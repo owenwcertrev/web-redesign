@@ -13,10 +13,69 @@
   html {
     scroll-behavior: smooth;
   }
+
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Smooth transitions except during window resize */
+  body:not(.resizing) * {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+
+  /* Disable transitions during resize for performance */
+  body.resizing * {
+    transition: none !important;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Smooth container width transitions */
+  .max-w-6xl,
+  .max-w-7xl,
+  .max-w-4xl,
+  .max-w-5xl {
+    transition: max-width 0.3s ease-out, padding 0.3s ease-out;
+  }
+
+  /* Grid auto-fit with smooth transitions */
+  .grid-auto-fit {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  /* Equal height cards in grid */
+  .card-grid {
+    display: grid;
+    grid-auto-rows: 1fr;
+  }
+}
+
+/* Custom scrollbar for modern browsers */
+@layer base {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #FAF9F6;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #A7C4BC;
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #8FB0A8;
   }
 }

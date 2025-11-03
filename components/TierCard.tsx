@@ -16,12 +16,12 @@ export default function TierCard({ tierNumber, tierName, credits, credentials }:
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-3xl p-8 shadow-base border border-black/5 hover:shadow-xl hover:border-primary/10 transition-all duration-500 group relative overflow-hidden"
+      className="bg-white rounded-3xl p-8 shadow-base border border-black/5 hover:shadow-xl hover:border-primary/10 transition-all duration-500 group relative overflow-hidden h-full flex flex-col"
     >
       {/* Subtle gradient overlay on hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-verification/0 group-hover:from-primary/5 group-hover:to-verification/5 transition-all duration-500 rounded-3xl" />
 
-      <div className="relative z-10">
+      <div className="relative z-10 flex flex-col h-full">
         {/* Tier Header */}
         <h3 className="text-sm font-semibold tracking-wider mb-2 text-primary">
           TIER {tierNumber}
@@ -42,7 +42,7 @@ export default function TierCard({ tierNumber, tierName, credits, credentials }:
 
         {/* Credentials List */}
         <h5 className="text-lg font-semibold mb-4 text-charcoal">Examples include:</h5>
-        <ul className="space-y-3 mb-8">
+        <ul className="space-y-3 mb-8 flex-grow">
           {credentials.map((cred, i) => (
             <motion.li
               key={i}
@@ -59,10 +59,12 @@ export default function TierCard({ tierNumber, tierName, credits, credentials }:
         </ul>
 
         {/* Primary Blue CTA Button - matches design system */}
-        <Button size="lg" className="w-full">
-          GET EXPERT REVIEWS
-          <ArrowRight className="w-5 h-5" />
-        </Button>
+        <div className="mt-auto">
+          <Button size="lg" className="w-full">
+            GET EXPERT REVIEWS
+            <ArrowRight className="w-5 h-5" />
+          </Button>
+        </div>
       </div>
     </motion.div>
   )

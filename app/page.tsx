@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
-      <section className="relative bg-cream py-32 px-4 min-h-[90vh] flex items-center">
+      <section className="relative bg-cream py-16 sm:py-24 md:py-32 px-4 min-h-[80vh] sm:min-h-[85vh] md:min-h-[90vh] flex items-center">
         {/* Animated Background Gradients */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <GradientBlob
@@ -70,7 +70,7 @@ export default function Home() {
           </FadeIn>
 
           <FadeIn delay={1}>
-            <div className="mt-16 flex items-center justify-center gap-8 text-sm text-charcoal/50">
+            <div className="mt-12 sm:mt-16 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm text-charcoal/50">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-verification animate-pulse" />
                 <span>Trusted by 500+ brands</span>
@@ -96,7 +96,7 @@ export default function Home() {
             </p>
           </FadeIn>
 
-          <StaggerChildren className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StaggerChildren className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 card-grid">
             <motion.div
               variants={{
                 hidden: { opacity: 0, y: 20 },
@@ -312,7 +312,7 @@ export default function Home() {
             </div>
           </FadeIn>
 
-          <StaggerChildren className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" staggerDelay={0.15}>
+          <StaggerChildren className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 card-grid" staggerDelay={0.15}>
             <motion.div
               variants={{
                 hidden: { opacity: 0, scale: 0.9 },

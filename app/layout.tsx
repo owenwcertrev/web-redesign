@@ -3,6 +3,7 @@ import { DM_Sans } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import SmoothResize from '@/components/SmoothResize'
 
 const dmSans = DM_Sans({ subsets: ['latin'] })
 
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={dmSans.className}>
+        <SmoothResize />
         <Navigation />
         <main className="pt-16">
           {children}

@@ -15,7 +15,7 @@ export default function StatCard({ stat, description, source, icon: Icon }: Stat
     <motion.div
       whileHover={{ y: -8, scale: 1.02 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="bg-white rounded-3xl p-8 shadow-base border border-black/5 hover:shadow-xl hover:border-primary/20 transition-all duration-300 group"
+      className="bg-white rounded-3xl p-8 shadow-base border border-black/5 hover:shadow-xl hover:border-primary/20 transition-all duration-300 group h-full flex flex-col"
     >
       {Icon && (
         <motion.div
@@ -29,8 +29,8 @@ export default function StatCard({ stat, description, source, icon: Icon }: Stat
       <div className="text-5xl font-bold bg-gradient-to-br from-primary to-verification bg-clip-text text-transparent mb-4">
         {stat}
       </div>
-      <p className="text-charcoal/80 mb-3 leading-relaxed">{description}</p>
-      <p className="text-xs text-charcoal/50 font-medium">{source}</p>
+      <p className="text-charcoal/80 mb-3 leading-relaxed flex-grow">{description}</p>
+      <p className="text-xs text-charcoal/50 font-medium mt-auto">{source}</p>
     </motion.div>
   )
 }
