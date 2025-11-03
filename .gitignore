@@ -1,6 +1,13 @@
 node_modules/
+.next/
 .vercel
 .DS_Store
 *.log
 .env
 .env.local
+.env.production.local
+.env.development.local
+.env.test.local
+out/
+build/
+dist/
