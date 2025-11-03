@@ -18,7 +18,7 @@ export default function ForExpertsPage() {
             Join Our Expert Network
           </h1>
           <p className="text-xl text-charcoal/80 max-w-2xl mx-auto mb-8">
-            Use your professional expertise to verify beauty and wellness content. Help brands build trust while earning competitive compensation.
+            Use your professional expertise to verify health, wellness, financial, and professional service content. Help brands build trust while earning competitive compensation.
           </p>
           <Button size="lg" asChild>
             <Link href="/eeat-meter">
@@ -93,27 +93,37 @@ export default function ForExpertsPage() {
                   Who We're Looking For
                 </h3>
                 <p className="text-charcoal/70 mb-4 leading-relaxed">
-                  We seek credentialed professionals across the beauty, wellness, health, and related fields. Our 6-tier system accommodates everyone from certified coaches to board-certified physicians.
+                  We seek credentialed professionals across health, wellness, finance, legal, tech, and professional services. Our 6-tier system accommodates everyone from certified coaches to board-certified physicians, CPAs, attorneys, and senior engineers.
                 </p>
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-3 gap-4">
                   <div className="bg-cream p-4 rounded-12">
-                    <h4 className="font-semibold mb-2 text-charcoal">Beauty & Wellness</h4>
+                    <h4 className="font-semibold mb-2 text-charcoal">Health & Wellness</h4>
                     <ul className="text-sm text-charcoal/70 space-y-1">
+                      <li>• Physicians (MD, DO)</li>
+                      <li>• Registered Nurses (RN)</li>
+                      <li>• Dietitian Nutritionists (RDN)</li>
+                      <li>• Physical Therapists (DPT)</li>
                       <li>• Estheticians (LE)</li>
-                      <li>• Cosmetologists</li>
-                      <li>• Massage Therapists (LMT)</li>
-                      <li>• Makeup Artists (MUA)</li>
-                      <li>• Nutrition Coaches</li>
                     </ul>
                   </div>
                   <div className="bg-cream p-4 rounded-12">
-                    <h4 className="font-semibold mb-2 text-charcoal">Healthcare</h4>
+                    <h4 className="font-semibold mb-2 text-charcoal">Finance & Legal</h4>
                     <ul className="text-sm text-charcoal/70 space-y-1">
-                      <li>• Registered Nurses (RN)</li>
-                      <li>• Nurse Practitioners (NP)</li>
-                      <li>• Dietitian Nutritionists (RDN)</li>
-                      <li>• Physicians (MD, DO)</li>
-                      <li>• Dermatologists</li>
+                      <li>• CPAs & Accountants</li>
+                      <li>• Financial Planners (CFP)</li>
+                      <li>• Chartered Financial Analysts</li>
+                      <li>• Attorneys (JD)</li>
+                      <li>• Enrolled Agents</li>
+                    </ul>
+                  </div>
+                  <div className="bg-cream p-4 rounded-12">
+                    <h4 className="font-semibold mb-2 text-charcoal">Tech & Engineering</h4>
+                    <ul className="text-sm text-charcoal/70 space-y-1">
+                      <li>• Professional Engineers (PE)</li>
+                      <li>• Cybersecurity Analysts</li>
+                      <li>• Data Scientists (PhD)</li>
+                      <li>• Software Architects</li>
+                      <li>• Patent Agents</li>
                     </ul>
                   </div>
                 </div>
@@ -181,7 +191,7 @@ export default function ForExpertsPage() {
               Ready to Join Our Network?
             </h2>
             <p className="text-lg text-charcoal/70 mb-8 max-w-2xl mx-auto">
-              Put your professional expertise to work. Help beauty brands build trustworthy content while earning competitive compensation on your schedule.
+              Put your professional expertise to work. Help brands across health, wellness, finance, and professional services build trustworthy content while earning competitive compensation on your schedule.
             </p>
             <Button size="lg" asChild>
               <Link href="/eeat-meter">

@@ -8,8 +8,8 @@ import SmoothResize from '@/components/SmoothResize'
 const dmSans = DM_Sans({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'CertREV - Expert Content Verification for Beauty Brands',
-  description: 'Expert fact-checking infrastructure for beauty brands navigating the AI content era. Human validation in an AI-powered world.',
+  title: 'CertREV - Expert Content Verification for Health, Wellness & Professional Services',
+  description: 'Expert fact-checking infrastructure for health, wellness, finance, and professional service brands. Human validation in an AI-powered world.',
 }
 
 export default function RootLayout({

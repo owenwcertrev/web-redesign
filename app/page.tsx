@@ -51,7 +51,7 @@ export default function Home() {
 
           <FadeIn delay={0.6}>
             <p className="text-xl md:text-2xl text-charcoal/70 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
-              Expert fact-checking infrastructure for beauty brands navigating the AI content era
+              Expert fact-checking infrastructure for health, wellness, and professional service brands navigating the AI content era
             </p>
           </FadeIn>
 
@@ -307,7 +307,7 @@ export default function Home() {
                 Expert Tiers
               </h2>
               <p className="text-xl text-charcoal/60 max-w-3xl mx-auto">
-                From certified coaches to medical doctors — we have the right expert for your content
+                From certified coaches to medical doctors, financial advisors to attorneys — we have the right expert for your content
               </p>
             </div>
           </FadeIn>

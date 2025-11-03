@@ -20,7 +20,7 @@ export default function HowItWorksPage() {
             How CertREV Works
           </h1>
           <p className="text-xl text-charcoal/80 max-w-2xl mx-auto">
-            Expert fact-checking infrastructure that protects your SEO, builds consumer trust, and ensures FTC compliance
+            Expert fact-checking infrastructure for health, wellness, financial, and professional service content that protects your SEO, builds consumer trust, and ensures compliance
           </p>
         </div>
       </section>

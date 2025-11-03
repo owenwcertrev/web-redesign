@@ -133,15 +133,15 @@ export default function EEATMeterPage() {
             </div>
 
             <h3 className="text-2xl font-semibold mb-4 mt-12 text-charcoal">
-              Why E-E-A-T Matters for Beauty Brands
+              Why E-E-A-T Matters for Your Brand
             </h3>
             <p className="text-charcoal/80 mb-4 leading-relaxed">
-              Beauty and wellness content falls under Google's "Your Money or Your Life" (YMYL) category — content
+              Health, wellness, financial, and legal content falls under Google's "Your Money or Your Life" (YMYL) category — content
               that can impact health, safety, or financial well-being. Google applies stricter E-E-A-T standards to
               YMYL content.
             </p>
             <p className="text-charcoal/80 leading-relaxed">
-              Without verified expert attribution, beauty brands risk:
+              Without verified expert attribution, brands risk:
             </p>
             <ul className="list-disc list-inside text-charcoal/80 space-y-2 my-4">
               <li>Significant drops in organic traffic (HubSpot saw 88% decline)</li>
@@ -150,7 +150,7 @@ export default function EEATMeterPage() {
               <li>FTC compliance issues for unsubstantiated claims</li>
             </ul>
             <p className="text-charcoal/80 leading-relaxed">
-              Expert validation through CertREV helps beauty brands meet E-E-A-T standards, protect their SEO
+              Expert validation through CertREV helps brands across health, wellness, finance, and professional services meet E-E-A-T standards, protect their SEO
               performance, and build lasting consumer trust.
             </p>
           </div>
