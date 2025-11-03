@@ -1,12 +1,8 @@
-import { Metadata } from 'next'
+'use client'
+
 import EEATMeterTool from '@/components/EEATMeterTool'
 import StatCard from '@/components/StatCard'
 import { BarChart, FileCheck, TrendingUp, Users, AlertCircle, ShoppingBag } from 'lucide-react'
-
-export const metadata: Metadata = {
-  title: 'E-E-A-T Meter - Free Content Analysis | CertREV',
-  description: 'Analyze any website\'s E-E-A-T score for free. Get instant insights on Experience, Expertise, Authoritativeness, and Trustworthiness.',
-}
 
 export default function EEATMeterPage() {
   return (
