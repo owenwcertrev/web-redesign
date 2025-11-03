@@ -54,7 +54,6 @@
 
   /* Equal height cards in grid */
   .card-grid {
-    display: grid;
     grid-auto-rows: 1fr;
   }
 }

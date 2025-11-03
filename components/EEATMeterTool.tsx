@@ -260,9 +260,6 @@ export default function EEATMeterTool() {
               <Button size="lg">Get Started with CertREV</Button>
               <Button size="lg" variant="secondary">Schedule a Demo</Button>
             </div>
-            <p className="text-sm text-verification-dark/70 mt-4">
-              Join 500+ brands building credible content
-            </p>
           </div>
         </div>
       )}

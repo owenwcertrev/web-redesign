@@ -14,7 +14,7 @@ export default function HumanLayerPage() {
       id: 1,
       category: 'Trust & AI',
       title: 'Why 60% of Consumers Doubt AI-Generated Content',
-      excerpt: 'Stanford\'s latest research reveals a growing trust gap. Here\'s what beauty brands need to know about maintaining credibility in the AI age.',
+      excerpt: 'Stanford\'s latest research reveals a growing trust gap. Here\'s what brands need to know about maintaining credibility in the AI age.',
       date: 'March 15, 2025',
       readTime: '6 min read',
       image: 'from-primary/20 to-verification/20',
@@ -32,7 +32,7 @@ export default function HumanLayerPage() {
       id: 3,
       category: 'Compliance',
       title: 'FTC Cracks Down: $51K Average Fine for Deceptive Claims',
-      excerpt: 'New enforcement data shows rising penalties. How expert-reviewed content helps beauty brands stay compliant and build consumer trust.',
+      excerpt: 'New enforcement data shows rising penalties. How expert-reviewed content helps brands stay compliant and build consumer trust.',
       date: 'March 5, 2025',
       readTime: '5 min read',
       image: 'from-accent/20 to-primary/20',
@@ -41,7 +41,7 @@ export default function HumanLayerPage() {
       id: 4,
       category: 'Content Strategy',
       title: 'The HubSpot Case Study: 88% Traffic Loss Without E-E-A-T',
-      excerpt: 'How one of marketing\'s biggest publishers lost nearly all organic traffic - and what beauty brands can learn from their recovery.',
+      excerpt: 'How one of marketing\'s biggest publishers lost nearly all organic traffic - and what brands can learn from their recovery.',
       date: 'February 28, 2025',
       readTime: '7 min read',
       image: 'from-primary/30 to-verification/10',
@@ -49,7 +49,7 @@ export default function HumanLayerPage() {
     {
       id: 5,
       category: 'Expert Insights',
-      title: 'Board-Certified Dermatologists vs. Beauty Influencers',
+      title: 'Credentialed Experts vs. Social Media Influencers',
       excerpt: 'Understanding the credential gap that impacts both SEO and consumer trust. Why expertise levels matter more than ever.',
       date: 'February 20, 2025',
       readTime: '6 min read',
@@ -58,7 +58,7 @@ export default function HumanLayerPage() {
     {
       id: 6,
       category: 'Industry Trends',
-      title: 'Purchase Intent Lift: The Nielsen Study Beauty Brands Need to See',
+      title: 'Purchase Intent Lift: The Nielsen Study Brands Need to See',
       excerpt: 'Data-backed proof that expert-reviewed content outperforms traditional brand messaging. Key findings and implementation strategies.',
       date: 'February 15, 2025',
       readTime: '5 min read',
@@ -165,7 +165,7 @@ export default function HumanLayerPage() {
               Stay Informed
             </h2>
             <p className="text-lg text-charcoal/70 mb-8 max-w-2xl mx-auto">
-              Get insights on trust, expertise, and content strategy delivered to your inbox. No spam, just valuable insights for beauty brands navigating the AI age.
+              Get insights on trust, expertise, and content strategy delivered to your inbox. No spam, just valuable insights for brands navigating the AI age.
             </p>
             <NewsletterSignup />
           </div>

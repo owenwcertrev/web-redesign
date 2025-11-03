@@ -471,7 +471,7 @@ export default function Home() {
               {
                 category: 'Trust & AI',
                 title: 'Why 60% of Consumers Doubt AI-Generated Content',
-                excerpt: 'Stanford\'s latest research reveals a growing trust gap. Here\'s what beauty brands need to know about maintaining credibility in the AI age.',
+                excerpt: 'Stanford\'s latest research reveals a growing trust gap. Here\'s what brands need to know about maintaining credibility in the AI age.',
                 gradient: 'from-primary/20 to-verification/20'
               },
               {

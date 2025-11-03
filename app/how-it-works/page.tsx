@@ -7,7 +7,7 @@ import { ArrowRight, Upload, Search, CheckCircle, Shield, FileCheck, Award } fro
 
 export const metadata: Metadata = {
   title: 'How It Works - Expert Content Verification | CertREV',
-  description: 'Learn how CertREV connects beauty brands with credentialed experts to verify content, boost E-E-A-T scores, and build trust.',
+  description: 'Learn how CertREV connects brands with credentialed experts to verify content, boost E-E-A-T scores, and build trust.',
 }
 
 export default function HowItWorksPage() {

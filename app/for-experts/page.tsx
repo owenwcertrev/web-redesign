@@ -5,7 +5,7 @@ import { ArrowRight, DollarSign, Clock, Award, TrendingUp, CheckCircle, Users } 
 
 export const metadata: Metadata = {
   title: 'Join Our Expert Network | CertREV',
-  description: 'Use your expertise to help beauty brands build trustworthy content. Flexible work, competitive compensation, professional recognition.',
+  description: 'Use your expertise to help brands build trustworthy content. Flexible work, competitive compensation, professional recognition.',
 }
 
 export default function ForExpertsPage() {
@@ -72,7 +72,7 @@ export default function ForExpertsPage() {
               </div>
               <h3 className="text-xl font-semibold mb-3 text-charcoal">Impact Quality</h3>
               <p className="text-charcoal/70">
-                Help combat misinformation in beauty and wellness. Your reviews protect consumers and elevate industry standards.
+                Help combat misinformation across industries. Your reviews protect consumers and elevate industry standards.
               </p>
             </div>
           </div>
