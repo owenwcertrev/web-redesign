@@ -73,11 +73,15 @@ export default function Home() {
             <div className="mt-12 sm:mt-16 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm text-charcoal/50">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-verification animate-pulse" />
-                <span>Trusted by 500+ brands</span>
+                <span>Expert-verified content</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                <span>10,000+ articles verified</span>
+                <span>Rigorous fact-checking</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-alert animate-pulse" />
+                <span>FTC compliant</span>
               </div>
             </div>
           </FadeIn>
