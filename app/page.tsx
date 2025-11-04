@@ -353,9 +353,8 @@ export default function Home() {
                 tierName="Certified Professional"
                 credits={1}
                 credentials={[
-                  'Doula (DONA)',
-                  'Nutrition Coach (CNC)',
                   'Health & Wellness Coach (NBHWC)',
+                  'Nutrition Coach (CNC)',
                   'Personal Trainer (NASM)',
                   'Pilates Instructor (PMI)',
                   'Digital Marketing Professional (OMCP)',
@@ -368,8 +367,7 @@ export default function Home() {
                 credits={2}
                 credentials={[
                   'Registered Nurse (RN)',
-                  'Practical/Vocational Nurse (LPN/LVN)',
-                  'Esthetician (LE)',
+                  'Licensed Esthetician (LE)',
                   'Massage Therapist (LMT)',
                   'Makeup Artist (MUA)',
                   'Enrolled Agent (IRS-licensed)',
@@ -383,7 +381,6 @@ export default function Home() {
                 credentials={[
                   'Nurse Practitioner (NP)',
                   'Physician Assistant (PA-C)',
-                  'Speech-Language Pathologist (CCC-SLP)',
                   'Dietitian Nutritionist (RDN)',
                   'Physical Therapist (DPT)',
                   'Public Accountant (CPA)',
@@ -398,8 +395,7 @@ export default function Home() {
                   'Doctor of Pharmacy (PharmD)',
                   'Senior RDN (CNSC, CSSD)',
                   'Behavior Analyst (BCBA-D)',
-                  'Senior Cybersecurity Analyst (CISSP)',
-                  'Chartered Financial Analyst (CFA charterholder)',
+                  'Chartered Financial Analyst (CFA)',
                   'Certified Financial Planner (CFP)',
                 ]}
               />,
@@ -409,9 +405,8 @@ export default function Home() {
                 tierName="Practice Leader"
                 credits={5}
                 credentials={[
-                  'Clinical PhD (Nutrition, Psych, Exercise Sci.)',
+                  'Clinical PhD (Nutrition, Psych)',
                   'Doctor of Nursing Practice (DNP)',
-                  'Director of Nursing',
                   'Senior Epidemiologist',
                   'Bar-Admitted Attorney (JD)',
                   'Managing CPA / Controller',
@@ -423,10 +418,9 @@ export default function Home() {
                 tierName="Industry Authority"
                 credits={6}
                 credentials={[
-                  'Medical Doctor (MD)',
-                  'Doctor of Osteopathy (DO)',
-                  'Surgeon',
-                  'Board-Certified Subspecialist (Derm, Cardio, Endo)',
+                  'Medical Doctor (MD/DO)',
+                  'Board-Certified Surgeon',
+                  'Board-Certified Specialist',
                   'Tenured Professor (PhD)',
                   'Chief Medical Officer',
                 ]}
