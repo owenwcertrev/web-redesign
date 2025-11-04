@@ -7,7 +7,7 @@
 
 @layer base {
   body {
-    @apply bg-cream text-charcoal font-sans;
+    @apply bg-beige text-black font-sans;
   }
 
   html {
@@ -101,15 +101,15 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #FAF9F6;
+    background: #E8E4DB;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #A7C4BC;
+    background: #D4E157;
     border-radius: 5px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #8FB0A8;
+    background: #A8B43E;
   }
 }

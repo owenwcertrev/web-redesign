@@ -12,14 +12,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', loading, children, disabled, asChild, ...props }, ref) => {
     const baseClassName = cn(
       'inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-300',
-      'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+      'focus:outline-none focus:ring-2 focus:ring-coral focus:ring-offset-2',
       'disabled:opacity-50 disabled:cursor-not-allowed',
       {
-        'bg-primary text-white hover:bg-primary-hover hover:scale-[1.02] shadow-sm hover:shadow-md':
+        'bg-coral text-white hover:bg-coral-hover hover:scale-[1.02] shadow-sm hover:shadow-md':
           variant === 'primary',
-        'border-2 border-primary text-primary hover:bg-primary hover:text-white':
+        'border-2 border-coral text-coral hover:bg-coral hover:text-white':
           variant === 'secondary',
-        'text-primary hover:bg-primary/10': variant === 'ghost',
+        'text-navy hover:bg-navy/10': variant === 'ghost',
         'px-4 py-2 text-sm': size === 'sm',
         'px-6 py-3 text-base': size === 'md',
         'px-8 py-4 text-lg': size === 'lg',

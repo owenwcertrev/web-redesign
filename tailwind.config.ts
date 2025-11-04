@@ -9,22 +9,47 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Primary Colors - Consumer Brand
+        navy: {
+          DEFAULT: '#0A1B3F',
+          primary: '#0A1B3F',
+        },
+        lime: {
+          DEFAULT: '#D4E157',
+          highlight: '#D4E157',
+        },
+        coral: {
+          DEFAULT: '#E8603C',
+          action: '#E8603C',
+          hover: '#D14E2A',
+        },
+        // Neutrals
+        beige: {
+          DEFAULT: '#E8E4DB',
+          warm: '#E8E4DB',
+        },
+        gray: {
+          light: '#F5F5F5',
+        },
+        white: '#FFFFFF',
+        black: '#000000',
+        // Legacy aliases for gradual migration
         primary: {
-          DEFAULT: '#5B8DEF',
-          hover: '#4F9CF9',
+          DEFAULT: '#0A1B3F',
+          hover: '#0A1B3F',
         },
         verification: {
-          DEFAULT: '#A7C4BC',
-          light: '#DBF0E4',
-          dark: '#2F6050',
+          DEFAULT: '#D4E157',
+          light: '#E8F5A0',
+          dark: '#A8B43E',
         },
         cream: {
-          DEFAULT: '#FAF9F6',
-          secondary: '#F8F7F5',
+          DEFAULT: '#E8E4DB',
+          secondary: '#F5F5F5',
         },
-        charcoal: '#3A3A3A',
-        accent: '#F4E4E6',
-        alert: '#F59E0B',
+        charcoal: '#000000',
+        accent: '#E8603C',
+        alert: '#E8603C',
       },
       fontFamily: {
         script: ['Allura', 'cursive'],
