@@ -2,6 +2,8 @@
 
 import { Check } from 'lucide-react'
 import { motion } from 'framer-motion'
+import TextureOverlay from './TextureOverlay'
+import OrganicShape from './OrganicShape'
 
 interface TierCardProps {
   tierNumber: number
@@ -10,78 +12,60 @@ interface TierCardProps {
   credentials: string[]
 }
 
-// Subtle metallic progression - cool titanium to platinum
-const tierGradients: Record<number, string> = {
-  1: 'from-slate-50 to-slate-100',            // Titanium white
-  2: 'from-slate-100 to-gray-100',            // Light platinum
-  3: 'from-gray-100 to-slate-200',            // Silver
-  4: 'from-slate-200 to-zinc-200',            // Polished silver
-  5: 'from-zinc-200 to-stone-200',            // Warm silver
-  6: 'from-stone-200 to-zinc-300',            // Refined platinum
+// Warm consumer brand progression with subtle color accents
+const tierStyles: Record<number, { bg: string; accent: string; blob: 'navy' | 'lime' | 'coral' }> = {
+  1: { bg: 'bg-beige', accent: 'border-lime/30', blob: 'lime' },
+  2: { bg: 'bg-white', accent: 'border-coral/30', blob: 'coral' },
+  3: { bg: 'bg-beige', accent: 'border-navy/30', blob: 'navy' },
+  4: { bg: 'bg-white', accent: 'border-lime/30', blob: 'lime' },
+  5: { bg: 'bg-beige', accent: 'border-coral/30', blob: 'coral' },
+  6: { bg: 'bg-white', accent: 'border-navy/40', blob: 'navy' },
 }
 
 export default function TierCard({ tierNumber, tierName, credits, credentials }: TierCardProps) {
-  const gradient = tierGradients[tierNumber] || tierGradients[1]
-
-  // All tiers use dark text since backgrounds are subtle
-  const useDarkText = true
-  const textColor = useDarkText ? 'text-charcoal' : 'text-white'
-  const textOpacity = useDarkText ? 'text-charcoal/80' : 'text-white/90'
-  const badgeOpacity = useDarkText ? 'text-charcoal/60' : 'text-white/80'
-  const borderColor = useDarkText ? 'border-charcoal/10' : 'border-white/20'
-  const borderColorDivider = useDarkText ? 'border-charcoal/10' : 'border-white/10'
-  const checkOpacity = useDarkText ? 'opacity-60' : 'opacity-80'
-  const highlightOpacity = useDarkText ? 'via-charcoal/20' : 'via-white/40'
-  const highlightBottomOpacity = useDarkText ? 'via-charcoal/10' : 'via-white/20'
+  const style = tierStyles[tierNumber] || tierStyles[1]
 
   return (
-    <div
-      className="relative"
-      style={{ transformStyle: 'preserve-3d' }}
-    >
-      {/* Enhanced shadow with depth */}
-      <div
-        className="absolute inset-0 bg-black/20 rounded-2xl blur-2xl"
-        style={{
-          transform: 'translateZ(-10px) translateY(10px)',
-        }}
-      />
-
-      {/* Main card with metallic gradient */}
+    <div className="relative">
+      {/* Main card with warm background */}
       <motion.div
-        whileHover={{ scale: 1.02 }}
+        whileHover={{ scale: 1.01, y: -4 }}
         transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-        className={`relative bg-gradient-to-br ${gradient} rounded-2xl p-8 border-2 ${borderColor} backdrop-blur-sm h-[480px] flex flex-col overflow-hidden`}
-        style={{
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        }}
+        className={`relative ${style.bg} rounded-2xl p-8 border-2 ${style.accent} h-[480px] flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow`}
       >
-        {/* Top edge highlight - security card detail */}
-        <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${highlightOpacity} to-transparent`} />
+        {/* Texture overlay */}
+        <TextureOverlay type="paper" opacity={0.4} />
 
-        {/* Bottom edge subtle highlight */}
-        <div className={`absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${highlightBottomOpacity} to-transparent`} />
+        {/* Decorative organic shape */}
+        <OrganicShape
+          variant={tierNumber % 2 === 0 ? 'blob1' : 'blob2'}
+          color={style.blob}
+          className="absolute -bottom-12 -right-12 w-48 h-48"
+          opacity={0.08}
+        />
 
         {/* Content */}
-        <div className={`relative z-10 flex flex-col h-full ${textColor}`}>
-          {/* Tier badge - monospace for technical feel */}
-          <div className={`text-sm font-mono mb-4 ${badgeOpacity} tracking-wider`}>
-            TIER {tierNumber}
+        <div className="relative z-10 flex flex-col h-full text-navy">
+          {/* Tier badge - warm and friendly */}
+          <div className="inline-block self-start mb-4">
+            <span className="text-xs font-semibold px-3 py-1 bg-navy/10 rounded-full text-navy tracking-wide">
+              Tier {tierNumber}
+            </span>
           </div>
 
-          {/* Tier name */}
-          <h3 className="text-3xl font-bold mb-4 leading-tight">
+          {/* Tier name - serif for warmth */}
+          <h3 className="text-3xl font-bold mb-4 leading-tight font-serif">
             {tierName}
           </h3>
 
-          {/* Credits display - prominent */}
-          <div className="text-lg mb-6 font-medium">
+          {/* Credits display - clear and friendly */}
+          <div className="text-lg mb-6 font-semibold text-coral">
             {credits} CertCredit{credits > 1 ? 's' : ''}
           </div>
 
           {/* Credentials list */}
           <div className="flex-grow">
-            <div className={`text-sm font-semibold mb-3 ${badgeOpacity} uppercase tracking-wide`}>
+            <div className="text-sm font-semibold mb-3 text-navy/70 uppercase tracking-wide">
               Examples include:
             </div>
             <ul className="space-y-2.5">
@@ -91,19 +75,19 @@ export default function TierCard({ tierNumber, tierName, credits, credentials }:
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05, duration: 0.3 }}
-                  className={`flex items-start gap-2.5 ${textOpacity}`}
+                  className="flex items-start gap-2.5 text-black/80"
                 >
-                  <Check className={`w-4 h-4 flex-shrink-0 mt-0.5 ${checkOpacity}`} />
+                  <Check className="w-4 h-4 flex-shrink-0 mt-0.5 text-lime" />
                   <span className="text-sm leading-relaxed">{cred}</span>
                 </motion.li>
               ))}
             </ul>
           </div>
 
-          {/* Subtle authentication mark at bottom */}
-          <div className={`mt-6 pt-4 border-t ${borderColorDivider}`}>
-            <div className={`text-xs font-mono ${badgeOpacity} tracking-wider`}>
-              VERIFIED CREDENTIAL TIER
+          {/* Verified footer - warm and trustworthy */}
+          <div className="mt-6 pt-4 border-t border-navy/10">
+            <div className="text-xs font-semibold text-navy/60 tracking-wide">
+              Verified Credential Tier
             </div>
           </div>
         </div>

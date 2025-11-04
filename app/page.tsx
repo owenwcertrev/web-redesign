@@ -216,7 +216,7 @@ export default function Home() {
                 'Expert attribution prevents penalties'
               ]}
               icon={TrendingUp}
-              gradient="from-primary/10 to-primary/20"
+              gradient="from-navy/10 to-navy/20"
             />
 
             <FlipStatCard
@@ -231,7 +231,7 @@ export default function Home() {
                 'Verified content drives conversions'
               ]}
               icon={Users}
-              gradient="from-verification/10 to-verification/20"
+              gradient="from-lime/10 to-lime/20"
             />
 
             <FlipStatCard
@@ -246,7 +246,7 @@ export default function Home() {
                 'Demonstrates due diligence'
               ]}
               icon={AlertCircle}
-              gradient="from-alert/10 to-alert/20"
+              gradient="from-coral/10 to-coral/20"
             />
 
             <FlipStatCard
@@ -261,7 +261,7 @@ export default function Home() {
                 'Compound effect over time'
               ]}
               icon={ShoppingBag}
-              gradient="from-charcoal/10 to-charcoal/20"
+              gradient="from-navy/10 to-navy/20"
             />
           </div>
         </div>
@@ -492,7 +492,7 @@ export default function Home() {
                 'Industry specialists'
               ]}
               icon={Shield}
-              gradient="from-verification/10 to-verification/20"
+              gradient="from-lime/10 to-lime/20"
             />
 
             <FlipStatCard
@@ -507,7 +507,7 @@ export default function Home() {
                 'Disclosure standards'
               ]}
               icon={CheckCircle2}
-              gradient="from-primary/10 to-primary/20"
+              gradient="from-navy/10 to-navy/20"
             />
 
             <FlipStatCard
@@ -522,7 +522,7 @@ export default function Home() {
                 'Public badge verification'
               ]}
               icon={Eye}
-              gradient="from-alert/10 to-alert/20"
+              gradient="from-coral/10 to-coral/20"
             />
           </div>
         </div>
