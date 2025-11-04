@@ -13,6 +13,8 @@ import CardDeck from '@/components/cards3d/CardDeck'
 import TiltCard from '@/components/cards3d/TiltCard'
 import Carousel3D from '@/components/cards3d/Carousel3D'
 import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Upload, FileCheck, Search, CheckCircle2 } from 'lucide-react'
+import CitationMarker from '@/components/trust/CitationMarker'
+import ConfidenceMeter from '@/components/trust/ConfidenceMeter'
 
 export default function Home() {
   // Stacked cards content for the process
@@ -264,6 +266,65 @@ export default function Home() {
               gradient="from-charcoal/10 to-charcoal/20"
             />
           </div>
+        </div>
+      </section>
+
+      {/* Trust Infrastructure Section */}
+      <section className="relative bg-gradient-to-b from-white to-cream py-32 px-4">
+        <div className="max-w-6xl mx-auto">
+          <FadeIn>
+            <TiltCard intensity={0.5} glowColor="rgba(119, 171, 149, 0.15)">
+              <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl border border-charcoal/10">
+                <div className="grid md:grid-cols-2 gap-12 items-center">
+                  <div>
+                    <h2 className="text-3xl md:text-4xl font-bold mb-6 text-charcoal">
+                      Trust Infrastructure for the AI Age
+                    </h2>
+                    <p className="text-lg text-charcoal/80 mb-6 leading-relaxed">
+                      Studies show that 60% of consumers doubt AI-generated content
+                      <CitationMarker
+                        number={1}
+                        confidence="high"
+                        source="Stanford Research, 2025"
+                        preview="Comprehensive study of 10,000+ consumers showing significant trust gaps."
+                      />
+                      . CertREV builds the verification infrastructure brands need to navigate this trust crisis.
+                    </p>
+                    <p className="text-lg text-charcoal/80 mb-8 leading-relaxed">
+                      Our platform connects your content with credentialed experts, creating a transparent verification layer that consumers and search engines recognize
+                      <CitationMarker
+                        number={2}
+                        confidence="high"
+                        source="Google E-E-A-T Guidelines, 2024"
+                        preview="Official Google documentation on Experience, Expertise, Authoritativeness, and Trust signals."
+                      />
+                      .
+                    </p>
+                    <Button size="lg" asChild>
+                      <Link href="/trust-showcase">
+                        Explore Trust Infrastructure
+                        <ArrowRight className="w-5 h-5" />
+                      </Link>
+                    </Button>
+                  </div>
+                  <div className="space-y-6">
+                    <div className="bg-gradient-to-br from-cream to-white backdrop-blur-sm rounded-xl p-6 border border-charcoal/10 shadow-lg">
+                      <h3 className="text-sm font-mono uppercase tracking-wider text-charcoal/60 mb-4">
+                        Verification Confidence
+                      </h3>
+                      <ConfidenceMeter score={94} label="Expert Match Quality" showPercentage />
+                    </div>
+                    <div className="bg-gradient-to-br from-cream to-white backdrop-blur-sm rounded-xl p-6 border border-charcoal/10 shadow-lg">
+                      <ConfidenceMeter score={88} label="Citation Coverage" showPercentage />
+                    </div>
+                    <div className="bg-gradient-to-br from-cream to-white backdrop-blur-sm rounded-xl p-6 border border-charcoal/10 shadow-lg">
+                      <ConfidenceMeter score={76} label="Source Credibility" showPercentage />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TiltCard>
+          </FadeIn>
         </div>
       </section>
 
