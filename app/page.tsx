@@ -96,14 +96,14 @@ export default function Home() {
           <OrganicShape key="blob4" variant="blob4" color="lime" className="bottom-1/3 left-1/2 w-64 h-64" opacity={0.10} />,
         ]}
       >
-        <div className="min-h-screen flex items-center justify-center px-4 relative">
+        <div className="min-h-screen flex items-center justify-center px-4 relative pt-24">
           <div className="max-w-5xl mx-auto text-center relative">
             {/* Main Hero Content */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-8 mt-8 px-6 py-3 bg-white rounded-full border-2 border-lime shadow-sm"
+              className="inline-block mb-8 px-6 py-3 bg-white rounded-full border-2 border-lime shadow-sm"
             >
               <span className="text-sm font-semibold text-navy tracking-wide">EXPERT VERIFICATION PLATFORM</span>
             </motion.div>
@@ -497,18 +497,22 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Flip Cards - Trust Principles - Bold Lime Color Block */}
-      <section className="pt-32 pb-28 px-4 bg-lime relative overflow-hidden">
-        <TextureOverlay type="grain" opacity={0.1} />
-        <OrganicShape variant="blob2" color="coral" className="absolute top-0 right-0 w-[600px] h-[600px]" opacity={0.15} />
-        <OrganicShape variant="blob3" color="navy" className="absolute bottom-0 left-0 w-[500px] h-[500px]" opacity={0.12} />
+      {/* Flip Cards - Trust Principles - Sophisticated Color Block */}
+      <section className="pt-32 pb-28 px-4 bg-gradient-to-br from-lime/30 via-lime/20 to-beige relative overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.15} />
+        <OrganicShape variant="blob2" color="lime" className="absolute top-0 right-0 w-[600px] h-[600px]" opacity={0.25} />
+        <OrganicShape variant="blob3" color="coral" className="absolute bottom-0 left-0 w-[500px] h-[500px]" opacity={0.08} />
+        <OrganicShape variant="blob1" color="navy" className="absolute top-1/2 left-1/3 w-[400px] h-[400px]" opacity={0.05} />
         <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <h2 className="text-6xl md:text-7xl font-bold mb-8 text-navy font-serif leading-tight drop-shadow-sm">
+              <div className="inline-block mb-6 px-6 py-3 bg-white/90 backdrop-blur-sm rounded-full border-2 border-lime shadow-md">
+                <span className="text-sm font-semibold text-navy tracking-wide">TRUST PRINCIPLES</span>
+              </div>
+              <h2 className="text-6xl md:text-7xl font-bold mb-8 text-navy font-serif leading-tight">
                 Built on Trust Principles
               </h2>
-              <p className="text-2xl text-navy/80 max-w-2xl mx-auto font-medium">
+              <p className="text-xl text-navy/70 max-w-2xl mx-auto leading-relaxed">
                 Expert verification, FTC compliance, and complete transparency
               </p>
             </div>
