@@ -12,6 +12,10 @@ import FadeIn from '@/components/animations/FadeIn'
 import StaggerChildren from '@/components/animations/StaggerChildren'
 import FloatingElement from '@/components/animations/FloatingElement'
 import GradientBlob from '@/components/GradientBlob'
+import TrustIndicator from '@/components/trust/TrustIndicator'
+import ConfidenceMeter from '@/components/trust/ConfidenceMeter'
+import GlassMorphCard from '@/components/trust/GlassMorphCard'
+import CitationMarker from '@/components/trust/CitationMarker'
 import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Sparkles } from 'lucide-react'
 
 export default function Home() {
@@ -70,20 +74,68 @@ export default function Home() {
           </FadeIn>
 
           <FadeIn delay={1}>
-            <div className="mt-12 sm:mt-16 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm text-charcoal/50">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-verification animate-pulse" />
-                <span>Expert-verified content</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                <span>Rigorous fact-checking</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-alert animate-pulse" />
-                <span>FTC compliant</span>
-              </div>
+            <div className="mt-12 sm:mt-16 flex flex-wrap items-center justify-center gap-4">
+              <TrustIndicator metric="verified" pulse />
+              <TrustIndicator metric="transparent" />
+              <TrustIndicator metric="encrypted" />
             </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Trust Infrastructure Highlight */}
+      <section className="relative bg-white py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <FadeIn>
+            <GlassMorphCard variant="verification" className="p-8 md:p-12">
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                  <h2 className="text-3xl md:text-4xl font-serif mb-6 text-charcoal">
+                    Trust Infrastructure for the AI Age
+                  </h2>
+                  <p className="text-lg text-charcoal/80 mb-6 leading-relaxed">
+                    Studies show that 60% of consumers doubt AI-generated content
+                    <CitationMarker
+                      number={1}
+                      confidence="high"
+                      source="Stanford Research, 2025"
+                      preview="Comprehensive study of 10,000+ consumers showing significant trust gaps."
+                    />
+                    . CertREV builds the verification infrastructure brands need to navigate this trust crisis.
+                  </p>
+                  <p className="text-lg text-charcoal/80 mb-8 leading-relaxed">
+                    Our platform connects your content with credentialed experts, creating a transparent verification layer that consumers and search engines recognize
+                    <CitationMarker
+                      number={2}
+                      confidence="high"
+                      source="Google E-E-A-T Guidelines, 2024"
+                      preview="Official Google documentation on Experience, Expertise, Authoritativeness, and Trust signals."
+                    />
+                    .
+                  </p>
+                  <Button size="lg" asChild>
+                    <Link href="/trust-showcase">
+                      Explore Trust Infrastructure
+                      <ArrowRight className="w-5 h-5" />
+                    </Link>
+                  </Button>
+                </div>
+                <div className="space-y-6">
+                  <div className="bg-white/40 backdrop-blur-sm rounded-xl p-6 border border-charcoal/10">
+                    <h3 className="text-sm font-mono uppercase tracking-wider text-charcoal/60 mb-4">
+                      Verification Confidence
+                    </h3>
+                    <ConfidenceMeter score={94} label="Expert Match Quality" showPercentage />
+                  </div>
+                  <div className="bg-white/40 backdrop-blur-sm rounded-xl p-6 border border-charcoal/10">
+                    <ConfidenceMeter score={88} label="Citation Coverage" showPercentage />
+                  </div>
+                  <div className="bg-white/40 backdrop-blur-sm rounded-xl p-6 border border-charcoal/10">
+                    <ConfidenceMeter score={76} label="Source Credibility" showPercentage />
+                  </div>
+                </div>
+              </div>
+            </GlassMorphCard>
           </FadeIn>
         </div>
       </section>
