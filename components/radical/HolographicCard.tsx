@@ -55,10 +55,10 @@ export default function HolographicCard({
           className="absolute inset-0 opacity-30 mix-blend-color-dodge pointer-events-none"
           style={{
             background: useTransform(
-              [gradientX, gradientY],
-              ([x, y]: [number, number]) => `
+              gradientX,
+              (xVal) => `
                 radial-gradient(
-                  circle at ${x}% ${y}%,
+                  circle at ${xVal}% 50%,
                   rgba(91, 141, 239, 0.8) 0%,
                   rgba(167, 196, 188, 0.6) 25%,
                   rgba(241, 130, 57, 0.6) 50%,
@@ -75,10 +75,10 @@ export default function HolographicCard({
           className="absolute inset-0 opacity-40 pointer-events-none"
           style={{
             background: useTransform(
-              [gradientX, gradientY],
-              ([x, y]: [number, number]) => `
+              gradientX,
+              (xVal) => `
                 linear-gradient(
-                  ${x * 3.6}deg,
+                  ${xVal * 3.6}deg,
                   transparent 20%,
                   rgba(255, 255, 255, 0.2) 40%,
                   rgba(91, 141, 239, 0.3) 50%,
@@ -100,10 +100,10 @@ export default function HolographicCard({
           className="absolute inset-0 rounded-2xl pointer-events-none"
           style={{
             background: useTransform(
-              [gradientX, gradientY],
-              ([x, y]: [number, number]) => `
+              gradientX,
+              (xVal) => `
                 linear-gradient(
-                  ${x * 3.6}deg,
+                  ${xVal * 3.6}deg,
                   rgba(91, 141, 239, 0.5),
                   rgba(119, 171, 149, 0.5),
                   rgba(241, 130, 57, 0.5)
