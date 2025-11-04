@@ -9,10 +9,9 @@ import FadeIn from '@/components/animations/FadeIn'
 import DepthHero from '@/components/cards3d/DepthHero'
 import FlipStatCard from '@/components/cards3d/FlipStatCard'
 import StackedCards from '@/components/cards3d/StackedCards'
-import CardDeck from '@/components/cards3d/CardDeck'
 import TiltCard from '@/components/cards3d/TiltCard'
 import Carousel3D from '@/components/cards3d/Carousel3D'
-import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Upload, FileCheck, Search, CheckCircle2 } from 'lucide-react'
+import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Upload, FileCheck, Search, CheckCircle2, Shield, Eye } from 'lucide-react'
 import CitationMarker from '@/components/trust/CitationMarker'
 import ConfidenceMeter from '@/components/trust/ConfidenceMeter'
 
@@ -75,57 +74,6 @@ export default function Home() {
     },
   ]
 
-  // Card deck content for trust principles
-  const trustPrincipleCards = [
-    {
-      id: 'expert-verified',
-      title: 'Expert Verified',
-      color: 'bg-gradient-to-br from-verification to-verification-dark',
-      content: (
-        <div className="space-y-4">
-          <p>Every piece of content reviewed by credentialed professionals with verified expertise in their field.</p>
-          <ul className="list-disc list-inside space-y-2 opacity-90">
-            <li>Board-certified professionals</li>
-            <li>Licensed practitioners</li>
-            <li>Academic researchers</li>
-            <li>Industry specialists</li>
-          </ul>
-        </div>
-      )
-    },
-    {
-      id: 'ftc-compliant',
-      title: 'FTC Compliant',
-      color: 'bg-gradient-to-br from-primary to-primary-dark',
-      content: (
-        <div className="space-y-4">
-          <p>Ensures all claims meet regulatory standards and requirements for consumer protection.</p>
-          <ul className="list-disc list-inside space-y-2 opacity-90">
-            <li>Substantiation requirements</li>
-            <li>Endorsement guidelines</li>
-            <li>Health claim compliance</li>
-            <li>Disclosure standards</li>
-          </ul>
-        </div>
-      )
-    },
-    {
-      id: 'transparent',
-      title: 'Fully Transparent',
-      color: 'bg-gradient-to-br from-alert to-amber-600',
-      content: (
-        <div className="space-y-4">
-          <p>Complete audit trail from submission to certification with full visibility into the review process.</p>
-          <ul className="list-disc list-inside space-y-2 opacity-90">
-            <li>Expert credentials disclosed</li>
-            <li>Review history tracked</li>
-            <li>Verification timestamps</li>
-            <li>Public badge verification</li>
-          </ul>
-        </div>
-      )
-    },
-  ]
 
   return (
     <div className="overflow-hidden">
@@ -455,14 +403,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Card Deck - Trust Principles */}
+      {/* Flip Cards - Trust Principles */}
       <section className="py-32 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <FadeIn>
             <div className="text-center mb-20">
-              <div className="inline-block mb-6 px-6 py-3 bg-cream rounded-full border border-primary/20">
-                <span className="text-sm font-medium text-primary">INTERACTIVE DECK</span>
-              </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-charcoal">
                 Built on Trust Principles
               </h2>
@@ -472,7 +417,52 @@ export default function Home() {
             </div>
           </FadeIn>
 
-          <CardDeck cards={trustPrincipleCards} />
+          <div className="grid md:grid-cols-3 gap-8">
+            <FlipStatCard
+              stat="✓"
+              label="Expert Verified"
+              description="Every piece of content reviewed by credentialed professionals"
+              backTitle="Expert Verification"
+              backDetails={[
+                'Board-certified professionals',
+                'Licensed practitioners',
+                'Academic researchers',
+                'Industry specialists'
+              ]}
+              icon={Shield}
+              gradient="from-verification/10 to-verification/20"
+            />
+
+            <FlipStatCard
+              stat="✓"
+              label="FTC Compliant"
+              description="All claims meet regulatory standards for consumer protection"
+              backTitle="Compliance Standards"
+              backDetails={[
+                'Substantiation requirements',
+                'Endorsement guidelines',
+                'Health claim compliance',
+                'Disclosure standards'
+              ]}
+              icon={CheckCircle2}
+              gradient="from-primary/10 to-primary/20"
+            />
+
+            <FlipStatCard
+              stat="✓"
+              label="Fully Transparent"
+              description="Complete audit trail from submission to certification"
+              backTitle="Transparency Features"
+              backDetails={[
+                'Expert credentials disclosed',
+                'Review history tracked',
+                'Verification timestamps',
+                'Public badge verification'
+              ]}
+              icon={Eye}
+              gradient="from-alert/10 to-alert/20"
+            />
+          </div>
         </div>
       </section>
 
