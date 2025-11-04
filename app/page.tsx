@@ -16,7 +16,11 @@ import TrustIndicator from '@/components/trust/TrustIndicator'
 import ConfidenceMeter from '@/components/trust/ConfidenceMeter'
 import GlassMorphCard from '@/components/trust/GlassMorphCard'
 import CitationMarker from '@/components/trust/CitationMarker'
-import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Sparkles } from 'lucide-react'
+import HolographicCard from '@/components/radical/HolographicCard'
+import ParticleNetwork from '@/components/radical/ParticleNetwork'
+import NeonText from '@/components/radical/NeonText'
+import LiquidBlob from '@/components/radical/LiquidBlob'
+import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Sparkles, Zap } from 'lucide-react'
 
 export default function Home() {
   return (
@@ -206,6 +210,108 @@ export default function Home() {
               />
             </motion.div>
           </StaggerChildren>
+        </div>
+      </section>
+
+      {/* Radical Future Section */}
+      <section className="relative bg-gradient-to-br from-charcoal via-charcoal/95 to-charcoal py-32 px-4 overflow-hidden">
+        {/* Particle Network Background */}
+        <div className="absolute inset-0 opacity-30">
+          <ParticleNetwork particleCount={60} connectionDistance={130} />
+        </div>
+
+        {/* Liquid Blob Accent */}
+        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4">
+          <LiquidBlob variant="processing" size="lg" />
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <FadeIn>
+            <div className="text-center mb-20">
+              <motion.div
+                className="inline-flex items-center gap-2 px-5 py-2 bg-white/5 backdrop-blur-xl rounded-full border border-primary/30 mb-6"
+                animate={{
+                  boxShadow: [
+                    '0 0 15px rgba(91,141,239,0.2)',
+                    '0 0 25px rgba(91,141,239,0.4)',
+                    '0 0 15px rgba(91,141,239,0.2)',
+                  ],
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <Zap className="w-4 h-4 text-primary" />
+                <span className="text-white/90 font-mono text-xs tracking-wider">
+                  NEXT-GEN INFRASTRUCTURE
+                </span>
+              </motion.div>
+
+              <h2 className="text-5xl md:text-6xl font-bold mb-6">
+                <span className="text-white">Trust Infrastructure </span>
+                <br />
+                <NeonText color="primary" intensity="high">
+                  Reimagined
+                </NeonText>
+              </h2>
+              <p className="text-xl text-white/70 max-w-2xl mx-auto">
+                Experience the future of verification with holographic interfaces and real-time trust signals
+              </p>
+            </div>
+          </FadeIn>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                title: 'Interactive Citations',
+                description: 'Beautiful inline citations with confidence indicators and source previews',
+                stat: '94%',
+                label: 'Accuracy'
+              },
+              {
+                title: 'Real-Time Verification',
+                description: 'Watch trust materialize with animated confidence meters and progress tracking',
+                stat: '< 2s',
+                label: 'Response Time'
+              },
+              {
+                title: 'Glass Morphism Design',
+                description: 'Transparent interfaces that literally let you "see through" to the truth',
+                stat: '100%',
+                label: 'Transparency'
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.2 }}
+              >
+                <HolographicCard className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 h-full">
+                  <div className="mb-6">
+                    <div className="text-4xl font-bold">
+                      <NeonText color={i === 0 ? 'verification' : i === 1 ? 'primary' : 'white'} intensity="medium">
+                        {item.stat}
+                      </NeonText>
+                    </div>
+                    <div className="text-xs font-mono text-white/50 mt-1">{item.label}</div>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
+                  <p className="text-white/70 leading-relaxed mb-6">{item.description}</p>
+                  <div className="h-1 bg-gradient-to-r from-primary via-verification to-alert rounded-full" />
+                </HolographicCard>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center mt-16">
+            <Button size="lg" asChild className="bg-primary hover:bg-primary/90 text-white shadow-[0_0_30px_rgba(91,141,239,0.4)]">
+              <Link href="/radical-demo">
+                <Sparkles className="w-5 h-5" />
+                See the Radical Demo
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 
