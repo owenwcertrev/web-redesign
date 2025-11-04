@@ -344,20 +344,23 @@ export default function Home() {
             {/* Right: Trust Metrics */}
             <TiltCard intensity={0.7} glowColor="rgba(212, 225, 87, 0.2)">
               <div className="space-y-6">
-                <div className="bg-white rounded-xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
+                <div className="bg-white rounded-2xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
                   <TextureOverlay type="paper" opacity={0.2} />
-                  <h3 className="text-sm font-semibold uppercase tracking-wider text-navy/70 mb-4 relative z-10">
-                    Verification Confidence
-                  </h3>
-                  <ConfidenceMeter score={94} label="Expert Match Quality" showPercentage />
+                  <div className="relative z-10">
+                    <ConfidenceMeter score={94} label="Expert Match Quality" showPercentage />
+                  </div>
                 </div>
-                <div className="bg-white rounded-xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
+                <div className="bg-white rounded-2xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
                   <TextureOverlay type="paper" opacity={0.2} />
-                  <ConfidenceMeter score={88} label="Citation Coverage" showPercentage />
+                  <div className="relative z-10">
+                    <ConfidenceMeter score={88} label="Citation Coverage" showPercentage />
+                  </div>
                 </div>
-                <div className="bg-white rounded-xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
+                <div className="bg-white rounded-2xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
                   <TextureOverlay type="paper" opacity={0.2} />
-                  <ConfidenceMeter score={76} label="Source Credibility" showPercentage />
+                  <div className="relative z-10">
+                    <ConfidenceMeter score={76} label="Source Credibility" showPercentage />
+                  </div>
                 </div>
               </div>
             </TiltCard>
@@ -632,6 +635,9 @@ export default function Home() {
           {/* Expert Profiles - Compact Grid */}
           <FadeIn delay={0.2}>
             <div className="text-center mb-12">
+              <div className="inline-block mb-4 px-6 py-2 bg-lime/10 rounded-full border-2 border-lime/30 shadow-sm">
+                <span className="text-xs font-semibold text-navy tracking-wide">OUR EXPERTS</span>
+              </div>
               <h3 className="text-3xl font-bold text-navy font-serif mb-3">
                 Meet Our Expert Network
               </h3>
@@ -641,7 +647,7 @@ export default function Home() {
             </div>
           </FadeIn>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -709,13 +715,13 @@ export default function Home() {
                 category: 'Trust & AI',
                 title: 'Why 60% of Consumers Doubt AI-Generated Content',
                 excerpt: 'Stanford\'s latest research reveals a growing trust gap. Here\'s what brands need to know about maintaining credibility in the AI age.',
-                gradient: 'from-primary/20 to-verification/20'
+                gradient: 'from-navy/20 to-lime/20'
               },
               {
                 category: 'SEO Strategy',
                 title: 'Google\'s E-E-A-T Update: What Changed in 2024',
                 excerpt: 'The extra \'E\' for Experience changed everything. Learn how expert validation protects your organic traffic from algorithm updates.',
-                gradient: 'from-verification/20 to-alert/20'
+                gradient: 'from-lime/20 to-coral/20'
               }
             ].map((article, index) => (
               <motion.article
@@ -727,9 +733,13 @@ export default function Home() {
                 className="group"
               >
                 <Link href="/human-layer" className="block">
-                  <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border-2 border-navy/10 relative">
+                  <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 border-2 border-navy/10 hover:border-navy/20 relative">
                     <TextureOverlay type="paper" opacity={0.2} />
-                    <div className="h-56 bg-coral/10 relative z-10" />
+                    <div className={`h-56 bg-gradient-to-br ${article.gradient} relative z-10 flex items-center justify-center`}>
+                      <div className="text-6xl opacity-10 font-serif font-bold text-navy">
+                        {index === 0 ? '60%' : 'E-E-A-T'}
+                      </div>
+                    </div>
                     <div className="p-8 relative z-10">
                       <span className="text-sm text-coral font-semibold uppercase tracking-wide">{article.category}</span>
                       <h3 className="text-2xl font-bold mt-3 mb-4 text-navy group-hover:text-coral transition-colors font-serif">
@@ -750,7 +760,7 @@ export default function Home() {
 
           <FadeIn delay={0.4}>
             <div className="bg-white rounded-2xl p-12 shadow-lg text-center border-2 border-lime relative overflow-hidden">
-              <TextureOverlay type="paper" opacity={0.3} />
+              <TextureOverlay type="paper" opacity={0.2} />
               <h3 className="text-3xl font-bold mb-4 text-navy font-serif relative z-10">Stay Informed</h3>
               <p className="text-black/70 mb-8 text-lg max-w-2xl mx-auto relative z-10">
                 Get insights on trust, expertise, and content strategy delivered to your inbox
@@ -782,10 +792,10 @@ export default function Home() {
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
             >
-              <Button size="lg" asChild className="text-lg px-12 py-6">
+              <Button size="lg" asChild>
                 <Link href="/eeat-meter">
                   Try the E-E-A-T Meter Free
-                  <ArrowRight className="w-6 h-6" />
+                  <ArrowRight className="w-5 h-5" />
                 </Link>
               </Button>
             </motion.div>
