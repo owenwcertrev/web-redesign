@@ -56,7 +56,7 @@ export default function HolographicCard({
           style={{
             background: useTransform(
               [gradientX, gradientY],
-              ([x, y]) => `
+              ([x, y]: [number, number]) => `
                 radial-gradient(
                   circle at ${x}% ${y}%,
                   rgba(91, 141, 239, 0.8) 0%,
@@ -76,7 +76,7 @@ export default function HolographicCard({
           style={{
             background: useTransform(
               [gradientX, gradientY],
-              ([x, y]) => `
+              ([x, y]: [number, number]) => `
                 linear-gradient(
                   ${x * 3.6}deg,
                   transparent 20%,
@@ -101,7 +101,7 @@ export default function HolographicCard({
           style={{
             background: useTransform(
               [gradientX, gradientY],
-              ([x, y]) => `
+              ([x, y]: [number, number]) => `
                 linear-gradient(
                   ${x * 3.6}deg,
                   rgba(91, 141, 239, 0.5),
