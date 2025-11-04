@@ -214,7 +214,7 @@ export default function Home() {
                 Why Expert Validation Matters
               </h2>
               <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
-                Click any card to flip and see the data behind expert verification
+                The data behind expert verification
               </p>
             </div>
           </FadeIn>
@@ -295,7 +295,7 @@ export default function Home() {
                 Verification in Layers
               </h2>
               <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
-                Click each card to expand and see how expert validation works
+                Three steps to expert-validated content
               </p>
             </div>
           </FadeIn>
@@ -316,7 +316,7 @@ export default function Home() {
                 The Complete Workflow
               </h2>
               <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
-                Hover and click cards to explore each step of the verification process
+                From content analysis to expert certification
               </p>
             </div>
           </FadeIn>
@@ -445,7 +445,7 @@ export default function Home() {
                 Built on Trust Principles
               </h2>
               <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
-                Hover to see depth and feel the interaction
+                Expert verification, FTC compliance, and complete transparency
               </p>
             </div>
           </FadeIn>

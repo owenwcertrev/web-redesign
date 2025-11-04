@@ -214,10 +214,10 @@ export default function HowItWorksPage() {
                 <span className="text-sm font-medium text-verification-dark">3-STEP PROCESS</span>
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-charcoal">
-                Verification in Three Steps
+                From Submission to Certification
               </h2>
               <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
-                Click each card to expand and explore the complete workflow
+                Our complete verification workflow
               </p>
             </div>
           </FadeIn>

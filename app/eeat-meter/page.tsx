@@ -80,7 +80,7 @@ export default function EEATMeterPage() {
                 Your Customized Analysis Includes
               </h2>
               <p className="text-xl text-charcoal/70">
-                Hover to explore each report component
+                Authority score and content health metrics
               </p>
             </div>
           </FadeIn>
@@ -268,7 +268,7 @@ export default function EEATMeterPage() {
                 The Impact of Expert Validation
               </h2>
               <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
-                Click any card to flip and see the data behind expert verification
+                Real data on traffic, trust, compliance, and conversions
               </p>
             </div>
           </FadeIn>

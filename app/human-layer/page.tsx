@@ -183,7 +183,7 @@ export default function HumanLayerPage() {
                 Recent Articles
               </h2>
               <p className="text-xl text-charcoal/70">
-                Hover to explore each insight
+                Expert insights on trust, AI, and content strategy
               </p>
             </div>
           </FadeIn>
