@@ -17,6 +17,8 @@ import ConfidenceMeter from '@/components/trust/ConfidenceMeter'
 import TrustIndicator from '@/components/trust/TrustIndicator'
 import OrganicShape from '@/components/OrganicShape'
 import TextureOverlay from '@/components/TextureOverlay'
+import Testimonial from '@/components/Testimonial'
+import ExpertProfile from '@/components/ExpertProfile'
 
 export default function Home() {
   // Stacked cards content for the process
@@ -523,6 +525,77 @@ export default function Home() {
               ]}
               icon={Eye}
               gradient="from-coral/10 to-coral/20"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof Section - Testimonials & Experts */}
+      <section className="relative bg-white py-28 px-4 overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.15} />
+        <OrganicShape variant="blob4" color="lime" className="top-0 right-0 w-96 h-96" opacity={0.08} />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <FadeIn>
+            <div className="text-center mb-20">
+              <p className="text-coral font-script text-3xl mb-4">Trusted By</p>
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
+                Brands & Experts Choose CertREV
+              </h2>
+              <p className="text-xl text-black/70 max-w-2xl mx-auto">
+                Join the growing community of brands and credentialed professionals building trust
+              </p>
+            </div>
+          </FadeIn>
+
+          {/* Testimonials Grid */}
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
+            <Testimonial
+              quote="CertREV transformed how we approach content credibility. Our organic traffic recovered within 3 months of implementing expert verification."
+              name="Sarah Chen"
+              role="VP of Content"
+              company="WellnessBrand Co."
+            />
+            <Testimonial
+              quote="As a dermatologist, I appreciate how CertREV makes it easy to lend my expertise to brands I trust. The platform is intuitive and the compensation is fair."
+              name="Dr. James Mitchell"
+              role="Board-Certified Dermatologist"
+              company="CertREV Expert Network"
+            />
+          </div>
+
+          {/* Expert Profiles - Compact Grid */}
+          <FadeIn delay={0.2}>
+            <div className="text-center mb-12">
+              <h3 className="text-3xl font-bold text-navy font-serif mb-3">
+                Meet Our Expert Network
+              </h3>
+              <p className="text-black/70">
+                Credentialed professionals across health, wellness, finance, and professional services
+              </p>
+            </div>
+          </FadeIn>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <ExpertProfile
+              name="Dr. Emily Rodriguez"
+              credentials="MD, Board-Certified"
+              specialty="Internal Medicine & Wellness"
+              bio="15+ years experience reviewing health content for major wellness brands"
+              tier={6}
+            />
+            <ExpertProfile
+              name="Michael Thompson, RDN"
+              credentials="Registered Dietitian Nutritionist"
+              specialty="Sports Nutrition & Supplements"
+              bio="Specializes in nutrition claim verification and FDA compliance"
+              tier={3}
+            />
+            <ExpertProfile
+              name="Jennifer Park, CFA"
+              credentials="Chartered Financial Analyst"
+              specialty="Financial Services Content"
+              bio="Expert in investment content review and SEC compliance"
+              tier={4}
             />
           </div>
         </div>
