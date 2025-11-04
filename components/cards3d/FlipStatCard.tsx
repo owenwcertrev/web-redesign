@@ -83,17 +83,17 @@ export default function FlipStatCard({
             transform: 'rotateY(180deg)',
           }}
         >
-          <div className="h-full flex flex-col bg-gradient-to-br from-verification to-verification-dark rounded-2xl p-8 border border-verification/30 shadow-2xl text-white overflow-hidden">
+          <div className={`h-full flex flex-col bg-gradient-to-br ${gradient} backdrop-blur-sm rounded-2xl p-8 border border-charcoal/10 shadow-2xl overflow-hidden`}>
             <div className="flex items-start justify-between mb-4 flex-shrink-0">
-              <Icon className="w-10 h-10 opacity-80" />
-              <div className="w-2 h-2 rounded-full bg-white/50" />
+              <Icon className="w-10 h-10 text-primary opacity-80" />
+              <div className="w-2 h-2 rounded-full bg-primary/50" />
             </div>
 
-            <h3 className="text-xl font-bold mb-4 flex-shrink-0">
+            <h3 className="text-xl font-bold mb-4 flex-shrink-0 text-charcoal">
               {backTitle}
             </h3>
 
-            <div className="space-y-3 flex-grow overflow-auto">
+            <div className="space-y-3 flex-grow overflow-hidden">
               {backDetails.map((detail, i) => (
                 <motion.div
                   key={i}
@@ -102,14 +102,14 @@ export default function FlipStatCard({
                   transition={{ delay: isFlipped ? 0.2 + i * 0.08 : 0 }}
                   className="flex items-start gap-3"
                 >
-                  <div className="w-1.5 h-1.5 rounded-full bg-white/80 mt-1.5 flex-shrink-0" />
-                  <span className="text-white/90 leading-relaxed text-sm">{detail}</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary/80 mt-1.5 flex-shrink-0" />
+                  <span className="text-charcoal/90 leading-relaxed text-sm">{detail}</span>
                 </motion.div>
               ))}
             </div>
 
-            <div className="mt-4 pt-4 border-t border-white/10 flex-shrink-0">
-              <div className="flex items-center justify-between text-xs text-white/40">
+            <div className="mt-4 pt-4 border-t border-charcoal/10 flex-shrink-0">
+              <div className="flex items-center justify-between text-xs text-charcoal/40">
                 <span>VERIFIED</span>
                 <span className="font-mono">{new Date().toLocaleDateString()}</span>
               </div>
@@ -117,7 +117,8 @@ export default function FlipStatCard({
 
             {/* Back edge highlights */}
             <div className="absolute inset-0 rounded-2xl pointer-events-none">
-              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+              <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent" />
             </div>
           </div>
         </div>
