@@ -27,7 +27,7 @@ export default function FlipStatCard({
 
   return (
     <div
-      className="h-full cursor-pointer group"
+      className="h-full min-h-[380px] cursor-pointer group"
       style={{ perspective: '1500px' }}
       onClick={() => setIsFlipped(!isFlipped)}
     >
