@@ -10,21 +10,21 @@ interface TierCardProps {
   credentials: string[]
 }
 
-// Very subtle tonal progression - all silver/gray, just slightly heavier
+// Subtle metallic progression - titanium to bronze/gold
 const tierGradients: Record<number, string> = {
-  1: 'from-slate-50 to-slate-100',            // Lightest silver
-  2: 'from-slate-100 to-slate-200',           // Very light silver
-  3: 'from-slate-200 to-zinc-200',            // Light silver
-  4: 'from-zinc-200 to-slate-300',            // Medium-light silver
-  5: 'from-slate-300 to-gray-300',            // Medium silver
-  6: 'from-gray-300 to-slate-400',            // Slightly heavier silver
+  1: 'from-slate-50 to-gray-100',             // Titanium white
+  2: 'from-gray-100 to-slate-200',            // Light titanium
+  3: 'from-slate-200 to-zinc-200',            // Silver
+  4: 'from-zinc-200 to-stone-200',            // Warm silver
+  5: 'from-stone-200 to-stone-300',           // Light bronze
+  6: 'from-stone-300 to-amber-200',           // Subtle gold/bronze
 }
 
 export default function TierCard({ tierNumber, tierName, credits, credentials }: TierCardProps) {
   const gradient = tierGradients[tierNumber] || tierGradients[1]
 
-  // Tiers 1-4 use dark text (lighter backgrounds), tiers 5-6 use white text (slightly darker backgrounds)
-  const useDarkText = tierNumber <= 4
+  // All tiers use dark text since backgrounds are subtle
+  const useDarkText = true
   const textColor = useDarkText ? 'text-charcoal' : 'text-white'
   const textOpacity = useDarkText ? 'text-charcoal/80' : 'text-white/90'
   const badgeOpacity = useDarkText ? 'text-charcoal/60' : 'text-white/80'
