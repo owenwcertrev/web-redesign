@@ -22,14 +22,53 @@ export default function Home() {
       content: (
         <div className="bg-gradient-to-br from-primary/20 to-verification/20 backdrop-blur-sm p-10 rounded-2xl border border-white/20">
           <div className="flex items-start gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-primary/30 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-primary/30 flex items-center justify-center flex-shrink-0">
               <Upload className="w-6 h-6 text-primary" />
             </div>
             <div>
               <h3 className="text-3xl font-bold text-charcoal mb-3">Submit Content</h3>
-              <p className="text-charcoal/70 text-lg leading-relaxed">
+              <p className="text-charcoal/70 text-lg leading-relaxed mb-6">
                 Upload your articles, blog posts, or landing pages through our dashboard. Our AI performs initial screening to identify claims that need expert validation.
               </p>
+
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold text-charcoal mb-2">What We Analyze</h4>
+                  <ul className="space-y-2 text-charcoal/70">
+                    <li className="flex items-start gap-2">
+                      <span className="text-primary mt-1">•</span>
+                      <span>Health claims and medical statements requiring expert validation</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-primary mt-1">•</span>
+                      <span>Product efficacy claims and performance promises</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-primary mt-1">•</span>
+                      <span>Statistical data and research citations for accuracy</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-primary mt-1">•</span>
+                      <span>FTC compliance issues and substantiation requirements</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-charcoal mb-2">Automated Pre-Screening</h4>
+                  <p className="text-charcoal/70 leading-relaxed">
+                    Our AI identifies potential concerns, flags unverified claims, and matches content with the appropriate credential tier. You'll receive a preliminary report within minutes showing what needs expert review.
+                  </p>
+                </div>
+
+                <div className="bg-white/50 rounded-xl p-4 border border-primary/20">
+                  <div className="flex items-center gap-2 text-sm text-charcoal/60 mb-1">
+                    <span className="font-mono">TYPICAL TURNAROUND</span>
+                  </div>
+                  <div className="text-2xl font-bold text-primary">2-5 minutes</div>
+                  <div className="text-sm text-charcoal/70">for initial AI screening</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -40,14 +79,60 @@ export default function Home() {
       content: (
         <div className="bg-gradient-to-br from-verification/20 to-alert/20 backdrop-blur-sm p-10 rounded-2xl border border-white/20">
           <div className="flex items-start gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-verification/30 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-verification/30 flex items-center justify-center flex-shrink-0">
               <Search className="w-6 h-6 text-verification-dark" />
             </div>
             <div>
               <h3 className="text-3xl font-bold text-charcoal mb-3">Expert Review</h3>
-              <p className="text-charcoal/70 text-lg leading-relaxed">
+              <p className="text-charcoal/70 text-lg leading-relaxed mb-6">
                 Credentialed professionals verify claims, check sources, validate accuracy against current research, and ensure regulatory compliance.
               </p>
+
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold text-charcoal mb-2">Expert Verification Process</h4>
+                  <ul className="space-y-2 text-charcoal/70">
+                    <li className="flex items-start gap-2">
+                      <span className="text-verification mt-1">•</span>
+                      <span>Claim-by-claim fact-checking against peer-reviewed research</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-verification mt-1">•</span>
+                      <span>Source credibility assessment and citation validation</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-verification mt-1">•</span>
+                      <span>Cross-reference with current guidelines and standards</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-verification mt-1">•</span>
+                      <span>Regulatory compliance check (FTC, FDA, HIPAA where applicable)</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-charcoal mb-2">Expert Matching</h4>
+                  <p className="text-charcoal/70 leading-relaxed">
+                    We match your content with experts whose credentials align with your specific needs—from certified coaches (Tier 1) to board-certified physicians and attorneys (Tier 6). Each expert brings verifiable credentials and subject matter expertise.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-charcoal mb-2">What You Receive</h4>
+                  <p className="text-charcoal/70 leading-relaxed">
+                    Detailed feedback on accuracy, recommended revisions for unsupported claims, expert commentary you can incorporate, and a comprehensive verification report.
+                  </p>
+                </div>
+
+                <div className="bg-white/50 rounded-xl p-4 border border-verification/20">
+                  <div className="flex items-center gap-2 text-sm text-charcoal/60 mb-1">
+                    <span className="font-mono">EXPERT REVIEW TIME</span>
+                  </div>
+                  <div className="text-2xl font-bold text-verification">24-72 hours</div>
+                  <div className="text-sm text-charcoal/70">depending on content complexity</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -58,14 +143,64 @@ export default function Home() {
       content: (
         <div className="bg-gradient-to-br from-alert/20 to-primary/20 backdrop-blur-sm p-10 rounded-2xl border border-white/20">
           <div className="flex items-start gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-alert/30 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-alert/30 flex items-center justify-center flex-shrink-0">
               <CheckCircle2 className="w-6 h-6 text-alert" />
             </div>
             <div>
               <h3 className="text-3xl font-bold text-charcoal mb-3">Get Certified</h3>
-              <p className="text-charcoal/70 text-lg leading-relaxed">
+              <p className="text-charcoal/70 text-lg leading-relaxed mb-6">
                 Receive verification badges, expert signatures, and structured data markup that boost credibility with consumers and search engines alike.
               </p>
+
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold text-charcoal mb-2">Certification Package Includes</h4>
+                  <ul className="space-y-2 text-charcoal/70">
+                    <li className="flex items-start gap-2">
+                      <span className="text-alert mt-1">•</span>
+                      <span>Verified expert badge with public verification link</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-alert mt-1">•</span>
+                      <span>Expert attribution with credentials and professional bio</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-alert mt-1">•</span>
+                      <span>Schema.org structured data for search engine recognition</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-alert mt-1">•</span>
+                      <span>Immutable blockchain record of verification</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-alert mt-1">•</span>
+                      <span>Downloadable certification certificate for your records</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-charcoal mb-2">SEO Benefits</h4>
+                  <p className="text-charcoal/70 leading-relaxed">
+                    Expert attribution signals satisfy Google's E-E-A-T requirements, helping protect your organic traffic from algorithm updates. Structured data markup makes your expert credentials visible to search engines.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-charcoal mb-2">Trust Signals for Consumers</h4>
+                  <p className="text-charcoal/70 leading-relaxed">
+                    Verification badges display prominently on your content. Visitors can click to verify expert credentials, view the verification date, and see the full audit trail—building trust at the point of decision.
+                  </p>
+                </div>
+
+                <div className="bg-white/50 rounded-xl p-4 border border-alert/20">
+                  <div className="flex items-center gap-2 text-sm text-charcoal/60 mb-1">
+                    <span className="font-mono">IMPLEMENTATION</span>
+                  </div>
+                  <div className="text-2xl font-bold text-alert">Same day</div>
+                  <div className="text-sm text-charcoal/70">ready to publish immediately</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
