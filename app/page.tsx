@@ -20,6 +20,7 @@ import TextureOverlay from '@/components/TextureOverlay'
 import Testimonial from '@/components/Testimonial'
 import ExpertProfile from '@/components/ExpertProfile'
 import HeroVisual from '@/components/HeroVisual'
+import Highlight from '@/components/Highlight'
 
 export default function Home() {
   // Stacked cards content for the process
@@ -115,11 +116,11 @@ export default function Home() {
               className="text-6xl md:text-8xl font-bold mb-8 leading-tight font-serif"
             >
               <span className="text-navy">
-                Turn Content
+                Turn Content Into
               </span>
               <br />
               <span className="text-coral">
-                Into Credibility
+                <Highlight>Credibility</Highlight>
               </span>
             </motion.h1>
 
@@ -199,9 +200,8 @@ export default function Home() {
         <div className="max-w-[1400px] mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <p className="text-coral font-script text-3xl mb-4">The Numbers</p>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
-                Why Expert Validation Matters
+                Why <Highlight>Expert Validation</Highlight> Matters
               </h2>
               <p className="text-xl text-black/70 max-w-2xl mx-auto">
                 The data behind expert verification
@@ -310,9 +310,8 @@ export default function Home() {
             {/* Left: Content */}
             <FadeIn>
               <div>
-                <p className="text-coral font-script text-6xl mb-6">Built Different</p>
                 <h2 className="text-5xl md:text-6xl font-bold mb-8 text-navy font-serif leading-tight">
-                  Trust Infrastructure for the AI Age
+                  <Highlight>Trust Infrastructure</Highlight> for the AI Age
                 </h2>
                 <p className="text-lg text-black/80 mb-6 leading-relaxed">
                   Studies show that 60% of consumers doubt AI-generated content
@@ -396,12 +395,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <p className="text-navy font-script text-3xl mb-4">Trust Starts Here</p>
               <div className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-navy/20 shadow-sm">
                 <span className="text-sm font-semibold text-navy">6 EXPERT LEVELS</span>
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
-                Expert Credential Tiers
+                Expert <Highlight>Credential Tiers</Highlight>
               </h2>
               <p className="text-xl text-black/70 max-w-3xl mx-auto mb-4">
                 From certified coaches to medical doctors, financial advisors to attorneys — we have the right expert for your content
@@ -505,9 +503,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <p className="text-navy/80 font-script text-5xl mb-6 drop-shadow-sm">Our Foundation</p>
               <h2 className="text-6xl md:text-7xl font-bold mb-8 text-navy font-serif leading-tight drop-shadow-sm">
-                Built on Trust Principles
+                Built on <Highlight>Trust Principles</Highlight>
               </h2>
               <p className="text-2xl text-navy/80 max-w-2xl mx-auto font-medium">
                 Expert verification, FTC compliance, and complete transparency
@@ -592,9 +589,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <p className="text-coral font-script text-3xl mb-4">Trusted By</p>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
-                Brands & Experts Choose CertREV
+                <Highlight>Brands & Experts</Highlight> Choose CertREV
               </h2>
               <p className="text-xl text-black/70 max-w-2xl mx-auto">
                 Join the growing community of brands and credentialed professionals building trust
@@ -699,9 +695,8 @@ export default function Home() {
         <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <p className="text-coral font-script text-3xl mb-4">Insights & Analysis</p>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
-                The Human Layer
+                The <Highlight>Human Layer</Highlight>
               </h2>
               <p className="text-xl md:text-2xl italic text-black/70 max-w-3xl mx-auto leading-relaxed">
                 In a world where AI writes faster than we can fact-check, CertREV puts human experts back in the loop
@@ -776,9 +771,8 @@ export default function Home() {
         <OrganicShape variant="blob1" color="lime" className="bottom-0 right-0 w-[400px] h-[400px]" opacity={0.10} />
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <FadeIn>
-            <p className="text-lime font-script text-4xl mb-6">Your Move</p>
             <h2 className="text-6xl md:text-7xl font-bold mb-8 text-navy leading-tight font-serif">
-              Start Building Trust Today
+              Start Building <Highlight>Trust</Highlight> Today
             </h2>
             <p className="text-xl md:text-2xl text-black/70 mb-14 max-w-2xl mx-auto">
               Get your free E-E-A-T analysis and discover how expert validation transforms skeptics into believers
