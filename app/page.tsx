@@ -108,11 +108,11 @@ export default function Home() {
               className="text-6xl md:text-8xl font-bold mb-8 leading-tight"
             >
               <span className="bg-gradient-to-br from-charcoal to-charcoal/70 bg-clip-text text-transparent">
-                Trust in
+                Turn Content
               </span>
               <br />
               <span className="bg-gradient-to-br from-primary to-verification bg-clip-text text-transparent">
-                Three Dimensions
+                Into Credibility
               </span>
             </motion.h1>
 
@@ -120,9 +120,9 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-xl md:text-2xl text-charcoal/70 mb-12 max-w-2xl mx-auto"
+              className="text-xl md:text-2xl text-charcoal/70 mb-12 max-w-3xl mx-auto"
             >
-              Expert fact-checking infrastructure for health, wellness, and professional service brands navigating the AI content era
+              Credentialed expert validation that satisfies Google's E-E-A-T, protects your organic traffic, and converts skeptical consumers
             </motion.p>
 
             {/* Live Trust Dashboard */}
@@ -136,7 +136,7 @@ export default function Home() {
                 <div className="flex items-center gap-2 mb-6 justify-center">
                   <div className="w-2 h-2 rounded-full bg-verification animate-pulse" />
                   <span className="text-xs font-mono uppercase tracking-wider text-charcoal/60">
-                    Live Verification Dashboard
+                    Real-Time Trust Metrics
                   </span>
                 </div>
 
@@ -168,12 +168,12 @@ export default function Home() {
             >
               <Button size="lg" asChild className="shadow-2xl hover:shadow-3xl transition-shadow">
                 <Link href="/eeat-meter">
-                  Get Free Analysis
+                  Analyze Your Content
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </Button>
               <Button size="lg" variant="secondary" asChild className="backdrop-blur-sm">
-                <Link href="#verification-process">See How It Works</Link>
+                <Link href="#verification-process">See the Platform</Link>
               </Button>
             </motion.div>
           </div>
