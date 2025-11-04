@@ -91,67 +91,6 @@ export default function Home() {
       >
         <div className="min-h-screen flex items-center justify-center px-4 relative">
           <div className="max-w-5xl mx-auto text-center relative">
-            {/* Floating Mini Stat Cards */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 1, duration: 0.6, type: 'spring' }}
-              className="absolute -left-4 md:-left-32 top-0 md:top-20 hidden md:block"
-              style={{ transform: 'translateZ(50px)' }}
-            >
-              <TiltCard intensity={0.8} glowColor="rgba(119, 171, 149, 0.3)">
-                <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-charcoal/10 w-48">
-                  <div className="text-3xl font-bold bg-gradient-to-br from-primary to-verification bg-clip-text text-transparent mb-1">
-                    60%
-                  </div>
-                  <div className="text-xs font-semibold text-charcoal/60 uppercase tracking-wider">
-                    Consumer Doubt
-                  </div>
-                  <div className="text-xs text-charcoal/50 mt-1">AI-generated content</div>
-                </div>
-              </TiltCard>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 1.2, duration: 0.6, type: 'spring' }}
-              className="absolute -right-4 md:-right-32 top-32 md:top-40 hidden md:block"
-              style={{ transform: 'translateZ(50px)' }}
-            >
-              <TiltCard intensity={0.8} glowColor="rgba(241, 130, 57, 0.3)">
-                <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-charcoal/10 w-48">
-                  <div className="text-3xl font-bold bg-gradient-to-br from-alert to-primary bg-clip-text text-transparent mb-1">
-                    $51K
-                  </div>
-                  <div className="text-xs font-semibold text-charcoal/60 uppercase tracking-wider">
-                    Average Fine
-                  </div>
-                  <div className="text-xs text-charcoal/50 mt-1">Per FTC violation</div>
-                </div>
-              </TiltCard>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 1.4, duration: 0.6, type: 'spring' }}
-              className="absolute -left-8 md:-left-24 bottom-20 md:bottom-32 hidden lg:block"
-              style={{ transform: 'translateZ(30px)' }}
-            >
-              <TiltCard intensity={0.8} glowColor="rgba(91, 141, 239, 0.3)">
-                <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-charcoal/10 w-44">
-                  <div className="text-3xl font-bold bg-gradient-to-br from-verification to-primary bg-clip-text text-transparent mb-1">
-                    88%
-                  </div>
-                  <div className="text-xs font-semibold text-charcoal/60 uppercase tracking-wider">
-                    Traffic Drop
-                  </div>
-                  <div className="text-xs text-charcoal/50 mt-1">Without E-E-A-T</div>
-                </div>
-              </TiltCard>
-            </motion.div>
-
             {/* Main Hero Content */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -181,28 +120,50 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-xl md:text-2xl text-charcoal/70 mb-8 max-w-2xl mx-auto"
+              className="text-xl md:text-2xl text-charcoal/70 mb-12 max-w-2xl mx-auto"
             >
               Expert fact-checking infrastructure for health, wellness, and professional service brands navigating the AI content era
             </motion.p>
 
-            {/* Trust Indicator Badges */}
+            {/* Live Trust Dashboard */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="flex flex-wrap gap-3 justify-center mb-10"
+              transition={{ delay: 0.8, duration: 0.6 }}
+              className="max-w-3xl mx-auto mb-12"
             >
-              <TrustIndicator metric="verified" pulse />
-              <TrustIndicator metric="encrypted" />
-              <TrustIndicator metric="transparent" />
+              <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-charcoal/10 shadow-2xl">
+                <div className="flex items-center gap-2 mb-6 justify-center">
+                  <div className="w-2 h-2 rounded-full bg-verification animate-pulse" />
+                  <span className="text-xs font-mono uppercase tracking-wider text-charcoal/60">
+                    Live Verification Dashboard
+                  </span>
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="space-y-3">
+                    <ConfidenceMeter score={94} label="Expert Match Quality" showPercentage />
+                  </div>
+                  <div className="space-y-3">
+                    <ConfidenceMeter score={88} label="Citation Coverage" showPercentage />
+                  </div>
+                  <div className="space-y-3">
+                    <ConfidenceMeter score={76} label="Source Credibility" showPercentage />
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-charcoal/10 flex items-center justify-center gap-3">
+                  <TrustIndicator metric="verified" pulse />
+                  <TrustIndicator metric="transparent" />
+                </div>
+              </div>
             </motion.div>
 
             {/* CTAs */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
+              transition={{ delay: 1 }}
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
               <Button size="lg" asChild className="shadow-2xl hover:shadow-3xl transition-shadow">
