@@ -20,7 +20,6 @@ import TextureOverlay from '@/components/TextureOverlay'
 import Testimonial from '@/components/Testimonial'
 import ExpertProfile from '@/components/ExpertProfile'
 import HeroVisual from '@/components/HeroVisual'
-import Highlight from '@/components/Highlight'
 
 export default function Home() {
   // Stacked cards content for the process
@@ -104,7 +103,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-lime shadow-sm"
+              className="inline-block mb-8 mt-8 px-6 py-3 bg-white rounded-full border-2 border-lime shadow-sm"
             >
               <span className="text-sm font-semibold text-navy tracking-wide">EXPERT VERIFICATION PLATFORM</span>
             </motion.div>
@@ -120,7 +119,7 @@ export default function Home() {
               </span>
               <br />
               <span className="text-coral">
-                <Highlight>Credibility</Highlight>
+                Credibility
               </span>
             </motion.h1>
 
@@ -138,19 +137,19 @@ export default function Home() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.6 }}
-              className="max-w-3xl mx-auto mb-12 relative"
+              className="max-w-4xl mx-auto mb-12 relative"
             >
-              <div className="bg-white rounded-2xl p-6 md:p-8 border-2 border-navy/10 shadow-lg relative overflow-hidden">
-                <TextureOverlay type="paper" opacity={0.3} />
+              <div className="bg-white rounded-2xl p-8 md:p-10 border-2 border-navy/10 shadow-xl relative overflow-hidden">
+                <TextureOverlay type="paper" opacity={0.2} />
                 <div className="relative z-10">
-                  <div className="flex items-center gap-2 mb-6 justify-center">
+                  <div className="flex items-center gap-2 mb-8 justify-center">
                     <div className="w-2 h-2 rounded-full bg-lime animate-pulse" />
                     <span className="text-xs font-semibold uppercase tracking-wider text-navy/80">
                       Real-Time Trust Metrics
                     </span>
                   </div>
 
-                  <div className="grid md:grid-cols-3 gap-6">
+                  <div className="grid md:grid-cols-3 gap-8">
                     <div className="space-y-3">
                       <ConfidenceMeter score={94} label="Expert Match Quality" showPercentage />
                     </div>
@@ -162,7 +161,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="mt-6 pt-6 border-t border-navy/10 flex items-center justify-center gap-3">
+                  <div className="mt-8 pt-8 border-t-2 border-navy/10 flex items-center justify-center gap-4">
                     <TrustIndicator metric="verified" pulse />
                     <TrustIndicator metric="transparent" />
                   </div>
@@ -201,7 +200,7 @@ export default function Home() {
           <FadeIn>
             <div className="text-center mb-20">
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
-                Why <Highlight>Expert Validation</Highlight> Matters
+                Why Expert Validation Matters
               </h2>
               <p className="text-xl text-black/70 max-w-2xl mx-auto">
                 The data behind expert verification
@@ -311,7 +310,7 @@ export default function Home() {
             <FadeIn>
               <div>
                 <h2 className="text-5xl md:text-6xl font-bold mb-8 text-navy font-serif leading-tight">
-                  <Highlight>Trust Infrastructure</Highlight> for the AI Age
+                  Trust Infrastructure for the AI Age
                 </h2>
                 <p className="text-lg text-black/80 mb-6 leading-relaxed">
                   Studies show that 60% of consumers doubt AI-generated content
@@ -399,7 +398,7 @@ export default function Home() {
                 <span className="text-sm font-semibold text-navy">6 EXPERT LEVELS</span>
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
-                Expert <Highlight>Credential Tiers</Highlight>
+                Expert Credential Tiers
               </h2>
               <p className="text-xl text-black/70 max-w-3xl mx-auto mb-4">
                 From certified coaches to medical doctors, financial advisors to attorneys — we have the right expert for your content
@@ -504,7 +503,7 @@ export default function Home() {
           <FadeIn>
             <div className="text-center mb-20">
               <h2 className="text-6xl md:text-7xl font-bold mb-8 text-navy font-serif leading-tight drop-shadow-sm">
-                Built on <Highlight>Trust Principles</Highlight>
+                Built on Trust Principles
               </h2>
               <p className="text-2xl text-navy/80 max-w-2xl mx-auto font-medium">
                 Expert verification, FTC compliance, and complete transparency
@@ -590,7 +589,7 @@ export default function Home() {
           <FadeIn>
             <div className="text-center mb-20">
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
-                <Highlight>Brands & Experts</Highlight> Choose CertREV
+                Brands & Experts Choose CertREV
               </h2>
               <p className="text-xl text-black/70 max-w-2xl mx-auto">
                 Join the growing community of brands and credentialed professionals building trust
@@ -696,7 +695,7 @@ export default function Home() {
           <FadeIn>
             <div className="text-center mb-16">
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
-                The <Highlight>Human Layer</Highlight>
+                The Human Layer
               </h2>
               <p className="text-xl md:text-2xl italic text-black/70 max-w-3xl mx-auto leading-relaxed">
                 In a world where AI writes faster than we can fact-check, CertREV puts human experts back in the loop
@@ -772,7 +771,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <FadeIn>
             <h2 className="text-6xl md:text-7xl font-bold mb-8 text-navy leading-tight font-serif">
-              Start Building <Highlight>Trust</Highlight> Today
+              Start Building Trust Today
             </h2>
             <p className="text-xl md:text-2xl text-black/70 mb-14 max-w-2xl mx-auto">
               Get your free E-E-A-T analysis and discover how expert validation transforms skeptics into believers
