@@ -10,14 +10,14 @@ interface TierCardProps {
   credentials: string[]
 }
 
-// Subtle metallic progression - titanium to bronze/gold
+// Subtle metallic progression - cool titanium to platinum
 const tierGradients: Record<number, string> = {
-  1: 'from-slate-50 to-gray-100',             // Titanium white
-  2: 'from-gray-100 to-slate-200',            // Light titanium
-  3: 'from-slate-200 to-zinc-200',            // Silver
-  4: 'from-zinc-200 to-stone-200',            // Warm silver
-  5: 'from-stone-200 to-stone-300',           // Light bronze
-  6: 'from-stone-300 to-amber-200',           // Subtle gold/bronze
+  1: 'from-slate-50 to-slate-100',            // Titanium white
+  2: 'from-slate-100 to-gray-100',            // Light platinum
+  3: 'from-gray-100 to-slate-200',            // Silver
+  4: 'from-slate-200 to-zinc-200',            // Polished silver
+  5: 'from-zinc-200 to-stone-200',            // Warm silver
+  6: 'from-stone-200 to-zinc-300',            // Refined platinum
 }
 
 export default function TierCard({ tierNumber, tierName, credits, credentials }: TierCardProps) {
