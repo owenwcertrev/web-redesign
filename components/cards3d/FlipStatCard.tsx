@@ -83,33 +83,33 @@ export default function FlipStatCard({
             transform: 'rotateY(180deg)',
           }}
         >
-          <div className={`h-full flex flex-col bg-gradient-to-br ${gradient} backdrop-blur-sm rounded-2xl p-8 border border-charcoal/10 shadow-2xl overflow-hidden`}>
-            <div className="flex items-start justify-between mb-4 flex-shrink-0">
-              <Icon className="w-10 h-10 text-primary opacity-80" />
-              <div className="w-2 h-2 rounded-full bg-primary/50" />
+          <div className={`h-full flex flex-col bg-gradient-to-br ${gradient.replace('/10', '/30').replace('/20', '/40')} backdrop-blur-sm rounded-2xl p-6 border border-charcoal/20 shadow-2xl overflow-hidden`}>
+            <div className="flex items-start justify-between mb-3 flex-shrink-0">
+              <Icon className="w-8 h-8 text-primary opacity-90" />
+              <div className="w-2 h-2 rounded-full bg-primary/60" />
             </div>
 
-            <h3 className="text-xl font-bold mb-4 flex-shrink-0 text-charcoal">
+            <h3 className="text-lg font-bold mb-3 flex-shrink-0 text-charcoal">
               {backTitle}
             </h3>
 
-            <div className="space-y-3 flex-grow overflow-hidden">
+            <div className="space-y-2.5 flex-grow overflow-hidden">
               {backDetails.map((detail, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: isFlipped ? 0.2 + i * 0.08 : 0 }}
-                  className="flex items-start gap-3"
+                  className="flex items-start gap-2.5"
                 >
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary/80 mt-1.5 flex-shrink-0" />
-                  <span className="text-charcoal/90 leading-relaxed text-sm">{detail}</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary/90 mt-1.5 flex-shrink-0" />
+                  <span className="text-charcoal/90 leading-snug text-sm">{detail}</span>
                 </motion.div>
               ))}
             </div>
 
-            <div className="mt-4 pt-4 border-t border-charcoal/10 flex-shrink-0">
-              <div className="flex items-center justify-between text-xs text-charcoal/40">
+            <div className="mt-3 pt-3 border-t border-charcoal/20 flex-shrink-0">
+              <div className="flex items-center justify-between text-xs text-charcoal/50">
                 <span>VERIFIED</span>
                 <span className="font-mono">{new Date().toLocaleDateString()}</span>
               </div>
