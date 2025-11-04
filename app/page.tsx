@@ -15,7 +15,8 @@ import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Upload, FileCh
 import CitationMarker from '@/components/trust/CitationMarker'
 import ConfidenceMeter from '@/components/trust/ConfidenceMeter'
 import TrustIndicator from '@/components/trust/TrustIndicator'
-import ParticleNetwork from '@/components/radical/ParticleNetwork'
+import OrganicShape from '@/components/OrganicShape'
+import TextureOverlay from '@/components/TextureOverlay'
 
 export default function Home() {
   // Stacked cards content for the process
@@ -23,14 +24,15 @@ export default function Home() {
     {
       id: 'submit',
       content: (
-        <div className="bg-gradient-to-br from-primary/20 to-verification/20 backdrop-blur-sm p-10 rounded-2xl border border-white/20">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-primary/30 flex items-center justify-center">
-              <Upload className="w-6 h-6 text-primary" />
+        <div className="bg-navy/5 p-10 rounded-2xl border-2 border-navy/20 relative overflow-hidden shadow-md">
+          <TextureOverlay type="paper" opacity={0.4} />
+          <div className="flex items-start gap-4 mb-6 relative z-10">
+            <div className="w-14 h-14 rounded-xl bg-navy flex items-center justify-center shadow-sm">
+              <Upload className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-charcoal mb-3">Submit Content</h3>
-              <p className="text-charcoal/70 text-lg leading-relaxed">
+              <h3 className="text-3xl font-bold text-navy mb-3 font-serif">Submit Content</h3>
+              <p className="text-black/70 text-lg leading-relaxed">
                 Upload your articles, blog posts, or landing pages through our dashboard. Our AI performs initial screening to identify claims that need expert validation.
               </p>
             </div>
@@ -41,14 +43,15 @@ export default function Home() {
     {
       id: 'review',
       content: (
-        <div className="bg-gradient-to-br from-verification/20 to-alert/20 backdrop-blur-sm p-10 rounded-2xl border border-white/20">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-verification/30 flex items-center justify-center">
-              <Search className="w-6 h-6 text-verification-dark" />
+        <div className="bg-lime/10 p-10 rounded-2xl border-2 border-lime relative overflow-hidden shadow-md">
+          <TextureOverlay type="paper" opacity={0.4} />
+          <div className="flex items-start gap-4 mb-6 relative z-10">
+            <div className="w-14 h-14 rounded-xl bg-lime flex items-center justify-center shadow-sm">
+              <Search className="w-7 h-7 text-navy" />
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-charcoal mb-3">Expert Review</h3>
-              <p className="text-charcoal/70 text-lg leading-relaxed">
+              <h3 className="text-3xl font-bold text-navy mb-3 font-serif">Expert Review</h3>
+              <p className="text-black/70 text-lg leading-relaxed">
                 Credentialed professionals verify claims, check sources, validate accuracy against current research, and ensure regulatory compliance.
               </p>
             </div>
@@ -59,14 +62,15 @@ export default function Home() {
     {
       id: 'certify',
       content: (
-        <div className="bg-gradient-to-br from-alert/20 to-primary/20 backdrop-blur-sm p-10 rounded-2xl border border-white/20">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-alert/30 flex items-center justify-center">
-              <CheckCircle2 className="w-6 h-6 text-alert" />
+        <div className="bg-coral/10 p-10 rounded-2xl border-2 border-coral relative overflow-hidden shadow-md">
+          <TextureOverlay type="paper" opacity={0.4} />
+          <div className="flex items-start gap-4 mb-6 relative z-10">
+            <div className="w-14 h-14 rounded-xl bg-coral flex items-center justify-center shadow-sm">
+              <CheckCircle2 className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-charcoal mb-3">Get Certified</h3>
-              <p className="text-charcoal/70 text-lg leading-relaxed">
+              <h3 className="text-3xl font-bold text-navy mb-3 font-serif">Get Certified</h3>
+              <p className="text-black/70 text-lg leading-relaxed">
                 Receive verification badges, expert signatures, and structured data markup that boost credibility with consumers and search engines alike.
               </p>
             </div>
@@ -82,11 +86,11 @@ export default function Home() {
       {/* Hero Section with Depth */}
       <DepthHero
         backgroundLayers={[
-          <ParticleNetwork key="particles" particleCount={25} className="opacity-30" />,
-          <div key="1" className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-primary/10 to-verification/10 rounded-full blur-3xl" />,
-          <div key="2" className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-gradient-to-br from-verification/10 to-alert/10 rounded-full blur-3xl" />,
-          <div key="3" className="absolute top-1/2 right-1/3 w-64 h-64 bg-gradient-to-br from-alert/5 to-primary/5 rounded-full blur-3xl" />,
-          <div key="4" className="absolute bottom-1/3 right-1/2 w-72 h-72 bg-gradient-to-br from-primary/5 to-verification/10 rounded-full blur-3xl" />,
+          <TextureOverlay key="texture" type="paper" opacity={0.3} />,
+          <OrganicShape key="blob1" variant="blob1" color="lime" className="top-20 right-1/4 w-96 h-96" opacity={0.12} />,
+          <OrganicShape key="blob2" variant="blob2" color="coral" className="bottom-1/4 left-1/4 w-80 h-80" opacity={0.10} />,
+          <OrganicShape key="blob3" variant="blob3" color="navy" className="top-1/2 right-1/3 w-72 h-72" opacity={0.08} />,
+          <OrganicShape key="blob4" variant="blob4" color="lime" className="bottom-1/3 left-1/2 w-64 h-64" opacity={0.10} />,
         ]}
       >
         <div className="min-h-screen flex items-center justify-center px-4 relative">
@@ -96,22 +100,22 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-6 py-3 bg-white/60 backdrop-blur-sm rounded-full border border-primary/20"
+              className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-lime shadow-sm"
             >
-              <span className="text-sm font-medium text-primary">EXPERT VERIFICATION PLATFORM</span>
+              <span className="text-sm font-semibold text-navy tracking-wide">EXPERT VERIFICATION PLATFORM</span>
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-6xl md:text-8xl font-bold mb-8 leading-tight"
+              className="text-6xl md:text-8xl font-bold mb-8 leading-tight font-serif"
             >
-              <span className="bg-gradient-to-br from-charcoal to-charcoal/70 bg-clip-text text-transparent">
+              <span className="text-navy">
                 Turn Content
               </span>
               <br />
-              <span className="bg-gradient-to-br from-primary to-verification bg-clip-text text-transparent">
+              <span className="text-coral">
                 Into Credibility
               </span>
             </motion.h1>
@@ -120,7 +124,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-xl md:text-2xl text-charcoal/70 mb-12 max-w-3xl mx-auto"
+              className="text-xl md:text-2xl text-black/70 mb-12 max-w-3xl mx-auto leading-relaxed"
             >
               Credentialed expert validation that satisfies Google's E-E-A-T, protects your organic traffic, and converts skeptical consumers
             </motion.p>
@@ -130,31 +134,34 @@ export default function Home() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.6 }}
-              className="max-w-3xl mx-auto mb-12"
+              className="max-w-3xl mx-auto mb-12 relative"
             >
-              <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-charcoal/10 shadow-2xl">
-                <div className="flex items-center gap-2 mb-6 justify-center">
-                  <div className="w-2 h-2 rounded-full bg-verification animate-pulse" />
-                  <span className="text-xs font-mono uppercase tracking-wider text-charcoal/60">
-                    Real-Time Trust Metrics
-                  </span>
-                </div>
+              <div className="bg-white rounded-2xl p-6 md:p-8 border-2 border-navy/10 shadow-lg relative overflow-hidden">
+                <TextureOverlay type="paper" opacity={0.3} />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-2 mb-6 justify-center">
+                    <div className="w-2 h-2 rounded-full bg-lime animate-pulse" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-navy/80">
+                      Real-Time Trust Metrics
+                    </span>
+                  </div>
 
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="space-y-3">
-                    <ConfidenceMeter score={94} label="Expert Match Quality" showPercentage />
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div className="space-y-3">
+                      <ConfidenceMeter score={94} label="Expert Match Quality" showPercentage />
+                    </div>
+                    <div className="space-y-3">
+                      <ConfidenceMeter score={88} label="Citation Coverage" showPercentage />
+                    </div>
+                    <div className="space-y-3">
+                      <ConfidenceMeter score={76} label="Source Credibility" showPercentage />
+                    </div>
                   </div>
-                  <div className="space-y-3">
-                    <ConfidenceMeter score={88} label="Citation Coverage" showPercentage />
-                  </div>
-                  <div className="space-y-3">
-                    <ConfidenceMeter score={76} label="Source Credibility" showPercentage />
-                  </div>
-                </div>
 
-                <div className="mt-6 pt-6 border-t border-charcoal/10 flex items-center justify-center gap-3">
-                  <TrustIndicator metric="verified" pulse />
-                  <TrustIndicator metric="transparent" />
+                  <div className="mt-6 pt-6 border-t border-navy/10 flex items-center justify-center gap-3">
+                    <TrustIndicator metric="verified" pulse />
+                    <TrustIndicator metric="transparent" />
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -166,13 +173,13 @@ export default function Home() {
               transition={{ delay: 1 }}
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              <Button size="lg" asChild className="shadow-2xl hover:shadow-3xl transition-shadow">
+              <Button size="lg" asChild>
                 <Link href="/eeat-meter">
                   Analyze Your Content
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="secondary" asChild className="backdrop-blur-sm">
+              <Button size="lg" variant="secondary" asChild>
                 <Link href="#verification-process">See the Platform</Link>
               </Button>
             </motion.div>
@@ -181,14 +188,16 @@ export default function Home() {
       </DepthHero>
 
       {/* Flip Stat Cards - Why Expert Validation Matters */}
-      <section className="py-32 px-4 bg-white">
-        <div className="max-w-[1400px] mx-auto">
+      <section className="py-24 px-4 bg-white relative overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.2} />
+        <div className="max-w-[1400px] mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-charcoal">
+              <p className="text-coral font-script text-3xl mb-4">The Numbers</p>
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
                 Why Expert Validation Matters
               </h2>
-              <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
+              <p className="text-xl text-black/70 max-w-2xl mx-auto">
                 The data behind expert verification
               </p>
             </div>
@@ -259,17 +268,21 @@ export default function Home() {
       </section>
 
       {/* Trust Infrastructure Section */}
-      <section className="relative bg-gradient-to-b from-white to-cream py-32 px-4">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative bg-beige py-28 px-4 overflow-hidden">
+        <OrganicShape variant="blob2" color="lime" className="top-10 right-10 w-96 h-96" opacity={0.08} />
+        <OrganicShape variant="blob4" color="coral" className="bottom-10 left-10 w-80 h-80" opacity={0.06} />
+        <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
-            <TiltCard intensity={0.5} glowColor="rgba(119, 171, 149, 0.15)">
-              <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl border border-charcoal/10">
-                <div className="grid md:grid-cols-2 gap-12 items-center">
+            <TiltCard intensity={0.3} glowColor="rgba(212, 225, 87, 0.1)">
+              <div className="bg-white rounded-2xl p-8 md:p-12 shadow-lg border-2 border-navy/10 relative overflow-hidden">
+                <TextureOverlay type="paper" opacity={0.3} />
+                <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
                   <div>
-                    <h2 className="text-3xl md:text-4xl font-bold mb-6 text-charcoal">
+                    <p className="text-lime font-script text-2xl mb-3">Built Different</p>
+                    <h2 className="text-3xl md:text-4xl font-bold mb-6 text-navy font-serif">
                       Trust Infrastructure for the AI Age
                     </h2>
-                    <p className="text-lg text-charcoal/80 mb-6 leading-relaxed">
+                    <p className="text-lg text-black/80 mb-6 leading-relaxed">
                       Studies show that 60% of consumers doubt AI-generated content
                       <CitationMarker
                         number={1}
@@ -279,7 +292,7 @@ export default function Home() {
                       />
                       . CertREV builds the verification infrastructure brands need to navigate this trust crisis.
                     </p>
-                    <p className="text-lg text-charcoal/80 mb-8 leading-relaxed">
+                    <p className="text-lg text-black/80 mb-8 leading-relaxed">
                       Our platform connects your content with credentialed experts, creating a transparent verification layer that consumers and search engines recognize
                       <CitationMarker
                         number={2}
@@ -297,16 +310,19 @@ export default function Home() {
                     </Button>
                   </div>
                   <div className="space-y-6">
-                    <div className="bg-gradient-to-br from-cream to-white backdrop-blur-sm rounded-xl p-6 border border-charcoal/10 shadow-lg">
-                      <h3 className="text-sm font-mono uppercase tracking-wider text-charcoal/60 mb-4">
+                    <div className="bg-white rounded-xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
+                      <TextureOverlay type="paper" opacity={0.2} />
+                      <h3 className="text-sm font-semibold uppercase tracking-wider text-navy/70 mb-4 relative z-10">
                         Verification Confidence
                       </h3>
                       <ConfidenceMeter score={94} label="Expert Match Quality" showPercentage />
                     </div>
-                    <div className="bg-gradient-to-br from-cream to-white backdrop-blur-sm rounded-xl p-6 border border-charcoal/10 shadow-lg">
+                    <div className="bg-white rounded-xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
+                      <TextureOverlay type="paper" opacity={0.2} />
                       <ConfidenceMeter score={88} label="Citation Coverage" showPercentage />
                     </div>
-                    <div className="bg-gradient-to-br from-cream to-white backdrop-blur-sm rounded-xl p-6 border border-charcoal/10 shadow-lg">
+                    <div className="bg-white rounded-xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
+                      <TextureOverlay type="paper" opacity={0.2} />
                       <ConfidenceMeter score={76} label="Source Credibility" showPercentage />
                     </div>
                   </div>
@@ -318,17 +334,18 @@ export default function Home() {
       </section>
 
       {/* Stacked Cards - Layered Process */}
-      <section id="verification-process" className="py-32 px-4 bg-gradient-to-b from-white to-cream">
-        <div className="max-w-4xl mx-auto">
+      <section id="verification-process" className="py-28 px-4 bg-white relative overflow-hidden">
+        <TextureOverlay type="paper" opacity={0.2} />
+        <div className="max-w-4xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <div className="inline-block mb-6 px-6 py-3 bg-white/60 backdrop-blur-sm rounded-full border border-verification/20">
-                <span className="text-sm font-medium text-verification-dark">LAYERED PROCESS</span>
+              <div className="inline-block mb-6 px-6 py-3 bg-lime/10 rounded-full border-2 border-lime shadow-sm">
+                <span className="text-sm font-semibold text-navy tracking-wide">LAYERED PROCESS</span>
               </div>
-              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-charcoal">
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
                 Verification in Layers
               </h2>
-              <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
+              <p className="text-xl text-black/70 max-w-2xl mx-auto">
                 Three steps to expert-validated content
               </p>
             </div>
@@ -340,20 +357,22 @@ export default function Home() {
 
 
       {/* Expert Tiers Carousel */}
-      <section className="relative bg-gradient-to-b from-white to-cream py-32 px-4 overflow-visible">
-        <div className="max-w-7xl mx-auto">
+      <section className="relative bg-beige py-28 px-4 overflow-visible">
+        <OrganicShape variant="blob1" color="coral" className="top-0 left-0 w-96 h-96" opacity={0.06} />
+        <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <div className="inline-block mb-6 px-6 py-3 bg-white rounded-full border border-primary/20 shadow-sm">
-                <span className="text-sm font-medium text-primary">6 EXPERT LEVELS</span>
+              <p className="text-navy font-script text-3xl mb-4">Trust Starts Here</p>
+              <div className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-navy/20 shadow-sm">
+                <span className="text-sm font-semibold text-navy">6 EXPERT LEVELS</span>
               </div>
-              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-charcoal">
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
                 Expert Credential Tiers
               </h2>
-              <p className="text-xl text-charcoal/70 max-w-3xl mx-auto mb-4">
+              <p className="text-xl text-black/70 max-w-3xl mx-auto mb-4">
                 From certified coaches to medical doctors, financial advisors to attorneys — we have the right expert for your content
               </p>
-              <p className="text-sm text-charcoal/40">
+              <p className="text-sm text-black/40">
                 ← Navigate to explore all tiers →
               </p>
             </div>
@@ -445,14 +464,16 @@ export default function Home() {
       </section>
 
       {/* Flip Cards - Trust Principles */}
-      <section className="py-32 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-28 px-4 bg-white relative overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.15} />
+        <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-charcoal">
+              <p className="text-coral font-script text-3xl mb-4">Our Foundation</p>
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
                 Built on Trust Principles
               </h2>
-              <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
+              <p className="text-xl text-black/70 max-w-2xl mx-auto">
                 Expert verification, FTC compliance, and complete transparency
               </p>
             </div>
@@ -508,14 +529,16 @@ export default function Home() {
       </section>
 
       {/* The Human Layer - Insights & Newsletter */}
-      <section className="relative bg-gradient-to-b from-white to-cream py-32 px-4">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative bg-beige py-28 px-4 overflow-hidden">
+        <OrganicShape variant="blob3" color="lime" className="bottom-0 right-0 w-[500px] h-[500px]" opacity={0.08} />
+        <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-charcoal">
+              <p className="text-coral font-script text-3xl mb-4">Insights & Analysis</p>
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
                 The Human Layer
               </h2>
-              <p className="text-xl md:text-2xl font-light italic text-charcoal/70 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl md:text-2xl italic text-black/70 max-w-3xl mx-auto leading-relaxed">
                 In a world where AI writes faster than we can fact-check, CertREV brings real experts back into the conversation
               </p>
             </div>
@@ -545,17 +568,18 @@ export default function Home() {
                 className="group"
               >
                 <Link href="/human-layer" className="block">
-                  <div className="bg-white rounded-3xl overflow-hidden shadow-base hover:shadow-xl transition-all duration-500 hover:scale-[1.02] border border-charcoal/5">
-                    <div className={`h-56 bg-gradient-to-br ${article.gradient}`} />
-                    <div className="p-8">
-                      <span className="text-sm text-primary font-medium uppercase tracking-wide">{article.category}</span>
-                      <h3 className="text-2xl font-semibold mt-3 mb-4 text-charcoal group-hover:text-primary transition-colors">
+                  <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border-2 border-navy/10 relative">
+                    <TextureOverlay type="paper" opacity={0.2} />
+                    <div className="h-56 bg-coral/10 relative z-10" />
+                    <div className="p-8 relative z-10">
+                      <span className="text-sm text-coral font-semibold uppercase tracking-wide">{article.category}</span>
+                      <h3 className="text-2xl font-bold mt-3 mb-4 text-navy group-hover:text-coral transition-colors font-serif">
                         {article.title}
                       </h3>
-                      <p className="text-charcoal/70 mb-6 leading-relaxed">
+                      <p className="text-black/70 mb-6 leading-relaxed">
                         {article.excerpt}
                       </p>
-                      <div className="inline-flex items-center gap-2 text-primary font-medium group-hover:gap-4 transition-all">
+                      <div className="inline-flex items-center gap-2 text-coral font-semibold group-hover:gap-4 transition-all">
                         Read More <ArrowRight className="w-4 h-4" />
                       </div>
                     </div>
@@ -566,25 +590,32 @@ export default function Home() {
           </div>
 
           <FadeIn delay={0.4}>
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 shadow-xl text-center border border-verification/20">
-              <h3 className="text-3xl font-bold mb-4 text-charcoal">Stay Informed</h3>
-              <p className="text-charcoal/70 mb-8 text-lg max-w-2xl mx-auto">
+            <div className="bg-white rounded-2xl p-12 shadow-lg text-center border-2 border-lime relative overflow-hidden">
+              <TextureOverlay type="paper" opacity={0.3} />
+              <h3 className="text-3xl font-bold mb-4 text-navy font-serif relative z-10">Stay Informed</h3>
+              <p className="text-black/70 mb-8 text-lg max-w-2xl mx-auto relative z-10">
                 Get insights on trust, expertise, and content strategy delivered to your inbox
               </p>
-              <NewsletterSignup />
+              <div className="relative z-10">
+                <NewsletterSignup />
+              </div>
             </div>
           </FadeIn>
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section className="relative bg-gradient-to-br from-cream via-white to-cream py-32 px-4">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="relative bg-white py-28 px-4 overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.15} />
+        <OrganicShape variant="blob2" color="coral" className="top-0 left-0 w-96 h-96" opacity={0.08} />
+        <OrganicShape variant="blob1" color="lime" className="bottom-0 right-0 w-[400px] h-[400px]" opacity={0.10} />
+        <div className="max-w-4xl mx-auto text-center relative z-10">
           <FadeIn>
-            <h2 className="text-6xl md:text-7xl font-bold mb-8 text-charcoal leading-tight">
+            <p className="text-lime font-script text-4xl mb-4">Let's Get Started</p>
+            <h2 className="text-6xl md:text-7xl font-bold mb-8 text-navy leading-tight font-serif">
               Ready to Build Trust?
             </h2>
-            <p className="text-xl md:text-2xl text-charcoal/70 mb-12 max-w-2xl mx-auto font-light">
+            <p className="text-xl md:text-2xl text-black/70 mb-12 max-w-2xl mx-auto">
               Get your free content analysis and see how expert validation can transform your brand credibility
             </p>
             <motion.div
@@ -593,7 +624,7 @@ export default function Home() {
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
             >
-              <Button size="lg" asChild className="text-lg px-12 py-6 shadow-2xl hover:shadow-3xl">
+              <Button size="lg" asChild className="text-lg px-12 py-6">
                 <Link href="/eeat-meter">
                   Get Your Free Analysis
                   <ArrowRight className="w-6 h-6" />

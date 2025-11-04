@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { LucideIcon } from 'lucide-react'
+import TextureOverlay from '../TextureOverlay'
 
 interface FlipStatCardProps {
   stat: string
@@ -35,7 +36,7 @@ export default function FlipStatCard({
         className="relative w-full h-full"
         style={{ transformStyle: 'preserve-3d' }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
-        whileHover={{ scale: 1.02 }}
+        whileHover={{ scale: 1.01 }}
         transition={{
           duration: 0.4,
           type: 'spring',
@@ -48,30 +49,26 @@ export default function FlipStatCard({
           className="absolute inset-0 backface-hidden"
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <div className={`relative h-full flex flex-col bg-gradient-to-br ${gradient} backdrop-blur-sm rounded-2xl p-8 border border-charcoal/10 shadow-xl group-hover:shadow-2xl group-hover:border-charcoal/20 transition-all overflow-hidden`}>
-            {/* 3D depth indicator - pulses on hover to hint interactivity */}
-            <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-primary/30 group-hover:bg-primary transition-all group-hover:scale-150" />
+          <div className="relative h-full flex flex-col bg-white rounded-2xl p-8 border-2 border-navy/10 shadow-md group-hover:shadow-lg group-hover:border-navy/20 transition-all overflow-hidden">
+            <TextureOverlay type="paper" opacity={0.3} />
 
-            <Icon className="w-12 h-12 text-primary mb-4 group-hover:scale-110 transition-transform flex-shrink-0" />
+            {/* Click indicator */}
+            <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-coral/40 group-hover:bg-coral transition-all group-hover:scale-150 relative z-10" />
 
-            <div className="mb-4 flex-shrink-0">
-              <div className="text-4xl font-bold bg-gradient-to-br from-primary to-verification bg-clip-text text-transparent mb-2">
+            <Icon className="w-12 h-12 text-coral mb-4 group-hover:scale-105 transition-transform flex-shrink-0 relative z-10" />
+
+            <div className="mb-4 flex-shrink-0 relative z-10">
+              <div className="text-5xl font-bold text-navy mb-2 font-serif">
                 {stat}
               </div>
-              <div className="text-xs font-semibold text-charcoal/80 uppercase tracking-wider">
+              <div className="text-xs font-semibold text-navy/70 uppercase tracking-wider">
                 {label}
               </div>
             </div>
 
-            <p className="text-charcoal/70 leading-relaxed text-sm flex-grow">
+            <p className="text-black/70 leading-relaxed text-sm flex-grow relative z-10">
               {description}
             </p>
-
-            {/* Subtle 3D edge highlight */}
-            <div className="absolute inset-0 rounded-2xl pointer-events-none">
-              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-              <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent" />
-            </div>
           </div>
         </div>
 
@@ -83,17 +80,19 @@ export default function FlipStatCard({
             transform: 'rotateY(180deg)',
           }}
         >
-          <div className={`h-full flex flex-col bg-gradient-to-br ${gradient.replace('/10', '/30').replace('/20', '/40')} backdrop-blur-sm rounded-2xl p-6 border border-charcoal/20 shadow-2xl overflow-hidden`}>
-            <div className="flex items-start justify-between mb-3 flex-shrink-0">
-              <Icon className="w-8 h-8 text-primary opacity-90" />
-              <div className="w-2 h-2 rounded-full bg-primary/60" />
+          <div className="h-full flex flex-col bg-navy rounded-2xl p-6 border-2 border-navy shadow-lg overflow-hidden relative">
+            <TextureOverlay type="paper" opacity={0.2} />
+
+            <div className="flex items-start justify-between mb-3 flex-shrink-0 relative z-10">
+              <Icon className="w-8 h-8 text-lime opacity-90" />
+              <div className="w-2 h-2 rounded-full bg-lime" />
             </div>
 
-            <h3 className="text-lg font-bold mb-3 flex-shrink-0 text-charcoal">
+            <h3 className="text-lg font-bold mb-3 flex-shrink-0 text-white font-serif relative z-10">
               {backTitle}
             </h3>
 
-            <div className="space-y-2.5 flex-grow overflow-hidden">
+            <div className="space-y-2.5 flex-grow overflow-hidden relative z-10">
               {backDetails.map((detail, i) => (
                 <motion.div
                   key={i}
@@ -102,23 +101,17 @@ export default function FlipStatCard({
                   transition={{ delay: isFlipped ? 0.2 + i * 0.08 : 0 }}
                   className="flex items-start gap-2.5"
                 >
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary/90 mt-1.5 flex-shrink-0" />
-                  <span className="text-charcoal/90 leading-snug text-sm">{detail}</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-lime mt-1.5 flex-shrink-0" />
+                  <span className="text-white/90 leading-snug text-sm">{detail}</span>
                 </motion.div>
               ))}
             </div>
 
-            <div className="mt-3 pt-3 border-t border-charcoal/20 flex-shrink-0">
-              <div className="flex items-center justify-between text-xs text-charcoal/50">
-                <span>VERIFIED</span>
-                <span className="font-mono">{new Date().toLocaleDateString()}</span>
+            <div className="mt-3 pt-3 border-t border-white/20 flex-shrink-0 relative z-10">
+              <div className="flex items-center justify-between text-xs text-white/60">
+                <span className="font-semibold">VERIFIED</span>
+                <span>{new Date().toLocaleDateString()}</span>
               </div>
-            </div>
-
-            {/* Back edge highlights */}
-            <div className="absolute inset-0 rounded-2xl pointer-events-none">
-              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-              <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent" />
             </div>
           </div>
         </div>

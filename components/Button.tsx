@@ -11,18 +11,18 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', loading, children, disabled, asChild, ...props }, ref) => {
     const baseClassName = cn(
-      'inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-300',
+      'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200',
       'focus:outline-none focus:ring-2 focus:ring-coral focus:ring-offset-2',
       'disabled:opacity-50 disabled:cursor-not-allowed',
       {
-        'bg-coral text-white hover:bg-coral-hover hover:scale-[1.02] shadow-sm hover:shadow-md':
+        'bg-coral text-white hover:bg-coral-hover shadow-md hover:shadow-lg':
           variant === 'primary',
-        'border-2 border-coral text-coral hover:bg-coral hover:text-white':
+        'border-2 border-coral text-coral hover:bg-coral hover:text-white shadow-sm':
           variant === 'secondary',
-        'text-navy hover:bg-navy/10': variant === 'ghost',
-        'px-4 py-2 text-sm': size === 'sm',
-        'px-6 py-3 text-base': size === 'md',
-        'px-8 py-4 text-lg': size === 'lg',
+        'text-navy hover:bg-navy/10 hover:text-coral': variant === 'ghost',
+        'px-5 py-2.5 text-sm font-semibold': size === 'sm',
+        'px-7 py-3.5 text-base font-semibold': size === 'md',
+        'px-9 py-4 text-lg font-bold': size === 'lg',
       },
       className
     )
