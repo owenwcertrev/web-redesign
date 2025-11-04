@@ -53,21 +53,6 @@ export default function Home() {
                     </li>
                   </ul>
                 </div>
-
-                <div>
-                  <h4 className="font-semibold text-charcoal mb-2">Automated Pre-Screening</h4>
-                  <p className="text-charcoal/70 leading-relaxed">
-                    Our AI identifies potential concerns, flags unverified claims, and matches content with the appropriate credential tier. You'll receive a preliminary report within minutes showing what needs expert review.
-                  </p>
-                </div>
-
-                <div className="bg-white/50 rounded-xl p-4 border border-primary/20">
-                  <div className="flex items-center gap-2 text-sm text-charcoal/60 mb-1">
-                    <span className="font-mono">TYPICAL TURNAROUND</span>
-                  </div>
-                  <div className="text-2xl font-bold text-primary">2-5 minutes</div>
-                  <div className="text-sm text-charcoal/70">for initial AI screening</div>
-                </div>
               </div>
             </div>
           </div>
@@ -109,28 +94,6 @@ export default function Home() {
                       <span>Regulatory compliance check (FTC, FDA, HIPAA where applicable)</span>
                     </li>
                   </ul>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-charcoal mb-2">Expert Matching</h4>
-                  <p className="text-charcoal/70 leading-relaxed">
-                    We match your content with experts whose credentials align with your specific needs—from certified coaches (Tier 1) to board-certified physicians and attorneys (Tier 6). Each expert brings verifiable credentials and subject matter expertise.
-                  </p>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-charcoal mb-2">What You Receive</h4>
-                  <p className="text-charcoal/70 leading-relaxed">
-                    Detailed feedback on accuracy, recommended revisions for unsupported claims, expert commentary you can incorporate, and a comprehensive verification report.
-                  </p>
-                </div>
-
-                <div className="bg-white/50 rounded-xl p-4 border border-verification/20">
-                  <div className="flex items-center gap-2 text-sm text-charcoal/60 mb-1">
-                    <span className="font-mono">EXPERT REVIEW TIME</span>
-                  </div>
-                  <div className="text-2xl font-bold text-verification">24-72 hours</div>
-                  <div className="text-sm text-charcoal/70">depending on content complexity</div>
                 </div>
               </div>
             </div>
@@ -177,28 +140,6 @@ export default function Home() {
                       <span>Downloadable certification certificate for your records</span>
                     </li>
                   </ul>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-charcoal mb-2">SEO Benefits</h4>
-                  <p className="text-charcoal/70 leading-relaxed">
-                    Expert attribution signals satisfy Google's E-E-A-T requirements, helping protect your organic traffic from algorithm updates. Structured data markup makes your expert credentials visible to search engines.
-                  </p>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-charcoal mb-2">Trust Signals for Consumers</h4>
-                  <p className="text-charcoal/70 leading-relaxed">
-                    Verification badges display prominently on your content. Visitors can click to verify expert credentials, view the verification date, and see the full audit trail—building trust at the point of decision.
-                  </p>
-                </div>
-
-                <div className="bg-white/50 rounded-xl p-4 border border-alert/20">
-                  <div className="flex items-center gap-2 text-sm text-charcoal/60 mb-1">
-                    <span className="font-mono">IMPLEMENTATION</span>
-                  </div>
-                  <div className="text-2xl font-bold text-alert">Same day</div>
-                  <div className="text-sm text-charcoal/70">ready to publish immediately</div>
                 </div>
               </div>
             </div>

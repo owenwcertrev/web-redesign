@@ -20,7 +20,7 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
 
   return (
     <div className={`relative ${className}`} style={{ perspective: '2000px' }}>
-      <div className="relative" style={{ minHeight: expandedIndex !== null ? '800px' : '400px' }}>
+      <div className="relative" style={{ minHeight: expandedIndex !== null ? '550px' : '400px' }}>
         {cards.map((card, index) => {
           const isExpanded = expandedIndex === index
           const isHovered = hoveredIndex === index
