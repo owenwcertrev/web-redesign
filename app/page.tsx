@@ -19,6 +19,7 @@ import CitationMarker from '@/components/trust/CitationMarker'
 import FlipStatCard from '@/components/cards3d/FlipStatCard'
 import CardDeck from '@/components/cards3d/CardDeck'
 import TiltCard from '@/components/cards3d/TiltCard'
+import Carousel3D from '@/components/cards3d/Carousel3D'
 import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Sparkles, Upload, FileCheck, Shield } from 'lucide-react'
 
 export default function Home() {
@@ -502,27 +503,29 @@ export default function Home() {
       </section>
 
       {/* Expert Tiers Section */}
-      <section className="relative bg-gradient-to-b from-white to-cream py-24 px-4">
+      <section className="relative bg-gradient-to-b from-white to-cream py-32 px-4 overflow-visible">
         <div className="max-w-7xl mx-auto">
           <FadeIn>
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-serif mb-4 text-charcoal">
-                Expert Tiers
+              <div className="inline-block mb-6 px-6 py-3 bg-white rounded-full border border-primary/20 shadow-sm">
+                <span className="text-sm font-medium text-primary">6 EXPERT LEVELS</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-serif mb-6 text-charcoal">
+                Expert Tiers Carousel
               </h2>
-              <p className="text-xl text-charcoal/60 max-w-3xl mx-auto">
+              <p className="text-xl text-charcoal/60 max-w-3xl mx-auto mb-4">
                 From certified coaches to medical doctors, financial advisors to attorneys — we have the right expert for your content
+              </p>
+              <p className="text-sm text-charcoal/40">
+                ← Navigate to explore all tiers →
               </p>
             </div>
           </FadeIn>
 
-          <StaggerChildren className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 card-grid" staggerDelay={0.15}>
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, scale: 0.9 },
-                visible: { opacity: 1, scale: 1 }
-              }}
-            >
+          <Carousel3D
+            items={[
               <TierCard
+                key="tier-1"
                 tierNumber={1}
                 tierName="Certified Professional"
                 credits={1}
@@ -534,15 +537,9 @@ export default function Home() {
                   'Pilates Instructor (PMI)',
                   'Digital Marketing Professional (OMCP)',
                 ]}
-              />
-            </motion.div>
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, scale: 0.9 },
-                visible: { opacity: 1, scale: 1 }
-              }}
-            >
+              />,
               <TierCard
+                key="tier-2"
                 tierNumber={2}
                 tierName="Licensed Practitioner"
                 credits={2}
@@ -554,15 +551,9 @@ export default function Home() {
                   'Makeup Artist (MUA)',
                   'Enrolled Agent (IRS-licensed)',
                 ]}
-              />
-            </motion.div>
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, scale: 0.9 },
-                visible: { opacity: 1, scale: 1 }
-              }}
-            >
+              />,
               <TierCard
+                key="tier-3"
                 tierNumber={3}
                 tierName="Credentialed Specialist"
                 credits={3}
@@ -574,15 +565,9 @@ export default function Home() {
                   'Physical Therapist (DPT)',
                   'Public Accountant (CPA)',
                 ]}
-              />
-            </motion.div>
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, scale: 0.9 },
-                visible: { opacity: 1, scale: 1 }
-              }}
-            >
+              />,
               <TierCard
+                key="tier-4"
                 tierNumber={4}
                 tierName="Senior Credentialed Specialist"
                 credits={4}
@@ -594,15 +579,9 @@ export default function Home() {
                   'Chartered Financial Analyst (CFA charterholder)',
                   'Certified Financial Planner (CFP)',
                 ]}
-              />
-            </motion.div>
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, scale: 0.9 },
-                visible: { opacity: 1, scale: 1 }
-              }}
-            >
+              />,
               <TierCard
+                key="tier-5"
                 tierNumber={5}
                 tierName="Practice Leader"
                 credits={5}
@@ -614,15 +593,9 @@ export default function Home() {
                   'Bar-Admitted Attorney (JD)',
                   'Managing CPA / Controller',
                 ]}
-              />
-            </motion.div>
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, scale: 0.9 },
-                visible: { opacity: 1, scale: 1 }
-              }}
-            >
+              />,
               <TierCard
+                key="tier-6"
                 tierNumber={6}
                 tierName="Industry Authority"
                 credits={6}
@@ -634,9 +607,9 @@ export default function Home() {
                   'Tenured Professor (PhD)',
                   'Chief Medical Officer',
                 ]}
-              />
-            </motion.div>
-          </StaggerChildren>
+              />,
+            ]}
+          />
         </div>
       </section>
 
