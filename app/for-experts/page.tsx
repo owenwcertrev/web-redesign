@@ -27,7 +27,7 @@ export default function ForExpertsPage() {
           </p>
           <Button size="lg" asChild>
             <Link href="/eeat-meter">
-              Apply Now
+              Join Our Expert Network
               <ArrowRight className="w-6 h-6" />
             </Link>
           </Button>
@@ -213,7 +213,7 @@ export default function ForExpertsPage() {
             <div className="relative z-10">
               <Button size="lg" asChild>
                 <Link href="/eeat-meter">
-                  Apply to Become an Expert
+                  Start Your Application
                   <ArrowRight className="w-6 h-6" />
                 </Link>
               </Button>

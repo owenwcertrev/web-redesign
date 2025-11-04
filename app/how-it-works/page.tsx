@@ -347,7 +347,7 @@ export default function HowItWorksPage() {
               Ready to Get Started?
             </h2>
             <p className="text-xl md:text-2xl text-black/70 mb-12 max-w-2xl mx-auto">
-              Try our free E-E-A-T Meter to see how expert validation can improve your content credibility
+              See how your content measures up with our free E-E-A-T analysis tool
             </p>
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
@@ -357,7 +357,7 @@ export default function HowItWorksPage() {
             >
               <Button size="lg" asChild className="shadow-2xl">
                 <Link href="/eeat-meter">
-                  Analyze Your Content
+                  Try the E-E-A-T Meter Free
                   <ArrowRight className="w-6 h-6" />
                 </Link>
               </Button>

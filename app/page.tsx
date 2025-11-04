@@ -19,6 +19,7 @@ import OrganicShape from '@/components/OrganicShape'
 import TextureOverlay from '@/components/TextureOverlay'
 import Testimonial from '@/components/Testimonial'
 import ExpertProfile from '@/components/ExpertProfile'
+import LifestyleImagePlaceholder from '@/components/LifestyleImagePlaceholder'
 
 export default function Home() {
   // Stacked cards content for the process
@@ -177,20 +178,26 @@ export default function Home() {
             >
               <Button size="lg" asChild>
                 <Link href="/eeat-meter">
-                  Analyze Your Content
+                  Get Your Free Analysis
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </Button>
               <Button size="lg" variant="secondary" asChild>
-                <Link href="#verification-process">See the Platform</Link>
+                <Link href="#verification-process">See How It Works</Link>
               </Button>
             </motion.div>
+
+            {/* Lifestyle Hero Image */}
+            <LifestyleImagePlaceholder
+              variant="hero"
+              caption="Trusted by wellness brands and credentialed experts building the future of content trust"
+            />
           </div>
         </div>
       </DepthHero>
 
-      {/* Flip Stat Cards - Why Expert Validation Matters */}
-      <section className="py-24 px-4 bg-white relative overflow-hidden">
+      {/* Flip Stat Cards - Why Expert Validation Matters - Asymmetric spacing */}
+      <section className="pt-28 pb-24 px-4 bg-white relative overflow-hidden">
         <TextureOverlay type="grain" opacity={0.2} />
         <div className="max-w-[1400px] mx-auto relative z-10">
           <FadeIn>
@@ -269,8 +276,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust Infrastructure Section */}
-      <section className="relative bg-beige py-28 px-4 overflow-hidden">
+      {/* Trust Infrastructure Section - Asymmetric spacing */}
+      <section className="relative bg-beige pt-24 pb-32 px-4 overflow-hidden">
         <OrganicShape variant="blob2" color="lime" className="top-10 right-10 w-96 h-96" opacity={0.08} />
         <OrganicShape variant="blob4" color="coral" className="bottom-10 left-10 w-80 h-80" opacity={0.06} />
         <div className="max-w-6xl mx-auto relative z-10">
@@ -465,8 +472,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Flip Cards - Trust Principles */}
-      <section className="py-28 px-4 bg-white relative overflow-hidden">
+      {/* Flip Cards - Trust Principles - Asymmetric spacing */}
+      <section className="pt-32 pb-28 px-4 bg-white relative overflow-hidden">
         <TextureOverlay type="grain" opacity={0.15} />
         <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
@@ -530,8 +537,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Social Proof Section - Testimonials & Experts */}
-      <section className="relative bg-white py-28 px-4 overflow-hidden">
+      {/* Social Proof Section - Testimonials & Experts - Asymmetric spacing */}
+      <section className="relative bg-white pt-24 pb-32 px-4 overflow-hidden">
         <TextureOverlay type="grain" opacity={0.15} />
         <OrganicShape variant="blob4" color="lime" className="top-0 right-0 w-96 h-96" opacity={0.08} />
         <div className="max-w-7xl mx-auto relative z-10">
@@ -601,8 +608,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* The Human Layer - Insights & Newsletter */}
-      <section className="relative bg-beige py-28 px-4 overflow-hidden">
+      {/* The Human Layer - Insights & Newsletter - Asymmetric spacing */}
+      <section className="relative bg-beige pt-32 pb-28 px-4 overflow-hidden">
         <OrganicShape variant="blob3" color="lime" className="bottom-0 right-0 w-[500px] h-[500px]" opacity={0.08} />
         <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
@@ -677,19 +684,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Final CTA Section */}
-      <section className="relative bg-white py-28 px-4 overflow-hidden">
+      {/* Final CTA Section - Asymmetric spacing */}
+      <section className="relative bg-white pt-32 pb-36 px-4 overflow-hidden">
         <TextureOverlay type="grain" opacity={0.15} />
         <OrganicShape variant="blob2" color="coral" className="top-0 left-0 w-96 h-96" opacity={0.08} />
         <OrganicShape variant="blob1" color="lime" className="bottom-0 right-0 w-[400px] h-[400px]" opacity={0.10} />
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <FadeIn>
-            <p className="text-lime font-script text-4xl mb-4">Let's Get Started</p>
+            <p className="text-lime font-script text-4xl mb-6">Your Move</p>
             <h2 className="text-6xl md:text-7xl font-bold mb-8 text-navy leading-tight font-serif">
-              Ready to Build Trust?
+              Start Building Trust Today
             </h2>
-            <p className="text-xl md:text-2xl text-black/70 mb-12 max-w-2xl mx-auto">
-              Get your free content analysis and see how expert validation can transform your brand credibility
+            <p className="text-xl md:text-2xl text-black/70 mb-14 max-w-2xl mx-auto">
+              Get your free E-E-A-T analysis and discover how expert validation transforms skeptics into believers
             </p>
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
@@ -699,7 +706,7 @@ export default function Home() {
             >
               <Button size="lg" asChild className="text-lg px-12 py-6">
                 <Link href="/eeat-meter">
-                  Get Your Free Analysis
+                  Try the E-E-A-T Meter Free
                   <ArrowRight className="w-6 h-6" />
                 </Link>
               </Button>
