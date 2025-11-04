@@ -20,7 +20,7 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
 
   return (
     <div className={`relative ${className}`} style={{ perspective: '2000px' }}>
-      <div className="relative" style={{ minHeight: '400px' }}>
+      <div className="relative" style={{ minHeight: expandedIndex !== null ? '800px' : '400px' }}>
         {cards.map((card, index) => {
           const isExpanded = expandedIndex === index
           const isHovered = hoveredIndex === index
@@ -70,10 +70,15 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
               />
 
               {/* Card */}
-              <div className={`bg-white rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 ${
+              <div className={`relative bg-white rounded-2xl shadow-2xl transition-all duration-300 ${
                 isHovered && !isExpanded ? 'ring-2 ring-primary/30' : ''
-              }`}>
+              } ${!isExpanded ? 'max-h-[200px] overflow-hidden' : ''}`}>
                 {card.content}
+
+                {/* Gradient fade for collapsed cards */}
+                {!isExpanded && (
+                  <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none" />
+                )}
 
                 {/* Expand/Collapse Icon - appears on hover */}
                 {!isExpanded && (
