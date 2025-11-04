@@ -37,10 +37,10 @@ export default function FlipStatCard({
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         whileHover={{ scale: 1.02 }}
         transition={{
-          duration: 0.6,
+          duration: 0.4,
           type: 'spring',
-          stiffness: 120,
-          damping: 20
+          stiffness: 260,
+          damping: 25
         }}
       >
         {/* Front */}
@@ -48,22 +48,22 @@ export default function FlipStatCard({
           className="absolute inset-0 backface-hidden"
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <div className={`relative h-full bg-gradient-to-br ${gradient} backdrop-blur-sm rounded-2xl p-8 border border-charcoal/10 shadow-xl group-hover:shadow-2xl group-hover:border-charcoal/20 transition-all overflow-hidden`}>
+          <div className={`relative h-full flex flex-col bg-gradient-to-br ${gradient} backdrop-blur-sm rounded-2xl p-8 border border-charcoal/10 shadow-xl group-hover:shadow-2xl group-hover:border-charcoal/20 transition-all overflow-hidden`}>
             {/* 3D depth indicator - pulses on hover to hint interactivity */}
             <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-primary/30 group-hover:bg-primary transition-all group-hover:scale-150" />
 
-            <Icon className="w-12 h-12 text-primary mb-6 group-hover:scale-110 transition-transform" />
+            <Icon className="w-12 h-12 text-primary mb-4 group-hover:scale-110 transition-transform flex-shrink-0" />
 
-            <div className="mb-6">
-              <div className="text-5xl font-bold bg-gradient-to-br from-primary to-verification bg-clip-text text-transparent mb-2">
+            <div className="mb-4 flex-shrink-0">
+              <div className="text-4xl font-bold bg-gradient-to-br from-primary to-verification bg-clip-text text-transparent mb-2">
                 {stat}
               </div>
-              <div className="text-sm font-semibold text-charcoal/80 uppercase tracking-wider">
+              <div className="text-xs font-semibold text-charcoal/80 uppercase tracking-wider">
                 {label}
               </div>
             </div>
 
-            <p className="text-charcoal/70 leading-relaxed mb-4">
+            <p className="text-charcoal/70 leading-relaxed text-sm flex-grow">
               {description}
             </p>
 
@@ -83,32 +83,32 @@ export default function FlipStatCard({
             transform: 'rotateY(180deg)',
           }}
         >
-          <div className="h-full bg-gradient-to-br from-verification to-verification-dark rounded-2xl p-8 border border-verification/30 shadow-2xl text-white">
-            <div className="flex items-start justify-between mb-6">
+          <div className="h-full flex flex-col bg-gradient-to-br from-verification to-verification-dark rounded-2xl p-8 border border-verification/30 shadow-2xl text-white overflow-hidden">
+            <div className="flex items-start justify-between mb-4 flex-shrink-0">
               <Icon className="w-10 h-10 opacity-80" />
               <div className="w-2 h-2 rounded-full bg-white/50" />
             </div>
 
-            <h3 className="text-2xl font-bold mb-6">
+            <h3 className="text-xl font-bold mb-4 flex-shrink-0">
               {backTitle}
             </h3>
 
-            <div className="space-y-4 mb-8">
+            <div className="space-y-3 flex-grow overflow-auto">
               {backDetails.map((detail, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: isFlipped ? 0.3 + i * 0.1 : 0 }}
+                  transition={{ delay: isFlipped ? 0.2 + i * 0.08 : 0 }}
                   className="flex items-start gap-3"
                 >
-                  <div className="w-1.5 h-1.5 rounded-full bg-white/80 mt-2 flex-shrink-0" />
-                  <span className="text-white/90 leading-relaxed">{detail}</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-white/80 mt-1.5 flex-shrink-0" />
+                  <span className="text-white/90 leading-relaxed text-sm">{detail}</span>
                 </motion.div>
               ))}
             </div>
 
-            <div className="absolute bottom-6 left-8 right-8">
+            <div className="mt-4 pt-4 border-t border-white/10 flex-shrink-0">
               <div className="flex items-center justify-between text-xs text-white/40">
                 <span>VERIFIED</span>
                 <span className="font-mono">{new Date().toLocaleDateString()}</span>
