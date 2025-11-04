@@ -35,6 +35,7 @@ export default function FlipStatCard({
         className="relative w-full h-full"
         style={{ transformStyle: 'preserve-3d' }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
+        whileHover={{ scale: 1.02 }}
         transition={{
           duration: 0.6,
           type: 'spring',
@@ -47,9 +48,9 @@ export default function FlipStatCard({
           className="absolute inset-0 backface-hidden"
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <div className={`relative h-full bg-gradient-to-br ${gradient} backdrop-blur-sm rounded-2xl p-8 border border-charcoal/10 shadow-xl group-hover:shadow-2xl transition-shadow overflow-hidden`}>
-            {/* 3D depth indicator */}
-            <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-primary/30 group-hover:bg-primary/60 transition-colors" />
+          <div className={`relative h-full bg-gradient-to-br ${gradient} backdrop-blur-sm rounded-2xl p-8 border border-charcoal/10 shadow-xl group-hover:shadow-2xl group-hover:border-charcoal/20 transition-all overflow-hidden`}>
+            {/* 3D depth indicator - pulses on hover to hint interactivity */}
+            <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-primary/30 group-hover:bg-primary transition-all group-hover:scale-150" />
 
             <Icon className="w-12 h-12 text-primary mb-6 group-hover:scale-110 transition-transform" />
 
@@ -65,13 +66,6 @@ export default function FlipStatCard({
             <p className="text-charcoal/70 leading-relaxed mb-4">
               {description}
             </p>
-
-            <div className="absolute bottom-6 left-8 right-8">
-              <div className="flex items-center justify-between text-xs text-charcoal/40">
-                <span>CLICK TO REVEAL</span>
-                <span>→</span>
-              </div>
-            </div>
 
             {/* Subtle 3D edge highlight */}
             <div className="absolute inset-0 rounded-2xl pointer-events-none">
