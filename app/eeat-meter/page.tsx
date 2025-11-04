@@ -57,7 +57,7 @@ export default function EEATMeterPage() {
               transition={{ delay: 0.6 }}
               className="text-xl md:text-2xl text-black/70 mb-4 max-w-2xl mx-auto"
             >
-              Human Validation in an AI-Powered Era
+              Human-in-the-Loop Validation for AI-Powered Content
             </motion.p>
 
             <motion.p
@@ -66,7 +66,7 @@ export default function EEATMeterPage() {
               transition={{ delay: 0.8 }}
               className="text-lg text-black/60 max-w-2xl mx-auto"
             >
-              In an AI driven world, trust is the ultimate discriminator. Get your free content analysis.
+              In an AI-driven world, human-in-the-loop verification is the ultimate trust signal. Get your free content analysis.
             </motion.p>
           </div>
         </div>

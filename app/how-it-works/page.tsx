@@ -209,7 +209,7 @@ export default function HowItWorksPage() {
               transition={{ delay: 0.6 }}
               className="text-xl md:text-2xl text-black/70 max-w-2xl mx-auto"
             >
-              Expert fact-checking infrastructure that protects your SEO, builds consumer trust, and ensures compliance
+              Human-in-the-loop expert fact-checking that protects your SEO, builds consumer trust, and ensures compliance
             </motion.p>
           </div>
         </div>

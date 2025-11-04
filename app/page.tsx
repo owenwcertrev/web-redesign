@@ -129,7 +129,7 @@ export default function Home() {
               transition={{ delay: 0.6 }}
               className="text-xl md:text-2xl text-black/70 mb-12 max-w-3xl mx-auto leading-relaxed"
             >
-              Credentialed expert validation that satisfies Google's E-E-A-T, protects your organic traffic, and converts skeptical consumers
+              Human-in-the-loop expert validation that satisfies Google's E-E-A-T, protects your organic traffic, and converts skeptical consumers
             </motion.p>
 
             {/* Live Trust Dashboard */}
@@ -299,10 +299,10 @@ export default function Home() {
                         source="Stanford Research, 2025"
                         preview="Comprehensive study of 10,000+ consumers showing significant trust gaps."
                       />
-                      . CertREV builds the verification infrastructure brands need to navigate this trust crisis.
+                      . CertREV builds the human-in-the-loop verification infrastructure brands need to navigate this trust crisis.
                     </p>
                     <p className="text-lg text-black/80 mb-8 leading-relaxed">
-                      Our platform connects your content with credentialed experts, creating a transparent verification layer that consumers and search engines recognize
+                      Our platform connects your content with credentialed experts, creating a transparent human-in-the-loop verification layer that consumers and search engines recognize
                       <CitationMarker
                         number={2}
                         confidence="high"
@@ -619,7 +619,7 @@ export default function Home() {
                 The Human Layer
               </h2>
               <p className="text-xl md:text-2xl italic text-black/70 max-w-3xl mx-auto leading-relaxed">
-                In a world where AI writes faster than we can fact-check, CertREV brings real experts back into the conversation
+                In a world where AI writes faster than we can fact-check, CertREV puts human experts back in the loop
               </p>
             </div>
           </FadeIn>

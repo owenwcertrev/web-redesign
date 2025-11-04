@@ -15,7 +15,7 @@ export default function Footer() {
           <div className="md:col-span-1">
             <h3 className="text-2xl font-bold text-navy mb-3 font-serif">CertREV</h3>
             <p className="text-sm text-black/70 leading-relaxed">
-              Human validation in an AI-powered era
+              Human-in-the-loop validation for AI-powered content
             </p>
           </div>
 
