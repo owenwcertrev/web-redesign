@@ -25,9 +25,9 @@ export default function ExpertProfile({
 }: ExpertProfileProps) {
   if (variant === 'inline') {
     return (
-      <div className="flex items-start gap-4 p-6 bg-white rounded-xl border-2 border-lime/20 relative overflow-hidden">
-        <TextureOverlay type="paper" opacity={0.3} />
-        <div className="w-16 h-16 rounded-full bg-lime/20 flex items-center justify-center flex-shrink-0 text-xs text-navy font-semibold border-2 border-lime/30 relative z-10">
+      <div className="flex items-start gap-4 p-6 bg-white rounded-2xl border-2 border-lime/20 relative overflow-hidden">
+        <TextureOverlay type="paper" opacity={0.2} />
+        <div className="w-16 h-16 rounded-full bg-lime/20 flex items-center justify-center flex-shrink-0 text-xs text-navy font-semibold border-2 border-lime/40 relative z-10">
           {imagePlaceholder}
         </div>
         <div className="relative z-10">
@@ -47,13 +47,13 @@ export default function ExpertProfile({
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="bg-white rounded-2xl p-8 border-2 border-navy/20 relative overflow-hidden shadow-lg"
+      className="bg-white rounded-2xl p-8 border-2 border-lime/20 relative overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
     >
-      <TextureOverlay type="paper" opacity={0.3} />
+      <TextureOverlay type="paper" opacity={0.2} />
 
       {/* Photo placeholder */}
       <div className="relative z-10 mb-6">
-        <div className="w-24 h-24 rounded-full bg-navy/10 flex items-center justify-center mx-auto text-sm text-navy font-semibold border-2 border-navy/20">
+        <div className="w-24 h-24 rounded-full bg-lime/10 flex items-center justify-center mx-auto text-sm text-navy font-semibold border-2 border-lime/30">
           {imagePlaceholder}
         </div>
       </div>

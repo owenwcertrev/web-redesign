@@ -49,9 +49,9 @@ export default function Testimonial({
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="bg-beige rounded-3xl p-8 md:p-12 border-2 border-navy/10 relative overflow-hidden shadow-lg"
+      className="bg-beige rounded-2xl p-8 md:p-12 border-2 border-navy/10 relative overflow-hidden shadow-lg"
     >
-      <TextureOverlay type="paper" opacity={0.4} />
+      <TextureOverlay type="paper" opacity={0.3} />
 
       {/* Quote icon */}
       <div className="relative z-10 mb-6">

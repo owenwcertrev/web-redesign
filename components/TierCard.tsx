@@ -31,10 +31,10 @@ export default function TierCard({ tierNumber, tierName, credits, credentials }:
       <motion.div
         whileHover={{ scale: 1.01, y: -4 }}
         transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-        className={`relative ${style.bg} rounded-2xl p-8 border-2 ${style.accent} h-[480px] flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow`}
+        className={`relative ${style.bg} rounded-2xl p-8 border-2 ${style.accent} min-h-[480px] flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow`}
       >
         {/* Texture overlay */}
-        <TextureOverlay type="paper" opacity={0.4} />
+        <TextureOverlay type="paper" opacity={0.3} />
 
         {/* Decorative organic shape */}
         <OrganicShape

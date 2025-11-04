@@ -28,9 +28,9 @@ export default function Home() {
       id: 'submit',
       content: (
         <div className="bg-navy/5 p-10 rounded-2xl border-2 border-navy/20 relative overflow-hidden shadow-md">
-          <TextureOverlay type="paper" opacity={0.4} />
+          <TextureOverlay type="paper" opacity={0.3} />
           <div className="flex items-start gap-4 mb-6 relative z-10">
-            <div className="w-14 h-14 rounded-xl bg-navy flex items-center justify-center shadow-sm">
+            <div className="w-14 h-14 rounded-2xl bg-navy flex items-center justify-center shadow-sm">
               <Upload className="w-7 h-7 text-white" />
             </div>
             <div>
@@ -47,9 +47,9 @@ export default function Home() {
       id: 'review',
       content: (
         <div className="bg-lime/10 p-10 rounded-2xl border-2 border-lime relative overflow-hidden shadow-md">
-          <TextureOverlay type="paper" opacity={0.4} />
+          <TextureOverlay type="paper" opacity={0.3} />
           <div className="flex items-start gap-4 mb-6 relative z-10">
-            <div className="w-14 h-14 rounded-xl bg-lime flex items-center justify-center shadow-sm">
+            <div className="w-14 h-14 rounded-2xl bg-lime flex items-center justify-center shadow-sm">
               <Search className="w-7 h-7 text-navy" />
             </div>
             <div>
@@ -66,9 +66,9 @@ export default function Home() {
       id: 'certify',
       content: (
         <div className="bg-coral/10 p-10 rounded-2xl border-2 border-coral relative overflow-hidden shadow-md">
-          <TextureOverlay type="paper" opacity={0.4} />
+          <TextureOverlay type="paper" opacity={0.3} />
           <div className="flex items-start gap-4 mb-6 relative z-10">
-            <div className="w-14 h-14 rounded-xl bg-coral flex items-center justify-center shadow-sm">
+            <div className="w-14 h-14 rounded-2xl bg-coral flex items-center justify-center shadow-sm">
               <CheckCircle2 className="w-7 h-7 text-white" />
             </div>
             <div>
@@ -374,7 +374,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <div className="inline-block mb-6 px-6 py-3 bg-lime/10 rounded-full border-2 border-lime shadow-sm">
+              <div className="inline-block mb-6 px-6 py-3 bg-lime/10 rounded-full border-2 border-lime shadow-md">
                 <span className="text-sm font-semibold text-navy tracking-wide">LAYERED PROCESS</span>
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">

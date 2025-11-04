@@ -221,7 +221,7 @@ export default function HowItWorksPage() {
         <div className="max-w-5xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <div className="inline-block mb-6 px-6 py-3 bg-coral/10 rounded-full border-2 border-coral/30 shadow-sm">
+              <div className="inline-block mb-6 px-6 py-3 bg-coral/10 rounded-full border-2 border-coral/30 shadow-md">
                 <span className="text-sm font-semibold text-navy tracking-wide">THE JOURNEY</span>
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
@@ -244,7 +244,7 @@ export default function HowItWorksPage() {
         <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <div className="inline-block mb-6 px-6 py-3 bg-lime/10 rounded-full border-2 border-lime/30 shadow-sm">
+              <div className="inline-block mb-6 px-6 py-3 bg-lime/10 rounded-full border-2 border-lime/30 shadow-md">
                 <span className="text-sm font-semibold text-navy tracking-wide">TRUST BUILT IN</span>
               </div>
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-navy font-serif">
@@ -362,7 +362,7 @@ export default function HowItWorksPage() {
               <Button size="lg" asChild className="shadow-2xl">
                 <Link href="/eeat-meter">
                   Try the E-E-A-T Meter Free
-                  <ArrowRight className="w-6 h-6" />
+                  <ArrowRight className="w-5 h-5" />
                 </Link>
               </Button>
             </motion.div>
