@@ -1,6 +1,5 @@
 'use client'
 
-import { Metadata } from 'next'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import NewsletterSignup from '@/components/NewsletterSignup'
@@ -139,7 +138,10 @@ export default function HumanLayerPage() {
               <div className="bg-white rounded-3xl overflow-hidden shadow-2xl border border-charcoal/10">
                 <div className="grid md:grid-cols-5">
                   <div className={`md:col-span-2 h-64 md:h-auto bg-gradient-to-br ${articles[0].gradient} flex items-center justify-center`}>
-                    <articles[0].icon className="w-24 h-24 text-white/30" />
+                    {(() => {
+                      const Icon = articles[0].icon
+                      return <Icon className="w-24 h-24 text-white/30" />
+                    })()}
                   </div>
                   <div className="md:col-span-3 p-10">
                     <div className="flex items-center gap-2 mb-4">
@@ -199,7 +201,10 @@ export default function HumanLayerPage() {
                   <Link href={`/human-layer/${article.id}`} className="block group">
                     <div className="bg-white rounded-2xl overflow-hidden shadow-xl border border-charcoal/10 h-full">
                       <div className={`h-48 bg-gradient-to-br ${article.gradient} flex items-center justify-center relative overflow-hidden`}>
-                        <article.icon className="w-16 h-16 text-white/20" />
+                        {(() => {
+                          const Icon = article.icon
+                          return <Icon className="w-16 h-16 text-white/20" />
+                        })()}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                       </div>
                       <div className="p-6">
