@@ -7,6 +7,8 @@ import DepthHero from '@/components/cards3d/DepthHero'
 import StackedCards from '@/components/cards3d/StackedCards'
 import TiltCard from '@/components/cards3d/TiltCard'
 import FadeIn from '@/components/animations/FadeIn'
+import TextureOverlay from '@/components/TextureOverlay'
+import OrganicShape from '@/components/OrganicShape'
 import { ArrowRight, Upload, Search, CheckCircle, Shield, FileCheck, Award, UserCheck, Clipboard } from 'lucide-react'
 
 export default function HowItWorksPage() {
@@ -15,42 +17,44 @@ export default function HowItWorksPage() {
     {
       id: 'submit',
       content: (
-        <div className="bg-gradient-to-br from-primary/20 to-verification/20 backdrop-blur-sm p-10 rounded-2xl border border-white/20">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="w-16 h-16 rounded-2xl bg-white/40 backdrop-blur-sm flex items-center justify-center shadow-lg">
-              <Upload className="w-8 h-8 text-primary" />
+        <div className="bg-beige p-10 rounded-2xl border-2 border-lime/20 relative overflow-hidden">
+          <TextureOverlay type="paper" opacity={0.4} />
+          <OrganicShape variant="blob1" color="lime" className="absolute -bottom-12 -right-12 w-48 h-48" opacity={0.08} />
+          <div className="flex items-start gap-4 mb-6 relative z-10">
+            <div className="w-16 h-16 rounded-2xl bg-lime/20 flex items-center justify-center shadow-md">
+              <Upload className="w-8 h-8 text-navy" />
             </div>
             <div className="flex-1">
-              <div className="inline-block px-4 py-1 bg-white/30 rounded-full mb-3">
-                <span className="text-sm font-mono text-charcoal/70">STEP 1</span>
+              <div className="inline-block px-4 py-1 bg-navy/10 rounded-full mb-3">
+                <span className="text-sm font-semibold text-navy tracking-wide">STEP 1</span>
               </div>
-              <h3 className="text-4xl font-bold text-charcoal mb-4">Submit Your Content</h3>
-              <p className="text-charcoal/80 text-lg leading-relaxed mb-6">
+              <h3 className="text-4xl font-bold text-navy mb-4 font-serif">Submit Your Content</h3>
+              <p className="text-black/80 text-lg leading-relaxed mb-6">
                 Upload articles, blog posts, landing pages, or product descriptions through our simple dashboard interface. Whether it's skincare guides, wellness advice, or product claims, we review all content types.
               </p>
-              <p className="text-charcoal/80 text-lg leading-relaxed mb-6">
+              <p className="text-black/80 text-lg leading-relaxed mb-6">
                 Specify the expertise level you need - from certified coaches to board-certified medical doctors. Our tier system ensures you get the right expert for your content's subject matter and claims.
               </p>
-              <div className="bg-white/40 backdrop-blur-sm rounded-xl p-6 border border-white/40">
-                <h4 className="font-semibold mb-3 text-charcoal flex items-center gap-2">
-                  <Clipboard className="w-5 h-5 text-primary" />
+              <div className="bg-white rounded-xl p-6 border-2 border-lime/10">
+                <h4 className="font-semibold mb-3 text-navy flex items-center gap-2 font-serif">
+                  <Clipboard className="w-5 h-5 text-coral" />
                   What You Can Submit:
                 </h4>
-                <ul className="space-y-2 text-charcoal/70">
+                <ul className="space-y-2 text-black/70">
                   <li className="flex items-center gap-2">
-                    <span className="text-verification">•</span>
+                    <span className="text-lime text-xl">•</span>
                     Blog articles and content pages
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-verification">•</span>
+                    <span className="text-lime text-xl">•</span>
                     Product descriptions and claims
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-verification">•</span>
+                    <span className="text-lime text-xl">•</span>
                     Email campaigns and newsletters
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-verification">•</span>
+                    <span className="text-lime text-xl">•</span>
                     Social media content
                   </li>
                 </ul>
@@ -63,42 +67,44 @@ export default function HowItWorksPage() {
     {
       id: 'review',
       content: (
-        <div className="bg-gradient-to-br from-verification/20 to-alert/20 backdrop-blur-sm p-10 rounded-2xl border border-white/20">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="w-16 h-16 rounded-2xl bg-white/40 backdrop-blur-sm flex items-center justify-center shadow-lg">
-              <Search className="w-8 h-8 text-verification-dark" />
+        <div className="bg-white p-10 rounded-2xl border-2 border-coral/20 relative overflow-hidden shadow-sm">
+          <TextureOverlay type="paper" opacity={0.4} />
+          <OrganicShape variant="blob2" color="coral" className="absolute -top-12 -right-12 w-48 h-48" opacity={0.08} />
+          <div className="flex items-start gap-4 mb-6 relative z-10">
+            <div className="w-16 h-16 rounded-2xl bg-coral/20 flex items-center justify-center shadow-md">
+              <Search className="w-8 h-8 text-coral" />
             </div>
             <div className="flex-1">
-              <div className="inline-block px-4 py-1 bg-white/30 rounded-full mb-3">
-                <span className="text-sm font-mono text-charcoal/70">STEP 2</span>
+              <div className="inline-block px-4 py-1 bg-navy/10 rounded-full mb-3">
+                <span className="text-sm font-semibold text-navy tracking-wide">STEP 2</span>
               </div>
-              <h3 className="text-4xl font-bold text-charcoal mb-4">Expert Review Process</h3>
-              <p className="text-charcoal/80 text-lg leading-relaxed mb-6">
+              <h3 className="text-4xl font-bold text-navy mb-4 font-serif">Expert Review Process</h3>
+              <p className="text-black/80 text-lg leading-relaxed mb-6">
                 Our network of credentialed professionals - nurses, estheticians, nutritionists, doctors, and more - rigorously fact-check your content against current research, industry standards, and regulatory requirements.
               </p>
-              <p className="text-charcoal/80 text-lg leading-relaxed mb-6">
+              <p className="text-black/80 text-lg leading-relaxed mb-6">
                 Experts verify claims, check sources, identify unsubstantiated statements, and ensure accuracy. They also evaluate whether the content demonstrates real-world experience and appropriate expertise level.
               </p>
-              <div className="bg-white/40 backdrop-blur-sm rounded-xl p-6 border border-white/40">
-                <h4 className="font-semibold mb-3 text-charcoal flex items-center gap-2">
-                  <UserCheck className="w-5 h-5 text-verification-dark" />
+              <div className="bg-beige rounded-xl p-6 border-2 border-coral/10">
+                <h4 className="font-semibold mb-3 text-navy flex items-center gap-2 font-serif">
+                  <UserCheck className="w-5 h-5 text-lime" />
                   What Experts Check:
                 </h4>
-                <ul className="space-y-2 text-charcoal/70">
+                <ul className="space-y-2 text-black/70">
                   <li className="flex items-center gap-2">
-                    <span className="text-verification">•</span>
+                    <span className="text-lime text-xl">•</span>
                     Factual accuracy against scientific literature
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-verification">•</span>
+                    <span className="text-lime text-xl">•</span>
                     Source credibility and citations
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-verification">•</span>
+                    <span className="text-lime text-xl">•</span>
                     FTC compliance for product claims
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-verification">•</span>
+                    <span className="text-lime text-xl">•</span>
                     Appropriate expertise level for topic
                   </li>
                 </ul>
@@ -111,42 +117,44 @@ export default function HowItWorksPage() {
     {
       id: 'certify',
       content: (
-        <div className="bg-gradient-to-br from-alert/20 to-primary/20 backdrop-blur-sm p-10 rounded-2xl border border-white/20">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="w-16 h-16 rounded-2xl bg-white/40 backdrop-blur-sm flex items-center justify-center shadow-lg">
-              <CheckCircle className="w-8 h-8 text-alert" />
+        <div className="bg-beige p-10 rounded-2xl border-2 border-navy/20 relative overflow-hidden">
+          <TextureOverlay type="paper" opacity={0.4} />
+          <OrganicShape variant="blob4" color="navy" className="absolute -bottom-12 -left-12 w-48 h-48" opacity={0.08} />
+          <div className="flex items-start gap-4 mb-6 relative z-10">
+            <div className="w-16 h-16 rounded-2xl bg-navy/10 flex items-center justify-center shadow-md">
+              <CheckCircle className="w-8 h-8 text-coral" />
             </div>
             <div className="flex-1">
-              <div className="inline-block px-4 py-1 bg-white/30 rounded-full mb-3">
-                <span className="text-sm font-mono text-charcoal/70">STEP 3</span>
+              <div className="inline-block px-4 py-1 bg-navy/10 rounded-full mb-3">
+                <span className="text-sm font-semibold text-navy tracking-wide">STEP 3</span>
               </div>
-              <h3 className="text-4xl font-bold text-charcoal mb-4">Receive Certification</h3>
-              <p className="text-charcoal/80 text-lg leading-relaxed mb-6">
+              <h3 className="text-4xl font-bold text-navy mb-4 font-serif">Receive Certification</h3>
+              <p className="text-black/80 text-lg leading-relaxed mb-6">
                 Once approved, receive expert-signed validation with visible verification badges, structured data markup, and proper expert attribution that search engines and consumers recognize.
               </p>
-              <p className="text-charcoal/80 text-lg leading-relaxed mb-6">
+              <p className="text-black/80 text-lg leading-relaxed mb-6">
                 Display trust signals on your site, improve your E-E-A-T score, and demonstrate to Google and consumers that real experts stand behind your content.
               </p>
-              <div className="bg-white/40 backdrop-blur-sm rounded-xl p-6 border border-white/40">
-                <h4 className="font-semibold mb-4 text-charcoal flex items-center gap-2">
-                  <Award className="w-5 h-5 text-alert" />
+              <div className="bg-white rounded-xl p-6 border-2 border-navy/10">
+                <h4 className="font-semibold mb-4 text-navy flex items-center gap-2 font-serif">
+                  <Award className="w-5 h-5 text-coral" />
                   You Receive:
                 </h4>
-                <div className="space-y-3 text-charcoal/70">
+                <div className="space-y-3 text-black/70">
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-verification flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-lime flex-shrink-0" />
                     <span>Verification badges for your content</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Award className="w-5 h-5 text-verification flex-shrink-0" />
+                    <Award className="w-5 h-5 text-lime flex-shrink-0" />
                     <span>Expert signature and credentials</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Shield className="w-5 h-5 text-verification flex-shrink-0" />
+                    <Shield className="w-5 h-5 text-lime flex-shrink-0" />
                     <span>Schema markup for search engines</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <FileCheck className="w-5 h-5 text-verification flex-shrink-0" />
+                    <FileCheck className="w-5 h-5 text-lime flex-shrink-0" />
                     <span>Immutable verification record</span>
                   </div>
                 </div>
@@ -163,8 +171,10 @@ export default function HowItWorksPage() {
       {/* Hero Section with Depth */}
       <DepthHero
         backgroundLayers={[
-          <div key="1" className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-verification/10 to-primary/10 rounded-full blur-3xl" />,
-          <div key="2" className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-gradient-to-br from-primary/10 to-alert/10 rounded-full blur-3xl" />,
+          <div key="bg" className="absolute inset-0 bg-beige" />,
+          <TextureOverlay key="texture" type="paper" opacity={0.3} />,
+          <OrganicShape key="shape1" variant="blob1" color="lime" className="absolute top-1/4 right-1/4 w-96 h-96" opacity={0.08} />,
+          <OrganicShape key="shape2" variant="blob2" color="coral" className="absolute bottom-1/4 left-1/4 w-80 h-80" opacity={0.06} />,
         ]}
       >
         <div className="min-h-[70vh] flex items-center justify-center px-4">
@@ -173,22 +183,22 @@ export default function HowItWorksPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-6 py-3 bg-white/60 backdrop-blur-sm rounded-full border border-verification/20"
+              className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-lime/20"
             >
-              <span className="text-sm font-medium text-verification-dark">THE PROCESS</span>
+              <span className="text-sm font-semibold text-lime tracking-wide">THE PROCESS</span>
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-6xl md:text-8xl font-bold mb-8 leading-tight"
+              className="text-6xl md:text-8xl font-bold mb-8 leading-tight font-serif"
             >
-              <span className="bg-gradient-to-br from-charcoal to-charcoal/70 bg-clip-text text-transparent">
+              <span className="text-navy">
                 How CertREV
               </span>
               <br />
-              <span className="bg-gradient-to-br from-verification to-primary bg-clip-text text-transparent">
+              <span className="text-coral">
                 Works
               </span>
             </motion.h1>
@@ -197,7 +207,7 @@ export default function HowItWorksPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-xl md:text-2xl text-charcoal/70 max-w-2xl mx-auto"
+              className="text-xl md:text-2xl text-black/70 max-w-2xl mx-auto"
             >
               Expert fact-checking infrastructure that protects your SEO, builds consumer trust, and ensures compliance
             </motion.p>
@@ -206,17 +216,16 @@ export default function HowItWorksPage() {
       </DepthHero>
 
       {/* Stacked Cards - Main Process */}
-      <section className="py-32 px-4 bg-white">
-        <div className="max-w-5xl mx-auto">
+      <section className="py-32 px-4 bg-white relative overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.15} />
+        <div className="max-w-5xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <div className="inline-block mb-6 px-6 py-3 bg-cream rounded-full border border-verification/20">
-                <span className="text-sm font-medium text-verification-dark">3-STEP PROCESS</span>
-              </div>
-              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-charcoal">
+              <p className="text-coral font-script text-3xl mb-3">The Journey</p>
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
                 From Submission to Certification
               </h2>
-              <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
+              <p className="text-xl text-black/70 max-w-2xl mx-auto">
                 Our complete verification workflow
               </p>
             </div>
@@ -227,14 +236,17 @@ export default function HowItWorksPage() {
       </section>
 
       {/* Expert Vetting Section - Tilt Cards */}
-      <section className="bg-gradient-to-b from-white to-cream py-32 px-4">
-        <div className="max-w-6xl mx-auto">
+      <section className="bg-beige py-32 px-4 relative overflow-hidden">
+        <TextureOverlay type="paper" opacity={0.3} />
+        <OrganicShape variant="blob3" color="lime" className="absolute -bottom-20 -left-20 w-96 h-96" opacity={0.06} />
+        <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-charcoal">
+              <p className="text-lime font-script text-3xl mb-3">Trust Built In</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-navy font-serif">
                 Our Expert Vetting Process
               </h2>
-              <p className="text-xl text-charcoal/70 max-w-3xl mx-auto">
+              <p className="text-xl text-black/70 max-w-3xl mx-auto">
                 Every expert in our network undergoes rigorous credentialing and quality checks
               </p>
             </div>
@@ -247,33 +259,34 @@ export default function HowItWorksPage() {
               viewport={{ once: true }}
               transition={{ delay: 0 }}
             >
-              <TiltCard intensity={0.6} glowColor="rgba(119, 171, 149, 0.2)">
-                <div className="bg-white rounded-3xl p-10 border border-charcoal/10 shadow-2xl h-full">
-                  <div className="w-14 h-14 rounded-2xl bg-verification/20 flex items-center justify-center mb-6">
-                    <Shield className="w-7 h-7 text-verification-dark" />
+              <TiltCard intensity={0.6} glowColor="rgba(212, 225, 87, 0.2)">
+                <div className="bg-white rounded-3xl p-10 border-2 border-lime/20 shadow-2xl h-full relative overflow-hidden">
+                  <TextureOverlay type="paper" opacity={0.3} />
+                  <div className="w-14 h-14 rounded-2xl bg-lime/20 flex items-center justify-center mb-6 relative z-10">
+                    <Shield className="w-7 h-7 text-lime" />
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-charcoal">
+                  <h3 className="text-2xl font-bold mb-4 text-navy font-serif relative z-10">
                     Credential Verification
                   </h3>
-                  <p className="text-charcoal/70 leading-relaxed mb-6 text-lg">
+                  <p className="text-black/70 leading-relaxed mb-6 text-lg relative z-10">
                     Every expert undergoes rigorous credential verification. We check licenses, certifications, board certifications, and professional standing.
                   </p>
-                  <ul className="space-y-3">
+                  <ul className="space-y-3 relative z-10">
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-verification flex-shrink-0 mt-0.5" />
-                      <span className="text-charcoal/70">State license verification (where applicable)</span>
+                      <CheckCircle className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />
+                      <span className="text-black/70">State license verification (where applicable)</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-verification flex-shrink-0 mt-0.5" />
-                      <span className="text-charcoal/70">Board certification checks</span>
+                      <CheckCircle className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />
+                      <span className="text-black/70">Board certification checks</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-verification flex-shrink-0 mt-0.5" />
-                      <span className="text-charcoal/70">Professional reference validation</span>
+                      <CheckCircle className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />
+                      <span className="text-black/70">Professional reference validation</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-verification flex-shrink-0 mt-0.5" />
-                      <span className="text-charcoal/70">Active standing confirmation</span>
+                      <CheckCircle className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />
+                      <span className="text-black/70">Active standing confirmation</span>
                     </li>
                   </ul>
                 </div>
@@ -286,33 +299,34 @@ export default function HowItWorksPage() {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
-              <TiltCard intensity={0.6} glowColor="rgba(91, 141, 239, 0.2)">
-                <div className="bg-white rounded-3xl p-10 border border-charcoal/10 shadow-2xl h-full">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center mb-6">
-                    <Award className="w-7 h-7 text-primary" />
+              <TiltCard intensity={0.6} glowColor="rgba(10, 27, 63, 0.2)">
+                <div className="bg-white rounded-3xl p-10 border-2 border-navy/20 shadow-2xl h-full relative overflow-hidden">
+                  <TextureOverlay type="paper" opacity={0.3} />
+                  <div className="w-14 h-14 rounded-2xl bg-navy/10 flex items-center justify-center mb-6 relative z-10">
+                    <Award className="w-7 h-7 text-navy" />
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-charcoal">
+                  <h3 className="text-2xl font-bold mb-4 text-navy font-serif relative z-10">
                     Quality Assurance
                   </h3>
-                  <p className="text-charcoal/70 leading-relaxed mb-6 text-lg">
+                  <p className="text-black/70 leading-relaxed mb-6 text-lg relative z-10">
                     Experts are evaluated on review quality, accuracy, and thoroughness. We maintain high standards to protect your brand and ensure compliance.
                   </p>
-                  <ul className="space-y-3">
+                  <ul className="space-y-3 relative z-10">
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-verification flex-shrink-0 mt-0.5" />
-                      <span className="text-charcoal/70">Sample review assessment</span>
+                      <CheckCircle className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />
+                      <span className="text-black/70">Sample review assessment</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-verification flex-shrink-0 mt-0.5" />
-                      <span className="text-charcoal/70">Ongoing performance monitoring</span>
+                      <CheckCircle className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />
+                      <span className="text-black/70">Ongoing performance monitoring</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-verification flex-shrink-0 mt-0.5" />
-                      <span className="text-charcoal/70">Client feedback integration</span>
+                      <CheckCircle className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />
+                      <span className="text-black/70">Client feedback integration</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-verification flex-shrink-0 mt-0.5" />
-                      <span className="text-charcoal/70">Continuous education tracking</span>
+                      <CheckCircle className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />
+                      <span className="text-black/70">Continuous education tracking</span>
                     </li>
                   </ul>
                 </div>
@@ -323,13 +337,16 @@ export default function HowItWorksPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-white py-32 px-4">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="bg-white py-32 px-4 relative overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.15} />
+        <OrganicShape variant="blob4" color="coral" className="absolute top-0 right-0 w-96 h-96" opacity={0.08} />
+        <div className="max-w-4xl mx-auto text-center relative z-10">
           <FadeIn>
-            <h2 className="text-5xl md:text-6xl font-bold mb-8 text-charcoal leading-tight">
+            <p className="text-coral font-script text-3xl mb-4">Get Started</p>
+            <h2 className="text-5xl md:text-6xl font-bold mb-8 text-navy leading-tight font-serif">
               Ready to Get Started?
             </h2>
-            <p className="text-xl md:text-2xl text-charcoal/70 mb-12 max-w-2xl mx-auto font-light">
+            <p className="text-xl md:text-2xl text-black/70 mb-12 max-w-2xl mx-auto">
               Try our free E-E-A-T Meter to see how expert validation can improve your content credibility
             </p>
             <motion.div
