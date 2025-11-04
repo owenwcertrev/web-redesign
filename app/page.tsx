@@ -19,7 +19,7 @@ import OrganicShape from '@/components/OrganicShape'
 import TextureOverlay from '@/components/TextureOverlay'
 import Testimonial from '@/components/Testimonial'
 import ExpertProfile from '@/components/ExpertProfile'
-import LifestyleImagePlaceholder from '@/components/LifestyleImagePlaceholder'
+import HeroVisual from '@/components/HeroVisual'
 
 export default function Home() {
   // Stacked cards content for the process
@@ -187,11 +187,8 @@ export default function Home() {
               </Button>
             </motion.div>
 
-            {/* Lifestyle Hero Image */}
-            <LifestyleImagePlaceholder
-              variant="hero"
-              caption="Trusted by wellness brands and credentialed experts building the future of content trust"
-            />
+            {/* Hero Visual - Human in the Loop Illustration */}
+            <HeroVisual />
           </div>
         </div>
       </DepthHero>
@@ -276,21 +273,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust Infrastructure Section - Asymmetric spacing */}
-      <section className="relative bg-beige pt-24 pb-32 px-4 overflow-hidden">
-        <OrganicShape variant="blob2" color="lime" className="top-10 right-10 w-96 h-96" opacity={0.08} />
-        <OrganicShape variant="blob4" color="coral" className="bottom-10 left-10 w-80 h-80" opacity={0.06} />
-        <div className="max-w-6xl mx-auto relative z-10">
-          <FadeIn>
-            <TiltCard intensity={0.3} glowColor="rgba(212, 225, 87, 0.1)">
-              <div className="bg-white rounded-2xl p-8 md:p-12 shadow-lg border-2 border-navy/10 relative overflow-hidden">
-                <TextureOverlay type="paper" opacity={0.3} />
-                <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
-                  <div>
-                    <p className="text-lime font-script text-2xl mb-3">Built Different</p>
-                    <h2 className="text-3xl md:text-4xl font-bold mb-6 text-navy font-serif">
-                      Trust Infrastructure for the AI Age
-                    </h2>
+      {/* Trust Infrastructure Section - Bold Split Layout */}
+      <section className="relative bg-white pt-24 pb-32 px-4 overflow-hidden">
+        <OrganicShape variant="blob2" color="lime" className="top-10 right-10 w-[600px] h-[600px]" opacity={0.15} />
+        <OrganicShape variant="blob4" color="coral" className="bottom-10 left-10 w-[500px] h-[500px]" opacity={0.12} />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left: Content */}
+            <FadeIn>
+              <div>
+                <p className="text-coral font-script text-6xl mb-6">Built Different</p>
+                <h2 className="text-5xl md:text-6xl font-bold mb-8 text-navy font-serif leading-tight">
+                  Trust Infrastructure for the AI Age
+                </h2>
                     <p className="text-lg text-black/80 mb-6 leading-relaxed">
                       Studies show that 60% of consumers doubt AI-generated content
                       <CitationMarker
@@ -472,17 +467,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Flip Cards - Trust Principles - Asymmetric spacing */}
-      <section className="pt-32 pb-28 px-4 bg-white relative overflow-hidden">
-        <TextureOverlay type="grain" opacity={0.15} />
+      {/* Flip Cards - Trust Principles - Bold Lime Color Block */}
+      <section className="pt-32 pb-28 px-4 bg-lime relative overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.1} />
+        <OrganicShape variant="blob2" color="coral" className="absolute top-0 right-0 w-[600px] h-[600px]" opacity={0.15} />
+        <OrganicShape variant="blob3" color="navy" className="absolute bottom-0 left-0 w-[500px] h-[500px]" opacity={0.12} />
         <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <p className="text-coral font-script text-3xl mb-4">Our Foundation</p>
-              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
+              <p className="text-navy/80 font-script text-5xl mb-6 drop-shadow-sm">Our Foundation</p>
+              <h2 className="text-6xl md:text-7xl font-bold mb-8 text-navy font-serif leading-tight drop-shadow-sm">
                 Built on Trust Principles
               </h2>
-              <p className="text-xl text-black/70 max-w-2xl mx-auto">
+              <p className="text-2xl text-navy/80 max-w-2xl mx-auto font-medium">
                 Expert verification, FTC compliance, and complete transparency
               </p>
             </div>

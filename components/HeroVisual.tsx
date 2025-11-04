@@ -1,0 +1,169 @@
+'use client'
+
+import { motion } from 'framer-motion'
+import { User, FileCheck, Award, CheckCircle, ArrowRight } from 'lucide-react'
+import TextureOverlay from './TextureOverlay'
+
+export default function HeroVisual() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="mt-20 max-w-5xl mx-auto relative"
+    >
+      {/* Main Visual Container */}
+      <div className="relative h-[400px] md:h-[500px]">
+        {/* Background glow */}
+        <div className="absolute inset-0 bg-gradient-to-br from-lime/20 via-coral/10 to-navy/20 rounded-[3rem] blur-3xl" />
+
+        {/* Center: Content Document */}
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 1.4, duration: 0.6 }}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
+        >
+          <div className="bg-white rounded-2xl p-8 border-2 border-navy/20 shadow-2xl w-80 relative overflow-hidden">
+            <TextureOverlay type="paper" opacity={0.3} />
+            <div className="relative z-10 space-y-3">
+              <div className="flex items-center gap-2 mb-4">
+                <FileCheck className="w-6 h-6 text-navy" />
+                <span className="font-bold text-navy font-serif">Content Document</span>
+              </div>
+              <div className="h-2 bg-navy/10 rounded-full w-full" />
+              <div className="h-2 bg-navy/10 rounded-full w-5/6" />
+              <div className="h-2 bg-navy/10 rounded-full w-4/6" />
+              <div className="h-2 bg-navy/10 rounded-full w-full" />
+              <div className="h-2 bg-navy/10 rounded-full w-3/4" />
+
+              {/* Verification badge overlay */}
+              <motion.div
+                initial={{ scale: 0, rotate: -10 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 2.2, type: "spring", stiffness: 200 }}
+                className="absolute top-6 right-6"
+              >
+                <div className="w-16 h-16 rounded-full bg-lime shadow-lg flex items-center justify-center border-4 border-white">
+                  <CheckCircle className="w-8 h-8 text-navy" />
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Left: Expert Reviewer */}
+        <motion.div
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 1.6, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute left-0 md:left-8 top-1/2 -translate-y-1/2 z-20"
+        >
+          <div className="bg-white rounded-2xl p-6 border-2 border-lime/30 shadow-xl w-56 relative overflow-hidden">
+            <TextureOverlay type="paper" opacity={0.2} />
+            <div className="relative z-10">
+              <div className="w-16 h-16 rounded-full bg-lime/20 flex items-center justify-center mx-auto mb-3 border-2 border-lime/40">
+                <User className="w-8 h-8 text-navy" />
+              </div>
+              <div className="text-center">
+                <div className="font-bold text-navy text-sm mb-1">Dr. Sarah Chen</div>
+                <div className="text-xs text-black/60 mb-2">Board Certified MD</div>
+                <div className="inline-flex items-center gap-1 px-2 py-1 bg-lime/20 rounded-full text-xs font-semibold text-navy">
+                  <Award className="w-3 h-3" />
+                  Tier 6 Expert
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Arrow to content */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.9, duration: 0.5 }}
+            className="absolute -right-16 top-1/2 -translate-y-1/2"
+          >
+            <ArrowRight className="w-8 h-8 text-lime" />
+          </motion.div>
+        </motion.div>
+
+        {/* Right: Trust Metrics */}
+        <motion.div
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 1.8, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute right-0 md:right-8 top-1/2 -translate-y-1/2 z-20"
+        >
+          <div className="bg-navy rounded-2xl p-6 border-2 border-lime shadow-xl w-56 relative overflow-hidden">
+            <TextureOverlay type="grain" opacity={0.1} />
+            <div className="relative z-10 space-y-3">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-2 h-2 rounded-full bg-lime animate-pulse" />
+                <span className="text-white font-semibold text-sm">Live Verification</span>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-white/80 text-xs">Accuracy</span>
+                  <span className="text-lime font-bold text-sm">98%</span>
+                </div>
+                <div className="h-1.5 bg-white/20 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: "98%" }}
+                    transition={{ delay: 2, duration: 1, ease: "easeOut" }}
+                    className="h-full bg-lime rounded-full"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-white/80 text-xs">Citations</span>
+                  <span className="text-lime font-bold text-sm">12/12</span>
+                </div>
+                <div className="h-1.5 bg-white/20 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ delay: 2.2, duration: 1, ease: "easeOut" }}
+                    className="h-full bg-lime rounded-full"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-white/20">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-lime" />
+                  <span className="text-white text-xs font-semibold">Verified Content</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Arrow from content */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2.1, duration: 0.5 }}
+            className="absolute -left-16 top-1/2 -translate-y-1/2"
+          >
+            <ArrowRight className="w-8 h-8 text-coral" />
+          </motion.div>
+        </motion.div>
+
+        {/* Bottom caption */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.4, duration: 0.6 }}
+          className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-full text-center"
+        >
+          <p className="text-sm text-black/60 italic">
+            Human experts verify AI-powered content in real-time
+          </p>
+        </motion.div>
+      </div>
+    </motion.div>
+  )
+}
