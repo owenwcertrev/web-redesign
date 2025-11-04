@@ -6,6 +6,8 @@ import DepthHero from '@/components/cards3d/DepthHero'
 import FlipStatCard from '@/components/cards3d/FlipStatCard'
 import TiltCard from '@/components/cards3d/TiltCard'
 import FadeIn from '@/components/animations/FadeIn'
+import TextureOverlay from '@/components/TextureOverlay'
+import OrganicShape from '@/components/OrganicShape'
 import { BarChart, FileCheck, TrendingUp, Users, AlertCircle, ShoppingBag, Sparkles } from 'lucide-react'
 
 export default function EEATMeterPage() {
@@ -14,8 +16,10 @@ export default function EEATMeterPage() {
       {/* Hero Section with Depth */}
       <DepthHero
         backgroundLayers={[
-          <div key="1" className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-primary/10 to-alert/10 rounded-full blur-3xl" />,
-          <div key="2" className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-gradient-to-br from-verification/10 to-primary/10 rounded-full blur-3xl" />,
+          <div key="bg" className="absolute inset-0 bg-beige" />,
+          <TextureOverlay key="texture" type="paper" opacity={0.3} />,
+          <OrganicShape key="shape1" variant="blob1" color="lime" className="absolute top-1/4 right-1/4 w-96 h-96" opacity={0.08} />,
+          <OrganicShape key="shape2" variant="blob2" color="coral" className="absolute bottom-1/4 left-1/4 w-80 h-80" opacity={0.06} />,
         ]}
       >
         <div className="min-h-[70vh] flex items-center justify-center px-4">
@@ -24,11 +28,11 @@ export default function EEATMeterPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-6 py-3 bg-white/60 backdrop-blur-sm rounded-full border border-primary/20"
+              className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-lime/20"
             >
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-primary">FREE CONTENT ANALYSIS</span>
+                <Sparkles className="w-4 h-4 text-lime" />
+                <span className="text-sm font-semibold text-lime tracking-wide">FREE CONTENT ANALYSIS</span>
               </div>
             </motion.div>
 
@@ -36,13 +40,13 @@ export default function EEATMeterPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-6xl md:text-8xl font-bold mb-8 leading-tight"
+              className="text-6xl md:text-8xl font-bold mb-8 leading-tight font-serif"
             >
-              <span className="bg-gradient-to-br from-charcoal to-charcoal/70 bg-clip-text text-transparent">
+              <span className="text-navy">
                 E-E-A-T
               </span>
               <br />
-              <span className="bg-gradient-to-br from-primary to-verification bg-clip-text text-transparent">
+              <span className="text-coral">
                 Meter
               </span>
             </motion.h1>
@@ -51,7 +55,7 @@ export default function EEATMeterPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-xl md:text-2xl text-charcoal/70 mb-4 max-w-2xl mx-auto"
+              className="text-xl md:text-2xl text-black/70 mb-4 max-w-2xl mx-auto"
             >
               Human Validation in an AI-Powered Era
             </motion.p>
@@ -60,7 +64,7 @@ export default function EEATMeterPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="text-lg text-charcoal/60 max-w-2xl mx-auto font-light"
+              className="text-lg text-black/60 max-w-2xl mx-auto"
             >
               In an AI driven world, trust is the ultimate discriminator. Get your free content analysis.
             </motion.p>
@@ -69,17 +73,16 @@ export default function EEATMeterPage() {
       </DepthHero>
 
       {/* Sample Report Preview - Tilt Cards */}
-      <section className="bg-white py-20 px-4">
-        <div className="max-w-6xl mx-auto">
+      <section className="bg-white py-20 px-4 relative overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.15} />
+        <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <div className="inline-block mb-4 px-6 py-2 bg-cream rounded-full border border-primary/20">
-                <span className="text-sm font-medium text-primary">YOUR FREE REPORTS</span>
-              </div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-charcoal">
+              <p className="text-coral font-script text-3xl mb-3">Your Free Report</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-navy font-serif">
                 Your Customized Analysis Includes
               </h2>
-              <p className="text-xl text-charcoal/70">
+              <p className="text-xl text-black/70">
                 Authority score and content health metrics
               </p>
             </div>
@@ -92,22 +95,23 @@ export default function EEATMeterPage() {
               viewport={{ once: true }}
               transition={{ delay: 0 }}
             >
-              <TiltCard intensity={0.7} glowColor="rgba(91, 141, 239, 0.2)">
-                <div className="bg-gradient-to-br from-white to-cream rounded-2xl p-8 border-2 border-primary/20 shadow-xl h-full">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
-                      <BarChart className="w-6 h-6 text-primary" />
+              <TiltCard intensity={0.7} glowColor="rgba(10, 27, 63, 0.2)">
+                <div className="bg-beige rounded-2xl p-8 border-2 border-navy/20 shadow-xl h-full relative overflow-hidden">
+                  <TextureOverlay type="paper" opacity={0.3} />
+                  <div className="flex items-center gap-3 mb-6 relative z-10">
+                    <div className="w-12 h-12 rounded-xl bg-navy/10 flex items-center justify-center">
+                      <BarChart className="w-6 h-6 text-navy" />
                     </div>
-                    <h3 className="text-xl font-bold text-charcoal">
+                    <h3 className="text-xl font-bold text-navy font-serif">
                       Estimated Semrush Authority Score
                     </h3>
                   </div>
-                  <div className="bg-white rounded-xl p-6 mb-4 border border-charcoal/10">
-                    <div className="h-32 flex items-center justify-center text-charcoal/40 text-sm">
+                  <div className="bg-white rounded-xl p-6 mb-4 border-2 border-navy/10 relative z-10">
+                    <div className="h-32 flex items-center justify-center text-black/40 text-sm">
                       Sample visualization preview
                     </div>
                   </div>
-                  <p className="text-sm text-charcoal/70 leading-relaxed">
+                  <p className="text-sm text-black/70 leading-relaxed relative z-10">
                     A calibrated snapshot of your domain's credibility based on backlinks, press coverage, and organic traffic
                   </p>
                 </div>
@@ -120,37 +124,38 @@ export default function EEATMeterPage() {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
-              <TiltCard intensity={0.7} glowColor="rgba(119, 171, 149, 0.2)">
-                <div className="bg-gradient-to-br from-white to-cream rounded-2xl p-8 border-2 border-verification/20 shadow-xl h-full">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 rounded-xl bg-verification/20 flex items-center justify-center">
-                      <FileCheck className="w-6 h-6 text-verification-dark" />
+              <TiltCard intensity={0.7} glowColor="rgba(212, 225, 87, 0.2)">
+                <div className="bg-white rounded-2xl p-8 border-2 border-lime/20 shadow-xl h-full relative overflow-hidden">
+                  <TextureOverlay type="paper" opacity={0.3} />
+                  <div className="flex items-center gap-3 mb-6 relative z-10">
+                    <div className="w-12 h-12 rounded-xl bg-lime/20 flex items-center justify-center">
+                      <FileCheck className="w-6 h-6 text-lime" />
                     </div>
-                    <h3 className="text-xl font-bold text-charcoal">
+                    <h3 className="text-xl font-bold text-navy font-serif">
                       Blog Content Health Check
                     </h3>
                   </div>
-                  <div className="bg-white rounded-xl p-6 mb-4 border border-charcoal/10">
+                  <div className="bg-beige rounded-xl p-6 mb-4 border-2 border-lime/10 relative z-10">
                     <div className="space-y-3 text-sm">
                       <div className="flex items-center gap-2">
-                        <span className="text-verification text-lg">✓</span>
-                        <span className="text-charcoal/70">SSL Certificate Present</span>
+                        <span className="text-lime text-lg">✓</span>
+                        <span className="text-black/70">SSL Certificate Present</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-red-500 text-lg">✗</span>
-                        <span className="text-charcoal/70">Missing Author Bylines</span>
+                        <span className="text-coral text-lg">✗</span>
+                        <span className="text-black/70">Missing Author Bylines</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-red-500 text-lg">✗</span>
-                        <span className="text-charcoal/70">No Expert Schema Markup</span>
+                        <span className="text-coral text-lg">✗</span>
+                        <span className="text-black/70">No Expert Schema Markup</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-alert text-lg">⚠</span>
-                        <span className="text-charcoal/70">Limited Expert Reviews</span>
+                        <span className="text-coral text-lg">⚠</span>
+                        <span className="text-black/70">Limited Expert Reviews</span>
                       </div>
                     </div>
                   </div>
-                  <p className="text-sm text-charcoal/70 leading-relaxed">
+                  <p className="text-sm text-black/70 leading-relaxed relative z-10">
                     Analysis of missing best practices like author bylines, expert reviews, structured data, and helpfulness signals
                   </p>
                 </div>
@@ -161,21 +166,26 @@ export default function EEATMeterPage() {
       </section>
 
       {/* The Analysis Tool */}
-      <section className="bg-gradient-to-b from-white to-cream py-20 px-4">
-        <div className="max-w-5xl mx-auto">
+      <section className="bg-beige py-20 px-4 relative overflow-hidden">
+        <TextureOverlay type="paper" opacity={0.3} />
+        <OrganicShape variant="blob3" color="lime" className="absolute -bottom-20 -right-20 w-96 h-96" opacity={0.06} />
+        <div className="max-w-5xl mx-auto relative z-10">
           <EEATMeterTool />
         </div>
       </section>
 
       {/* Educational Section - E-E-A-T Explained */}
-      <section className="bg-white py-32 px-4">
-        <div className="max-w-6xl mx-auto">
+      <section className="bg-white py-32 px-4 relative overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.15} />
+        <OrganicShape variant="blob4" color="coral" className="absolute top-0 left-0 w-96 h-96" opacity={0.08} />
+        <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-charcoal">
+              <p className="text-lime font-script text-3xl mb-3">Understanding E-E-A-T</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-navy font-serif">
                 What is E-E-A-T?
               </h2>
-              <p className="text-xl text-charcoal/70 max-w-3xl mx-auto">
+              <p className="text-xl text-black/70 max-w-3xl mx-auto">
                 Google's framework for evaluating content quality — and why it matters for your brand
               </p>
             </div>
@@ -186,22 +196,26 @@ export default function EEATMeterPage() {
               {
                 title: 'Experience',
                 description: 'Demonstrates first-hand, real-world experience with the topic. This is what separates human expertise from AI-generated content.',
-                color: 'rgba(119, 171, 149, 0.2)'
+                color: 'rgba(212, 225, 87, 0.2)',
+                borderColor: 'border-lime/20'
               },
               {
                 title: 'Expertise',
                 description: 'Shows credentialed knowledge and qualifications in the subject matter. Professional credentials and certifications signal expertise.',
-                color: 'rgba(91, 141, 239, 0.2)'
+                color: 'rgba(10, 27, 63, 0.2)',
+                borderColor: 'border-navy/20'
               },
               {
                 title: 'Authoritativeness',
                 description: 'Recognized as a leading source in the industry. Built through citations, backlinks, press mentions, and expert partnerships.',
-                color: 'rgba(241, 130, 57, 0.2)'
+                color: 'rgba(232, 96, 60, 0.2)',
+                borderColor: 'border-coral/20'
               },
               {
                 title: 'Trustworthiness',
                 description: 'Proven accuracy, transparency, and reliability. Fact-checking, expert reviews, and clear sourcing build trust with audiences.',
-                color: 'rgba(119, 171, 149, 0.2)'
+                color: 'rgba(212, 225, 87, 0.2)',
+                borderColor: 'border-lime/20'
               }
             ].map((item, index) => (
               <motion.div
@@ -212,46 +226,48 @@ export default function EEATMeterPage() {
                 transition={{ delay: index * 0.1 }}
               >
                 <TiltCard intensity={0.6} glowColor={item.color}>
-                  <div className="bg-gradient-to-br from-white to-cream rounded-2xl p-8 border border-charcoal/10 shadow-xl h-full">
-                    <h3 className="text-2xl font-bold mb-4 text-charcoal">{item.title}</h3>
-                    <p className="text-charcoal/70 leading-relaxed">{item.description}</p>
+                  <div className={`bg-white rounded-2xl p-8 border-2 ${item.borderColor} shadow-xl h-full relative overflow-hidden`}>
+                    <TextureOverlay type="paper" opacity={0.3} />
+                    <h3 className="text-2xl font-bold mb-4 text-navy font-serif relative z-10">{item.title}</h3>
+                    <p className="text-black/70 leading-relaxed relative z-10">{item.description}</p>
                   </div>
                 </TiltCard>
               </motion.div>
             ))}
           </div>
 
-          <div className="bg-gradient-to-br from-cream to-white rounded-3xl p-10 md:p-14 border border-charcoal/10 shadow-xl">
-            <h3 className="text-3xl font-bold mb-6 text-charcoal">
+          <div className="bg-beige rounded-3xl p-10 md:p-14 border-2 border-navy/10 shadow-xl relative overflow-hidden">
+            <TextureOverlay type="paper" opacity={0.3} />
+            <h3 className="text-3xl font-bold mb-6 text-navy font-serif relative z-10">
               Why E-E-A-T Matters for Your Brand
             </h3>
-            <p className="text-lg text-charcoal/80 mb-6 leading-relaxed">
+            <p className="text-lg text-black/80 mb-6 leading-relaxed relative z-10">
               Health, wellness, financial, and legal content falls under Google's "Your Money or Your Life" (YMYL) category — content
               that can impact health, safety, or financial well-being. Google applies stricter E-E-A-T standards to
               YMYL content.
             </p>
-            <p className="text-lg text-charcoal/80 mb-4 leading-relaxed font-semibold">
+            <p className="text-lg text-black/80 mb-4 leading-relaxed font-semibold relative z-10">
               Without verified expert attribution, brands risk:
             </p>
-            <ul className="grid md:grid-cols-2 gap-4 text-charcoal/80 mb-6">
-              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border border-charcoal/10">
-                <span className="text-red-500 font-bold">•</span>
+            <ul className="grid md:grid-cols-2 gap-4 text-black/80 mb-6 relative z-10">
+              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border-2 border-coral/20">
+                <span className="text-coral font-bold">•</span>
                 <span>Significant drops in organic traffic (HubSpot saw 88% decline)</span>
               </li>
-              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border border-charcoal/10">
-                <span className="text-red-500 font-bold">•</span>
+              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border-2 border-coral/20">
+                <span className="text-coral font-bold">•</span>
                 <span>Lower search rankings for competitive keywords</span>
               </li>
-              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border border-charcoal/10">
-                <span className="text-red-500 font-bold">•</span>
+              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border-2 border-coral/20">
+                <span className="text-coral font-bold">•</span>
                 <span>Reduced consumer trust and conversion rates</span>
               </li>
-              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border border-charcoal/10">
-                <span className="text-red-500 font-bold">•</span>
+              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border-2 border-coral/20">
+                <span className="text-coral font-bold">•</span>
                 <span>FTC compliance issues for unsubstantiated claims</span>
               </li>
             </ul>
-            <p className="text-lg text-charcoal/80 leading-relaxed">
+            <p className="text-lg text-black/80 leading-relaxed relative z-10">
               Expert validation through CertREV helps brands across health, wellness, finance, and professional services meet E-E-A-T standards, protect their SEO
               performance, and build lasting consumer trust.
             </p>
@@ -260,14 +276,17 @@ export default function EEATMeterPage() {
       </section>
 
       {/* Trust Signals Section - Flip Cards */}
-      <section className="bg-gradient-to-b from-white to-cream py-32 px-4">
-        <div className="max-w-7xl mx-auto">
+      <section className="bg-beige py-32 px-4 relative overflow-hidden">
+        <TextureOverlay type="paper" opacity={0.3} />
+        <OrganicShape variant="blob1" color="lime" className="absolute top-0 right-0 w-96 h-96" opacity={0.08} />
+        <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-charcoal">
+              <p className="text-coral font-script text-3xl mb-3">The Numbers</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-navy font-serif">
                 The Impact of Expert Validation
               </h2>
-              <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
+              <p className="text-xl text-black/70 max-w-2xl mx-auto">
                 Real data on traffic, trust, compliance, and conversions
               </p>
             </div>
