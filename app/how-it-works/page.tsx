@@ -221,7 +221,9 @@ export default function HowItWorksPage() {
         <div className="max-w-5xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <p className="text-coral font-script text-3xl mb-3">The Journey</p>
+              <div className="inline-block mb-6 px-6 py-3 bg-coral/10 rounded-full border-2 border-coral/30 shadow-sm">
+                <span className="text-sm font-semibold text-navy tracking-wide">THE JOURNEY</span>
+              </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
                 From Submission to Certification
               </h2>
@@ -242,7 +244,9 @@ export default function HowItWorksPage() {
         <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <p className="text-lime font-script text-3xl mb-3">Trust Built In</p>
+              <div className="inline-block mb-6 px-6 py-3 bg-lime/10 rounded-full border-2 border-lime/30 shadow-sm">
+                <span className="text-sm font-semibold text-navy tracking-wide">TRUST BUILT IN</span>
+              </div>
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-navy font-serif">
                 Our Expert Vetting Process
               </h2>

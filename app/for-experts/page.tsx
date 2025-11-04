@@ -14,21 +14,25 @@ export default function ForExpertsPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-beige py-24 px-4 relative overflow-hidden">
-        <TextureOverlay type="paper" opacity={0.3} />
-        <OrganicShape variant="blob1" color="lime" className="absolute top-0 right-0 w-96 h-96" opacity={0.08} />
+      <section className="bg-gradient-to-br from-lime/20 via-beige to-beige py-32 px-4 relative overflow-hidden">
+        <TextureOverlay type="paper" opacity={0.2} />
+        <OrganicShape variant="blob1" color="lime" className="absolute top-0 right-0 w-96 h-96" opacity={0.15} />
+        <OrganicShape variant="blob2" color="coral" className="absolute bottom-0 left-0 w-80 h-80" opacity={0.08} />
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <p className="text-coral font-script text-3xl mb-4">Join Us</p>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-navy leading-tight font-serif">
-            Join Our Expert Network
+          <div className="inline-block mb-6 px-6 py-3 bg-white/90 backdrop-blur-sm rounded-full border-2 border-lime shadow-md">
+            <span className="text-sm font-semibold text-navy tracking-wide">FOR EXPERTS</span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 text-navy leading-tight font-serif">
+            Share Your Expertise.<br />
+            <span className="text-coral">Build Trust.</span>
           </h1>
-          <p className="text-xl text-black/80 max-w-2xl mx-auto mb-8">
-            Use your professional expertise to verify health, wellness, financial, and professional service content. Help brands build trust while earning competitive compensation.
+          <p className="text-xl md:text-2xl text-black/70 max-w-2xl mx-auto mb-10 leading-relaxed">
+            Use your professional credentials to verify health, wellness, financial, and professional service content. Earn competitive compensation while helping brands combat misinformation.
           </p>
           <Button size="lg" asChild>
             <Link href="/eeat-meter">
-              Join Our Expert Network
-              <ArrowRight className="w-6 h-6" />
+              Apply to Join
+              <ArrowRight className="w-5 h-5" />
             </Link>
           </Button>
         </div>
@@ -38,10 +42,14 @@ export default function ForExpertsPage() {
       <section className="bg-white py-24 px-4 relative overflow-hidden">
         <TextureOverlay type="grain" opacity={0.15} />
         <div className="max-w-6xl mx-auto relative z-10">
-          <p className="text-lime font-script text-3xl text-center mb-3">Why Work With Us</p>
-          <h2 className="text-3xl font-bold text-center mb-12 text-navy font-serif">
-            Why Join CertREV
-          </h2>
+          <div className="text-center mb-12">
+            <div className="inline-block mb-4 px-6 py-2 bg-lime/10 rounded-full border-2 border-lime/30 shadow-sm">
+              <span className="text-xs font-semibold text-navy tracking-wide">BENEFITS</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-navy font-serif">
+              Why Join CertREV
+            </h2>
+          </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-beige rounded-2xl p-6 text-center border-2 border-lime/20 relative overflow-hidden">
               <TextureOverlay type="paper" opacity={0.3} />
