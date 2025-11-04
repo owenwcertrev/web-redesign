@@ -16,11 +16,10 @@ import TrustIndicator from '@/components/trust/TrustIndicator'
 import ConfidenceMeter from '@/components/trust/ConfidenceMeter'
 import GlassMorphCard from '@/components/trust/GlassMorphCard'
 import CitationMarker from '@/components/trust/CitationMarker'
-import HolographicCard from '@/components/radical/HolographicCard'
-import ParticleNetwork from '@/components/radical/ParticleNetwork'
-import NeonText from '@/components/radical/NeonText'
-import LiquidBlob from '@/components/radical/LiquidBlob'
-import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Sparkles, Zap } from 'lucide-react'
+import FlipStatCard from '@/components/cards3d/FlipStatCard'
+import CardDeck from '@/components/cards3d/CardDeck'
+import TiltCard from '@/components/cards3d/TiltCard'
+import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Sparkles, Upload, FileCheck, Shield } from 'lucide-react'
 
 export default function Home() {
   return (
@@ -156,128 +155,176 @@ export default function Home() {
             </p>
           </FadeIn>
 
-          <StaggerChildren className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 card-grid">
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 }
-              }}
-            >
-              <StatCard
-                stat="88%"
-                description="Organic traffic drop at HubSpot after Google's 2024 updates"
-                source="Source: HubSpot"
-                icon={TrendingUp}
-              />
-            </motion.div>
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 }
-              }}
-            >
-              <StatCard
-                stat="60%"
-                description="of consumers doubt content that shows no human review"
-                source="Source: Stanford, 2025"
-                icon={Users}
-              />
-            </motion.div>
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 }
-              }}
-            >
-              <StatCard
-                stat="$51,744"
-                description="per violation for deceptive or unsubstantiated claims"
-                source="Source: FTC, 2024"
-                icon={AlertCircle}
-              />
-            </motion.div>
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 }
-              }}
-            >
-              <StatCard
-                stat="↑ Purchase Intent"
-                description="Expert-reviewed articles lift purchase intent vs. brand copy alone"
-                source="Source: Nielsen x inPowered"
-                icon={ShoppingBag}
-              />
-            </motion.div>
-          </StaggerChildren>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <FlipStatCard
+              stat="88%"
+              label="Traffic Drop"
+              description="Organic traffic lost by major publishers without E-E-A-T"
+              backTitle="The Cost of Unverified Content"
+              backDetails={[
+                'HubSpot lost 88% organic traffic after Google updates',
+                'Affects brands without expert validation',
+                'Reversible with proper verification',
+                'Expert attribution prevents penalties'
+              ]}
+              icon={TrendingUp}
+              gradient="from-primary/10 to-primary/20"
+            />
+
+            <FlipStatCard
+              stat="60%"
+              label="Consumer Doubt"
+              description="People who distrust AI-generated content without expert review"
+              backTitle="Trust Gap Analysis"
+              backDetails={[
+                'Stanford study of 10,000+ consumers',
+                'Highest among health/finance content',
+                'Expert badges increase trust 3x',
+                'Verified content drives conversions'
+              ]}
+              icon={Users}
+              gradient="from-verification/10 to-verification/20"
+            />
+
+            <FlipStatCard
+              stat="$51,744"
+              label="Per Violation"
+              description="Average FTC fine for deceptive or unsubstantiated claims"
+              backTitle="Compliance Protection"
+              backDetails={[
+                'FTC enforcement up 400% in 2024',
+                'Expert review ensures compliance',
+                'Protects against costly penalties',
+                'Demonstrates due diligence'
+              ]}
+              icon={AlertCircle}
+              gradient="from-alert/10 to-alert/20"
+            />
+
+            <FlipStatCard
+              stat="↑40%"
+              label="Purchase Intent"
+              description="Lift from expert-verified content vs brand copy alone"
+              backTitle="Conversion Impact"
+              backDetails={[
+                'Nielsen x inPowered meta-analysis',
+                'Expert content outperforms ads',
+                'Builds long-term brand trust',
+                'Compound effect over time'
+              ]}
+              icon={ShoppingBag}
+              gradient="from-charcoal/10 to-charcoal/20"
+            />
+          </div>
         </div>
       </section>
 
-      {/* Radical Future Section */}
-      <section className="relative bg-gradient-to-br from-charcoal via-charcoal/95 to-charcoal py-32 px-4 overflow-hidden">
-        {/* Particle Network Background */}
-        <div className="absolute inset-0 opacity-30">
-          <ParticleNetwork particleCount={60} connectionDistance={130} />
-        </div>
-
-        {/* Liquid Blob Accent */}
-        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4">
-          <LiquidBlob variant="processing" size="lg" />
-        </div>
-
-        <div className="max-w-7xl mx-auto relative z-10">
+      {/* 3D Verification Process */}
+      <section className="relative bg-white py-32 px-4">
+        <div className="max-w-7xl mx-auto">
           <FadeIn>
             <div className="text-center mb-20">
-              <motion.div
-                className="inline-flex items-center gap-2 px-5 py-2 bg-white/5 backdrop-blur-xl rounded-full border border-primary/30 mb-6"
-                animate={{
-                  boxShadow: [
-                    '0 0 15px rgba(91,141,239,0.2)',
-                    '0 0 25px rgba(91,141,239,0.4)',
-                    '0 0 15px rgba(91,141,239,0.2)',
-                  ],
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <Zap className="w-4 h-4 text-primary" />
-                <span className="text-white/90 font-mono text-xs tracking-wider">
-                  NEXT-GEN INFRASTRUCTURE
-                </span>
-              </motion.div>
-
-              <h2 className="text-5xl md:text-6xl font-bold mb-6">
-                <span className="text-white">Trust Infrastructure </span>
-                <br />
-                <NeonText color="primary" intensity="high">
-                  Reimagined
-                </NeonText>
+              <div className="inline-block mb-6 px-6 py-3 bg-cream rounded-full border border-primary/20">
+                <span className="text-sm font-medium text-primary">INTERACTIVE PROCESS</span>
+              </div>
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-charcoal">
+                Verification Made Tangible
               </h2>
-              <p className="text-xl text-white/70 max-w-2xl mx-auto">
-                Experience the future of verification with holographic interfaces and real-time trust signals
+              <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
+                Hover over cards to explore our verification workflow in 3D depth
               </p>
             </div>
           </FadeIn>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <CardDeck
+            cards={[
+              {
+                id: 'submit',
+                title: 'Submit Content',
+                color: 'bg-gradient-to-br from-primary to-primary-dark',
+                content: (
+                  <div className="space-y-4">
+                    <p>Upload your articles, blog posts, landing pages, or product descriptions through our simple dashboard interface.</p>
+                    <ul className="list-disc list-inside space-y-2 opacity-90">
+                      <li>Instant AI pre-screening</li>
+                      <li>Claim detection & extraction</li>
+                      <li>Automatic expert matching</li>
+                      <li>Compliance risk assessment</li>
+                    </ul>
+                  </div>
+                )
+              },
+              {
+                id: 'review',
+                title: 'Expert Review',
+                color: 'bg-gradient-to-br from-verification to-verification-dark',
+                content: (
+                  <div className="space-y-4">
+                    <p>A credentialed professional in your industry reviews every claim against current research and validates all sources.</p>
+                    <ul className="list-disc list-inside space-y-2 opacity-90">
+                      <li>Fact-check all claims</li>
+                      <li>Verify source credibility</li>
+                      <li>Check regulatory compliance</li>
+                      <li>Provide expert recommendations</li>
+                    </ul>
+                  </div>
+                )
+              },
+              {
+                id: 'certify',
+                title: 'Get Certified',
+                color: 'bg-gradient-to-br from-alert to-amber-600',
+                content: (
+                  <div className="space-y-4">
+                    <p>Receive expert-signed validation with verification badges, structured data markup, and attribution.</p>
+                    <ul className="list-disc list-inside space-y-2 opacity-90">
+                      <li>Expert signature & credentials</li>
+                      <li>Verification badge for your site</li>
+                      <li>Schema markup for SEO</li>
+                      <li>Immutable verification record</li>
+                    </ul>
+                  </div>
+                )
+              },
+            ]}
+          />
+        </div>
+      </section>
+
+      {/* 3D Tilt Cards Feature Highlight */}
+      <section className="relative bg-gradient-to-b from-white to-cream py-32 px-4">
+        <div className="max-w-7xl mx-auto">
+          <FadeIn>
+            <div className="text-center mb-20">
+              <h2 className="text-4xl md:text-5xl font-serif mb-6 text-charcoal">
+                Built on Trust Principles
+              </h2>
+              <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
+                Move your mouse over each card to explore
+              </p>
+            </div>
+          </FadeIn>
+
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                title: 'Interactive Citations',
-                description: 'Beautiful inline citations with confidence indicators and source previews',
-                stat: '94%',
-                label: 'Accuracy'
+                icon: Shield,
+                title: 'Expert Verified',
+                description: 'Every piece of content reviewed by credentialed professionals',
+                color: 'rgba(119, 171, 149, 0.2)'
               },
               {
-                title: 'Real-Time Verification',
-                description: 'Watch trust materialize with animated confidence meters and progress tracking',
-                stat: '< 2s',
-                label: 'Response Time'
+                icon: FileCheck,
+                title: 'FTC Compliant',
+                description: 'Ensures all claims meet regulatory standards and requirements',
+                color: 'rgba(91, 141, 239, 0.2)'
               },
               {
-                title: 'Glass Morphism Design',
-                description: 'Transparent interfaces that literally let you "see through" to the truth',
-                stat: '100%',
-                label: 'Transparency'
-              },
+                icon: Upload,
+                title: 'Fully Transparent',
+                description: 'Complete audit trail from submission to certification',
+                color: 'rgba(241, 130, 57, 0.2)'
+              }
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -286,28 +333,22 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.2 }}
               >
-                <HolographicCard className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 h-full">
-                  <div className="mb-6">
-                    <div className="text-4xl font-bold">
-                      <NeonText color={i === 0 ? 'verification' : i === 1 ? 'primary' : 'white'} intensity="medium">
-                        {item.stat}
-                      </NeonText>
-                    </div>
-                    <div className="text-xs font-mono text-white/50 mt-1">{item.label}</div>
+                <TiltCard intensity={0.8} glowColor={item.color}>
+                  <div className="bg-gradient-to-br from-white to-cream backdrop-blur-sm rounded-2xl p-10 h-80 flex flex-col justify-center items-center text-center border border-charcoal/10 shadow-xl">
+                    <item.icon className="w-20 h-20 text-primary mb-6" />
+                    <h3 className="text-2xl font-bold text-charcoal mb-4">{item.title}</h3>
+                    <p className="text-charcoal/70 leading-relaxed">{item.description}</p>
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
-                  <p className="text-white/70 leading-relaxed mb-6">{item.description}</p>
-                  <div className="h-1 bg-gradient-to-r from-primary via-verification to-alert rounded-full" />
-                </HolographicCard>
+                </TiltCard>
               </motion.div>
             ))}
           </div>
 
           <div className="text-center mt-16">
-            <Button size="lg" asChild className="bg-primary hover:bg-primary/90 text-white shadow-[0_0_30px_rgba(91,141,239,0.4)]">
-              <Link href="/radical-demo">
+            <Button size="lg" asChild>
+              <Link href="/cards-3d-demo">
                 <Sparkles className="w-5 h-5" />
-                See the Radical Demo
+                Explore 3D Components
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </Button>
