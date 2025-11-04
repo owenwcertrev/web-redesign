@@ -12,7 +12,7 @@ import StackedCards from '@/components/cards3d/StackedCards'
 import CardDeck from '@/components/cards3d/CardDeck'
 import TiltCard from '@/components/cards3d/TiltCard'
 import Carousel3D from '@/components/cards3d/Carousel3D'
-import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Shield, CheckCircle2, Eye, Upload, FileCheck, Search } from 'lucide-react'
+import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Upload, FileCheck, Search, CheckCircle2 } from 'lucide-react'
 
 export default function Home() {
   // Stacked cards content for the process
@@ -73,68 +73,52 @@ export default function Home() {
     },
   ]
 
-  // Card deck content for detailed workflow
-  const workflowCards = [
+  // Card deck content for trust principles
+  const trustPrincipleCards = [
     {
-      id: 'analysis',
-      title: 'Content Analysis',
-      color: 'bg-gradient-to-br from-primary to-primary-dark',
-      content: (
-        <div className="space-y-4">
-          <p>Our AI-powered system performs an initial scan of your content, identifying claims that need verification and checking for potential compliance issues.</p>
-          <ul className="list-disc list-inside space-y-2 opacity-90">
-            <li>Automated claim detection</li>
-            <li>Source credibility check</li>
-            <li>FTC compliance screening</li>
-            <li>E-E-A-T score estimation</li>
-          </ul>
-        </div>
-      )
-    },
-    {
-      id: 'matching',
-      title: 'Expert Matching',
+      id: 'expert-verified',
+      title: 'Expert Verified',
       color: 'bg-gradient-to-br from-verification to-verification-dark',
       content: (
         <div className="space-y-4">
-          <p>We match your content with the most qualified expert based on their credentials, specialization, and experience level.</p>
+          <p>Every piece of content reviewed by credentialed professionals with verified expertise in their field.</p>
           <ul className="list-disc list-inside space-y-2 opacity-90">
-            <li>Credential verification</li>
-            <li>Subject matter expertise</li>
-            <li>Track record review</li>
-            <li>Availability confirmation</li>
+            <li>Board-certified professionals</li>
+            <li>Licensed practitioners</li>
+            <li>Academic researchers</li>
+            <li>Industry specialists</li>
           </ul>
         </div>
       )
     },
     {
-      id: 'review',
-      title: 'Human Verification',
+      id: 'ftc-compliant',
+      title: 'FTC Compliant',
+      color: 'bg-gradient-to-br from-primary to-primary-dark',
+      content: (
+        <div className="space-y-4">
+          <p>Ensures all claims meet regulatory standards and requirements for consumer protection.</p>
+          <ul className="list-disc list-inside space-y-2 opacity-90">
+            <li>Substantiation requirements</li>
+            <li>Endorsement guidelines</li>
+            <li>Health claim compliance</li>
+            <li>Disclosure standards</li>
+          </ul>
+        </div>
+      )
+    },
+    {
+      id: 'transparent',
+      title: 'Fully Transparent',
       color: 'bg-gradient-to-br from-alert to-amber-600',
       content: (
         <div className="space-y-4">
-          <p>A credentialed expert thoroughly reviews your content, fact-checks claims against current research, and validates all sources.</p>
+          <p>Complete audit trail from submission to certification with full visibility into the review process.</p>
           <ul className="list-disc list-inside space-y-2 opacity-90">
-            <li>Claim-by-claim verification</li>
-            <li>Source validation</li>
-            <li>Current research check</li>
-            <li>Expert recommendations</li>
-          </ul>
-        </div>
-      )
-    },
-    {
-      id: 'certification',
-      title: 'Certification',
-      color: 'bg-gradient-to-br from-charcoal to-charcoal/80',
-      content: (
-        <div className="space-y-4">
-          <p>Once verified, your content receives an expert signature, verification badge, and structured data markup for search engines.</p>
-          <ul className="list-disc list-inside space-y-2 opacity-90">
-            <li>Expert attribution</li>
-            <li>Verification badge</li>
-            <li>Schema markup</li>
-            <li>Immutable record</li>
+            <li>Expert credentials disclosed</li>
+            <li>Review history tracked</li>
+            <li>Verification timestamps</li>
+            <li>Public badge verification</li>
           </ul>
         </div>
       )
@@ -304,26 +288,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Card Deck - Interactive Workflow */}
-      <section className="py-32 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <FadeIn>
-            <div className="text-center mb-20">
-              <div className="inline-block mb-6 px-6 py-3 bg-cream rounded-full border border-primary/20">
-                <span className="text-sm font-medium text-primary">INTERACTIVE DECK</span>
-              </div>
-              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-charcoal">
-                The Complete Workflow
-              </h2>
-              <p className="text-xl text-charcoal/70 max-w-2xl mx-auto">
-                From content analysis to expert certification
-              </p>
-            </div>
-          </FadeIn>
-
-          <CardDeck cards={workflowCards} />
-        </div>
-      </section>
 
       {/* Expert Tiers Carousel */}
       <section className="relative bg-gradient-to-b from-white to-cream py-32 px-4 overflow-visible">
@@ -430,11 +394,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Tilt Card Grid - Trust Principles */}
+      {/* Card Deck - Trust Principles */}
       <section className="py-32 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <FadeIn>
             <div className="text-center mb-20">
+              <div className="inline-block mb-6 px-6 py-3 bg-cream rounded-full border border-primary/20">
+                <span className="text-sm font-medium text-primary">INTERACTIVE DECK</span>
+              </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-charcoal">
                 Built on Trust Principles
               </h2>
@@ -444,44 +411,7 @@ export default function Home() {
             </div>
           </FadeIn>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Shield,
-                title: 'Expert Verified',
-                description: 'Every piece of content reviewed by credentialed professionals',
-                color: 'rgba(119, 171, 149, 0.2)'
-              },
-              {
-                icon: CheckCircle2,
-                title: 'FTC Compliant',
-                description: 'Ensures all claims meet regulatory standards and requirements',
-                color: 'rgba(91, 141, 239, 0.2)'
-              },
-              {
-                icon: Eye,
-                title: 'Fully Transparent',
-                description: 'Complete audit trail from submission to certification',
-                color: 'rgba(241, 130, 57, 0.2)'
-              }
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.2 }}
-              >
-                <TiltCard intensity={0.8} glowColor={item.color}>
-                  <div className="bg-gradient-to-br from-white to-cream backdrop-blur-sm rounded-2xl p-10 h-80 flex flex-col justify-center items-center text-center border border-charcoal/10 shadow-xl">
-                    <item.icon className="w-20 h-20 text-primary mb-6" />
-                    <h3 className="text-2xl font-bold text-charcoal mb-4">{item.title}</h3>
-                    <p className="text-charcoal/70 leading-relaxed">{item.description}</p>
-                  </div>
-                </TiltCard>
-              </motion.div>
-            ))}
-          </div>
+          <CardDeck cards={trustPrincipleCards} />
         </div>
       </section>
 
