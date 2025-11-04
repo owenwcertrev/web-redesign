@@ -22,38 +22,14 @@ export default function Home() {
       content: (
         <div className="bg-gradient-to-br from-primary/20 to-verification/20 backdrop-blur-sm p-10 rounded-2xl border border-white/20">
           <div className="flex items-start gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-primary/30 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-primary/30 flex items-center justify-center">
               <Upload className="w-6 h-6 text-primary" />
             </div>
             <div>
               <h3 className="text-3xl font-bold text-charcoal mb-3">Submit Content</h3>
-              <p className="text-charcoal/70 text-lg leading-relaxed mb-6">
+              <p className="text-charcoal/70 text-lg leading-relaxed">
                 Upload your articles, blog posts, or landing pages through our dashboard. Our AI performs initial screening to identify claims that need expert validation.
               </p>
-
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-semibold text-charcoal mb-2">What We Analyze</h4>
-                  <ul className="space-y-2 text-charcoal/70">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Health claims and medical statements requiring expert validation</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Product efficacy claims and performance promises</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Statistical data and research citations for accuracy</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>FTC compliance issues and substantiation requirements</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -64,38 +40,14 @@ export default function Home() {
       content: (
         <div className="bg-gradient-to-br from-verification/20 to-alert/20 backdrop-blur-sm p-10 rounded-2xl border border-white/20">
           <div className="flex items-start gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-verification/30 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-verification/30 flex items-center justify-center">
               <Search className="w-6 h-6 text-verification-dark" />
             </div>
             <div>
               <h3 className="text-3xl font-bold text-charcoal mb-3">Expert Review</h3>
-              <p className="text-charcoal/70 text-lg leading-relaxed mb-6">
+              <p className="text-charcoal/70 text-lg leading-relaxed">
                 Credentialed professionals verify claims, check sources, validate accuracy against current research, and ensure regulatory compliance.
               </p>
-
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-semibold text-charcoal mb-2">Expert Verification Process</h4>
-                  <ul className="space-y-2 text-charcoal/70">
-                    <li className="flex items-start gap-2">
-                      <span className="text-verification mt-1">•</span>
-                      <span>Claim-by-claim fact-checking against peer-reviewed research</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-verification mt-1">•</span>
-                      <span>Source credibility assessment and citation validation</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-verification mt-1">•</span>
-                      <span>Cross-reference with current guidelines and standards</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-verification mt-1">•</span>
-                      <span>Regulatory compliance check (FTC, FDA, HIPAA where applicable)</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -106,42 +58,14 @@ export default function Home() {
       content: (
         <div className="bg-gradient-to-br from-alert/20 to-primary/20 backdrop-blur-sm p-10 rounded-2xl border border-white/20">
           <div className="flex items-start gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-alert/30 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-alert/30 flex items-center justify-center">
               <CheckCircle2 className="w-6 h-6 text-alert" />
             </div>
             <div>
               <h3 className="text-3xl font-bold text-charcoal mb-3">Get Certified</h3>
-              <p className="text-charcoal/70 text-lg leading-relaxed mb-6">
+              <p className="text-charcoal/70 text-lg leading-relaxed">
                 Receive verification badges, expert signatures, and structured data markup that boost credibility with consumers and search engines alike.
               </p>
-
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-semibold text-charcoal mb-2">Certification Package Includes</h4>
-                  <ul className="space-y-2 text-charcoal/70">
-                    <li className="flex items-start gap-2">
-                      <span className="text-alert mt-1">•</span>
-                      <span>Verified expert badge with public verification link</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-alert mt-1">•</span>
-                      <span>Expert attribution with credentials and professional bio</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-alert mt-1">•</span>
-                      <span>Schema.org structured data for search engine recognition</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-alert mt-1">•</span>
-                      <span>Immutable blockchain record of verification</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-alert mt-1">•</span>
-                      <span>Downloadable certification certificate for your records</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </div>
         </div>
