@@ -210,10 +210,16 @@ export default function Home() {
           </FadeIn>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <FlipStatCard
-              stat="88%"
-              label="Traffic Drop"
-              description="Organic traffic lost by major publishers without E-E-A-T"
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0, duration: 0.6 }}
+            >
+              <FlipStatCard
+                stat="88%"
+                label="Traffic Drop"
+                description="Organic traffic lost by major publishers without E-E-A-T"
               backTitle="The Cost of Unverified Content"
               backDetails={[
                 'HubSpot lost 88% organic traffic after Google updates',
@@ -221,13 +227,20 @@ export default function Home() {
                 'Reversible with proper verification',
                 'Expert attribution prevents penalties'
               ]}
-              icon={TrendingUp}
-              gradient="from-navy/10 to-navy/20"
-            />
+                icon={TrendingUp}
+                gradient="from-navy/10 to-navy/20"
+              />
+            </motion.div>
 
-            <FlipStatCard
-              stat="60%"
-              label="Consumer Doubt"
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1, duration: 0.6 }}
+            >
+              <FlipStatCard
+                stat="60%"
+                label="Consumer Doubt"
               description="People who distrust AI-generated content without expert review"
               backTitle="Trust Gap Analysis"
               backDetails={[
@@ -236,13 +249,20 @@ export default function Home() {
                 'Expert badges increase trust 3x',
                 'Verified content drives conversions'
               ]}
-              icon={Users}
-              gradient="from-lime/10 to-lime/20"
-            />
+                icon={Users}
+                gradient="from-lime/10 to-lime/20"
+              />
+            </motion.div>
 
-            <FlipStatCard
-              stat="$51,744"
-              label="Per Violation"
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+            >
+              <FlipStatCard
+                stat="$51,744"
+                label="Per Violation"
               description="Average FTC fine for deceptive or unsubstantiated claims"
               backTitle="Compliance Protection"
               backDetails={[
@@ -251,13 +271,20 @@ export default function Home() {
                 'Protects against costly penalties',
                 'Demonstrates due diligence'
               ]}
-              icon={AlertCircle}
-              gradient="from-coral/10 to-coral/20"
-            />
+                icon={AlertCircle}
+                gradient="from-coral/10 to-coral/20"
+              />
+            </motion.div>
 
-            <FlipStatCard
-              stat="↑40%"
-              label="Purchase Intent"
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+            >
+              <FlipStatCard
+                stat="↑40%"
+                label="Purchase Intent"
               description="Lift from expert-verified content vs brand copy alone"
               backTitle="Conversion Impact"
               backDetails={[
@@ -266,9 +293,10 @@ export default function Home() {
                 'Builds long-term brand trust',
                 'Compound effect over time'
               ]}
-              icon={ShoppingBag}
-              gradient="from-navy/10 to-navy/20"
-            />
+                icon={ShoppingBag}
+                gradient="from-navy/10 to-navy/20"
+              />
+            </motion.div>
           </div>
         </div>
       </section>
@@ -486,9 +514,15 @@ export default function Home() {
           </FadeIn>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <FlipStatCard
-              stat="✓"
-              label="Expert Verified"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0, duration: 0.5 }}
+            >
+              <FlipStatCard
+                stat="✓"
+                label="Expert Verified"
               description="Every piece of content reviewed by credentialed professionals"
               backTitle="Expert Verification"
               backDetails={[
@@ -497,13 +531,20 @@ export default function Home() {
                 'Academic researchers',
                 'Industry specialists'
               ]}
-              icon={Shield}
-              gradient="from-lime/10 to-lime/20"
-            />
+                icon={Shield}
+                gradient="from-lime/10 to-lime/20"
+              />
+            </motion.div>
 
-            <FlipStatCard
-              stat="✓"
-              label="FTC Compliant"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.15, duration: 0.5 }}
+            >
+              <FlipStatCard
+                stat="✓"
+                label="FTC Compliant"
               description="All claims meet regulatory standards for consumer protection"
               backTitle="Compliance Standards"
               backDetails={[
@@ -512,13 +553,20 @@ export default function Home() {
                 'Health claim compliance',
                 'Disclosure standards'
               ]}
-              icon={CheckCircle2}
-              gradient="from-navy/10 to-navy/20"
-            />
+                icon={CheckCircle2}
+                gradient="from-navy/10 to-navy/20"
+              />
+            </motion.div>
 
-            <FlipStatCard
-              stat="✓"
-              label="Fully Transparent"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              <FlipStatCard
+                stat="✓"
+                label="Fully Transparent"
               description="Complete audit trail from submission to certification"
               backTitle="Transparency Features"
               backDetails={[
@@ -527,9 +575,10 @@ export default function Home() {
                 'Verification timestamps',
                 'Public badge verification'
               ]}
-              icon={Eye}
-              gradient="from-coral/10 to-coral/20"
-            />
+                icon={Eye}
+                gradient="from-coral/10 to-coral/20"
+              />
+            </motion.div>
           </div>
         </div>
       </section>
@@ -551,20 +600,36 @@ export default function Home() {
             </div>
           </FadeIn>
 
-          {/* Testimonials Grid */}
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <Testimonial
-              quote="CertREV transformed how we approach content credibility. Our organic traffic recovered within 3 months of implementing expert verification."
-              name="Sarah Chen"
-              role="VP of Content"
-              company="WellnessBrand Co."
-            />
-            <Testimonial
-              quote="As a dermatologist, I appreciate how CertREV makes it easy to lend my expertise to brands I trust. The platform is intuitive and the compensation is fair."
-              name="Dr. James Mitchell"
-              role="Board-Certified Dermatologist"
-              company="CertREV Expert Network"
-            />
+          {/* Testimonials Grid - Offset Layout */}
+          <div className="grid md:grid-cols-2 gap-8 mb-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="md:translate-y-8"
+            >
+              <Testimonial
+                quote="CertREV transformed how we approach content credibility. Our organic traffic recovered within 3 months of implementing expert verification."
+                name="Sarah Chen"
+                role="VP of Content"
+                company="WellnessBrand Co."
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="md:-translate-y-8"
+            >
+              <Testimonial
+                quote="As a dermatologist, I appreciate how CertREV makes it easy to lend my expertise to brands I trust. The platform is intuitive and the compensation is fair."
+                name="Dr. James Mitchell"
+                role="Board-Certified Dermatologist"
+                company="CertREV Expert Network"
+              />
+            </motion.div>
           </div>
 
           {/* Expert Profiles - Compact Grid */}
@@ -580,27 +645,48 @@ export default function Home() {
           </FadeIn>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <ExpertProfile
-              name="Dr. Emily Rodriguez"
-              credentials="MD, Board-Certified"
-              specialty="Internal Medicine & Wellness"
-              bio="15+ years experience reviewing health content for major wellness brands"
-              tier={6}
-            />
-            <ExpertProfile
-              name="Michael Thompson, RDN"
-              credentials="Registered Dietitian Nutritionist"
-              specialty="Sports Nutrition & Supplements"
-              bio="Specializes in nutrition claim verification and FDA compliance"
-              tier={3}
-            />
-            <ExpertProfile
-              name="Jennifer Park, CFA"
-              credentials="Chartered Financial Analyst"
-              specialty="Financial Services Content"
-              bio="Expert in investment content review and SEC compliance"
-              tier={4}
-            />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0, duration: 0.5 }}
+            >
+              <ExpertProfile
+                name="Dr. Emily Rodriguez"
+                credentials="MD, Board-Certified"
+                specialty="Internal Medicine & Wellness"
+                bio="15+ years experience reviewing health content for major wellness brands"
+                tier={6}
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.15, duration: 0.5 }}
+            >
+              <ExpertProfile
+                name="Michael Thompson, RDN"
+                credentials="Registered Dietitian Nutritionist"
+                specialty="Sports Nutrition & Supplements"
+                bio="Specializes in nutrition claim verification and FDA compliance"
+                tier={3}
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              <ExpertProfile
+                name="Jennifer Park, CFA"
+                credentials="Chartered Financial Analyst"
+                specialty="Financial Services Content"
+                bio="Expert in investment content review and SEC compliance"
+                tier={4}
+              />
+            </motion.div>
           </div>
         </div>
       </section>
