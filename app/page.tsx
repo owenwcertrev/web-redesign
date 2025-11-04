@@ -314,54 +314,56 @@ export default function Home() {
                 <h2 className="text-5xl md:text-6xl font-bold mb-8 text-navy font-serif leading-tight">
                   Trust Infrastructure for the AI Age
                 </h2>
-                    <p className="text-lg text-black/80 mb-6 leading-relaxed">
-                      Studies show that 60% of consumers doubt AI-generated content
-                      <CitationMarker
-                        number={1}
-                        confidence="high"
-                        source="Stanford Research, 2025"
-                        preview="Comprehensive study of 10,000+ consumers showing significant trust gaps."
-                      />
-                      . CertREV builds the human-in-the-loop verification infrastructure brands need to navigate this trust crisis.
-                    </p>
-                    <p className="text-lg text-black/80 mb-8 leading-relaxed">
-                      Our platform connects your content with credentialed experts, creating a transparent human-in-the-loop verification layer that consumers and search engines recognize
-                      <CitationMarker
-                        number={2}
-                        confidence="high"
-                        source="Google E-E-A-T Guidelines, 2024"
-                        preview="Official Google documentation on Experience, Expertise, Authoritativeness, and Trust signals."
-                      />
-                      .
-                    </p>
-                    <Button size="lg" asChild>
-                      <Link href="/trust-showcase">
-                        Explore Trust Infrastructure
-                        <ArrowRight className="w-5 h-5" />
-                      </Link>
-                    </Button>
-                  </div>
-                  <div className="space-y-6">
-                    <div className="bg-white rounded-xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
-                      <TextureOverlay type="paper" opacity={0.2} />
-                      <h3 className="text-sm font-semibold uppercase tracking-wider text-navy/70 mb-4 relative z-10">
-                        Verification Confidence
-                      </h3>
-                      <ConfidenceMeter score={94} label="Expert Match Quality" showPercentage />
-                    </div>
-                    <div className="bg-white rounded-xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
-                      <TextureOverlay type="paper" opacity={0.2} />
-                      <ConfidenceMeter score={88} label="Citation Coverage" showPercentage />
-                    </div>
-                    <div className="bg-white rounded-xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
-                      <TextureOverlay type="paper" opacity={0.2} />
-                      <ConfidenceMeter score={76} label="Source Credibility" showPercentage />
-                    </div>
-                  </div>
+                <p className="text-lg text-black/80 mb-6 leading-relaxed">
+                  Studies show that 60% of consumers doubt AI-generated content
+                  <CitationMarker
+                    number={1}
+                    confidence="high"
+                    source="Stanford Research, 2025"
+                    preview="Comprehensive study of 10,000+ consumers showing significant trust gaps."
+                  />
+                  . CertREV builds the human-in-the-loop verification infrastructure brands need to navigate this trust crisis.
+                </p>
+                <p className="text-lg text-black/80 mb-8 leading-relaxed">
+                  Our platform connects your content with credentialed experts, creating a transparent human-in-the-loop verification layer that consumers and search engines recognize
+                  <CitationMarker
+                    number={2}
+                    confidence="high"
+                    source="Google E-E-A-T Guidelines, 2024"
+                    preview="Official Google documentation on Experience, Expertise, Authoritativeness, and Trust signals."
+                  />
+                  .
+                </p>
+                <Button size="lg" asChild>
+                  <Link href="/trust-showcase">
+                    Explore Trust Infrastructure
+                    <ArrowRight className="w-5 h-5" />
+                  </Link>
+                </Button>
+              </div>
+            </FadeIn>
+
+            {/* Right: Trust Metrics */}
+            <TiltCard intensity={0.7} glowColor="rgba(212, 225, 87, 0.2)">
+              <div className="space-y-6">
+                <div className="bg-white rounded-xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
+                  <TextureOverlay type="paper" opacity={0.2} />
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-navy/70 mb-4 relative z-10">
+                    Verification Confidence
+                  </h3>
+                  <ConfidenceMeter score={94} label="Expert Match Quality" showPercentage />
+                </div>
+                <div className="bg-white rounded-xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
+                  <TextureOverlay type="paper" opacity={0.2} />
+                  <ConfidenceMeter score={88} label="Citation Coverage" showPercentage />
+                </div>
+                <div className="bg-white rounded-xl p-6 border-2 border-lime/20 shadow-md relative overflow-hidden">
+                  <TextureOverlay type="paper" opacity={0.2} />
+                  <ConfidenceMeter score={76} label="Source Credibility" showPercentage />
                 </div>
               </div>
             </TiltCard>
-          </FadeIn>
+          </div>
         </div>
       </section>
 
