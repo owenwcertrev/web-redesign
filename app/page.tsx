@@ -207,7 +207,7 @@ export default function Home() {
 
       {/* Flip Stat Cards - Why Expert Validation Matters */}
       <section className="py-32 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1400px] mx-auto">
           <FadeIn>
             <div className="text-center mb-20">
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-charcoal">
