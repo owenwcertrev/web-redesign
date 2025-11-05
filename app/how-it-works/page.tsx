@@ -183,9 +183,9 @@ export default function HowItWorksPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-lime/20"
+              className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-coral/20 shadow-sm"
             >
-              <span className="text-sm font-semibold text-lime tracking-wide">THE PROCESS</span>
+              <span className="text-sm font-semibold text-navy tracking-wide">THE PROCESS</span>
             </motion.div>
 
             <motion.h1
@@ -244,7 +244,7 @@ export default function HowItWorksPage() {
         <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <div className="inline-block mb-6 px-6 py-3 bg-lime/10 rounded-full border-2 border-lime/30 shadow-md">
+              <div className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-lime/20 shadow-sm">
                 <span className="text-sm font-semibold text-navy tracking-wide">TRUST BUILT IN</span>
               </div>
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-navy font-serif">

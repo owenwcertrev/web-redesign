@@ -28,11 +28,11 @@ export default function EEATMeterPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-lime/20"
+              className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-coral/20 shadow-sm"
             >
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-lime" />
-                <span className="text-sm font-semibold text-lime tracking-wide">FREE CONTENT ANALYSIS</span>
+                <Sparkles className="w-4 h-4 text-coral" />
+                <span className="text-sm font-semibold text-navy tracking-wide">FREE CONTENT ANALYSIS</span>
               </div>
             </motion.div>
 
