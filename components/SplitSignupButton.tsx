@@ -65,7 +65,7 @@ export default function SplitSignupButton() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="px-8 py-4 bg-gradient-to-r from-coral to-navy text-white font-semibold text-lg rounded-2xl border-2 border-navy shadow-lg cursor-pointer whitespace-nowrap">
+              <div className="px-8 py-4 bg-coral text-white font-semibold text-lg rounded-2xl border-2 border-coral shadow-lg cursor-pointer whitespace-nowrap">
                 Sign Up
               </div>
             </motion.div>

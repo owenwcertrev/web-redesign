@@ -178,13 +178,10 @@ export default function Home() {
               transition={{ delay: 1 }}
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
             >
-              <SplitSignupButton />
-              <Button size="lg" asChild>
-                <Link href="/book-demo">
-                  Book Demo
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
+              <Button size="lg" variant="secondary" asChild>
+                <Link href="/book-demo">Book Demo</Link>
               </Button>
+              <SplitSignupButton />
               <Button size="lg" variant="secondary" asChild>
                 <Link href="#verification-process">See How It Works</Link>
               </Button>
