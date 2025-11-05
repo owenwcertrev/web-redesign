@@ -56,9 +56,9 @@ export default function EEATMeterTool() {
   const getIssueIcon = (type: string) => {
     switch (type) {
       case 'good':
-        return <CheckCircle className="w-5 h-5 text-verification flex-shrink-0" />
+        return <CheckCircle className="w-5 h-5 text-lime flex-shrink-0" />
       case 'warning':
-        return <AlertCircle className="w-5 h-5 text-alert flex-shrink-0" />
+        return <AlertCircle className="w-5 h-5 text-coral flex-shrink-0" />
       case 'missing':
         return <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
       default:
@@ -87,7 +87,7 @@ export default function EEATMeterTool() {
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://example.com"
               required
-              className="w-full pl-12 pr-4 py-4 text-lg rounded-16 border-2 border-black/10 focus:border-primary focus:outline-none transition-colors"
+              className="w-full pl-12 pr-4 py-4 text-lg rounded-16 border-2 border-black/10 focus:border-navy focus:outline-none transition-colors"
             />
           </div>
 
@@ -96,7 +96,7 @@ export default function EEATMeterTool() {
             <button
               type="button"
               onClick={() => setShowEmailField(true)}
-              className="text-primary hover:underline text-sm"
+              className="text-navy hover:underline text-sm"
             >
               + Add email to receive detailed report
             </button>
@@ -108,7 +108,7 @@ export default function EEATMeterTool() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com (optional)"
-                className="w-full pl-12 pr-4 py-3 rounded-16 border-2 border-black/10 focus:border-primary focus:outline-none transition-colors"
+                className="w-full pl-12 pr-4 py-3 rounded-16 border-2 border-black/10 focus:border-navy focus:outline-none transition-colors"
               />
             </div>
           )}
@@ -145,22 +145,22 @@ export default function EEATMeterTool() {
             {/* Breakdown */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center p-4 bg-cream rounded-12">
-                <div className="text-3xl font-bold text-primary mb-1">{results.breakdown.experience}</div>
+                <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.experience}</div>
                 <div className="text-sm text-charcoal/70">Experience</div>
                 <div className="text-xs text-charcoal/50">out of 25</div>
               </div>
               <div className="text-center p-4 bg-cream rounded-12">
-                <div className="text-3xl font-bold text-primary mb-1">{results.breakdown.expertise}</div>
+                <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.expertise}</div>
                 <div className="text-sm text-charcoal/70">Expertise</div>
                 <div className="text-xs text-charcoal/50">out of 25</div>
               </div>
               <div className="text-center p-4 bg-cream rounded-12">
-                <div className="text-3xl font-bold text-primary mb-1">{results.breakdown.authoritativeness}</div>
+                <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.authoritativeness}</div>
                 <div className="text-sm text-charcoal/70">Authoritativeness</div>
                 <div className="text-xs text-charcoal/50">out of 25</div>
               </div>
               <div className="text-center p-4 bg-cream rounded-12">
-                <div className="text-3xl font-bold text-primary mb-1">{results.breakdown.trustworthiness}</div>
+                <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.trustworthiness}</div>
                 <div className="text-sm text-charcoal/70">Trustworthiness</div>
                 <div className="text-xs text-charcoal/50">out of 25</div>
               </div>
@@ -188,7 +188,7 @@ export default function EEATMeterTool() {
               How CertREV Can Boost Your Score
             </h3>
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="p-4 border-2 border-verification-light rounded-12 hover:bg-verification-light/30 transition-colors">
+              <div className="p-4 border-2 border-lime-light rounded-12 hover:bg-lime-light/30 transition-colors">
                 <div className="mb-2">
                   <VerificationBadge size="sm" />
                 </div>
@@ -197,7 +197,7 @@ export default function EEATMeterTool() {
                   Add credentialed expert signatures to your content
                 </p>
               </div>
-              <div className="p-4 border-2 border-verification-light rounded-12 hover:bg-verification-light/30 transition-colors">
+              <div className="p-4 border-2 border-lime-light rounded-12 hover:bg-lime-light/30 transition-colors">
                 <div className="mb-2">
                   <VerificationBadge size="sm" />
                 </div>
@@ -206,7 +206,7 @@ export default function EEATMeterTool() {
                   Display trust signals that consumers recognize
                 </p>
               </div>
-              <div className="p-4 border-2 border-verification-light rounded-12 hover:bg-verification-light/30 transition-colors">
+              <div className="p-4 border-2 border-lime-light rounded-12 hover:bg-lime-light/30 transition-colors">
                 <div className="mb-2">
                   <VerificationBadge size="sm" />
                 </div>
@@ -215,7 +215,7 @@ export default function EEATMeterTool() {
                   Implement proper schema markup for search engines
                 </p>
               </div>
-              <div className="p-4 border-2 border-verification-light rounded-12 hover:bg-verification-light/30 transition-colors">
+              <div className="p-4 border-2 border-lime-light rounded-12 hover:bg-lime-light/30 transition-colors">
                 <div className="mb-2">
                   <VerificationBadge size="sm" />
                 </div>
@@ -229,15 +229,15 @@ export default function EEATMeterTool() {
 
           {/* Email Confirmation */}
           {email && (
-            <div className="bg-verification-light rounded-16 p-6 border-2 border-verification">
+            <div className="bg-lime-light rounded-16 p-6 border-2 border-lime">
               <div className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-verification-dark flex-shrink-0 mt-1" />
+                <CheckCircle className="w-6 h-6 text-lime-dark flex-shrink-0 mt-1" />
                 <div>
-                  <h4 className="font-semibold text-verification-dark mb-2">
+                  <h4 className="font-semibold text-lime-dark mb-2">
                     Detailed report sent to your email
                   </h4>
-                  <p className="text-sm text-verification-dark/80 mb-3">Check your inbox for:</p>
-                  <ul className="text-sm text-verification-dark/80 space-y-1 list-disc list-inside">
+                  <p className="text-sm text-lime-dark/80 mb-3">Check your inbox for:</p>
+                  <ul className="text-sm text-lime-dark/80 space-y-1 list-disc list-inside">
                     <li>Complete E-E-A-T breakdown</li>
                     <li>Estimated Semrush Authority Score</li>
                     <li>Blog Content Health Check</li>
@@ -249,11 +249,11 @@ export default function EEATMeterTool() {
           )}
 
           {/* CTA */}
-          <div className="bg-verification-light rounded-16 p-8 text-center">
-            <h3 className="text-2xl font-semibold mb-3 text-verification-dark">
+          <div className="bg-lime-light rounded-16 p-8 text-center">
+            <h3 className="text-2xl font-semibold mb-3 text-lime-dark">
               Ready to Improve Your Score?
             </h3>
-            <p className="text-verification-dark/80 mb-6">
+            <p className="text-lime-dark/80 mb-6">
               Connect with credentialed experts and start building trust
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

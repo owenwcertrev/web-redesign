@@ -16,17 +16,17 @@ interface TrustIndicatorProps {
 const metricConfig = {
   verified: {
     icon: Shield,
-    color: 'text-verification',
-    bgColor: 'bg-verification/10',
-    borderColor: 'border-verification/30',
+    color: 'text-lime',
+    bgColor: 'bg-lime/10',
+    borderColor: 'border-lime/30',
     defaultLabel: 'Expert Verified',
     defaultValue: '✓',
   },
   encrypted: {
     icon: Lock,
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
-    borderColor: 'border-primary/30',
+    color: 'text-navy',
+    bgColor: 'bg-navy/10',
+    borderColor: 'border-navy/30',
     defaultLabel: 'Secure',
     defaultValue: 'AES-256',
   },

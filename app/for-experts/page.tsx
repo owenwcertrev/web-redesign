@@ -211,7 +211,6 @@ export default function ForExpertsPage() {
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="bg-lime/10 rounded-2xl p-8 md:p-12 text-center border-2 border-lime relative overflow-hidden">
             <TextureOverlay type="paper" opacity={0.3} />
-            <p className="text-coral font-script text-3xl mb-3 relative z-10">Ready to Start?</p>
             <h2 className="text-3xl font-bold mb-4 text-navy font-serif relative z-10">
               Ready to Join Our Network?
             </h2>

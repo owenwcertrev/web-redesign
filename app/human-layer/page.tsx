@@ -124,8 +124,8 @@ export default function HumanLayerPage() {
         <div className="max-w-6xl mx-auto">
           <FadeIn>
             <div className="text-center mb-12">
-              <div className="inline-block mb-4 px-6 py-2 bg-cream rounded-full border border-primary/20">
-                <span className="text-sm font-medium text-primary">FEATURED ARTICLE</span>
+              <div className="inline-block mb-4 px-6 py-2 bg-cream rounded-full border border-navy/20">
+                <span className="text-sm font-medium text-navy">FEATURED ARTICLE</span>
               </div>
               <h2 className="text-4xl md:text-5xl font-bold text-charcoal">
                 Latest Insights
@@ -145,7 +145,7 @@ export default function HumanLayerPage() {
                   </div>
                   <div className="md:col-span-3 p-10">
                     <div className="flex items-center gap-2 mb-4">
-                      <span className="text-sm text-primary font-medium uppercase tracking-wide">{articles[0].category}</span>
+                      <span className="text-sm text-navy font-medium uppercase tracking-wide">{articles[0].category}</span>
                       <span className="text-charcoal/30">•</span>
                       <div className="flex items-center gap-1 text-sm text-charcoal/60">
                         <Calendar className="w-3 h-3" />
@@ -157,13 +157,13 @@ export default function HumanLayerPage() {
                         {articles[0].readTime}
                       </div>
                     </div>
-                    <h3 className="text-3xl md:text-4xl font-bold mb-4 text-charcoal group-hover:text-primary transition-colors">
+                    <h3 className="text-3xl md:text-4xl font-bold mb-4 text-charcoal group-hover:text-navy transition-colors">
                       {articles[0].title}
                     </h3>
                     <p className="text-charcoal/70 mb-6 leading-relaxed text-lg">
                       {articles[0].excerpt}
                     </p>
-                    <div className="inline-flex items-center gap-2 text-primary font-medium group-hover:gap-4 transition-all">
+                    <div className="inline-flex items-center gap-2 text-navy font-medium group-hover:gap-4 transition-all">
                       Read Full Article <ArrowRight className="w-5 h-5" />
                     </div>
                   </div>
@@ -209,14 +209,14 @@ export default function HumanLayerPage() {
                       </div>
                       <div className="p-6">
                         <div className="flex items-center gap-2 mb-3 text-xs">
-                          <span className="text-primary font-medium uppercase tracking-wide">{article.category}</span>
+                          <span className="text-navy font-medium uppercase tracking-wide">{article.category}</span>
                           <span className="text-charcoal/30">•</span>
                           <div className="flex items-center gap-1 text-charcoal/60">
                             <Clock className="w-3 h-3" />
                             {article.readTime}
                           </div>
                         </div>
-                        <h3 className="text-xl font-bold mb-3 text-charcoal group-hover:text-primary transition-colors">
+                        <h3 className="text-xl font-bold mb-3 text-charcoal group-hover:text-navy transition-colors">
                           {article.title}
                         </h3>
                         <p className="text-charcoal/70 mb-4 text-sm leading-relaxed line-clamp-3">
@@ -226,7 +226,7 @@ export default function HumanLayerPage() {
                           <Calendar className="w-3 h-3" />
                           {article.date}
                         </div>
-                        <div className="inline-flex items-center gap-2 text-primary font-medium text-sm group-hover:gap-3 transition-all">
+                        <div className="inline-flex items-center gap-2 text-navy font-medium text-sm group-hover:gap-3 transition-all">
                           Read More <ArrowRight className="w-4 h-4" />
                         </div>
                       </div>
@@ -243,7 +243,7 @@ export default function HumanLayerPage() {
       <section className="py-32 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <FadeIn>
-            <div className="bg-gradient-to-br from-verification-light to-cream rounded-3xl p-12 md:p-16 text-center shadow-2xl border border-verification/20">
+            <div className="bg-gradient-to-br from-lime-light to-cream rounded-3xl p-12 md:p-16 text-center shadow-2xl border border-lime/20">
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-charcoal">
                 Stay Informed
               </h2>

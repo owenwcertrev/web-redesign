@@ -23,25 +23,25 @@ const stateConfig = {
   },
   processing: {
     icon: Loader2,
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
-    borderColor: 'border-primary/30',
+    color: 'text-navy',
+    bgColor: 'bg-navy/10',
+    borderColor: 'border-navy/30',
     label: 'VERIFYING',
     spinning: true,
   },
   verified: {
     icon: CheckCircle2,
-    color: 'text-verification',
-    bgColor: 'bg-verification/10',
-    borderColor: 'border-verification/30',
+    color: 'text-lime',
+    bgColor: 'bg-lime/10',
+    borderColor: 'border-lime/30',
     label: 'VERIFIED',
     spinning: false,
   },
   failed: {
     icon: AlertCircle,
-    color: 'text-alert',
-    bgColor: 'bg-alert/10',
-    borderColor: 'border-alert/30',
+    color: 'text-coral',
+    bgColor: 'bg-coral/10',
+    borderColor: 'border-coral/30',
     label: 'REVIEW NEEDED',
     spinning: false,
   },
@@ -161,7 +161,7 @@ export default function VerificationProgress({
             {[...Array(6)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute w-1 h-1 rounded-full bg-verification"
+                className="absolute w-1 h-1 rounded-full bg-lime"
                 style={{
                   left: '50%',
                   top: '50%',

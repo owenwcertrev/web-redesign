@@ -30,9 +30,9 @@ export default function BrandDashboardPage() {
             What's Inside Your Dashboard
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-cream rounded-16 p-6 border-2 border-primary/20 hover:border-primary/40 transition-colors">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <Upload className="w-6 h-6 text-primary" />
+            <div className="bg-cream rounded-16 p-6 border-2 border-navy/20 hover:border-navy/40 transition-colors">
+              <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center mb-4">
+                <Upload className="w-6 h-6 text-navy" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-charcoal">Submit Content</h3>
               <p className="text-charcoal/70 text-sm leading-relaxed">
@@ -40,9 +40,9 @@ export default function BrandDashboardPage() {
               </p>
             </div>
 
-            <div className="bg-cream rounded-16 p-6 border-2 border-primary/20 hover:border-primary/40 transition-colors">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <FileText className="w-6 h-6 text-primary" />
+            <div className="bg-cream rounded-16 p-6 border-2 border-navy/20 hover:border-navy/40 transition-colors">
+              <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center mb-4">
+                <FileText className="w-6 h-6 text-navy" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-charcoal">Track Status</h3>
               <p className="text-charcoal/70 text-sm leading-relaxed">
@@ -50,9 +50,9 @@ export default function BrandDashboardPage() {
               </p>
             </div>
 
-            <div className="bg-cream rounded-16 p-6 border-2 border-primary/20 hover:border-primary/40 transition-colors">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <Download className="w-6 h-6 text-primary" />
+            <div className="bg-cream rounded-16 p-6 border-2 border-navy/20 hover:border-navy/40 transition-colors">
+              <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center mb-4">
+                <Download className="w-6 h-6 text-navy" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-charcoal">Get Badges</h3>
               <p className="text-charcoal/70 text-sm leading-relaxed">
@@ -60,9 +60,9 @@ export default function BrandDashboardPage() {
               </p>
             </div>
 
-            <div className="bg-cream rounded-16 p-6 border-2 border-primary/20 hover:border-primary/40 transition-colors">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <BarChart className="w-6 h-6 text-primary" />
+            <div className="bg-cream rounded-16 p-6 border-2 border-navy/20 hover:border-navy/40 transition-colors">
+              <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center mb-4">
+                <BarChart className="w-6 h-6 text-navy" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-charcoal">View Analytics</h3>
               <p className="text-charcoal/70 text-sm leading-relaxed">
@@ -70,9 +70,9 @@ export default function BrandDashboardPage() {
               </p>
             </div>
 
-            <div className="bg-cream rounded-16 p-6 border-2 border-primary/20 hover:border-primary/40 transition-colors">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <Users className="w-6 h-6 text-primary" />
+            <div className="bg-cream rounded-16 p-6 border-2 border-navy/20 hover:border-navy/40 transition-colors">
+              <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center mb-4">
+                <Users className="w-6 h-6 text-navy" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-charcoal">Manage Team</h3>
               <p className="text-charcoal/70 text-sm leading-relaxed">
@@ -80,9 +80,9 @@ export default function BrandDashboardPage() {
               </p>
             </div>
 
-            <div className="bg-cream rounded-16 p-6 border-2 border-primary/20 hover:border-primary/40 transition-colors">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <CheckCircle className="w-6 h-6 text-verification" />
+            <div className="bg-cream rounded-16 p-6 border-2 border-navy/20 hover:border-navy/40 transition-colors">
+              <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center mb-4">
+                <CheckCircle className="w-6 h-6 text-lime" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-charcoal">Expert Communication</h3>
               <p className="text-charcoal/70 text-sm leading-relaxed">

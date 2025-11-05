@@ -10,8 +10,8 @@ interface ScoreGaugeProps {
 
 export default function ScoreGauge({ score, label, className }: ScoreGaugeProps) {
   const getColor = (score: number) => {
-    if (score >= 71) return 'text-verification'
-    if (score >= 41) return 'text-alert'
+    if (score >= 71) return 'text-lime'
+    if (score >= 41) return 'text-coral'
     return 'text-red-500'
   }
 

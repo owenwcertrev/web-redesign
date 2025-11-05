@@ -30,9 +30,9 @@ export default function ExpertDashboardPage() {
             What's Inside Your Expert Dashboard
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-cream rounded-16 p-6 border-2 border-verification/30 hover:border-verification transition-colors">
-              <div className="w-12 h-12 bg-verification/10 rounded-full flex items-center justify-center mb-4">
-                <FileText className="w-6 h-6 text-verification" />
+            <div className="bg-cream rounded-16 p-6 border-2 border-lime/30 hover:border-lime transition-colors">
+              <div className="w-12 h-12 bg-lime/10 rounded-full flex items-center justify-center mb-4">
+                <FileText className="w-6 h-6 text-lime" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-charcoal">Review Assignments</h3>
               <p className="text-charcoal/70 text-sm leading-relaxed">
@@ -40,9 +40,9 @@ export default function ExpertDashboardPage() {
               </p>
             </div>
 
-            <div className="bg-cream rounded-16 p-6 border-2 border-verification/30 hover:border-verification transition-colors">
-              <div className="w-12 h-12 bg-verification/10 rounded-full flex items-center justify-center mb-4">
-                <CheckCircle className="w-6 h-6 text-verification" />
+            <div className="bg-cream rounded-16 p-6 border-2 border-lime/30 hover:border-lime transition-colors">
+              <div className="w-12 h-12 bg-lime/10 rounded-full flex items-center justify-center mb-4">
+                <CheckCircle className="w-6 h-6 text-lime" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-charcoal">Submit Reviews</h3>
               <p className="text-charcoal/70 text-sm leading-relaxed">
@@ -50,9 +50,9 @@ export default function ExpertDashboardPage() {
               </p>
             </div>
 
-            <div className="bg-cream rounded-16 p-6 border-2 border-verification/30 hover:border-verification transition-colors">
-              <div className="w-12 h-12 bg-verification/10 rounded-full flex items-center justify-center mb-4">
-                <DollarSign className="w-6 h-6 text-verification" />
+            <div className="bg-cream rounded-16 p-6 border-2 border-lime/30 hover:border-lime transition-colors">
+              <div className="w-12 h-12 bg-lime/10 rounded-full flex items-center justify-center mb-4">
+                <DollarSign className="w-6 h-6 text-lime" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-charcoal">Track Earnings</h3>
               <p className="text-charcoal/70 text-sm leading-relaxed">
@@ -60,9 +60,9 @@ export default function ExpertDashboardPage() {
               </p>
             </div>
 
-            <div className="bg-cream rounded-16 p-6 border-2 border-verification/30 hover:border-verification transition-colors">
-              <div className="w-12 h-12 bg-verification/10 rounded-full flex items-center justify-center mb-4">
-                <User className="w-6 h-6 text-verification" />
+            <div className="bg-cream rounded-16 p-6 border-2 border-lime/30 hover:border-lime transition-colors">
+              <div className="w-12 h-12 bg-lime/10 rounded-full flex items-center justify-center mb-4">
+                <User className="w-6 h-6 text-lime" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-charcoal">Manage Profile</h3>
               <p className="text-charcoal/70 text-sm leading-relaxed">
@@ -70,9 +70,9 @@ export default function ExpertDashboardPage() {
               </p>
             </div>
 
-            <div className="bg-cream rounded-16 p-6 border-2 border-verification/30 hover:border-verification transition-colors">
-              <div className="w-12 h-12 bg-verification/10 rounded-full flex items-center justify-center mb-4">
-                <Calendar className="w-6 h-6 text-verification" />
+            <div className="bg-cream rounded-16 p-6 border-2 border-lime/30 hover:border-lime transition-colors">
+              <div className="w-12 h-12 bg-lime/10 rounded-full flex items-center justify-center mb-4">
+                <Calendar className="w-6 h-6 text-lime" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-charcoal">Review History</h3>
               <p className="text-charcoal/70 text-sm leading-relaxed">
@@ -80,9 +80,9 @@ export default function ExpertDashboardPage() {
               </p>
             </div>
 
-            <div className="bg-cream rounded-16 p-6 border-2 border-verification/30 hover:border-verification transition-colors">
-              <div className="w-12 h-12 bg-verification/10 rounded-full flex items-center justify-center mb-4">
-                <BarChart className="w-6 h-6 text-verification" />
+            <div className="bg-cream rounded-16 p-6 border-2 border-lime/30 hover:border-lime transition-colors">
+              <div className="w-12 h-12 bg-lime/10 rounded-full flex items-center justify-center mb-4">
+                <BarChart className="w-6 h-6 text-lime" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-charcoal">Performance Metrics</h3>
               <p className="text-charcoal/70 text-sm leading-relaxed">

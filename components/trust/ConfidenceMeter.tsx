@@ -42,9 +42,9 @@ export default function ConfidenceMeter({
   }, [score, animated])
 
   const getColor = (score: number) => {
-    if (score >= 80) return { from: '#77AB95', to: '#5B8DEF', text: 'text-verification' }
-    if (score >= 60) return { from: '#5B8DEF', to: '#A7C4BC', text: 'text-primary' }
-    if (score >= 40) return { from: '#F18239', to: '#5B8DEF', text: 'text-alert' }
+    if (score >= 80) return { from: '#77AB95', to: '#5B8DEF', text: 'text-lime' }
+    if (score >= 60) return { from: '#5B8DEF', to: '#A7C4BC', text: 'text-navy' }
+    if (score >= 40) return { from: '#F18239', to: '#5B8DEF', text: 'text-coral' }
     return { from: '#9CA3AF', to: '#6B7280', text: 'text-charcoal/50' }
   }
 

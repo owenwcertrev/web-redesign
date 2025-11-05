@@ -17,22 +17,22 @@ interface CitationMarkerProps {
 const confidenceConfig = {
   high: {
     color: 'text-navy',
-    bg: 'bg-verification/10',
-    border: 'border-verification/30',
+    bg: 'bg-lime/10',
+    border: 'border-lime/30',
     glow: 'shadow-[0_0_8px_rgba(119,171,149,0.3)]',
     icon: CheckCircle2,
   },
   medium: {
     color: 'text-navy',
-    bg: 'bg-primary/10',
-    border: 'border-primary/30',
+    bg: 'bg-navy/10',
+    border: 'border-navy/30',
     glow: 'shadow-[0_0_8px_rgba(91,141,239,0.3)]',
     icon: Info,
   },
   low: {
     color: 'text-navy',
-    bg: 'bg-alert/10',
-    border: 'border-alert/30',
+    bg: 'bg-coral/10',
+    border: 'border-coral/30',
     glow: 'shadow-[0_0_8px_rgba(241,130,57,0.3)]',
     icon: AlertCircle,
   },

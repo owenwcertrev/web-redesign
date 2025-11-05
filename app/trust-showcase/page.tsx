@@ -220,11 +220,11 @@ export default function TrustShowcase() {
               <div className="font-mono text-xs space-y-2 text-charcoal/60">
                 <div className="flex justify-between">
                   <span>VERIFICATION_ID:</span>
-                  <span className="text-verification">cert_vf_2025_0x4a8b9c</span>
+                  <span className="text-lime">cert_vf_2025_0x4a8b9c</span>
                 </div>
                 <div className="flex justify-between">
                   <span>TIMESTAMP:</span>
-                  <span className="text-primary">2025-01-15T14:32:00.000Z</span>
+                  <span className="text-navy">2025-01-15T14:32:00.000Z</span>
                 </div>
                 <div className="flex justify-between">
                   <span>HASH:</span>

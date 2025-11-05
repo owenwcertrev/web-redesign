@@ -8,12 +8,12 @@ interface StatusIndicatorProps {
 export default function StatusIndicator({ status, className }: StatusIndicatorProps) {
   const config = {
     verified: {
-      color: 'bg-verification',
+      color: 'bg-lime',
       text: 'Verified',
-      textColor: 'text-verification-dark',
+      textColor: 'text-lime-dark',
     },
     inReview: {
-      color: 'bg-alert',
+      color: 'bg-coral',
       text: 'In Review',
       textColor: 'text-amber-900',
     },

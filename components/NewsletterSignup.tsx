@@ -35,8 +35,8 @@ export default function NewsletterSignup() {
 
   if (success) {
     return (
-      <div className="bg-verification-light rounded-16 p-6 text-center">
-        <p className="text-verification-dark font-medium">
+      <div className="bg-lime-light rounded-16 p-6 text-center">
+        <p className="text-lime-dark font-medium">
           Thanks for subscribing! Check your email for confirmation.
         </p>
       </div>
@@ -54,7 +54,7 @@ export default function NewsletterSignup() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             required
-            className="w-full pl-10 pr-4 py-3 rounded-full border-2 border-black/10 focus:border-primary focus:outline-none transition-colors"
+            className="w-full pl-10 pr-4 py-3 rounded-full border-2 border-black/10 focus:border-navy focus:outline-none transition-colors"
           />
         </div>
         <Button type="submit" loading={loading}>

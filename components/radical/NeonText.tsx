@@ -13,15 +13,15 @@ interface NeonTextProps {
 
 const colorClasses = {
   primary: {
-    text: 'text-primary',
+    text: 'text-navy',
     shadow: 'drop-shadow-[0_0_10px_rgba(91,141,239,0.8)] drop-shadow-[0_0_20px_rgba(91,141,239,0.6)] drop-shadow-[0_0_30px_rgba(91,141,239,0.4)]',
   },
   verification: {
-    text: 'text-verification',
+    text: 'text-lime',
     shadow: 'drop-shadow-[0_0_10px_rgba(119,171,149,0.8)] drop-shadow-[0_0_20px_rgba(119,171,149,0.6)] drop-shadow-[0_0_30px_rgba(119,171,149,0.4)]',
   },
   alert: {
-    text: 'text-alert',
+    text: 'text-coral',
     shadow: 'drop-shadow-[0_0_10px_rgba(241,130,57,0.8)] drop-shadow-[0_0_20px_rgba(241,130,57,0.6)] drop-shadow-[0_0_30px_rgba(241,130,57,0.4)]',
   },
   white: {

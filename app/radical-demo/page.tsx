@@ -36,7 +36,7 @@ export default function RadicalDemo() {
             transition={{ duration: 1 }}
           >
             <motion.div
-              className="mb-8 inline-flex items-center gap-3 px-6 py-3 bg-white/5 backdrop-blur-xl rounded-full border border-primary/30"
+              className="mb-8 inline-flex items-center gap-3 px-6 py-3 bg-white/5 backdrop-blur-xl rounded-full border border-navy/30"
               animate={{
                 boxShadow: [
                   '0 0 20px rgba(91,141,239,0.3)',
@@ -46,7 +46,7 @@ export default function RadicalDemo() {
               }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <Sparkles className="w-5 h-5 text-primary" />
+              <Sparkles className="w-5 h-5 text-navy" />
               <span className="text-white/90 font-mono text-sm tracking-wider">
                 TRUST INFRASTRUCTURE v2.0
               </span>
@@ -68,11 +68,11 @@ export default function RadicalDemo() {
 
             <p className="text-xl md:text-2xl text-white/70 mb-12 max-w-3xl mx-auto leading-relaxed">
               Next-generation verification infrastructure for the{' '}
-              <span className="text-primary font-semibold">AI age</span>
+              <span className="text-navy font-semibold">AI age</span>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white shadow-[0_0_30px_rgba(91,141,239,0.5)]">
+              <Button size="lg" className="bg-navy hover:bg-navy/90 text-white shadow-[0_0_30px_rgba(91,141,239,0.5)]">
                 <Zap className="w-5 h-5" />
                 Experience the Future
                 <ArrowRight className="w-5 h-5" />
@@ -109,19 +109,19 @@ export default function RadicalDemo() {
                 icon: Shield,
                 title: 'Expert Verified',
                 description: 'Credentialed professionals validate every claim',
-                color: 'text-verification'
+                color: 'text-lime'
               },
               {
                 icon: Lock,
                 title: 'Cryptographically Secure',
                 description: 'Immutable verification records on blockchain',
-                color: 'text-primary'
+                color: 'text-navy'
               },
               {
                 icon: Eye,
                 title: 'Radically Transparent',
                 description: 'Every source, every citation, fully traceable',
-                color: 'text-alert'
+                color: 'text-coral'
               },
             ].map((item, i) => (
               <motion.div
@@ -186,7 +186,7 @@ export default function RadicalDemo() {
               >
                 <FlipCard3D
                   front={
-                    <div className="relative h-full bg-gradient-to-br from-primary/20 to-verification/20 backdrop-blur-xl border border-white/20 rounded-2xl p-8 flex flex-col justify-between">
+                    <div className="relative h-full bg-gradient-to-br from-navy/20 to-lime/20 backdrop-blur-xl border border-white/20 rounded-2xl p-8 flex flex-col justify-between">
                       <div className="absolute top-0 left-0 w-full h-full">
                         <LiquidBlob variant={i === 0 ? 'processing' : 'verified'} size="sm" className="opacity-30" />
                       </div>
@@ -201,7 +201,7 @@ export default function RadicalDemo() {
                     </div>
                   }
                   back={
-                    <div className="h-full bg-gradient-to-br from-verification to-verification-dark backdrop-blur-xl border border-verification/30 rounded-2xl p-8 flex flex-col justify-between">
+                    <div className="h-full bg-gradient-to-br from-lime to-lime-dark backdrop-blur-xl border border-lime/30 rounded-2xl p-8 flex flex-col justify-between">
                       <div>
                         <CheckCircle2 className="w-12 h-12 text-white mb-4" />
                         <h3 className="text-2xl font-bold text-white mb-6">{card.backTitle}</h3>
@@ -288,7 +288,7 @@ export default function RadicalDemo() {
                 Experience verification infrastructure that's as beautiful as it is secure
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-verification hover:bg-verification-dark text-white shadow-[0_0_30px_rgba(119,171,149,0.5)]">
+                <Button size="lg" className="bg-lime hover:bg-lime-dark text-white shadow-[0_0_30px_rgba(119,171,149,0.5)]">
                   <Shield className="w-5 h-5" />
                   Start Verifying
                   <ArrowRight className="w-5 h-5" />

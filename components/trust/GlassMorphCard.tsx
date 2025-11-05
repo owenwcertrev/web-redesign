@@ -20,20 +20,20 @@ const variantStyles = {
   },
   primary: {
     bg: 'bg-white/60',
-    border: 'border-primary/20',
-    hoverBorder: 'hover:border-primary/40',
+    border: 'border-navy/20',
+    hoverBorder: 'hover:border-navy/40',
     glow: 'hover:shadow-[0_0_24px_rgba(91,141,239,0.15)]',
   },
   verification: {
     bg: 'bg-white/60',
-    border: 'border-verification/20',
-    hoverBorder: 'hover:border-verification/40',
+    border: 'border-lime/20',
+    hoverBorder: 'hover:border-lime/40',
     glow: 'hover:shadow-[0_0_24px_rgba(119,171,149,0.15)]',
   },
   alert: {
     bg: 'bg-white/60',
-    border: 'border-alert/20',
-    hoverBorder: 'hover:border-alert/40',
+    border: 'border-coral/20',
+    hoverBorder: 'hover:border-coral/40',
     glow: 'hover:shadow-[0_0_24px_rgba(241,130,57,0.15)]',
   },
 }

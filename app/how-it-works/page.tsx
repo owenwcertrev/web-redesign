@@ -346,7 +346,6 @@ export default function HowItWorksPage() {
         <OrganicShape variant="blob4" color="coral" className="absolute top-0 right-0 w-96 h-96" opacity={0.08} />
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <FadeIn>
-            <p className="text-coral font-script text-3xl mb-4">Get Started</p>
             <h2 className="text-5xl md:text-6xl font-bold mb-8 text-navy leading-tight font-serif">
               Ready to Get Started?
             </h2>

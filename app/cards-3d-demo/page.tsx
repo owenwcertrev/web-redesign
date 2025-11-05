@@ -15,7 +15,7 @@ export default function Cards3DDemo() {
     {
       id: '1',
       content: (
-        <div className="bg-gradient-to-br from-primary/20 to-verification/20 backdrop-blur-sm p-8 rounded-2xl border border-white/20">
+        <div className="bg-gradient-to-br from-navy/20 to-lime/20 backdrop-blur-sm p-8 rounded-2xl border border-white/20">
           <h3 className="text-2xl font-bold text-charcoal mb-4">Submit Content</h3>
           <p className="text-charcoal/70">Upload your articles, blog posts, or landing pages for expert verification.</p>
         </div>
@@ -24,7 +24,7 @@ export default function Cards3DDemo() {
     {
       id: '2',
       content: (
-        <div className="bg-gradient-to-br from-verification/20 to-alert/20 backdrop-blur-sm p-8 rounded-2xl border border-white/20">
+        <div className="bg-gradient-to-br from-lime/20 to-coral/20 backdrop-blur-sm p-8 rounded-2xl border border-white/20">
           <h3 className="text-2xl font-bold text-charcoal mb-4">Expert Review</h3>
           <p className="text-charcoal/70">Credentialed professionals verify claims, check sources, and validate accuracy.</p>
         </div>
@@ -33,7 +33,7 @@ export default function Cards3DDemo() {
     {
       id: '3',
       content: (
-        <div className="bg-gradient-to-br from-alert/20 to-primary/20 backdrop-blur-sm p-8 rounded-2xl border border-white/20">
+        <div className="bg-gradient-to-br from-coral/20 to-navy/20 backdrop-blur-sm p-8 rounded-2xl border border-white/20">
           <h3 className="text-2xl font-bold text-charcoal mb-4">Get Certified</h3>
           <p className="text-charcoal/70">Receive verification badges and expert signatures that boost credibility.</p>
         </div>
@@ -42,7 +42,7 @@ export default function Cards3DDemo() {
   ]
 
   const carouselItems = [
-    <div key="1" className="bg-gradient-to-br from-primary to-primary-dark rounded-2xl p-8 h-[400px] flex flex-col justify-between text-white">
+    <div key="1" className="bg-gradient-to-br from-navy to-navy-dark rounded-2xl p-8 h-[400px] flex flex-col justify-between text-white">
       <div>
         <div className="text-sm font-mono mb-4 opacity-80">TIER 1</div>
         <h3 className="text-3xl font-bold mb-4">Certified Professional</h3>
@@ -54,7 +54,7 @@ export default function Cards3DDemo() {
         </ul>
       </div>
     </div>,
-    <div key="2" className="bg-gradient-to-br from-verification to-verification-dark rounded-2xl p-8 h-[400px] flex flex-col justify-between text-white">
+    <div key="2" className="bg-gradient-to-br from-lime to-lime-dark rounded-2xl p-8 h-[400px] flex flex-col justify-between text-white">
       <div>
         <div className="text-sm font-mono mb-4 opacity-80">TIER 2</div>
         <h3 className="text-3xl font-bold mb-4">Licensed Practitioner</h3>
@@ -66,7 +66,7 @@ export default function Cards3DDemo() {
         </ul>
       </div>
     </div>,
-    <div key="3" className="bg-gradient-to-br from-alert to-amber-600 rounded-2xl p-8 h-[400px] flex flex-col justify-between text-white">
+    <div key="3" className="bg-gradient-to-br from-coral to-amber-600 rounded-2xl p-8 h-[400px] flex flex-col justify-between text-white">
       <div>
         <div className="text-sm font-mono mb-4 opacity-80">TIER 3</div>
         <h3 className="text-3xl font-bold mb-4">Credentialed Specialist</h3>
@@ -96,7 +96,7 @@ export default function Cards3DDemo() {
     {
       id: 'analysis',
       title: 'Content Analysis',
-      color: 'bg-gradient-to-br from-primary to-primary-dark',
+      color: 'bg-gradient-to-br from-navy to-navy-dark',
       content: (
         <div className="space-y-4">
           <p>Our AI-powered system performs an initial scan of your content, identifying claims that need verification and checking for potential compliance issues.</p>
@@ -112,7 +112,7 @@ export default function Cards3DDemo() {
     {
       id: 'matching',
       title: 'Expert Matching',
-      color: 'bg-gradient-to-br from-verification to-verification-dark',
+      color: 'bg-gradient-to-br from-lime to-lime-dark',
       content: (
         <div className="space-y-4">
           <p>We match your content with the most qualified expert based on their credentials, specialization, and experience level.</p>
@@ -128,7 +128,7 @@ export default function Cards3DDemo() {
     {
       id: 'review',
       title: 'Human Verification',
-      color: 'bg-gradient-to-br from-alert to-amber-600',
+      color: 'bg-gradient-to-br from-coral to-amber-600',
       content: (
         <div className="space-y-4">
           <p>A credentialed expert thoroughly reviews your content, fact-checks claims against current research, and validates all sources.</p>
@@ -164,14 +164,14 @@ export default function Cards3DDemo() {
       {/* Depth Hero */}
       <DepthHero
         backgroundLayers={[
-          <div key="1" className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-primary/10 to-verification/10 rounded-full blur-3xl" />,
-          <div key="2" className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-gradient-to-br from-verification/10 to-alert/10 rounded-full blur-3xl" />,
+          <div key="1" className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-navy/10 to-lime/10 rounded-full blur-3xl" />,
+          <div key="2" className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-gradient-to-br from-lime/10 to-coral/10 rounded-full blur-3xl" />,
         ]}
       >
         <div className="min-h-screen flex items-center justify-center px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-block mb-6 px-6 py-3 bg-white/60 backdrop-blur-sm rounded-full border border-primary/20">
-              <span className="text-sm font-medium text-primary">3D CARD DESIGN SYSTEM</span>
+            <div className="inline-block mb-6 px-6 py-3 bg-white/60 backdrop-blur-sm rounded-full border border-navy/20">
+              <span className="text-sm font-medium text-navy">3D CARD DESIGN SYSTEM</span>
             </div>
 
             <h1 className="text-6xl md:text-8xl font-bold mb-8 leading-tight">
@@ -179,7 +179,7 @@ export default function Cards3DDemo() {
                 Trust in
               </span>
               <br />
-              <span className="bg-gradient-to-br from-primary to-verification bg-clip-text text-transparent">
+              <span className="bg-gradient-to-br from-navy to-lime bg-clip-text text-transparent">
                 Three Dimensions
               </span>
             </h1>
@@ -219,7 +219,7 @@ export default function Cards3DDemo() {
                 'Expert attribution prevents penalties'
               ]}
               icon={TrendingUp}
-              gradient="from-primary/10 to-primary/20"
+              gradient="from-navy/10 to-navy/20"
             />
 
             <FlipStatCard
@@ -234,7 +234,7 @@ export default function Cards3DDemo() {
                 'Verified content drives conversions'
               ]}
               icon={Users}
-              gradient="from-verification/10 to-verification/20"
+              gradient="from-lime/10 to-lime/20"
             />
 
             <FlipStatCard
@@ -249,7 +249,7 @@ export default function Cards3DDemo() {
                 'Demonstrates due diligence'
               ]}
               icon={AlertCircle}
-              gradient="from-alert/10 to-alert/20"
+              gradient="from-coral/10 to-coral/20"
             />
 
             <FlipStatCard
@@ -330,7 +330,7 @@ export default function Cards3DDemo() {
             ].map((item, i) => (
               <TiltCard key={i} intensity={0.8} glowColor={item.color}>
                 <div className="bg-gradient-to-br from-white to-cream backdrop-blur-sm rounded-2xl p-8 h-64 flex flex-col justify-center items-center text-center border border-charcoal/10 shadow-xl">
-                  <item.icon className="w-16 h-16 text-primary mb-4" />
+                  <item.icon className="w-16 h-16 text-navy mb-4" />
                   <h3 className="text-2xl font-bold text-charcoal">{item.title}</h3>
                 </div>
               </TiltCard>

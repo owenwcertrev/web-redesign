@@ -78,7 +78,6 @@ export default function EEATMeterPage() {
         <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <p className="text-coral font-script text-3xl mb-3">Your Free Report</p>
               <h2 className="text-4xl md:text-5xl font-bold mb-4 text-navy font-serif">
                 Your Customized Analysis Includes
               </h2>
@@ -181,7 +180,6 @@ export default function EEATMeterPage() {
         <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <p className="text-lime font-script text-3xl mb-3">Understanding E-E-A-T</p>
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-navy font-serif">
                 What is E-E-A-T?
               </h2>
@@ -282,7 +280,6 @@ export default function EEATMeterPage() {
         <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <p className="text-coral font-script text-3xl mb-3">The Numbers</p>
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-navy font-serif">
                 The Impact of Expert Validation
               </h2>

@@ -80,7 +80,7 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: isHovered ? 1 : 0 }}
-                    className="absolute bottom-4 right-4 w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-lg"
+                    className="absolute bottom-4 right-4 w-10 h-10 bg-navy rounded-full flex items-center justify-center shadow-lg"
                   >
                     <ChevronDown className="w-5 h-5 text-white" />
                   </motion.div>

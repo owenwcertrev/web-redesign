@@ -68,9 +68,9 @@ export default function ContactPage() {
               </h2>
 
               {success ? (
-                <div className="bg-verification-light rounded-16 p-6 border-2 border-verification">
-                  <h3 className="font-semibold text-verification-dark mb-2">Message Sent!</h3>
-                  <p className="text-verification-dark/80">
+                <div className="bg-lime-light rounded-16 p-6 border-2 border-lime">
+                  <h3 className="font-semibold text-lime-dark mb-2">Message Sent!</h3>
+                  <p className="text-lime-dark/80">
                     Thank you for reaching out. We'll get back to you within 1 business day.
                   </p>
                 </div>
@@ -87,7 +87,7 @@ export default function ContactPage() {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 rounded-16 border-2 border-black/10 focus:border-primary focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-16 border-2 border-black/10 focus:border-navy focus:outline-none transition-colors"
                     />
                   </div>
 
@@ -102,7 +102,7 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 rounded-16 border-2 border-black/10 focus:border-primary focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-16 border-2 border-black/10 focus:border-navy focus:outline-none transition-colors"
                     />
                   </div>
 
@@ -116,7 +116,7 @@ export default function ContactPage() {
                       name="company"
                       value={formData.company}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-16 border-2 border-black/10 focus:border-primary focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-16 border-2 border-black/10 focus:border-navy focus:outline-none transition-colors"
                     />
                   </div>
 
@@ -131,7 +131,7 @@ export default function ContactPage() {
                       onChange={handleChange}
                       required
                       rows={6}
-                      className="w-full px-4 py-3 rounded-16 border-2 border-black/10 focus:border-primary focus:outline-none transition-colors resize-none"
+                      className="w-full px-4 py-3 rounded-16 border-2 border-black/10 focus:border-navy focus:outline-none transition-colors resize-none"
                     />
                   </div>
 
@@ -158,14 +158,14 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <div className="bg-cream rounded-16 p-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Mail className="w-6 h-6 text-primary" />
+                    <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Mail className="w-6 h-6 text-navy" />
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1 text-charcoal">Email</h3>
                       <a
                         href="mailto:certreviewed@gmail.com"
-                        className="text-primary hover:underline"
+                        className="text-navy hover:underline"
                       >
                         certreviewed@gmail.com
                       </a>
@@ -175,14 +175,14 @@ export default function ContactPage() {
 
                 <div className="bg-cream rounded-16 p-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Phone className="w-6 h-6 text-primary" />
+                    <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Phone className="w-6 h-6 text-navy" />
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1 text-charcoal">Phone</h3>
                       <a
                         href="tel:213-422-8356"
-                        className="text-primary hover:underline"
+                        className="text-navy hover:underline"
                       >
                         213-422-8356
                       </a>
@@ -192,8 +192,8 @@ export default function ContactPage() {
 
                 <div className="bg-cream rounded-16 p-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-6 h-6 text-primary" />
+                    <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-6 h-6 text-navy" />
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1 text-charcoal">Address</h3>
@@ -205,9 +205,9 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="bg-verification-light rounded-16 p-6 border-2 border-verification/30">
-                  <h3 className="font-semibold mb-2 text-verification-dark">Response Time</h3>
-                  <p className="text-sm text-verification-dark/80">
+                <div className="bg-lime-light rounded-16 p-6 border-2 border-lime/30">
+                  <h3 className="font-semibold mb-2 text-lime-dark">Response Time</h3>
+                  <p className="text-sm text-lime-dark/80">
                     We typically respond to inquiries within 1 business day. For urgent matters, please call us directly.
                   </p>
                 </div>
