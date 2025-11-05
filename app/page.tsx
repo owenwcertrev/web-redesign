@@ -526,10 +526,10 @@ export default function Home() {
                   </div>
                   <h3 className="text-2xl font-bold text-charcoal mb-4">Expert Verified</h3>
                   <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow">
-                    Every piece of content reviewed by credentialed professionals with verified expertise
+                    Real doctors, nutritionists, and certified professionals review your content to ensure accuracy
                   </p>
                   <ul className="space-y-3">
-                    {['Board-certified professionals', 'Licensed practitioners', 'Industry specialists'].map((item, i) => (
+                    {['Medical doctors & specialists', 'Licensed health professionals', 'Certified industry experts'].map((item, i) => (
                       <li key={i} className="flex items-center gap-3 text-sm text-charcoal/80">
                         <div className="w-1.5 h-1.5 bg-lime rounded-full flex-shrink-0" />
                         {item}
@@ -553,10 +553,10 @@ export default function Home() {
                   </div>
                   <h3 className="text-2xl font-bold text-charcoal mb-4">FTC Compliant</h3>
                   <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow">
-                    All claims meet regulatory standards for consumer protection and advertising truth
+                    Your content meets advertising and consumer protection standards to avoid costly fines
                   </p>
                   <ul className="space-y-3">
-                    {['Substantiation requirements', 'Endorsement guidelines', 'Health claim compliance'].map((item, i) => (
+                    {['Protects against regulatory penalties', 'Meets advertising standards', 'Safe health & wellness claims'].map((item, i) => (
                       <li key={i} className="flex items-center gap-3 text-sm text-charcoal/80">
                         <div className="w-1.5 h-1.5 bg-navy rounded-full flex-shrink-0" />
                         {item}
@@ -580,10 +580,10 @@ export default function Home() {
                   </div>
                   <h3 className="text-2xl font-bold text-charcoal mb-4">Fully Transparent</h3>
                   <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow">
-                    Complete audit trail from submission to certification with public verification
+                    See exactly who reviewed your content and track every step of the verification process
                   </p>
                   <ul className="space-y-3">
-                    {['Expert credentials disclosed', 'Review history tracked', 'Public badge verification'].map((item, i) => (
+                    {['Expert names & credentials shown', 'Full review history available', 'Publicly verifiable badges'].map((item, i) => (
                       <li key={i} className="flex items-center gap-3 text-sm text-charcoal/80">
                         <div className="w-1.5 h-1.5 bg-coral rounded-full flex-shrink-0" />
                         {item}
