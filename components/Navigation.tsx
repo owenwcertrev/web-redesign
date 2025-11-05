@@ -69,7 +69,7 @@ export default function Navigation() {
                   )}
                 </AnimatePresence>
                 <Button
-                  variant="secondary"
+                  variant="primary"
                   size="sm"
                   asChild
                   className={`!bg-coral hover:!bg-coral/90 !text-white !border-coral ${brandHovered || brandExpanded ? 'rounded-l-none' : ''}`}
@@ -159,7 +159,7 @@ export default function Navigation() {
               How It Works
             </Link>
             <div className="pt-3 space-y-2 border-t border-black/5">
-              <Button variant="secondary" size="sm" className="w-full !bg-coral hover:!bg-coral/90 !text-white !border-coral" asChild>
+              <Button variant="primary" size="sm" className="w-full !bg-coral hover:!bg-coral/90 !text-white !border-coral" asChild>
                 <Link href="/brand-dashboard">Brand Dashboard</Link>
               </Button>
               <Button variant="primary" size="sm" className="w-full" asChild>
