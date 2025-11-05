@@ -164,10 +164,10 @@ export default function ContactPage() {
                     <div>
                       <h3 className="font-semibold mb-1 text-charcoal">Email</h3>
                       <a
-                        href="mailto:certreviewed@gmail.com"
+                        href="mailto:owen@certrev.com"
                         className="text-navy hover:underline"
                       >
-                        certreviewed@gmail.com
+                        owen@certrev.com
                       </a>
                     </div>
                   </div>
@@ -181,10 +181,10 @@ export default function ContactPage() {
                     <div>
                       <h3 className="font-semibold mb-1 text-charcoal">Phone</h3>
                       <a
-                        href="tel:213-422-8356"
+                        href="tel:213-304-9637"
                         className="text-navy hover:underline"
                       >
-                        213-422-8356
+                        213-304-9637
                       </a>
                     </div>
                   </div>

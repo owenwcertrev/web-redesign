@@ -63,13 +63,13 @@ export default function Footer() {
             <h4 className="font-semibold text-navy mb-4 font-serif">Contact</h4>
             <ul className="space-y-3 text-sm text-black/70">
               <li>
-                <a href="mailto:certreviewed@gmail.com" className="hover:text-coral transition-colors">
-                  certreviewed@gmail.com
+                <a href="mailto:owen@certrev.com" className="hover:text-coral transition-colors">
+                  owen@certrev.com
                 </a>
               </li>
               <li>
-                <a href="tel:213-422-8356" className="hover:text-coral transition-colors">
-                  213-422-8356
+                <a href="tel:213-304-9637" className="hover:text-coral transition-colors">
+                  213-304-9637
                 </a>
               </li>
               <li className="pt-2">
