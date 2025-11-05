@@ -9,6 +9,7 @@ import TiltCard from '@/components/cards3d/TiltCard'
 import FadeIn from '@/components/animations/FadeIn'
 import TextureOverlay from '@/components/TextureOverlay'
 import OrganicShape from '@/components/OrganicShape'
+import ConfidenceMeter from '@/components/trust/ConfidenceMeter'
 import { BarChart, FileCheck, TrendingUp, Users, AlertCircle, ShoppingBag, Sparkles, ArrowRight, Mail } from 'lucide-react'
 
 export default function EEATMeterPage() {
@@ -107,11 +108,10 @@ export default function EEATMeterPage() {
                     </h3>
                   </div>
                   <div className="bg-white rounded-xl p-6 mb-4 border-2 border-navy/10 relative z-10">
-                    <div className="h-32 flex flex-col items-center justify-center gap-4">
+                    <ConfidenceMeter score={67} label="Authority Score" showPercentage={false} />
+                    <div className="text-center mt-4">
                       <div className="text-5xl font-bold text-navy">67</div>
-                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                        <div className="bg-gradient-to-r from-coral via-lime to-navy h-full rounded-full" style={{ width: '67%' }}></div>
-                      </div>
+                      <div className="text-xs text-black/50 mt-1">Domain Authority</div>
                     </div>
                   </div>
                   <p className="text-sm text-black/70 leading-relaxed relative z-10">
