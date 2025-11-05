@@ -152,12 +152,7 @@ export default function Navigation() {
               <Button variant="primary" size="sm" className="w-full" asChild>
                 <Link href="/brand-dashboard">Brand Dashboard</Link>
               </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                className="w-full !bg-lime hover:!bg-lime/90 hover:!text-navy !text-navy !border-lime"
-                asChild
-              >
+              <Button variant="primary" size="sm" className="w-full" asChild>
                 <Link href="/expert-dashboard">Expert Dashboard</Link>
               </Button>
             </div>
