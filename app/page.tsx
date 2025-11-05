@@ -163,9 +163,21 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t-2 border-navy/10 flex items-center justify-center gap-3 sm:gap-4 flex-wrap">
-                    <TrustIndicator metric="verified" pulse />
-                    <TrustIndicator metric="transparent" />
+                  <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t-2 border-navy/10">
+                    <div className="flex items-center justify-center gap-4 sm:gap-6">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-lime animate-pulse" />
+                        <span className="text-sm font-medium text-navy">Expert Verified</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-coral" />
+                        <span className="text-sm font-medium text-navy">Fully Transparent</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-navy" />
+                        <span className="text-sm font-medium text-navy">FTC Compliant</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
