@@ -16,28 +16,28 @@ interface CitationMarkerProps {
 
 const confidenceConfig = {
   high: {
-    color: 'text-verification',
+    color: 'text-navy',
     bg: 'bg-verification/10',
     border: 'border-verification/30',
     glow: 'shadow-[0_0_8px_rgba(119,171,149,0.3)]',
     icon: CheckCircle2,
   },
   medium: {
-    color: 'text-primary',
+    color: 'text-navy',
     bg: 'bg-primary/10',
     border: 'border-primary/30',
     glow: 'shadow-[0_0_8px_rgba(91,141,239,0.3)]',
     icon: Info,
   },
   low: {
-    color: 'text-alert',
+    color: 'text-navy',
     bg: 'bg-alert/10',
     border: 'border-alert/30',
     glow: 'shadow-[0_0_8px_rgba(241,130,57,0.3)]',
     icon: AlertCircle,
   },
   unverified: {
-    color: 'text-charcoal/40',
+    color: 'text-navy',
     bg: 'bg-charcoal/5',
     border: 'border-charcoal/20',
     glow: '',

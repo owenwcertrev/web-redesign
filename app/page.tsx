@@ -309,24 +309,22 @@ export default function Home() {
                   Trust Infrastructure for the AI Age
                 </h2>
                 <p className="text-lg text-black/80 mb-6 leading-relaxed">
-                  Studies show that 60% of consumers doubt AI-generated content
+                  Studies show that 60% of consumers doubt AI-generated content.
                   <CitationMarker
                     number={1}
                     confidence="high"
                     source="Stanford Research, 2025"
                     preview="Comprehensive study of 10,000+ consumers showing significant trust gaps."
-                  />
-                  . CertREV builds the human-in-the-loop verification infrastructure brands need to navigate this trust crisis.
+                  /> CertREV builds the human-in-the-loop verification infrastructure brands need to navigate this trust crisis.
                 </p>
                 <p className="text-lg text-black/80 mb-8 leading-relaxed">
-                  Our platform connects your content with credentialed experts, creating a transparent human-in-the-loop verification layer that consumers and search engines recognize
+                  Our platform connects your content with credentialed experts, creating a transparent human-in-the-loop verification layer that consumers and search engines recognize.
                   <CitationMarker
                     number={2}
                     confidence="high"
                     source="Google E-E-A-T Guidelines, 2024"
                     preview="Official Google documentation on Experience, Expertise, Authoritativeness, and Trust signals."
                   />
-                  .
                 </p>
                 <Button size="lg" asChild>
                   <Link href="/trust-showcase">

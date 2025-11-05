@@ -1,0 +1,1 @@
+- always push changes to vercel

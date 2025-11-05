@@ -41,27 +41,24 @@ export default function TrustShowcase() {
             <h2 className="text-3xl font-semibold mb-6 text-charcoal">Citation Markers</h2>
             <p className="text-lg text-charcoal/80 mb-8 leading-relaxed">
               Beautiful inline citations with confidence indicators.
-              Studies show that 60% of consumers doubt AI-generated content
+              Studies show that 60% of consumers doubt AI-generated content.
               <CitationMarker
                 number={1}
                 confidence="high"
                 source="Stanford Research, 2025"
                 preview="Comprehensive study of 10,000+ consumers across demographics showing significant trust gaps in AI content."
-              />
-              , while expert-verified articles see a 40% lift in purchase intent
+              />, while expert-verified articles see a 40% lift in purchase intent.
               <CitationMarker
                 number={2}
                 confidence="medium"
                 source="Nielsen x inPowered Study"
                 preview="Meta-analysis of branded content performance across industries."
-              />
-              . Even unverified claims
+              /> Even unverified claims.
               <CitationMarker
                 number={3}
                 confidence="unverified"
                 source="Pending verification"
-              />
-              can be tracked for future review.
+              /> can be tracked for future review.
             </p>
 
             <div className="grid md:grid-cols-3 gap-4 p-6 bg-cream/50 rounded-xl border border-charcoal/5">

@@ -77,7 +77,7 @@ export default function TierCard({ tierNumber, tierName, credits, credentials }:
                   transition={{ delay: i * 0.05, duration: 0.3 }}
                   className="flex items-start gap-2.5 text-black/80"
                 >
-                  <Check className="w-4 h-4 flex-shrink-0 mt-0.5 text-lime" />
+                  <Check className="w-4 h-4 flex-shrink-0 mt-0.5 text-coral" />
                   <span className="text-sm leading-relaxed">{cred}</span>
                 </motion.li>
               ))}
