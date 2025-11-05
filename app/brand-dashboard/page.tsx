@@ -101,18 +101,21 @@ export default function BrandDashboardPage() {
               Get Started with CertREV
             </h2>
             <p className="text-lg text-charcoal/70 mb-8 max-w-2xl mx-auto">
-              Ready to build trust infrastructure for your brand? Start with a free E-E-A-T analysis to see how we can help.
+              Ready to build trust infrastructure for your brand? Choose how you want to get started.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" asChild className="!bg-coral hover:!bg-coral/90 !text-white !border-coral">
+                <Link href="/brand-dashboard">Sign Up as Brand</Link>
+              </Button>
               <Button size="lg" asChild>
-                <Link href="/eeat-meter">Get Free Analysis</Link>
+                <Link href="/expert-dashboard">Sign Up as Expert</Link>
               </Button>
               <Button size="lg" variant="secondary" asChild>
-                <Link href="/contact">Schedule Demo</Link>
+                <Link href="/book-demo">Schedule Demo</Link>
               </Button>
             </div>
             <p className="text-sm text-charcoal/60 mt-6">
-              Dashboard access provided upon signup. No credit card required for E-E-A-T Meter.
+              Dashboard access provided upon signup. No credit card required.
             </p>
           </div>
         </div>

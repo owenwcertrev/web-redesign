@@ -98,21 +98,24 @@ export default function ExpertDashboardPage() {
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-16 p-8 md:p-12 text-center shadow-base">
             <h2 className="text-3xl font-semibold mb-6 text-charcoal">
-              Not an Expert Yet?
+              Get Started with CertREV
             </h2>
             <p className="text-lg text-charcoal/70 mb-8 max-w-2xl mx-auto">
-              Join our network of credentialed professionals. Use your expertise to help brands build trustworthy content while earning competitive compensation.
+              Join our network of credentialed professionals or explore our platform as a brand.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" asChild className="!bg-coral hover:!bg-coral/90 !text-white !border-coral">
+                <Link href="/brand-dashboard">Sign Up as Brand</Link>
+              </Button>
               <Button size="lg" asChild>
-                <Link href="/for-experts">Apply to Join</Link>
+                <Link href="/expert-dashboard">Sign Up as Expert</Link>
               </Button>
               <Button size="lg" variant="secondary" asChild>
-                <Link href="/how-it-works">Learn More</Link>
+                <Link href="/book-demo">Schedule Demo</Link>
               </Button>
             </div>
             <p className="text-sm text-charcoal/60 mt-6">
-              Application review typically takes 3-5 business days
+              Expert applications typically reviewed within 3-5 business days
             </p>
           </div>
         </div>

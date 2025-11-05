@@ -347,21 +347,33 @@ export default function HowItWorksPage() {
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <FadeIn>
             <h2 className="text-5xl md:text-6xl font-bold mb-8 text-navy leading-tight font-serif">
-              Ready to Get Started?
+              Get Started with CertREV
             </h2>
             <p className="text-xl md:text-2xl text-black/70 mb-12 max-w-2xl mx-auto">
-              See how your content measures up with our free E-E-A-T analysis tool
+              Choose how you want to engage with our expert verification platform
             </p>
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              <Button size="lg" asChild className="shadow-2xl">
-                <Link href="/eeat-meter">
-                  Try the E-E-A-T Meter Free
+              <Button size="lg" asChild className="shadow-2xl !bg-coral hover:!bg-coral/90 !text-white !border-coral">
+                <Link href="/brand-dashboard">
+                  Sign Up as Brand
                   <ArrowRight className="w-5 h-5" />
+                </Link>
+              </Button>
+              <Button size="lg" asChild className="shadow-2xl">
+                <Link href="/expert-dashboard">
+                  Sign Up as Expert
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="secondary" asChild className="shadow-2xl">
+                <Link href="/book-demo">
+                  Schedule Demo
                 </Link>
               </Button>
             </motion.div>
