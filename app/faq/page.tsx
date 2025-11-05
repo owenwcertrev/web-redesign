@@ -713,7 +713,7 @@ export default function FAQPage() {
                         ? 'bg-coral text-white shadow-md'
                         : tab.color === 'navy'
                         ? 'bg-navy text-white shadow-md'
-                        : 'bg-lime text-white shadow-md'
+                        : 'bg-lime text-navy shadow-md'
                       : 'bg-beige text-navy hover:bg-beige/80'
                     }
                   `}
