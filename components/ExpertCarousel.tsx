@@ -1,7 +1,7 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
-import { ReactNode, useState, useEffect, useRef } from 'react'
+import { motion } from 'framer-motion'
+import { ReactNode, useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface ExpertCarouselProps {
@@ -18,77 +18,84 @@ export default function ExpertCarousel({
   autoPlayInterval = 5000
 }: ExpertCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [direction, setDirection] = useState(0)
+  const cardsPerView = 3
+
+  // Duplicate items for infinite scroll effect
+  const extendedItems = [...items, ...items, ...items]
+  const startIndex = items.length // Start from the middle set
 
   // Auto-play functionality
   useEffect(() => {
     if (!autoPlay) return
 
     const interval = setInterval(() => {
-      navigate('next')
+      setCurrentIndex((prev) => prev + 1)
     }, autoPlayInterval)
 
     return () => clearInterval(interval)
-  }, [currentIndex, autoPlay, autoPlayInterval])
+  }, [autoPlay, autoPlayInterval])
 
-  const navigate = (dir: 'prev' | 'next') => {
-    if (dir === 'prev') {
-      setDirection(-1)
-      setCurrentIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1))
-    } else {
-      setDirection(1)
-      setCurrentIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1))
+  // Reset to middle when reaching boundaries
+  useEffect(() => {
+    if (currentIndex >= items.length * 2) {
+      setTimeout(() => {
+        setCurrentIndex(items.length)
+      }, 500)
+    } else if (currentIndex < items.length) {
+      setTimeout(() => {
+        setCurrentIndex(items.length * 2 - 1)
+      }, 500)
     }
+  }, [currentIndex, items.length])
+
+  const next = () => {
+    setCurrentIndex((prev) => prev + 1)
+  }
+
+  const prev = () => {
+    setCurrentIndex((prev) => prev - 1)
   }
 
   const goToSlide = (index: number) => {
-    setDirection(index > currentIndex ? 1 : -1)
-    setCurrentIndex(index)
+    setCurrentIndex(startIndex + index)
   }
 
-  // Get visible items (3 at once, wrapping around)
-  const getVisibleItems = () => {
-    const visible = []
-    for (let i = 0; i < 3; i++) {
-      const index = (currentIndex + i) % items.length
-      visible.push({ item: items[index], originalIndex: index })
-    }
-    return visible
-  }
-
-  const visibleItems = getVisibleItems()
+  // Calculate the display index for dot indicators
+  const displayIndex = ((currentIndex - startIndex) % items.length + items.length) % items.length
 
   return (
     <div className={`relative ${className}`}>
-      {/* Carousel Container with horizontal slide animation */}
-      <div className="relative overflow-hidden">
-        <AnimatePresence initial={false} custom={direction} mode="wait">
-          <motion.div
-            key={currentIndex}
-            custom={direction}
-            initial={{ x: direction > 0 ? 1000 : -1000 }}
-            animate={{ x: 0 }}
-            exit={{ x: direction > 0 ? -1000 : 1000 }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 30
-            }}
-            className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 auto-rows-fr"
-          >
-            {visibleItems.map(({ item, originalIndex }, idx) => (
-              <div key={`${currentIndex}-${idx}`} className="h-full">
+      {/* Carousel Container */}
+      <div className="overflow-hidden">
+        <motion.div
+          className="flex gap-6"
+          animate={{
+            x: `calc(-${(currentIndex * 100) / cardsPerView}% - ${currentIndex * 1.5}rem)`
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 30
+          }}
+        >
+          {extendedItems.map((item, index) => (
+            <div
+              key={index}
+              className="flex-shrink-0"
+              style={{ width: `calc(${100 / cardsPerView}% - ${(cardsPerView - 1) * 1.5 / cardsPerView}rem)` }}
+            >
+              <div className="h-full">
                 {item}
               </div>
-            ))}
-          </motion.div>
-        </AnimatePresence>
+            </div>
+          ))}
+        </motion.div>
       </div>
 
       {/* Navigation Arrows */}
       <div className="flex items-center justify-center gap-4 mt-8">
         <button
-          onClick={() => navigate('prev')}
+          onClick={prev}
           className="w-12 h-12 rounded-full bg-white border-2 border-navy/10 hover:border-lime/40 hover:bg-lime/5 transition-all flex items-center justify-center group shadow-lg"
           aria-label="Previous expert"
         >
@@ -102,7 +109,7 @@ export default function ExpertCarousel({
               key={index}
               onClick={() => goToSlide(index)}
               className={`h-2 rounded-full transition-all ${
-                index === currentIndex
+                index === displayIndex
                   ? 'w-8 bg-lime'
                   : 'w-2 bg-navy/20 hover:bg-navy/40'
               }`}
@@ -112,7 +119,7 @@ export default function ExpertCarousel({
         </div>
 
         <button
-          onClick={() => navigate('next')}
+          onClick={next}
           className="w-12 h-12 rounded-full bg-white border-2 border-navy/10 hover:border-lime/40 hover:bg-lime/5 transition-all flex items-center justify-center group shadow-lg"
           aria-label="Next expert"
         >
