@@ -11,6 +11,7 @@ import FlipStatCard from '@/components/cards3d/FlipStatCard'
 import StackedCards from '@/components/cards3d/StackedCards'
 import TiltCard from '@/components/cards3d/TiltCard'
 import Carousel3D from '@/components/cards3d/Carousel3D'
+import SplitSignupButton from '@/components/SplitSignupButton'
 import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Upload, FileCheck, Search, CheckCircle2, Shield, Eye } from 'lucide-react'
 import CitationMarker from '@/components/trust/CitationMarker'
 import ConfidenceMeter from '@/components/trust/ConfidenceMeter'
@@ -177,6 +178,7 @@ export default function Home() {
               transition={{ delay: 1 }}
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
             >
+              <SplitSignupButton />
               <Button size="lg" asChild>
                 <Link href="/book-demo">
                   Book Demo
