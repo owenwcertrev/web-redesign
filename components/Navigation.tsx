@@ -34,7 +34,7 @@ export default function Navigation() {
 
           {/* Dashboard CTAs - Desktop and Tablet */}
           <div className="hidden md:flex items-center gap-3">
-            {/* Brand Dashboard with extending profile icon (left) */}
+            {/* Brand Dashboard - Orange button with Blue icon (left) */}
             <div
               className="relative"
               onMouseEnter={() => setBrandHovered(true)}
@@ -66,17 +66,17 @@ export default function Navigation() {
                   )}
                 </AnimatePresence>
                 <Button
-                  variant="primary"
+                  variant="secondary"
                   size="sm"
                   asChild
-                  className={brandHovered || brandExpanded ? 'rounded-l-none' : ''}
+                  className={`!bg-coral hover:!bg-coral/90 !text-white !border-coral ${brandHovered || brandExpanded ? 'rounded-l-none' : ''}`}
                 >
                   <Link href="/brand-dashboard">Brand Dashboard</Link>
                 </Button>
               </div>
             </div>
 
-            {/* Expert Dashboard with extending profile icon (right) - Navy button, Orange icon */}
+            {/* Expert Dashboard - Blue button with Orange icon (right) */}
             <div
               className="relative"
               onMouseEnter={() => setExpertHovered(true)}
@@ -149,7 +149,7 @@ export default function Navigation() {
               How It Works
             </Link>
             <div className="pt-3 space-y-2 border-t border-black/5">
-              <Button variant="primary" size="sm" className="w-full" asChild>
+              <Button variant="secondary" size="sm" className="w-full !bg-coral hover:!bg-coral/90 !text-white !border-coral" asChild>
                 <Link href="/brand-dashboard">Brand Dashboard</Link>
               </Button>
               <Button variant="primary" size="sm" className="w-full" asChild>
