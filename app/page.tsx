@@ -19,7 +19,6 @@ import OrganicShape from '@/components/OrganicShape'
 import TextureOverlay from '@/components/TextureOverlay'
 import Testimonial from '@/components/Testimonial'
 import ExpertProfile from '@/components/ExpertProfile'
-import HeroVisual from '@/components/HeroVisual'
 
 export default function Home() {
   // Stacked cards content for the process
@@ -186,9 +185,6 @@ export default function Home() {
                 <Link href="#verification-process">See How It Works</Link>
               </Button>
             </motion.div>
-
-            {/* Hero Visual - Human in the Loop Illustration */}
-            <HeroVisual />
           </div>
         </div>
       </DepthHero>
