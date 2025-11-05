@@ -62,7 +62,7 @@ export default function BookDemoPage() {
           <OrganicShape key="shape2" variant="blob3" color="navy" className="absolute bottom-1/3 left-1/4 w-80 h-80" opacity={0.08} />,
         ]}
       >
-        <div className="py-16 px-4">
+        <div className="py-24 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -280,19 +280,19 @@ export default function BookDemoPage() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
-              className="space-y-6"
+              className="space-y-4"
             >
               <TiltCard intensity={0.5} glowColor="rgba(119, 171, 149, 0.2)">
-                <div className="bg-white rounded-3xl p-8 border-2 border-lime/20 shadow-xl relative overflow-hidden">
+                <div className="bg-white rounded-3xl p-5 border-2 border-lime/20 shadow-xl relative overflow-hidden">
                   <TextureOverlay type="paper" opacity={0.3} />
                   <div className="relative z-10">
-                    <div className="flex items-start gap-4 mb-6">
-                      <div className="w-14 h-14 bg-lime/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <Clock className="w-7 h-7 text-lime" />
+                    <div className="flex items-start gap-3">
+                      <div className="w-12 h-12 bg-lime/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <Clock className="w-6 h-6 text-lime" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold mb-2 text-navy font-serif">30-Minute Session</h3>
-                        <p className="text-black/70 leading-relaxed">
+                        <h3 className="text-lg font-bold mb-1 text-navy font-serif">30-Minute Session</h3>
+                        <p className="text-black/70 text-sm leading-relaxed">
                           A personalized walkthrough of CertREV's platform tailored to your content verification needs
                         </p>
                       </div>
@@ -302,16 +302,16 @@ export default function BookDemoPage() {
               </TiltCard>
 
               <TiltCard intensity={0.5} glowColor="rgba(240, 123, 97, 0.2)">
-                <div className="bg-white rounded-3xl p-8 border-2 border-coral/20 shadow-xl relative overflow-hidden">
+                <div className="bg-white rounded-3xl p-5 border-2 border-coral/20 shadow-xl relative overflow-hidden">
                   <TextureOverlay type="paper" opacity={0.3} />
                   <div className="relative z-10">
-                    <div className="flex items-start gap-4 mb-6">
-                      <div className="w-14 h-14 bg-coral/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <Users className="w-7 h-7 text-coral" />
+                    <div className="flex items-start gap-3">
+                      <div className="w-12 h-12 bg-coral/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <Users className="w-6 h-6 text-coral" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold mb-2 text-navy font-serif">Meet the Founders</h3>
-                        <p className="text-black/70 leading-relaxed">
+                        <h3 className="text-lg font-bold mb-1 text-navy font-serif">Meet the Founders</h3>
+                        <p className="text-black/70 text-sm leading-relaxed">
                           Direct access to CertREV's founding team who will personally guide you through the platform and answer your questions
                         </p>
                       </div>
@@ -321,16 +321,16 @@ export default function BookDemoPage() {
               </TiltCard>
 
               <TiltCard intensity={0.5} glowColor="rgba(10, 27, 63, 0.2)">
-                <div className="bg-white rounded-3xl p-8 border-2 border-navy/20 shadow-xl relative overflow-hidden">
+                <div className="bg-white rounded-3xl p-5 border-2 border-navy/20 shadow-xl relative overflow-hidden">
                   <TextureOverlay type="paper" opacity={0.3} />
                   <div className="relative z-10">
-                    <div className="flex items-start gap-4 mb-6">
-                      <div className="w-14 h-14 bg-navy/10 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <Calendar className="w-7 h-7 text-navy" />
+                    <div className="flex items-start gap-3">
+                      <div className="w-12 h-12 bg-navy/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <Calendar className="w-6 h-6 text-navy" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold mb-2 text-navy font-serif">Custom Solution</h3>
-                        <p className="text-black/70 leading-relaxed">
+                        <h3 className="text-lg font-bold mb-1 text-navy font-serif">Custom Solution</h3>
+                        <p className="text-black/70 text-sm leading-relaxed">
                           Learn how to build trust infrastructure specific to your content, audience, and business goals
                         </p>
                       </div>
@@ -339,23 +339,23 @@ export default function BookDemoPage() {
                 </div>
               </TiltCard>
 
-              <div className="bg-gradient-to-br from-lime/5 to-lime/10 rounded-3xl p-8 border-2 border-lime/30 shadow-lg">
-                <h3 className="text-xl font-bold mb-4 text-navy font-serif">During the Demo</h3>
-                <ul className="space-y-3 text-black/70">
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />
+              <div className="bg-gradient-to-br from-lime/5 to-lime/10 rounded-3xl p-5 border-2 border-lime/30 shadow-lg">
+                <h3 className="text-lg font-bold mb-3 text-navy font-serif">During the Demo</h3>
+                <ul className="space-y-2 text-black/70 text-sm">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-lime flex-shrink-0 mt-0.5" />
                     <span>See the expert verification workflow in action</span>
                   </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-lime flex-shrink-0 mt-0.5" />
                     <span>Explore our expert network and credentialing tiers</span>
                   </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-lime flex-shrink-0 mt-0.5" />
                     <span>Review pricing and ROI for your use case</span>
                   </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-lime flex-shrink-0 mt-0.5" />
                     <span>Get answers to all your questions</span>
                   </li>
                 </ul>
