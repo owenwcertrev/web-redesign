@@ -46,60 +46,40 @@ export default function ExpertCarousel({
     setCurrentIndex(index)
   }
 
-  const variants = {
+  const slideVariants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0,
-      scale: 0.8
+      x: direction > 0 ? 300 : -300,
+      opacity: 0
     }),
     center: {
-      zIndex: 1,
       x: 0,
-      opacity: 1,
-      scale: 1
+      opacity: 1
     },
     exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0,
-      scale: 0.8
+      x: direction < 0 ? 300 : -300,
+      opacity: 0
     })
   }
 
   return (
     <div className={`relative ${className}`}>
       {/* Carousel Container */}
-      <div className="relative overflow-hidden">
+      <div className="relative min-h-[500px] flex items-center justify-center">
         <AnimatePresence initial={false} custom={direction} mode="wait">
           <motion.div
             key={currentIndex}
             custom={direction}
-            variants={variants}
+            variants={slideVariants}
             initial="enter"
             animate="center"
             exit="exit"
             transition={{
               x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.2 },
-              scale: { duration: 0.2 }
+              opacity: { duration: 0.3 }
             }}
-            className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8"
+            className="w-full max-w-md mx-auto"
           >
-            {/* Show current set of items based on screen size */}
-            {/* Desktop: show 3 at a time, Tablet: 2, Mobile: 1 */}
-            {items.slice(currentIndex, currentIndex + 3).map((item, index) => (
-              <div key={currentIndex + index}>
-                {item}
-              </div>
-            ))}
-            {/* Loop back to start if needed */}
-            {currentIndex + 3 > items.length &&
-              items.slice(0, (currentIndex + 3) - items.length).map((item, index) => (
-                <div key={index}>
-                  {item}
-                </div>
-              ))
-            }
+            {items[currentIndex]}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -109,7 +89,7 @@ export default function ExpertCarousel({
         <button
           onClick={() => navigate('prev')}
           className="w-12 h-12 rounded-full bg-white border-2 border-navy/10 hover:border-lime/40 hover:bg-lime/5 transition-all flex items-center justify-center group shadow-lg"
-          aria-label="Previous experts"
+          aria-label="Previous expert"
         >
           <ChevronLeft className="w-5 h-5 text-navy/60 group-hover:text-navy transition-colors" />
         </button>
@@ -133,7 +113,7 @@ export default function ExpertCarousel({
         <button
           onClick={() => navigate('next')}
           className="w-12 h-12 rounded-full bg-white border-2 border-navy/10 hover:border-lime/40 hover:bg-lime/5 transition-all flex items-center justify-center group shadow-lg"
-          aria-label="Next experts"
+          aria-label="Next expert"
         >
           <ChevronRight className="w-5 h-5 text-navy/60 group-hover:text-navy transition-colors" />
         </button>
