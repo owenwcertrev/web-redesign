@@ -23,14 +23,14 @@ export default function Navigation() {
           </Link>
 
           {/* Desktop Navigation - Right aligned */}
-          <div className="hidden lg:flex items-center gap-8 ml-auto mr-4">
-            <Link href="/book-demo" className="text-black hover:text-coral transition-colors">
+          <div className="hidden lg:flex items-center gap-12 ml-auto mr-6">
+            <Link href="/book-demo" className="text-black hover:text-coral transition-colors text-base">
               Book Demo
             </Link>
-            <Link href="/eeat-meter" className="text-black hover:text-coral transition-colors">
+            <Link href="/eeat-meter" className="text-black hover:text-coral transition-colors text-base">
               E-E-A-T Meter
             </Link>
-            <Link href="/how-it-works" className="text-black hover:text-coral transition-colors">
+            <Link href="/how-it-works" className="text-black hover:text-coral transition-colors text-base">
               How It Works
             </Link>
           </div>
