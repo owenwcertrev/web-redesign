@@ -50,11 +50,14 @@ export default function BookDemoPage() {
       {/* Hero Section */}
       <section className="bg-cream py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-block mb-4 px-6 py-2 bg-navy/10 rounded-full">
+            <span className="text-sm font-semibold text-navy tracking-wide">MEET THE FOUNDERS</span>
+          </div>
           <h1 className="text-4xl md:text-5xl font-semibold mb-6 text-charcoal leading-tight">
-            Book Your Demo
+            Schedule a Demo with Our Team
           </h1>
           <p className="text-xl text-charcoal/80 max-w-2xl mx-auto">
-            See how CertREV can transform your content with expert verification and build trust infrastructure for your brand
+            Book a personalized 30-minute session with CertREV's founders to see how expert verification can transform your content strategy
           </p>
         </div>
       </section>
@@ -73,7 +76,7 @@ export default function BookDemoPage() {
                 <div className="bg-lime-light rounded-16 p-6 border-2 border-lime">
                   <h3 className="font-semibold text-lime-dark mb-2">Demo Request Sent!</h3>
                   <p className="text-lime-dark/80">
-                    Thank you for your interest. We'll contact you within 1 business day to schedule your personalized demo.
+                    Thank you for your interest. One of our founders will reach out within 1 business day to schedule your personalized demo session.
                   </p>
                 </div>
               ) : (
@@ -234,9 +237,9 @@ export default function BookDemoPage() {
                       <Users className="w-6 h-6 text-navy" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1 text-charcoal">Meet the Team</h3>
+                      <h3 className="font-semibold mb-1 text-charcoal">Meet the Founders</h3>
                       <p className="text-charcoal/70 text-sm">
-                        Connect with our verification specialists who understand your industry and compliance requirements
+                        Direct access to CertREV's founding team who will personally guide you through the platform and answer your questions
                       </p>
                     </div>
                   </div>
