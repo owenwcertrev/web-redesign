@@ -2,11 +2,16 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, User } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import Button from './Button'
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [brandHovered, setBrandHovered] = useState(false)
+  const [expertHovered, setExpertHovered] = useState(false)
+  const [brandExpanded, setBrandExpanded] = useState(false)
+  const [expertExpanded, setExpertExpanded] = useState(false)
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-beige border-b border-black/10 shadow-sm">
@@ -30,25 +35,87 @@ export default function Navigation() {
             </Link>
           </div>
 
-          {/* Dashboard CTAs - Desktop */}
-          <div className="hidden lg:flex items-center gap-3">
-            <Button variant="primary" size="sm" asChild>
-              <Link href="/brand-dashboard">Brand Dashboard</Link>
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              className="!bg-lime hover:!bg-lime/90 hover:!text-navy !text-navy !border-lime"
-              asChild
+          {/* Dashboard CTAs - Desktop and Tablet */}
+          <div className="hidden md:flex items-center gap-3">
+            {/* Brand Dashboard with extending profile icon (left) */}
+            <div
+              className="relative"
+              onMouseEnter={() => setBrandHovered(true)}
+              onMouseLeave={() => setBrandHovered(false)}
+              onClick={() => setBrandExpanded(!brandExpanded)}
             >
-              <Link href="/expert-dashboard">Expert Dashboard</Link>
-            </Button>
+              <div className="flex items-center">
+                <AnimatePresence>
+                  {(brandHovered || brandExpanded) && (
+                    <motion.div
+                      initial={{ width: 0, opacity: 0 }}
+                      animate={{ width: 40, opacity: 1 }}
+                      exit={{ width: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className="overflow-hidden"
+                    >
+                      <Link
+                        href="/brand-dashboard"
+                        className="flex items-center justify-center w-10 h-10 bg-navy hover:bg-navy/90 transition-colors rounded-l-lg border-2 border-r-0 border-navy"
+                      >
+                        <User className="w-4 h-4 text-white" />
+                      </Link>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  asChild
+                  className={brandHovered || brandExpanded ? 'rounded-l-none' : ''}
+                >
+                  <Link href="/brand-dashboard">Brand Dashboard</Link>
+                </Button>
+              </div>
+            </div>
+
+            {/* Expert Dashboard with extending profile icon (right) */}
+            <div
+              className="relative"
+              onMouseEnter={() => setExpertHovered(true)}
+              onMouseLeave={() => setExpertHovered(false)}
+              onClick={() => setExpertExpanded(!expertExpanded)}
+            >
+              <div className="flex items-center">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className={`!bg-lime hover:!bg-lime/90 hover:!text-navy !text-navy !border-lime ${expertHovered || expertExpanded ? 'rounded-r-none' : ''}`}
+                  asChild
+                >
+                  <Link href="/expert-dashboard">Expert Dashboard</Link>
+                </Button>
+                <AnimatePresence>
+                  {(expertHovered || expertExpanded) && (
+                    <motion.div
+                      initial={{ width: 0, opacity: 0 }}
+                      animate={{ width: 40, opacity: 1 }}
+                      exit={{ width: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className="overflow-hidden"
+                    >
+                      <Link
+                        href="/expert-dashboard"
+                        className="flex items-center justify-center w-10 h-10 bg-lime hover:bg-lime/90 transition-colors rounded-r-lg border-2 border-l-0 border-lime"
+                      >
+                        <User className="w-4 h-4 text-navy" />
+                      </Link>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
           </div>
 
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-black hover:text-coral transition-colors"
+            className="md:hidden p-2 text-black hover:text-coral transition-colors"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -58,7 +125,7 @@ export default function Navigation() {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-black/5 bg-beige">
+        <div className="md:hidden border-t border-black/5 bg-beige">
           <div className="px-4 py-4 space-y-3">
             <Link
               href="/human-layer"
