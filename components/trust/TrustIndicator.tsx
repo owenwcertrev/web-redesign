@@ -16,9 +16,9 @@ interface TrustIndicatorProps {
 const metricConfig = {
   verified: {
     icon: Shield,
-    color: 'text-lime',
-    bgColor: 'bg-lime/10',
-    borderColor: 'border-lime/30',
+    color: 'text-navy',
+    bgColor: 'bg-navy/10',
+    borderColor: 'border-navy/30',
     defaultLabel: 'Expert Verified',
     defaultValue: '✓',
   },
@@ -40,9 +40,9 @@ const metricConfig = {
   },
   immutable: {
     icon: Database,
-    color: 'text-navy',
-    bgColor: 'bg-navy/10',
-    borderColor: 'border-navy/30',
+    color: 'text-coral',
+    bgColor: 'bg-coral/10',
+    borderColor: 'border-coral/30',
     defaultLabel: 'Immutable',
     defaultValue: 'Blockchain',
   },
