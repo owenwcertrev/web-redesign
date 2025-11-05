@@ -24,9 +24,6 @@ export default function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
-            <Link href="/human-layer" className="text-black hover:text-coral transition-colors">
-              The Human Layer
-            </Link>
             <Link href="/eeat-meter" className="text-black hover:text-coral transition-colors">
               E-E-A-T Meter
             </Link>
@@ -79,7 +76,7 @@ export default function Navigation() {
               </div>
             </div>
 
-            {/* Expert Dashboard with extending profile icon (right) */}
+            {/* Expert Dashboard with extending profile icon (right) - Navy button, Orange icon */}
             <div
               className="relative"
               onMouseEnter={() => setExpertHovered(true)}
@@ -111,7 +108,7 @@ export default function Navigation() {
                     >
                       <Link
                         href="/expert-dashboard"
-                        className="flex items-center justify-center w-10 h-10 bg-navy hover:bg-navy/90 transition-colors rounded-r-lg border-2 border-l-0 border-navy"
+                        className="flex items-center justify-center w-10 h-10 bg-coral hover:bg-coral/90 transition-colors rounded-r-lg border-2 border-l-0 border-coral"
                       >
                         <User className="w-4 h-4 text-white" />
                       </Link>
@@ -137,13 +134,6 @@ export default function Navigation() {
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-black/5 bg-beige">
           <div className="px-4 py-4 space-y-3">
-            <Link
-              href="/human-layer"
-              className="block py-2 text-black hover:text-coral transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              The Human Layer
-            </Link>
             <Link
               href="/eeat-meter"
               className="block py-2 text-black hover:text-coral transition-colors"
