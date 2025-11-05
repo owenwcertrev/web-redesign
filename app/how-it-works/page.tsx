@@ -359,15 +359,15 @@ export default function HowItWorksPage() {
               viewport={{ once: true }}
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              <Button size="lg" asChild className="shadow-2xl !bg-coral hover:!bg-coral/90 !text-white !border-coral">
-                <Link href="/brand-dashboard">
-                  Sign Up as Brand
+              <Button size="lg" asChild className="shadow-2xl !bg-navy hover:!bg-navy/90 !text-white !border-navy">
+                <Link href="/expert-dashboard">
+                  Sign Up as Expert
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </Button>
-              <Button size="lg" asChild className="shadow-2xl">
-                <Link href="/expert-dashboard">
-                  Sign Up as Expert
+              <Button size="lg" asChild className="shadow-2xl !bg-coral hover:!bg-coral/90 !text-white !border-coral">
+                <Link href="/brand-dashboard">
+                  Sign Up as Brand
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </Button>

@@ -104,11 +104,11 @@ export default function BrandDashboardPage() {
               Ready to build trust infrastructure for your brand? Choose how you want to get started.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" asChild className="!bg-navy hover:!bg-navy/90 !text-white !border-navy">
+                <Link href="/expert-dashboard">Sign Up as Expert</Link>
+              </Button>
               <Button size="lg" asChild className="!bg-coral hover:!bg-coral/90 !text-white !border-coral">
                 <Link href="/brand-dashboard">Sign Up as Brand</Link>
-              </Button>
-              <Button size="lg" asChild>
-                <Link href="/expert-dashboard">Sign Up as Expert</Link>
               </Button>
               <Button size="lg" variant="secondary" asChild>
                 <Link href="/book-demo">Schedule Demo</Link>
