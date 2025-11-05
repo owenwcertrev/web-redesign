@@ -721,8 +721,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* The Human Layer - Insights & Newsletter - Asymmetric spacing */}
-      <section className="relative bg-beige pt-16 pb-12 sm:pt-24 sm:pb-20 md:pt-32 md:pb-28 px-4 overflow-hidden">
+      {/* The Human Layer - Hidden for MVP */}
+      {/* <section className="relative bg-beige pt-16 pb-12 sm:pt-24 sm:pb-20 md:pt-32 md:pb-28 px-4 overflow-hidden">
         <OrganicShape variant="blob3" color="lime" className="bottom-0 right-0 w-[500px] h-[500px]" opacity={0.08} />
         <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
@@ -798,7 +798,7 @@ export default function Home() {
             </div>
           </FadeIn>
         </div>
-      </section>
+      </section> */}
 
       {/* Final CTA Section - Asymmetric spacing */}
       <section className="relative bg-white pt-16 pb-20 sm:pt-24 sm:pb-28 md:pt-32 md:pb-36 px-4 overflow-hidden">
