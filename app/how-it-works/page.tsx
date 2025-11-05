@@ -192,7 +192,7 @@ export default function HowItWorksPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-6xl md:text-8xl font-bold mb-8 leading-tight font-serif"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 sm:mb-8 leading-tight font-serif"
             >
               <span className="text-navy">
                 How CertREV
@@ -207,7 +207,7 @@ export default function HowItWorksPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-xl md:text-2xl text-black/70 max-w-2xl mx-auto"
+              className="text-lg sm:text-xl md:text-2xl text-black/70 max-w-2xl mx-auto"
             >
               Human-in-the-loop expert fact-checking that protects your SEO, builds consumer trust, and ensures compliance
             </motion.p>

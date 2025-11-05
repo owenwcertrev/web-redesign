@@ -10,21 +10,21 @@ export default function HeroVisual() {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="mt-20 max-w-5xl mx-auto relative"
+      className="mt-12 sm:mt-16 md:mt-20 max-w-5xl mx-auto relative px-4"
     >
       {/* Main Visual Container */}
-      <div className="relative h-[400px] md:h-[500px]">
+      <div className="relative min-h-[700px] sm:min-h-[600px] md:h-[500px]">
         {/* Background glow */}
-        <div className="absolute inset-0 bg-gradient-to-br from-lime/20 via-coral/10 to-navy/20 rounded-[3rem] blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-lime/20 via-coral/10 to-navy/20 rounded-2xl md:rounded-[3rem] blur-3xl" />
 
         {/* Center: Content Document */}
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 1.4, duration: 0.6 }}
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
+          className="absolute left-1/2 top-[30%] sm:top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-[90%] max-w-[320px] md:max-w-[320px]"
         >
-          <div className="bg-white rounded-2xl p-8 border-2 border-navy/20 shadow-2xl w-80 relative overflow-hidden">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border-2 border-navy/20 shadow-2xl w-full relative overflow-hidden">
             <TextureOverlay type="paper" opacity={0.3} />
             <div className="relative z-10 space-y-3">
               <div className="flex items-center gap-2 mb-4">
@@ -57,37 +57,37 @@ export default function HeroVisual() {
           initial={{ x: -100, opacity: 0, rotate: -5 }}
           animate={{ x: 0, opacity: 1, rotate: 0 }}
           transition={{ delay: 1.6, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute left-0 md:left-8 top-1/2 -translate-y-1/2 z-20"
+          className="absolute left-1/2 -translate-x-1/2 top-4 sm:top-8 md:left-8 md:top-1/2 md:-translate-y-1/2 md:translate-x-0 z-20 w-[85%] max-w-[240px] md:max-w-[224px]"
         >
-          <div className="bg-gradient-to-br from-white to-lime/5 rounded-2xl p-6 border-2 border-lime shadow-xl w-56 relative overflow-hidden">
+          <div className="bg-gradient-to-br from-white to-lime/5 rounded-2xl p-5 sm:p-6 border-2 border-lime shadow-xl w-full relative overflow-hidden">
             <TextureOverlay type="paper" opacity={0.2} />
 
             {/* Credential seal/badge */}
             <div className="relative z-10">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-lime to-lime-dark flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-lg relative">
-                <CheckCircle className="w-10 h-10 text-navy" strokeWidth={2.5} />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-lime to-lime-dark flex items-center justify-center mx-auto mb-3 sm:mb-4 border-4 border-white shadow-lg relative">
+                <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 text-navy" strokeWidth={2.5} />
                 {/* Inner ring decoration */}
                 <div className="absolute inset-2 rounded-full border-2 border-white/30" />
               </div>
 
               <div className="text-center">
-                <div className="text-xs font-semibold text-navy/70 uppercase tracking-wider mb-1">Verified By</div>
-                <div className="font-bold text-navy text-base mb-2 font-serif">Board Certified MD</div>
-                <div className="text-xs text-black/60 mb-3 leading-relaxed">Licensed Medical Professional</div>
-                <div className="inline-flex items-center gap-1 px-3 py-1.5 bg-lime/20 rounded-full text-xs font-bold text-navy border border-lime/40">
-                  <Award className="w-3.5 h-3.5" />
+                <div className="text-[10px] sm:text-xs font-semibold text-navy/70 uppercase tracking-wider mb-1">Verified By</div>
+                <div className="font-bold text-navy text-sm sm:text-base mb-1 sm:mb-2 font-serif">Board Certified MD</div>
+                <div className="text-[10px] sm:text-xs text-black/60 mb-2 sm:mb-3 leading-relaxed">Licensed Medical Professional</div>
+                <div className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-lime/20 rounded-full text-[10px] sm:text-xs font-bold text-navy border border-lime/40">
+                  <Award className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   Tier 6 Authority
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Arrow to content */}
+          {/* Arrow to content - hidden on mobile */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.9, duration: 0.5 }}
-            className="absolute -right-16 top-1/2 -translate-y-1/2"
+            className="hidden md:block absolute -right-16 top-1/2 -translate-y-1/2"
           >
             <ArrowRight className="w-8 h-8 text-lime" />
           </motion.div>
@@ -98,9 +98,9 @@ export default function HeroVisual() {
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 1.8, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute right-0 md:right-8 top-1/2 -translate-y-1/2 z-20"
+          className="absolute left-1/2 -translate-x-1/2 bottom-4 sm:bottom-8 md:right-8 md:left-auto md:translate-x-0 md:top-1/2 md:-translate-y-1/2 md:bottom-auto z-20 w-[85%] max-w-[240px] md:max-w-[224px]"
         >
-          <div className="bg-navy rounded-2xl p-6 border-2 border-lime shadow-xl w-56 relative overflow-hidden">
+          <div className="bg-navy rounded-2xl p-5 sm:p-6 border-2 border-lime shadow-xl w-full relative overflow-hidden">
             <TextureOverlay type="grain" opacity={0.1} />
             <div className="relative z-10 space-y-3">
               <div className="flex items-center gap-2 mb-3">
@@ -147,12 +147,12 @@ export default function HeroVisual() {
             </div>
           </div>
 
-          {/* Arrow from content */}
+          {/* Arrow from content - hidden on mobile */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2.1, duration: 0.5 }}
-            className="absolute -left-16 top-1/2 -translate-y-1/2"
+            className="hidden md:block absolute -left-16 top-1/2 -translate-y-1/2"
           >
             <ArrowRight className="w-8 h-8 text-coral" />
           </motion.div>
@@ -163,9 +163,9 @@ export default function HeroVisual() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.4, duration: 0.6 }}
-          className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-full text-center"
+          className="absolute -bottom-8 sm:-bottom-12 left-1/2 -translate-x-1/2 w-full text-center px-4"
         >
-          <p className="text-sm text-black/60 italic">
+          <p className="text-xs sm:text-sm text-black/60 italic">
             Human experts verify AI-powered content in real-time
           </p>
         </motion.div>

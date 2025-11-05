@@ -96,7 +96,7 @@ export default function Home() {
           <OrganicShape key="blob4" variant="blob4" color="lime" className="bottom-1/3 left-1/2 w-64 h-64" opacity={0.10} />,
         ]}
       >
-        <div className="min-h-screen flex items-center justify-center px-4 relative pt-24">
+        <div className="min-h-[85vh] sm:min-h-[90vh] md:min-h-screen flex items-center justify-center px-4 relative pt-20 sm:pt-24">
           <div className="max-w-5xl mx-auto text-center relative">
             {/* Main Hero Content */}
             <motion.div
@@ -112,7 +112,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-6xl md:text-8xl font-bold mb-8 leading-tight font-serif"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 sm:mb-8 leading-tight font-serif"
             >
               <span className="text-navy">
                 Turn Content Into
@@ -127,7 +127,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-xl md:text-2xl text-black/70 mb-12 max-w-3xl mx-auto leading-relaxed"
+              className="text-lg sm:text-xl md:text-2xl text-black/70 mb-10 sm:mb-12 max-w-3xl mx-auto leading-relaxed"
             >
               Human-in-the-loop expert validation that satisfies Google's E-E-A-T, protects your organic traffic, and converts skeptical consumers
             </motion.p>
@@ -139,17 +139,17 @@ export default function Home() {
               transition={{ delay: 0.8, duration: 0.6 }}
               className="max-w-4xl mx-auto mb-12 relative"
             >
-              <div className="bg-white rounded-2xl p-8 md:p-10 border-2 border-navy/10 shadow-xl relative overflow-hidden">
+              <div className="bg-white rounded-2xl p-6 sm:p-8 md:p-10 border-2 border-navy/10 shadow-xl relative overflow-hidden">
                 <TextureOverlay type="paper" opacity={0.2} />
                 <div className="relative z-10">
-                  <div className="flex items-center gap-2 mb-8 justify-center">
+                  <div className="flex items-center gap-2 mb-6 sm:mb-8 justify-center">
                     <div className="w-2 h-2 rounded-full bg-lime animate-pulse" />
                     <span className="text-xs font-semibold uppercase tracking-wider text-navy/80">
                       Real-Time Trust Metrics
                     </span>
                   </div>
 
-                  <div className="grid md:grid-cols-3 gap-8">
+                  <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                     <div className="space-y-3">
                       <ConfidenceMeter score={94} label="Expert Match Quality" showPercentage />
                     </div>
@@ -161,7 +161,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-8 border-t-2 border-navy/10 flex items-center justify-center gap-4">
+                  <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t-2 border-navy/10 flex items-center justify-center gap-3 sm:gap-4 flex-wrap">
                     <TrustIndicator metric="verified" pulse />
                     <TrustIndicator metric="transparent" />
                   </div>
@@ -174,7 +174,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
             >
               <Button size="lg" asChild>
                 <Link href="/eeat-meter">
@@ -194,7 +194,7 @@ export default function Home() {
       </DepthHero>
 
       {/* Flip Stat Cards - Why Expert Validation Matters - Asymmetric spacing */}
-      <section className="pt-28 pb-24 px-4 bg-white relative overflow-hidden">
+      <section className="pt-16 pb-12 sm:pt-20 sm:pb-16 md:pt-28 md:pb-24 px-4 bg-white relative overflow-hidden">
         <TextureOverlay type="grain" opacity={0.2} />
         <div className="max-w-[1400px] mx-auto relative z-10">
           <FadeIn>
@@ -301,11 +301,11 @@ export default function Home() {
       </section>
 
       {/* Trust Infrastructure Section - Bold Split Layout */}
-      <section className="relative bg-white pt-24 pb-32 px-4 overflow-hidden">
+      <section className="relative bg-white pt-16 pb-20 sm:pt-20 sm:pb-24 md:pt-24 md:pb-32 px-4 overflow-hidden">
         <OrganicShape variant="blob2" color="lime" className="top-10 right-10 w-[600px] h-[600px]" opacity={0.15} />
         <OrganicShape variant="blob4" color="coral" className="bottom-10 left-10 w-[500px] h-[500px]" opacity={0.12} />
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
             {/* Left: Content */}
             <FadeIn>
               <div>
@@ -369,7 +369,7 @@ export default function Home() {
       </section>
 
       {/* Stacked Cards - Layered Process */}
-      <section id="verification-process" className="py-28 px-4 bg-white relative overflow-hidden">
+      <section id="verification-process" className="py-16 sm:py-20 md:py-28 px-4 bg-white relative overflow-hidden">
         <TextureOverlay type="paper" opacity={0.2} />
         <div className="max-w-4xl mx-auto relative z-10">
           <FadeIn>
@@ -392,7 +392,7 @@ export default function Home() {
 
 
       {/* Expert Tiers Carousel */}
-      <section className="relative bg-beige py-28 px-4 overflow-visible">
+      <section className="relative bg-beige py-16 sm:py-20 md:py-28 px-4 overflow-visible">
         <OrganicShape variant="blob1" color="coral" className="top-0 left-0 w-96 h-96" opacity={0.06} />
         <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
@@ -498,7 +498,7 @@ export default function Home() {
       </section>
 
       {/* Flip Cards - Trust Principles - Sophisticated Color Block */}
-      <section className="pt-32 pb-28 px-4 bg-gradient-to-br from-lime/30 via-lime/20 to-beige relative overflow-hidden">
+      <section className="pt-16 pb-12 sm:pt-24 sm:pb-20 md:pt-32 md:pb-28 px-4 bg-gradient-to-br from-lime/30 via-lime/20 to-beige relative overflow-hidden">
         <TextureOverlay type="grain" opacity={0.15} />
         <OrganicShape variant="blob2" color="lime" className="absolute top-0 right-0 w-[600px] h-[600px]" opacity={0.25} />
         <OrganicShape variant="blob3" color="coral" className="absolute bottom-0 left-0 w-[500px] h-[500px]" opacity={0.08} />
@@ -518,7 +518,7 @@ export default function Home() {
             </div>
           </FadeIn>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -589,7 +589,7 @@ export default function Home() {
       </section>
 
       {/* Social Proof Section - Testimonials & Experts - Asymmetric spacing */}
-      <section className="relative bg-white pt-24 pb-32 px-4 overflow-hidden">
+      <section className="relative bg-white pt-16 pb-20 sm:pt-20 sm:pb-24 md:pt-24 md:pb-32 px-4 overflow-hidden">
         <TextureOverlay type="grain" opacity={0.15} />
         <OrganicShape variant="blob4" color="lime" className="top-0 right-0 w-96 h-96" opacity={0.08} />
         <div className="max-w-7xl mx-auto relative z-10">
@@ -605,7 +605,7 @@ export default function Home() {
           </FadeIn>
 
           {/* Testimonials Grid - Offset Layout */}
-          <div className="grid md:grid-cols-2 gap-8 mb-16 items-center">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -651,7 +651,7 @@ export default function Home() {
             </div>
           </FadeIn>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -699,7 +699,7 @@ export default function Home() {
       </section>
 
       {/* The Human Layer - Insights & Newsletter - Asymmetric spacing */}
-      <section className="relative bg-beige pt-32 pb-28 px-4 overflow-hidden">
+      <section className="relative bg-beige pt-16 pb-12 sm:pt-24 sm:pb-20 md:pt-32 md:pb-28 px-4 overflow-hidden">
         <OrganicShape variant="blob3" color="lime" className="bottom-0 right-0 w-[500px] h-[500px]" opacity={0.08} />
         <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
@@ -713,7 +713,7 @@ export default function Home() {
             </div>
           </FadeIn>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-10 sm:mb-12">
             {[
               {
                 category: 'Trust & AI',
@@ -778,7 +778,7 @@ export default function Home() {
       </section>
 
       {/* Final CTA Section - Asymmetric spacing */}
-      <section className="relative bg-white pt-32 pb-36 px-4 overflow-hidden">
+      <section className="relative bg-white pt-16 pb-20 sm:pt-24 sm:pb-28 md:pt-32 md:pb-36 px-4 overflow-hidden">
         <TextureOverlay type="grain" opacity={0.15} />
         <OrganicShape variant="blob2" color="coral" className="top-0 left-0 w-96 h-96" opacity={0.08} />
         <OrganicShape variant="blob1" color="lime" className="bottom-0 right-0 w-[400px] h-[400px]" opacity={0.10} />

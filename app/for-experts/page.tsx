@@ -22,11 +22,11 @@ export default function ForExpertsPage() {
           <div className="inline-block mb-6 px-6 py-3 bg-white/90 backdrop-blur-sm rounded-full border-2 border-lime shadow-md">
             <span className="text-sm font-semibold text-navy tracking-wide">FOR EXPERTS</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 text-navy leading-tight font-serif">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 text-navy leading-tight font-serif">
             Share Your Expertise.<br />
             <span className="text-coral">Build Trust.</span>
           </h1>
-          <p className="text-xl md:text-2xl text-black/70 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-black/70 max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed">
             Use your professional credentials to verify health, wellness, financial, and professional service content. Earn competitive compensation while helping brands combat misinformation.
           </p>
           <Button size="lg" asChild>
