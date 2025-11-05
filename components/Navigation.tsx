@@ -91,7 +91,7 @@ export default function Navigation() {
                   variant="primary"
                   size="sm"
                   asChild
-                  className={expertHovered || expertExpanded ? 'rounded-r-none' : ''}
+                  className={`!bg-navy hover:!bg-navy/90 !text-white !border-navy ${expertHovered || expertExpanded ? 'rounded-r-none' : ''}`}
                 >
                   <Link href="/expert-dashboard">Expert Dashboard</Link>
                 </Button>
@@ -111,7 +111,7 @@ export default function Navigation() {
                     >
                       <Link
                         href="/expert-dashboard"
-                        className="flex items-center justify-center w-10 h-10 bg-coral hover:bg-coral/90 transition-colors rounded-r-lg border-2 border-l-0 border-coral"
+                        className="flex items-center justify-center w-10 h-10 bg-navy hover:bg-navy/90 transition-colors rounded-r-lg border-2 border-l-0 border-navy"
                       >
                         <User className="w-4 h-4 text-white" />
                       </Link>
@@ -162,7 +162,7 @@ export default function Navigation() {
               <Button variant="primary" size="sm" className="w-full !bg-coral hover:!bg-coral/90 !text-white !border-coral" asChild>
                 <Link href="/brand-dashboard">Brand Dashboard</Link>
               </Button>
-              <Button variant="primary" size="sm" className="w-full" asChild>
+              <Button variant="primary" size="sm" className="w-full !bg-navy hover:!bg-navy/90 !text-white !border-navy" asChild>
                 <Link href="/expert-dashboard">Expert Dashboard</Link>
               </Button>
             </div>
