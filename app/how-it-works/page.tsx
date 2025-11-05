@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import Button from '@/components/Button'
 import DepthHero from '@/components/cards3d/DepthHero'
-import StackedCards from '@/components/cards3d/StackedCards'
+import AccordionCards from '@/components/cards3d/AccordionCards'
 import TiltCard from '@/components/cards3d/TiltCard'
 import FadeIn from '@/components/animations/FadeIn'
 import TextureOverlay from '@/components/TextureOverlay'
@@ -233,7 +233,7 @@ export default function HowItWorksPage() {
             </div>
           </FadeIn>
 
-          <StackedCards cards={processCards} />
+          <AccordionCards cards={processCards} />
         </div>
       </section>
 
