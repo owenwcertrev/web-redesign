@@ -57,7 +57,7 @@ export default function ConfidenceMeter({
         <span className="text-sm font-medium text-charcoal/70">{label}</span>
         {showPercentage && (
           <motion.span
-            className={`text-sm font-mono font-bold ${colors.text}`}
+            className="text-sm font-mono font-bold text-navy"
             key={displayScore}
             initial={{ scale: 1.2 }}
             animate={{ scale: 1 }}
@@ -92,27 +92,6 @@ export default function ConfidenceMeter({
             ease: [0.16, 1, 0.3, 1] // Custom easing for smooth feel
           }}
         />
-
-        {/* Pulse Effect at the End */}
-        {displayScore > 0 && (
-          <motion.div
-            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
-            style={{
-              left: `${displayScore}%`,
-              background: colors.to,
-              boxShadow: `0 0 8px ${colors.to}`,
-            }}
-            animate={{
-              scale: [1, 1.3, 1],
-              opacity: [1, 0.7, 1],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-        )}
       </div>
 
       {/* Precision Indicator (monospace technical detail) */}
