@@ -493,92 +493,104 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Flip Cards - Trust Principles - Sophisticated Color Block */}
-      <section className="pt-16 pb-12 sm:pt-24 sm:pb-20 md:pt-32 md:pb-28 px-4 bg-gradient-to-br from-lime/30 via-lime/20 to-beige relative overflow-hidden">
-        <TextureOverlay type="grain" opacity={0.15} />
-        <OrganicShape variant="blob2" color="lime" className="absolute top-0 right-0 w-[600px] h-[600px]" opacity={0.25} />
-        <OrganicShape variant="blob3" color="coral" className="absolute bottom-0 left-0 w-[500px] h-[500px]" opacity={0.08} />
-        <OrganicShape variant="blob1" color="navy" className="absolute top-1/2 left-1/3 w-[400px] h-[400px]" opacity={0.05} />
+      {/* Trust Principles - Modern Card Design */}
+      <section className="pt-16 pb-12 sm:pt-24 sm:pb-20 md:pt-32 md:pb-28 px-4 bg-white relative overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.08} />
         <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <div className="inline-block mb-6 px-6 py-3 bg-white/90 backdrop-blur-sm rounded-full border-2 border-lime shadow-md">
+              <div className="inline-block mb-6 px-6 py-3 bg-cream rounded-full border-2 border-navy/10">
                 <span className="text-sm font-semibold text-navy tracking-wide">TRUST PRINCIPLES</span>
               </div>
-              <h2 className="text-6xl md:text-7xl font-bold mb-8 text-navy font-serif leading-tight">
+              <h2 className="text-5xl md:text-6xl font-bold mb-8 text-charcoal font-serif leading-tight">
                 Built on Trust Principles
               </h2>
-              <p className="text-xl text-navy/70 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-xl text-charcoal/70 max-w-2xl mx-auto leading-relaxed">
                 Expert verification, FTC compliance, and complete transparency
               </p>
             </div>
           </FadeIn>
 
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0, duration: 0.5 }}
+              transition={{ delay: 0, duration: 0.6 }}
             >
-              <FlipStatCard
-                stat="✓"
-                label="Expert Verified"
-              description="Every piece of content reviewed by credentialed professionals"
-              backTitle="Expert Verification"
-              backDetails={[
-                'Board-certified professionals',
-                'Licensed practitioners',
-                'Academic researchers',
-                'Industry specialists'
-              ]}
-                icon={Shield}
-                gradient="from-lime/10 to-lime/20"
-              />
+              <TiltCard intensity={0.7} glowColor="rgba(119, 171, 149, 0.3)">
+                <div className="bg-gradient-to-br from-lime/10 to-lime/5 rounded-3xl p-8 border-2 border-lime/30 h-full flex flex-col">
+                  <div className="w-16 h-16 bg-lime rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                    <Shield className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-charcoal mb-4">Expert Verified</h3>
+                  <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow">
+                    Every piece of content reviewed by credentialed professionals with verified expertise
+                  </p>
+                  <ul className="space-y-3">
+                    {['Board-certified professionals', 'Licensed practitioners', 'Industry specialists'].map((item, i) => (
+                      <li key={i} className="flex items-center gap-3 text-sm text-charcoal/80">
+                        <div className="w-1.5 h-1.5 bg-lime rounded-full flex-shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </TiltCard>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.15, duration: 0.5 }}
+              transition={{ delay: 0.15, duration: 0.6 }}
             >
-              <FlipStatCard
-                stat="✓"
-                label="FTC Compliant"
-              description="All claims meet regulatory standards for consumer protection"
-              backTitle="Compliance Standards"
-              backDetails={[
-                'Substantiation requirements',
-                'Endorsement guidelines',
-                'Health claim compliance',
-                'Disclosure standards'
-              ]}
-                icon={CheckCircle2}
-                gradient="from-navy/10 to-navy/20"
-              />
+              <TiltCard intensity={0.7} glowColor="rgba(91, 141, 239, 0.3)">
+                <div className="bg-gradient-to-br from-navy/10 to-navy/5 rounded-3xl p-8 border-2 border-navy/30 h-full flex flex-col">
+                  <div className="w-16 h-16 bg-navy rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                    <CheckCircle2 className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-charcoal mb-4">FTC Compliant</h3>
+                  <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow">
+                    All claims meet regulatory standards for consumer protection and advertising truth
+                  </p>
+                  <ul className="space-y-3">
+                    {['Substantiation requirements', 'Endorsement guidelines', 'Health claim compliance'].map((item, i) => (
+                      <li key={i} className="flex items-center gap-3 text-sm text-charcoal/80">
+                        <div className="w-1.5 h-1.5 bg-navy rounded-full flex-shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </TiltCard>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.3, duration: 0.5 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
             >
-              <FlipStatCard
-                stat="✓"
-                label="Fully Transparent"
-              description="Complete audit trail from submission to certification"
-              backTitle="Transparency Features"
-              backDetails={[
-                'Expert credentials disclosed',
-                'Review history tracked',
-                'Verification timestamps',
-                'Public badge verification'
-              ]}
-                icon={Eye}
-                gradient="from-coral/10 to-coral/20"
-              />
+              <TiltCard intensity={0.7} glowColor="rgba(241, 130, 57, 0.3)">
+                <div className="bg-gradient-to-br from-coral/10 to-coral/5 rounded-3xl p-8 border-2 border-coral/30 h-full flex flex-col">
+                  <div className="w-16 h-16 bg-coral rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                    <Eye className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-charcoal mb-4">Fully Transparent</h3>
+                  <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow">
+                    Complete audit trail from submission to certification with public verification
+                  </p>
+                  <ul className="space-y-3">
+                    {['Expert credentials disclosed', 'Review history tracked', 'Public badge verification'].map((item, i) => (
+                      <li key={i} className="flex items-center gap-3 text-sm text-charcoal/80">
+                        <div className="w-1.5 h-1.5 bg-coral rounded-full flex-shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </TiltCard>
             </motion.div>
           </div>
         </div>
