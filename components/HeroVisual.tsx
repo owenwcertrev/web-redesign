@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { User, FileCheck, Award, CheckCircle, ArrowRight } from 'lucide-react'
+import { FileCheck, Award, CheckCircle, ArrowRight } from 'lucide-react'
 import TextureOverlay from './TextureOverlay'
 
 export default function HeroVisual() {
@@ -52,25 +52,31 @@ export default function HeroVisual() {
           </div>
         </motion.div>
 
-        {/* Left: Expert Reviewer */}
+        {/* Left: Credential Verification Badge */}
         <motion.div
-          initial={{ x: -100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
+          initial={{ x: -100, opacity: 0, rotate: -5 }}
+          animate={{ x: 0, opacity: 1, rotate: 0 }}
           transition={{ delay: 1.6, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="absolute left-0 md:left-8 top-1/2 -translate-y-1/2 z-20"
         >
-          <div className="bg-white rounded-2xl p-6 border-2 border-lime/30 shadow-xl w-56 relative overflow-hidden">
+          <div className="bg-gradient-to-br from-white to-lime/5 rounded-2xl p-6 border-2 border-lime shadow-xl w-56 relative overflow-hidden">
             <TextureOverlay type="paper" opacity={0.2} />
+
+            {/* Credential seal/badge */}
             <div className="relative z-10">
-              <div className="w-16 h-16 rounded-full bg-lime/20 flex items-center justify-center mx-auto mb-3 border-2 border-lime/40">
-                <User className="w-8 h-8 text-navy" />
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-lime to-lime-dark flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-lg relative">
+                <CheckCircle className="w-10 h-10 text-navy" strokeWidth={2.5} />
+                {/* Inner ring decoration */}
+                <div className="absolute inset-2 rounded-full border-2 border-white/30" />
               </div>
+
               <div className="text-center">
-                <div className="font-bold text-navy text-sm mb-1">Dr. Sarah Chen</div>
-                <div className="text-xs text-black/60 mb-2">Board Certified MD</div>
-                <div className="inline-flex items-center gap-1 px-2 py-1 bg-lime/20 rounded-full text-xs font-semibold text-navy">
-                  <Award className="w-3 h-3" />
-                  Tier 6 Expert
+                <div className="text-xs font-semibold text-navy/70 uppercase tracking-wider mb-1">Verified By</div>
+                <div className="font-bold text-navy text-base mb-2 font-serif">Board Certified MD</div>
+                <div className="text-xs text-black/60 mb-3 leading-relaxed">Licensed Medical Professional</div>
+                <div className="inline-flex items-center gap-1 px-3 py-1.5 bg-lime/20 rounded-full text-xs font-bold text-navy border border-lime/40">
+                  <Award className="w-3.5 h-3.5" />
+                  Tier 6 Authority
                 </div>
               </div>
             </div>
