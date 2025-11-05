@@ -9,7 +9,7 @@ import TiltCard from '@/components/cards3d/TiltCard'
 import FadeIn from '@/components/animations/FadeIn'
 import TextureOverlay from '@/components/TextureOverlay'
 import OrganicShape from '@/components/OrganicShape'
-import { ArrowRight, Upload, Search, CheckCircle, Shield, FileCheck, Award, UserCheck, Clipboard } from 'lucide-react'
+import { ArrowRight, Upload, Search, CheckCircle, Shield, FileCheck, Award, UserCheck, Clipboard, GraduationCap, Building2 } from 'lucide-react'
 
 export default function HowItWorksPage() {
   // Stacked cards for the main process
@@ -362,13 +362,13 @@ export default function HowItWorksPage() {
               <Button size="lg" asChild className="shadow-2xl !bg-navy hover:!bg-navy/90 !text-white !border-navy">
                 <Link href="/expert-dashboard">
                   Sign Up as Expert
-                  <ArrowRight className="w-5 h-5" />
+                  <GraduationCap className="w-5 h-5" />
                 </Link>
               </Button>
               <Button size="lg" asChild className="shadow-2xl !bg-coral hover:!bg-coral/90 !text-white !border-coral">
                 <Link href="/brand-dashboard">
                   Sign Up as Brand
-                  <ArrowRight className="w-5 h-5" />
+                  <Building2 className="w-5 h-5" />
                 </Link>
               </Button>
               <Button size="lg" variant="secondary" asChild className="shadow-2xl">
