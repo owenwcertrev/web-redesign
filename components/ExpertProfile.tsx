@@ -47,7 +47,7 @@ export default function ExpertProfile({
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="bg-white rounded-2xl p-8 border-2 border-lime/20 relative overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+      className="bg-white rounded-2xl p-8 border-2 border-lime/20 relative overflow-hidden shadow-lg hover:shadow-xl transition-shadow h-full flex flex-col"
     >
       <TextureOverlay type="paper" opacity={0.2} />
 
@@ -81,7 +81,7 @@ export default function ExpertProfile({
       </div>
 
       {/* Bio */}
-      <div className="relative z-10">
+      <div className="relative z-10 flex-grow">
         <p className="text-black/70 leading-relaxed text-center">
           {bio}
         </p>
