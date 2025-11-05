@@ -116,7 +116,7 @@ export default function BookDemoPage() {
             </div>
           </FadeIn>
 
-          <div className="grid md:grid-cols-2 gap-12">
+          <div className="grid md:grid-cols-2 gap-12 items-start">
             {/* Demo Form */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -124,27 +124,27 @@ export default function BookDemoPage() {
               transition={{ delay: 0.2 }}
             >
               <TiltCard intensity={0.5} glowColor="rgba(240, 123, 97, 0.2)">
-                <div className="bg-beige rounded-3xl p-8 border-2 border-coral/20 shadow-xl relative overflow-hidden">
+                <div className="bg-beige rounded-3xl p-6 border-2 border-coral/20 shadow-xl relative overflow-hidden">
                   <TextureOverlay type="paper" opacity={0.3} />
                   <div className="relative z-10">
-                    <h3 className="text-2xl font-bold mb-6 text-navy font-serif">
+                    <h3 className="text-xl font-bold mb-4 text-navy font-serif">
                       Schedule Your Demo
                     </h3>
 
                     {success ? (
-                      <div className="bg-lime/10 rounded-2xl p-6 border-2 border-lime">
-                        <div className="flex items-start gap-3 mb-3">
-                          <CheckCircle className="w-6 h-6 text-lime flex-shrink-0" />
-                          <h4 className="font-bold text-navy text-lg">Demo Request Sent!</h4>
+                      <div className="bg-lime/10 rounded-2xl p-4 border-2 border-lime">
+                        <div className="flex items-start gap-3 mb-2">
+                          <CheckCircle className="w-5 h-5 text-lime flex-shrink-0" />
+                          <h4 className="font-bold text-navy">Demo Request Sent!</h4>
                         </div>
-                        <p className="text-black/70 leading-relaxed">
+                        <p className="text-black/70 text-sm leading-relaxed">
                           Thank you for your interest. One of our founders will reach out within 1 business day to schedule your personalized demo session.
                         </p>
                       </div>
                     ) : (
-                      <form onSubmit={handleSubmit} className="space-y-4">
+                      <form onSubmit={handleSubmit} className="space-y-3">
                         <div>
-                          <label htmlFor="name" className="block text-sm font-semibold text-navy mb-2">
+                          <label htmlFor="name" className="block text-sm font-semibold text-navy mb-1">
                             Name *
                           </label>
                           <input
@@ -154,12 +154,12 @@ export default function BookDemoPage() {
                             value={formData.name}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-3 rounded-2xl border-2 border-black/10 focus:border-coral focus:outline-none transition-colors bg-white"
+                            className="w-full px-3 py-2 rounded-2xl border-2 border-black/10 focus:border-coral focus:outline-none transition-colors bg-white text-sm"
                           />
                         </div>
 
                         <div>
-                          <label htmlFor="email" className="block text-sm font-semibold text-navy mb-2">
+                          <label htmlFor="email" className="block text-sm font-semibold text-navy mb-1">
                             Email *
                           </label>
                           <input
@@ -169,12 +169,12 @@ export default function BookDemoPage() {
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-3 rounded-2xl border-2 border-black/10 focus:border-coral focus:outline-none transition-colors bg-white"
+                            className="w-full px-3 py-2 rounded-2xl border-2 border-black/10 focus:border-coral focus:outline-none transition-colors bg-white text-sm"
                           />
                         </div>
 
                         <div>
-                          <label htmlFor="company" className="block text-sm font-semibold text-navy mb-2">
+                          <label htmlFor="company" className="block text-sm font-semibold text-navy mb-1">
                             Company *
                           </label>
                           <input
@@ -184,12 +184,12 @@ export default function BookDemoPage() {
                             value={formData.company}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-3 rounded-2xl border-2 border-black/10 focus:border-coral focus:outline-none transition-colors bg-white"
+                            className="w-full px-3 py-2 rounded-2xl border-2 border-black/10 focus:border-coral focus:outline-none transition-colors bg-white text-sm"
                           />
                         </div>
 
                         <div>
-                          <label htmlFor="role" className="block text-sm font-semibold text-navy mb-2">
+                          <label htmlFor="role" className="block text-sm font-semibold text-navy mb-1">
                             Role
                           </label>
                           <select
@@ -197,7 +197,7 @@ export default function BookDemoPage() {
                             name="role"
                             value={formData.role}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-2xl border-2 border-black/10 focus:border-coral focus:outline-none transition-colors bg-white"
+                            className="w-full px-3 py-2 rounded-2xl border-2 border-black/10 focus:border-coral focus:outline-none transition-colors bg-white text-sm"
                           >
                             <option value="">Select your role</option>
                             <option value="marketing">Marketing</option>
@@ -211,7 +211,7 @@ export default function BookDemoPage() {
 
                         <div className="grid sm:grid-cols-2 gap-4">
                           <div>
-                            <label htmlFor="preferredDate" className="block text-sm font-semibold text-navy mb-2">
+                            <label htmlFor="preferredDate" className="block text-sm font-semibold text-navy mb-1">
                               Preferred Date
                             </label>
                             <input
@@ -220,12 +220,12 @@ export default function BookDemoPage() {
                               name="preferredDate"
                               value={formData.preferredDate}
                               onChange={handleChange}
-                              className="w-full px-4 py-3 rounded-2xl border-2 border-black/10 focus:border-coral focus:outline-none transition-colors bg-white"
+                              className="w-full px-3 py-2 rounded-2xl border-2 border-black/10 focus:border-coral focus:outline-none transition-colors bg-white text-sm"
                             />
                           </div>
 
                           <div>
-                            <label htmlFor="preferredTime" className="block text-sm font-semibold text-navy mb-2">
+                            <label htmlFor="preferredTime" className="block text-sm font-semibold text-navy mb-1">
                               Preferred Time
                             </label>
                             <select
@@ -233,7 +233,7 @@ export default function BookDemoPage() {
                               name="preferredTime"
                               value={formData.preferredTime}
                               onChange={handleChange}
-                              className="w-full px-4 py-3 rounded-2xl border-2 border-black/10 focus:border-coral focus:outline-none transition-colors bg-white"
+                              className="w-full px-3 py-2 rounded-2xl border-2 border-black/10 focus:border-coral focus:outline-none transition-colors bg-white text-sm"
                             >
                               <option value="">Select time</option>
                               <option value="morning">Morning (9AM-12PM)</option>
@@ -244,7 +244,7 @@ export default function BookDemoPage() {
                         </div>
 
                         <div>
-                          <label htmlFor="message" className="block text-sm font-semibold text-navy mb-2">
+                          <label htmlFor="message" className="block text-sm font-semibold text-navy mb-1">
                             What would you like to see in the demo?
                           </label>
                           <textarea
