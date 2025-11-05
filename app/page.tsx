@@ -165,8 +165,8 @@ export default function Home() {
 
                   <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t-2 border-navy/10 flex items-center justify-center gap-3 sm:gap-4 flex-wrap">
                     <TrustIndicator metric="verified" pulse label="Expert Verified" value="" />
-                    <TrustIndicator metric="transparent" label="Fully Transparent" value="" />
                     <TrustIndicator metric="encrypted" label="FTC Compliant" value="" />
+                    <TrustIndicator metric="transparent" label="Fully Transparent" value="" />
                     <TrustIndicator metric="immutable" label="Audit Trail" value="" />
                   </div>
                 </div>
