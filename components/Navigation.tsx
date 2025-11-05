@@ -111,7 +111,7 @@ export default function Navigation() {
                     >
                       <Link
                         href="/expert-dashboard"
-                        className="flex items-center justify-center w-10 h-10 bg-navy hover:bg-navy/90 transition-colors rounded-r-lg border-2 border-l-0 border-navy"
+                        className="flex items-center justify-center w-10 h-10 bg-coral hover:bg-coral/90 transition-colors rounded-r-lg border-2 border-l-0 border-coral"
                       >
                         <User className="w-4 h-4 text-white" />
                       </Link>
