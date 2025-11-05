@@ -1,14 +1,15 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'framer-motion'
-import EEATMeterTool from '@/components/EEATMeterTool'
+import Button from '@/components/Button'
 import DepthHero from '@/components/cards3d/DepthHero'
 import FlipStatCard from '@/components/cards3d/FlipStatCard'
 import TiltCard from '@/components/cards3d/TiltCard'
 import FadeIn from '@/components/animations/FadeIn'
 import TextureOverlay from '@/components/TextureOverlay'
 import OrganicShape from '@/components/OrganicShape'
-import { BarChart, FileCheck, TrendingUp, Users, AlertCircle, ShoppingBag, Sparkles } from 'lucide-react'
+import { BarChart, FileCheck, TrendingUp, Users, AlertCircle, ShoppingBag, Sparkles, ArrowRight, Mail } from 'lucide-react'
 
 export default function EEATMeterPage() {
   return (
@@ -164,12 +165,44 @@ export default function EEATMeterPage() {
         </div>
       </section>
 
-      {/* The Analysis Tool */}
-      <section className="bg-beige py-20 px-4 relative overflow-hidden">
+      {/* Get Your Free Analysis CTA */}
+      <section className="bg-beige py-32 px-4 relative overflow-hidden">
         <TextureOverlay type="paper" opacity={0.3} />
         <OrganicShape variant="blob3" color="lime" className="absolute -bottom-20 -right-20 w-96 h-96" opacity={0.06} />
-        <div className="max-w-5xl mx-auto relative z-10">
-          <EEATMeterTool />
+        <div className="max-w-4xl mx-auto relative z-10">
+          <FadeIn>
+            <div className="text-center">
+              <div className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-coral/20 shadow-sm">
+                <span className="text-sm font-semibold text-navy tracking-wide">COMING SOON</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-navy font-serif">
+                Get Your Free E-E-A-T Analysis
+              </h2>
+              <p className="text-xl text-black/70 mb-10 max-w-2xl mx-auto leading-relaxed">
+                Our E-E-A-T Meter tool is launching soon. Contact us today to get early access and a personalized content analysis for your domain.
+              </p>
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+                className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+              >
+                <Button size="lg" asChild className="!bg-coral hover:!bg-coral/90 !text-white !border-coral shadow-2xl">
+                  <Link href="/contact">
+                    Request Early Access
+                    <Mail className="w-5 h-5" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="secondary" asChild className="shadow-xl">
+                  <Link href="/book-demo">
+                    Schedule Demo
+                    <ArrowRight className="w-5 h-5" />
+                  </Link>
+                </Button>
+              </motion.div>
+            </div>
+          </FadeIn>
         </div>
       </section>
 
