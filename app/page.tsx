@@ -20,6 +20,7 @@ import TextureOverlay from '@/components/TextureOverlay'
 import Testimonial from '@/components/Testimonial'
 import ExpertProfile from '@/components/ExpertProfile'
 import ExpertCarousel from '@/components/ExpertCarousel'
+import { featureFlags } from '@/config/features'
 
 export default function Home() {
   // Stacked cards content for the process
@@ -632,74 +633,78 @@ export default function Home() {
           </div>
 
           {/* Expert Profiles - Compact Grid */}
-          <FadeIn delay={0.2}>
-            <div className="text-center mb-12">
-              <div className="inline-block mb-4 px-6 py-2 bg-lime/10 rounded-full border-2 border-lime/30 shadow-sm">
-                <span className="text-xs font-semibold text-navy tracking-wide">OUR EXPERTS</span>
-              </div>
-              <h3 className="text-3xl font-bold text-navy font-serif mb-3">
-                Meet Our Expert Network
-              </h3>
-              <p className="text-black/70">
-                Credentialed professionals across health, wellness, finance, and professional services
-              </p>
-            </div>
-          </FadeIn>
+          {featureFlags.homepage.expertNetwork && (
+            <>
+              <FadeIn delay={0.2}>
+                <div className="text-center mb-12">
+                  <div className="inline-block mb-4 px-6 py-2 bg-lime/10 rounded-full border-2 border-lime/30 shadow-sm">
+                    <span className="text-xs font-semibold text-navy tracking-wide">OUR EXPERTS</span>
+                  </div>
+                  <h3 className="text-3xl font-bold text-navy font-serif mb-3">
+                    Meet Our Expert Network
+                  </h3>
+                  <p className="text-black/70">
+                    Credentialed professionals across health, wellness, finance, and professional services
+                  </p>
+                </div>
+              </FadeIn>
 
-          <ExpertCarousel
-            autoPlay
-            autoPlayInterval={6000}
-            items={[
-              <ExpertProfile
-                key="emily"
-                name="Dr. Emily Rodriguez"
-                credentials="MD, Board-Certified"
-                specialty="Internal Medicine & Wellness"
-                bio="15+ years experience reviewing health content for major wellness brands"
-                tier={6}
-              />,
-              <ExpertProfile
-                key="michael"
-                name="Michael Thompson, RDN"
-                credentials="Registered Dietitian Nutritionist"
-                specialty="Sports Nutrition & Supplements"
-                bio="Specializes in nutrition claim verification and FDA compliance"
-                tier={3}
-              />,
-              <ExpertProfile
-                key="jennifer"
-                name="Jennifer Park, CFA"
-                credentials="Chartered Financial Analyst"
-                specialty="Financial Services Content"
-                bio="Expert in investment content review and SEC compliance"
-                tier={4}
-              />,
-              <ExpertProfile
-                key="sarah"
-                name="Sarah Mitchell, PE"
-                credentials="Professional Engineer"
-                specialty="Technical & Engineering Content"
-                bio="Validates technical specifications and engineering claims for B2B brands"
-                tier={5}
-              />,
-              <ExpertProfile
-                key="david"
-                name="David Chen, JD"
-                credentials="Attorney at Law"
-                specialty="Legal & Compliance"
-                bio="Reviews legal content and ensures regulatory compliance across industries"
-                tier={5}
-              />,
-              <ExpertProfile
-                key="lisa"
-                name="Lisa Anderson, PhD"
-                credentials="Clinical Psychologist"
-                specialty="Mental Health & Wellness"
-                bio="Expert in mental health content accuracy and ethical representation"
-                tier={6}
+              <ExpertCarousel
+                autoPlay
+                autoPlayInterval={6000}
+                items={[
+                  <ExpertProfile
+                    key="emily"
+                    name="Dr. Emily Rodriguez"
+                    credentials="MD, Board-Certified"
+                    specialty="Internal Medicine & Wellness"
+                    bio="15+ years experience reviewing health content for major wellness brands"
+                    tier={6}
+                  />,
+                  <ExpertProfile
+                    key="michael"
+                    name="Michael Thompson, RDN"
+                    credentials="Registered Dietitian Nutritionist"
+                    specialty="Sports Nutrition & Supplements"
+                    bio="Specializes in nutrition claim verification and FDA compliance"
+                    tier={3}
+                  />,
+                  <ExpertProfile
+                    key="jennifer"
+                    name="Jennifer Park, CFA"
+                    credentials="Chartered Financial Analyst"
+                    specialty="Financial Services Content"
+                    bio="Expert in investment content review and SEC compliance"
+                    tier={4}
+                  />,
+                  <ExpertProfile
+                    key="sarah"
+                    name="Sarah Mitchell, PE"
+                    credentials="Professional Engineer"
+                    specialty="Technical & Engineering Content"
+                    bio="Validates technical specifications and engineering claims for B2B brands"
+                    tier={5}
+                  />,
+                  <ExpertProfile
+                    key="david"
+                    name="David Chen, JD"
+                    credentials="Attorney at Law"
+                    specialty="Legal & Compliance"
+                    bio="Reviews legal content and ensures regulatory compliance across industries"
+                    tier={5}
+                  />,
+                  <ExpertProfile
+                    key="lisa"
+                    name="Lisa Anderson, PhD"
+                    credentials="Clinical Psychologist"
+                    specialty="Mental Health & Wellness"
+                    bio="Expert in mental health content accuracy and ethical representation"
+                    tier={6}
+                  />
+                ]}
               />
-            ]}
-          />
+            </>
+          )}
         </div>
       </section>
 
