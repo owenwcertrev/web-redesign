@@ -62,13 +62,13 @@ export default function BookDemoPage() {
           <OrganicShape key="shape2" variant="blob3" color="navy" className="absolute bottom-1/3 left-1/4 w-80 h-80" opacity={0.08} />,
         ]}
       >
-        <div className="min-h-[70vh] flex items-center justify-center px-4">
+        <div className="min-h-[50vh] flex items-center justify-center px-4 py-20">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-coral/20 shadow-sm"
+              className="inline-block mb-4 px-6 py-2 bg-white rounded-full border-2 border-coral/20 shadow-sm"
             >
               <span className="text-sm font-semibold text-navy tracking-wide">MEET THE FOUNDERS</span>
             </motion.div>
@@ -77,7 +77,7 @@ export default function BookDemoPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 sm:mb-8 leading-tight font-serif"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight font-serif"
             >
               <span className="text-navy">
                 Schedule a Demo
@@ -92,7 +92,7 @@ export default function BookDemoPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-lg sm:text-xl md:text-2xl text-black/70 max-w-3xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg md:text-xl text-black/70 max-w-2xl mx-auto leading-relaxed"
             >
               Book a personalized 30-minute session with CertREV's founders to see how expert verification can transform your content strategy
             </motion.p>
@@ -101,16 +101,16 @@ export default function BookDemoPage() {
       </DepthHero>
 
       {/* Demo Form & Info */}
-      <section className="bg-white py-32 px-4 relative overflow-hidden">
+      <section className="bg-white py-20 px-4 relative overflow-hidden">
         <TextureOverlay type="grain" opacity={0.15} />
         <OrganicShape variant="blob2" color="lime" className="absolute -top-20 -right-20 w-96 h-96" opacity={0.06} />
         <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
-            <div className="text-center mb-16">
-              <div className="inline-block mb-6 px-6 py-3 bg-coral/10 rounded-full border-2 border-coral/30 shadow-md">
+            <div className="text-center mb-12">
+              <div className="inline-block mb-4 px-6 py-2 bg-coral/10 rounded-full border-2 border-coral/30 shadow-md">
                 <span className="text-sm font-semibold text-navy tracking-wide">GET STARTED</span>
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-navy font-serif">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-navy font-serif">
                 Let's Talk About Your Needs
               </h2>
             </div>
