@@ -520,16 +520,17 @@ export default function Home() {
               transition={{ delay: 0, duration: 0.6 }}
             >
               <TiltCard intensity={0.7} glowColor="rgba(119, 171, 149, 0.3)">
-                <div className="bg-gradient-to-br from-lime/10 to-lime/5 rounded-3xl p-8 border-2 border-lime/30 h-full flex flex-col">
-                  <div className="w-16 h-16 bg-lime rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                    <Shield className="w-8 h-8 text-white" />
+                <div className="bg-white rounded-3xl p-8 border-2 border-lime/20 shadow-md h-full flex flex-col relative overflow-hidden">
+                  <TextureOverlay type="paper" opacity={0.2} />
+                  <div className="w-16 h-16 bg-lime rounded-full flex items-center justify-center mb-6 shadow-sm relative z-10">
+                    <Shield className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-charcoal mb-4">Expert Verified</h3>
-                  <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow">
-                    Real doctors, nutritionists, and certified professionals review your content to ensure accuracy
+                  <h3 className="text-2xl font-bold text-charcoal mb-4 font-serif relative z-10">Expert Verified</h3>
+                  <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow relative z-10">
+                    Every piece of content reviewed by credentialed professionals with verified expertise
                   </p>
-                  <ul className="space-y-3">
-                    {['Medical doctors & specialists', 'Licensed health professionals', 'Certified industry experts'].map((item, i) => (
+                  <ul className="space-y-3 relative z-10">
+                    {['Board-certified professionals', 'Licensed practitioners', 'Industry specialists'].map((item, i) => (
                       <li key={i} className="flex items-center gap-3 text-sm text-charcoal/80">
                         <div className="w-1.5 h-1.5 bg-lime rounded-full flex-shrink-0" />
                         {item}
@@ -546,17 +547,18 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: 0.15, duration: 0.6 }}
             >
-              <TiltCard intensity={0.7} glowColor="rgba(91, 141, 239, 0.3)">
-                <div className="bg-gradient-to-br from-navy/10 to-navy/5 rounded-3xl p-8 border-2 border-navy/30 h-full flex flex-col">
-                  <div className="w-16 h-16 bg-navy rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                    <CheckCircle2 className="w-8 h-8 text-white" />
+              <TiltCard intensity={0.7} glowColor="rgba(10, 27, 63, 0.3)">
+                <div className="bg-white rounded-3xl p-8 border-2 border-navy/20 shadow-md h-full flex flex-col relative overflow-hidden">
+                  <TextureOverlay type="paper" opacity={0.2} />
+                  <div className="w-16 h-16 bg-navy rounded-full flex items-center justify-center mb-6 shadow-sm relative z-10">
+                    <CheckCircle2 className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-charcoal mb-4">FTC Compliant</h3>
-                  <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow">
-                    Your content meets advertising and consumer protection standards to avoid costly fines
+                  <h3 className="text-2xl font-bold text-charcoal mb-4 font-serif relative z-10">FTC Compliant</h3>
+                  <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow relative z-10">
+                    All claims meet regulatory standards for consumer protection and advertising truth
                   </p>
-                  <ul className="space-y-3">
-                    {['Protects against regulatory penalties', 'Meets advertising standards', 'Safe health & wellness claims'].map((item, i) => (
+                  <ul className="space-y-3 relative z-10">
+                    {['Substantiation requirements', 'Endorsement guidelines', 'Health claim compliance'].map((item, i) => (
                       <li key={i} className="flex items-center gap-3 text-sm text-charcoal/80">
                         <div className="w-1.5 h-1.5 bg-navy rounded-full flex-shrink-0" />
                         {item}
@@ -573,17 +575,18 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              <TiltCard intensity={0.7} glowColor="rgba(241, 130, 57, 0.3)">
-                <div className="bg-gradient-to-br from-coral/10 to-coral/5 rounded-3xl p-8 border-2 border-coral/30 h-full flex flex-col">
-                  <div className="w-16 h-16 bg-coral rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                    <Eye className="w-8 h-8 text-white" />
+              <TiltCard intensity={0.7} glowColor="rgba(240, 123, 97, 0.3)">
+                <div className="bg-white rounded-3xl p-8 border-2 border-coral/20 shadow-md h-full flex flex-col relative overflow-hidden">
+                  <TextureOverlay type="paper" opacity={0.2} />
+                  <div className="w-16 h-16 bg-coral rounded-full flex items-center justify-center mb-6 shadow-sm relative z-10">
+                    <Eye className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-charcoal mb-4">Fully Transparent</h3>
-                  <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow">
-                    See exactly who reviewed your content and track every step of the verification process
+                  <h3 className="text-2xl font-bold text-charcoal mb-4 font-serif relative z-10">Fully Transparent</h3>
+                  <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow relative z-10">
+                    Complete audit trail from submission to certification with public verification
                   </p>
-                  <ul className="space-y-3">
-                    {['Expert names & credentials shown', 'Full review history available', 'Publicly verifiable badges'].map((item, i) => (
+                  <ul className="space-y-3 relative z-10">
+                    {['Expert credentials disclosed', 'Review history tracked', 'Public badge verification'].map((item, i) => (
                       <li key={i} className="flex items-center gap-3 text-sm text-charcoal/80">
                         <div className="w-1.5 h-1.5 bg-coral rounded-full flex-shrink-0" />
                         {item}
