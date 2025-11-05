@@ -63,11 +63,11 @@ export default function TrustIndicator({
   return (
     <motion.div
       className={`
-        inline-flex items-center gap-3
+        inline-flex items-center gap-2.5
         px-4 py-2.5
         bg-white/60 backdrop-blur-xl
         border ${config.borderColor}
-        rounded-[10px]
+        rounded-xl
         ${className}
       `}
       whileHover={{ scale: 1.02 }}
@@ -102,15 +102,21 @@ export default function TrustIndicator({
         )}
       </div>
 
-      {/* Label and Value */}
-      <div className="flex flex-col">
-        <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal/50">
+      {/* Label - show only if value is empty, otherwise show both */}
+      {displayValue === '' ? (
+        <span className="text-sm font-semibold text-navy">
           {displayLabel}
         </span>
-        <span className={`text-sm font-mono font-semibold ${config.color}`}>
-          {displayValue}
-        </span>
-      </div>
+      ) : (
+        <div className="flex flex-col">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal/50">
+            {displayLabel}
+          </span>
+          <span className={`text-sm font-mono font-semibold ${config.color}`}>
+            {displayValue}
+          </span>
+        </div>
+      )}
     </motion.div>
   )
 }
