@@ -15,7 +15,7 @@ export default function DepthHero({
 }: DepthHeroProps) {
   return (
     <div
-      className={`relative min-h-screen overflow-hidden ${className}`}
+      className={`relative overflow-hidden ${className}`}
     >
       {/* Background layers - static without hooks */}
       {backgroundLayers.map((layer, index) => (
