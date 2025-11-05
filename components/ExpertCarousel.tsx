@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { ReactNode, useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -18,7 +18,6 @@ export default function ExpertCarousel({
   autoPlayInterval = 5000
 }: ExpertCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [direction, setDirection] = useState(0)
 
   // Auto-play functionality
   useEffect(() => {
@@ -33,55 +32,53 @@ export default function ExpertCarousel({
 
   const navigate = (dir: 'prev' | 'next') => {
     if (dir === 'prev') {
-      setDirection(-1)
       setCurrentIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1))
     } else {
-      setDirection(1)
       setCurrentIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1))
     }
   }
 
   const goToSlide = (index: number) => {
-    setDirection(index > currentIndex ? 1 : -1)
     setCurrentIndex(index)
   }
 
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 300 : -300,
-      opacity: 0
-    }),
-    center: {
-      x: 0,
-      opacity: 1
-    },
-    exit: (direction: number) => ({
-      x: direction < 0 ? 300 : -300,
-      opacity: 0
-    })
+  // Get visible items (3 on desktop, wrapping around)
+  const getVisibleItems = () => {
+    const visible = []
+    for (let i = 0; i < 3; i++) {
+      const index = (currentIndex + i) % items.length
+      visible.push({ item: items[index], index })
+    }
+    return visible
   }
+
+  const visibleItems = getVisibleItems()
 
   return (
     <div className={`relative ${className}`}>
       {/* Carousel Container */}
-      <div className="relative min-h-[500px] flex items-center justify-center">
-        <AnimatePresence initial={false} custom={direction} mode="wait">
-          <motion.div
-            key={currentIndex}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.3 }
-            }}
-            className="w-full max-w-md mx-auto"
-          >
-            {items[currentIndex]}
-          </motion.div>
-        </AnimatePresence>
+      <div className="relative overflow-hidden">
+        <motion.div
+          key={currentIndex}
+          initial={{ x: 300, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{
+            x: { type: "spring", stiffness: 300, damping: 30 },
+            opacity: { duration: 0.3 }
+          }}
+          className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8"
+        >
+          {visibleItems.map(({ item, index }) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
+              {item}
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
 
       {/* Navigation Arrows */}
@@ -89,7 +86,7 @@ export default function ExpertCarousel({
         <button
           onClick={() => navigate('prev')}
           className="w-12 h-12 rounded-full bg-white border-2 border-navy/10 hover:border-lime/40 hover:bg-lime/5 transition-all flex items-center justify-center group shadow-lg"
-          aria-label="Previous expert"
+          aria-label="Previous experts"
         >
           <ChevronLeft className="w-5 h-5 text-navy/60 group-hover:text-navy transition-colors" />
         </button>
@@ -105,7 +102,7 @@ export default function ExpertCarousel({
                   ? 'w-8 bg-lime'
                   : 'w-2 bg-navy/20 hover:bg-navy/40'
               }`}
-              aria-label={`Go to expert ${index + 1}`}
+              aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
@@ -113,7 +110,7 @@ export default function ExpertCarousel({
         <button
           onClick={() => navigate('next')}
           className="w-12 h-12 rounded-full bg-white border-2 border-navy/10 hover:border-lime/40 hover:bg-lime/5 transition-all flex items-center justify-center group shadow-lg"
-          aria-label="Next expert"
+          aria-label="Next experts"
         >
           <ChevronRight className="w-5 h-5 text-navy/60 group-hover:text-navy transition-colors" />
         </button>
