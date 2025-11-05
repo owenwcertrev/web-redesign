@@ -22,8 +22,11 @@ export default function Navigation() {
             CertREV
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
+          {/* Desktop Navigation - Right aligned */}
+          <div className="hidden lg:flex items-center gap-8 ml-auto mr-4">
+            <Link href="/book-demo" className="text-black hover:text-coral transition-colors">
+              Book Demo
+            </Link>
             <Link href="/eeat-meter" className="text-black hover:text-coral transition-colors">
               E-E-A-T Meter
             </Link>
@@ -134,6 +137,13 @@ export default function Navigation() {
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-black/5 bg-beige">
           <div className="px-4 py-4 space-y-3">
+            <Link
+              href="/book-demo"
+              className="block py-2 text-black hover:text-coral transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Book Demo
+            </Link>
             <Link
               href="/eeat-meter"
               className="block py-2 text-black hover:text-coral transition-colors"

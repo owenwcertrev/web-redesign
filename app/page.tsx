@@ -178,8 +178,8 @@ export default function Home() {
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
             >
               <Button size="lg" asChild>
-                <Link href="/eeat-meter">
-                  Get Your Free Analysis
+                <Link href="/book-demo">
+                  Book Demo
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </Button>
