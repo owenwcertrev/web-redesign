@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ReactNode, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 
@@ -15,92 +15,101 @@ interface StackedCardsProps {
 }
 
 export default function StackedCards({ cards, className = '' }: StackedCardsProps) {
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   return (
-    <div className={`relative ${className}`} style={{ perspective: '2000px' }}>
-      <div className="relative" style={{ minHeight: '400px' }}>
-        {cards.map((card, index) => {
-          const isExpanded = expandedIndex === index
-          const isHovered = hoveredIndex === index
-          const isAfterExpanded = expandedIndex !== null && index > expandedIndex
+    <div className={`space-y-6 ${className}`}>
+      {cards.map((card, index) => {
+        const isExpanded = expandedIndex === index
+        const isHovered = hoveredIndex === index
 
-          let zIndex = cards.length - index
-          let yOffset = index * 20
-          let scale = 1 - index * 0.03
-          let rotateX = -index * 2
-
-          if (isExpanded) {
-            zIndex = 1000
-            yOffset = 0
-            scale = 1.05
-            rotateX = 0
-          } else if (isAfterExpanded) {
-            yOffset = (expandedIndex! * 20) + ((index - expandedIndex!) * 20) + 100
-          }
-
-          return (
+        return (
+          <motion.div
+            key={card.id}
+            className="cursor-pointer group"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            onClick={() => setExpandedIndex(isExpanded ? null : index)}
+            onHoverStart={() => setHoveredIndex(index)}
+            onHoverEnd={() => setHoveredIndex(null)}
+          >
+            {/* Card */}
             <motion.div
-              key={card.id}
-              className="absolute inset-x-0 cursor-pointer group"
-              style={{
-                zIndex,
-                transformStyle: 'preserve-3d',
-              }}
-              animate={{
-                y: yOffset,
-                scale,
-                rotateX,
-              }}
-              transition={{
-                type: 'spring',
-                stiffness: 300,
-                damping: 30,
-              }}
-              onClick={() => setExpandedIndex(isExpanded ? null : index)}
-              onHoverStart={() => setHoveredIndex(index)}
-              onHoverEnd={() => setHoveredIndex(null)}
-              whileHover={!isExpanded ? { scale: scale * 1.02, y: yOffset - 5 } : {}}
+              className={`rounded-2xl shadow-xl overflow-hidden transition-all duration-300 ${
+                isHovered ? 'shadow-2xl' : ''
+              }`}
+              whileHover={{ scale: 1.01, y: -2 }}
             >
-              {/* Enhanced Shadow with depth */}
-              <div
-                className="absolute inset-0 bg-black/20 rounded-2xl blur-xl -z-10"
-                style={{ transform: 'translateY(10px)' }}
-              />
-
-              {/* Card */}
-              <div className={`bg-white rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 ${
-                isHovered && !isExpanded ? 'ring-2 ring-primary/30' : ''
-              }`}>
-                {card.content}
-
-                {/* Expand/Collapse Icon - appears on hover */}
-                {!isExpanded && (
+              <AnimatePresence mode="wait">
+                {isExpanded ? (
                   <motion.div
+                    key="expanded"
+                    initial={{ opacity: 0, height: 'auto' }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {card.content}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="collapsed"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: isHovered ? 1 : 0 }}
-                    className="absolute bottom-4 right-4 w-10 h-10 bg-navy rounded-full flex items-center justify-center shadow-lg"
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="relative"
                   >
-                    <ChevronDown className="w-5 h-5 text-white" />
+                    {/* Collapsed preview - extract title from content */}
+                    <div className="p-6 bg-white border-2 border-charcoal/10 hover:border-navy/30 transition-colors">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          {/* Extract the step badge and title from content */}
+                          <div className="flex items-center gap-4">
+                            {/* Step number badge */}
+                            <div className="inline-block px-4 py-1 bg-navy/10 rounded-full">
+                              <span className="text-sm font-semibold text-navy tracking-wide">
+                                STEP {index + 1}
+                              </span>
+                            </div>
+                            {/* Title */}
+                            <h3 className="text-2xl md:text-3xl font-bold text-navy font-serif">
+                              {index === 0 ? 'Submit Your Content' : index === 1 ? 'Expert Review Process' : 'Receive Certification'}
+                            </h3>
+                          </div>
+                        </div>
+                        <motion.div
+                          className="w-10 h-10 bg-navy/10 hover:bg-navy rounded-full flex items-center justify-center transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                        >
+                          <ChevronDown className="w-5 h-5 text-navy group-hover:text-white transition-colors" />
+                        </motion.div>
+                      </div>
+                    </div>
                   </motion.div>
                 )}
+              </AnimatePresence>
 
-                {/* Collapse Icon - always visible when expanded */}
-                {isExpanded && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="absolute bottom-4 right-4 w-10 h-10 bg-charcoal rounded-full flex items-center justify-center shadow-lg"
+              {/* Collapse button for expanded state */}
+              {isExpanded && (
+                <div className="relative">
+                  <button
+                    className="absolute bottom-4 right-4 w-12 h-12 bg-navy hover:bg-navy/90 rounded-full flex items-center justify-center shadow-lg z-10 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setExpandedIndex(null)
+                    }}
                   >
-                    <ChevronUp className="w-5 h-5 text-white" />
-                  </motion.div>
-                )}
-              </div>
+                    <ChevronUp className="w-6 h-6 text-white" />
+                  </button>
+                </div>
+              )}
             </motion.div>
-          )
-        })}
-      </div>
+          </motion.div>
+        )
+      })}
     </div>
   )
 }
