@@ -51,7 +51,12 @@ export default function Navigation() {
                       initial={{ width: 0, opacity: 0 }}
                       animate={{ width: 40, opacity: 1 }}
                       exit={{ width: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 300,
+                        damping: 25,
+                        mass: 0.5
+                      }}
                       className="overflow-hidden"
                     >
                       <Link
@@ -83,10 +88,10 @@ export default function Navigation() {
             >
               <div className="flex items-center">
                 <Button
-                  variant="secondary"
+                  variant="primary"
                   size="sm"
-                  className={`!bg-lime hover:!bg-lime/90 hover:!text-navy !text-navy !border-lime ${expertHovered || expertExpanded ? 'rounded-r-none' : ''}`}
                   asChild
+                  className={expertHovered || expertExpanded ? 'rounded-r-none' : ''}
                 >
                   <Link href="/expert-dashboard">Expert Dashboard</Link>
                 </Button>
@@ -96,14 +101,19 @@ export default function Navigation() {
                       initial={{ width: 0, opacity: 0 }}
                       animate={{ width: 40, opacity: 1 }}
                       exit={{ width: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 300,
+                        damping: 25,
+                        mass: 0.5
+                      }}
                       className="overflow-hidden"
                     >
                       <Link
                         href="/expert-dashboard"
-                        className="flex items-center justify-center w-10 h-10 bg-lime hover:bg-lime/90 transition-colors rounded-r-lg border-2 border-l-0 border-lime"
+                        className="flex items-center justify-center w-10 h-10 bg-navy hover:bg-navy/90 transition-colors rounded-r-lg border-2 border-l-0 border-navy"
                       >
-                        <User className="w-4 h-4 text-navy" />
+                        <User className="w-4 h-4 text-white" />
                       </Link>
                     </motion.div>
                   )}
