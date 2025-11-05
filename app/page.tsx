@@ -19,6 +19,7 @@ import OrganicShape from '@/components/OrganicShape'
 import TextureOverlay from '@/components/TextureOverlay'
 import Testimonial from '@/components/Testimonial'
 import ExpertProfile from '@/components/ExpertProfile'
+import ExpertCarousel from '@/components/ExpertCarousel'
 
 export default function Home() {
   // Stacked cards content for the process
@@ -645,50 +646,60 @@ export default function Home() {
             </div>
           </FadeIn>
 
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0, duration: 0.5 }}
-            >
+          <ExpertCarousel
+            autoPlay
+            autoPlayInterval={6000}
+            items={[
               <ExpertProfile
+                key="emily"
                 name="Dr. Emily Rodriguez"
                 credentials="MD, Board-Certified"
                 specialty="Internal Medicine & Wellness"
                 bio="15+ years experience reviewing health content for major wellness brands"
                 tier={6}
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.15, duration: 0.5 }}
-            >
+              />,
               <ExpertProfile
+                key="michael"
                 name="Michael Thompson, RDN"
                 credentials="Registered Dietitian Nutritionist"
                 specialty="Sports Nutrition & Supplements"
                 bio="Specializes in nutrition claim verification and FDA compliance"
                 tier={3}
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-            >
+              />,
               <ExpertProfile
+                key="jennifer"
                 name="Jennifer Park, CFA"
                 credentials="Chartered Financial Analyst"
                 specialty="Financial Services Content"
                 bio="Expert in investment content review and SEC compliance"
                 tier={4}
+              />,
+              <ExpertProfile
+                key="sarah"
+                name="Sarah Mitchell, PE"
+                credentials="Professional Engineer"
+                specialty="Technical & Engineering Content"
+                bio="Validates technical specifications and engineering claims for B2B brands"
+                tier={5}
+              />,
+              <ExpertProfile
+                key="david"
+                name="David Chen, JD"
+                credentials="Attorney at Law"
+                specialty="Legal & Compliance"
+                bio="Reviews legal content and ensures regulatory compliance across industries"
+                tier={5}
+              />,
+              <ExpertProfile
+                key="lisa"
+                name="Lisa Anderson, PhD"
+                credentials="Clinical Psychologist"
+                specialty="Mental Health & Wellness"
+                bio="Expert in mental health content accuracy and ethical representation"
+                tier={6}
               />
-            </motion.div>
-          </div>
+            ]}
+          />
         </div>
       </section>
 
