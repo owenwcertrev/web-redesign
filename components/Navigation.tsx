@@ -18,7 +18,7 @@ export default function Navigation() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-8">
             <Link href="/human-layer" className="text-black hover:text-coral transition-colors">
               The Human Layer
             </Link>
@@ -31,7 +31,7 @@ export default function Navigation() {
           </div>
 
           {/* Dashboard CTAs - Desktop */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             <Button variant="primary" size="sm" asChild>
               <Link href="/brand-dashboard">Brand Dashboard</Link>
             </Button>
@@ -48,7 +48,7 @@ export default function Navigation() {
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-black hover:text-coral transition-colors"
+            className="lg:hidden p-2 text-black hover:text-coral transition-colors"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -58,7 +58,7 @@ export default function Navigation() {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-black/5 bg-beige">
+        <div className="lg:hidden border-t border-black/5 bg-beige">
           <div className="px-4 py-4 space-y-3">
             <Link
               href="/human-layer"
