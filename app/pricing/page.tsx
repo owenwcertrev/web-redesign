@@ -219,9 +219,9 @@ export default function PricingPage() {
               transition={{ delay: 0.4 }}
               className="text-5xl md:text-7xl font-bold mb-6 leading-tight font-serif"
             >
-              <span className="text-navy">Clear Pricing</span>
+              <span className="text-navy">Clear Pricing for</span>
               <br />
-              <span className="text-coral">for Credible Content</span>
+              <span className="text-coral">Credible Content</span>
             </motion.h1>
 
             <motion.p
