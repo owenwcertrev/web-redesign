@@ -189,6 +189,11 @@ export default function Home() {
                   Sign Up as Brand
                 </Link>
               </Button>
+              <Button size="lg" asChild className="w-full sm:w-auto !bg-navy hover:!bg-navy/90 !text-white !border-navy">
+                <Link href="https://dashboard.certrev.com/auth/signup?tab=expert">
+                  Join as Expert
+                </Link>
+              </Button>
               <Button size="lg" variant="secondary" asChild className="w-full sm:w-auto">
                 <Link href="/book-demo">Book a Demo</Link>
               </Button>
