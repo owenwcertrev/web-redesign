@@ -330,8 +330,8 @@ export default function Home() {
                   />
                 </p>
                 <Button size="lg" asChild>
-                  <Link href="/trust-showcase">
-                    Explore Trust Infrastructure
+                  <Link href="/how-it-works">
+                    See How It Works
                     <ArrowRight className="w-5 h-5" />
                   </Link>
                 </Button>
