@@ -5,7 +5,32 @@ import { FileText, DollarSign, BarChart, User, Calendar, CheckCircle, Graduation
 
 export const metadata: Metadata = {
   title: 'Expert Dashboard | CertREV',
-  description: 'Access your expert assignments, submit reviews, track earnings, and manage your expert profile.',
+  description: 'Access your expert assignments, submit reviews, track earnings, and manage your expert profile. Review content, earn $50-200/hour, and build your professional reputation.',
+  keywords: ['expert dashboard', 'expert assignments', 'content review platform', 'expert earnings', 'professional verification work'],
+  openGraph: {
+    title: 'Expert Dashboard - Manage Review Assignments',
+    description: 'Access assignments, submit reviews, track earnings, and manage your expert profile.',
+    url: 'https://certrev.com/expert-dashboard',
+    siteName: 'CertREV',
+    type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'CertREV Expert Dashboard',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CertREV Expert Dashboard',
+    description: 'Manage review assignments and track your earnings.',
+    images: ['/twitter-image.png'],
+  },
+  alternates: {
+    canonical: 'https://certrev.com/expert-dashboard',
+  },
 }
 
 export default function ExpertDashboardPage() {

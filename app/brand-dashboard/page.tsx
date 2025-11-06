@@ -5,7 +5,32 @@ import { Upload, BarChart, Download, Users, FileText, CheckCircle, GraduationCap
 
 export const metadata: Metadata = {
   title: 'Brand Dashboard | CertREV',
-  description: 'Manage your content verification projects, track status, and download verification badges.',
+  description: 'Manage your content verification projects, track expert reviews, and access your trust infrastructure. Submit content, monitor status, download badges, and view E-E-A-T analytics.',
+  keywords: ['brand dashboard', 'content management', 'verification tracking', 'E-E-A-T analytics', 'content verification platform'],
+  openGraph: {
+    title: 'Brand Dashboard - Manage Content Verification',
+    description: 'Submit content, track expert reviews, download verification badges, and view analytics.',
+    url: 'https://certrev.com/brand-dashboard',
+    siteName: 'CertREV',
+    type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'CertREV Brand Dashboard',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CertREV Brand Dashboard',
+    description: 'Manage content verification projects and track expert reviews.',
+    images: ['/twitter-image.png'],
+  },
+  alternates: {
+    canonical: 'https://certrev.com/brand-dashboard',
+  },
 }
 
 export default function BrandDashboardPage() {

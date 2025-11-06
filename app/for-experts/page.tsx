@@ -7,7 +7,32 @@ import { ArrowRight, DollarSign, Clock, Award, TrendingUp, CheckCircle, Users } 
 
 export const metadata: Metadata = {
   title: 'Join Our Expert Network | CertREV',
-  description: 'Use your expertise to help brands build trustworthy content. Flexible work, competitive compensation, professional recognition.',
+  description: 'Use your expertise to help brands build trustworthy content. Flexible work, competitive compensation, professional recognition. Join credentialed professionals earning $50-200/hour reviewing content.',
+  keywords: ['become expert reviewer', 'expert network', 'credentialed professional work', 'content review jobs', 'flexible expert work', 'fact-checking jobs'],
+  openGraph: {
+    title: 'Join Our Expert Network - Earn as a Credentialed Professional',
+    description: 'Use your expertise to validate content. Flexible work, competitive compensation $50-200/hour, professional recognition.',
+    url: 'https://certrev.com/for-experts',
+    siteName: 'CertREV',
+    type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Join CertREV Expert Network',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Join CertREV Expert Network',
+    description: 'Earn $50-200/hour as a credentialed content reviewer.',
+    images: ['/twitter-image.png'],
+  },
+  alternates: {
+    canonical: 'https://certrev.com/for-experts',
+  },
 }
 
 export default function ForExpertsPage() {
