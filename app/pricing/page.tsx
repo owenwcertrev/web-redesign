@@ -394,7 +394,7 @@ export default function PricingPage() {
                     <td className="p-6 text-sm font-medium text-navy">90-Day Credit Rollover</td>
                     {pricingTiers.map((tier) => (
                       <td key={tier.id} className="p-6 text-center">
-                        <span className="text-lime text-lg">✓</span>
+                        <span className="text-navy text-lg">✓</span>
                       </td>
                     ))}
                   </tr>
@@ -402,7 +402,7 @@ export default function PricingPage() {
                     <td className="p-6 text-sm font-medium text-navy">All 6 Credential Tiers</td>
                     {pricingTiers.map((tier) => (
                       <td key={tier.id} className="p-6 text-center">
-                        <span className="text-lime text-lg">✓</span>
+                        <span className="text-navy text-lg">✓</span>
                       </td>
                     ))}
                   </tr>
@@ -410,28 +410,15 @@ export default function PricingPage() {
                     <td className="p-6 text-sm font-medium text-navy">JSON-LD Schema & EEAT Badges</td>
                     {pricingTiers.map((tier) => (
                       <td key={tier.id} className="p-6 text-center">
-                        <span className="text-lime text-lg">✓</span>
-                      </td>
-                    ))}
-                  </tr>
-                  <tr className="border-b border-navy/10">
-                    <td className="p-6 text-sm font-medium text-navy">SOC-2 Compliant Platform</td>
-                    {pricingTiers.map((tier) => (
-                      <td key={tier.id} className="p-6 text-center">
-                        <span className="text-lime text-lg">✓</span>
+                        <span className="text-navy text-lg">✓</span>
                       </td>
                     ))}
                   </tr>
                   <tr>
-                    <td className="p-6"></td>
+                    <td className="p-6 text-sm font-medium text-navy">SOC-2 Compliant Platform</td>
                     {pricingTiers.map((tier) => (
                       <td key={tier.id} className="p-6 text-center">
-                        <a
-                          href="/brand-dashboard"
-                          className="inline-block w-full px-6 py-3 bg-coral text-white font-semibold rounded-full hover:bg-coral/90 transition-all shadow-md hover:shadow-lg text-sm"
-                        >
-                          Start Today
-                        </a>
+                        <span className="text-navy text-lg">✓</span>
                       </td>
                     ))}
                   </tr>
