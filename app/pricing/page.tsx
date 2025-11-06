@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { DollarSign, Sparkles } from 'lucide-react'
 import DepthHero from '@/components/cards3d/DepthHero'
@@ -171,6 +171,7 @@ const pricingFAQs = [
 
 export default function PricingPage() {
   const [postsPerMonth, setPostsPerMonth] = useState(9) // Start at Core SEO range
+  const comparisonRef = useRef<HTMLElement>(null)
 
   // Map slider value to appropriate pricing tier
   // Ranges aligned to ~3 credits per review average
@@ -182,6 +183,10 @@ export default function PricingPage() {
     if (postsPerMonth <= 30) return pricingTiers[4] // Authority (75 credits ÷ 3 = 25 posts)
     return pricingTiers[5] // Enterprise (129 credits ÷ 3 = 43 posts)
   }, [postsPerMonth])
+
+  const scrollToComparison = () => {
+    comparisonRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
     <div>
@@ -265,7 +270,7 @@ export default function PricingPage() {
             <div className="text-center mt-8">
               <p className="text-sm text-navy/60">
                 Want to see all plans side-by-side?{' '}
-                <button className="text-coral font-semibold hover:underline">
+                <button onClick={scrollToComparison} className="text-coral font-semibold hover:underline">
                   View comparison table
                 </button>
               </p>
@@ -309,6 +314,137 @@ export default function PricingPage() {
               </FadeIn>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Comparison Table Section */}
+      <section ref={comparisonRef} className="bg-white py-20 px-4 relative overflow-hidden">
+        <TextureOverlay type="paper" opacity={0.15} />
+        <OrganicShape variant="blob1" color="coral" className="absolute -top-40 -right-40 w-96 h-96" opacity={0.05} />
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <FadeIn>
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-navy font-serif">
+                Compare All Plans
+              </h2>
+              <p className="text-lg text-black/70">
+                Choose the perfect plan for your content marketing needs
+              </p>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={0.2}>
+            <div className="overflow-x-auto">
+              <table className="w-full bg-white rounded-2xl shadow-lg border-2 border-navy/10">
+                <thead>
+                  <tr className="border-b-2 border-navy/10">
+                    <th className="p-6 text-left text-sm font-semibold text-navy/60 uppercase tracking-wide bg-beige/30">
+                      Features
+                    </th>
+                    {pricingTiers.map((tier) => (
+                      <th key={tier.id} className="p-6 text-center min-w-[180px]">
+                        <div className="flex flex-col items-center gap-2">
+                          {tier.isPopular && (
+                            <span className="inline-block bg-lime text-navy px-3 py-1 rounded-full text-xs font-bold">
+                              Most Popular
+                            </span>
+                          )}
+                          <span className="text-lg font-bold text-navy font-serif">{tier.name}</span>
+                          <span className="text-2xl font-bold text-coral font-serif">
+                            ${tier.price.toLocaleString()}
+                          </span>
+                          <span className="text-xs text-navy/50">/month</span>
+                        </div>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-navy/10">
+                    <td className="p-6 text-sm font-medium text-navy">Credits Included</td>
+                    {pricingTiers.map((tier) => (
+                      <td key={tier.id} className="p-6 text-center text-sm text-navy/70">
+                        {tier.credits} credits
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="border-b border-navy/10 bg-beige/20">
+                    <td className="p-6 text-sm font-medium text-navy">Price Per Credit</td>
+                    {pricingTiers.map((tier) => (
+                      <td key={tier.id} className="p-6 text-center text-sm text-navy/70">
+                        ${tier.pricePerCredit}/credit
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="border-b border-navy/10">
+                    <td className="p-6 text-sm font-medium text-navy">Ideal Monthly Posts</td>
+                    {pricingTiers.map((tier) => (
+                      <td key={tier.id} className="p-6 text-center text-sm text-navy/70">
+                        {tier.id === 'mini' && '2-3 posts'}
+                        {tier.id === 'starter' && '4-6 posts'}
+                        {tier.id === 'core-seo' && '7-12 posts'}
+                        {tier.id === 'accelerate' && '13-20 posts'}
+                        {tier.id === 'authority' && '21-30 posts'}
+                        {tier.id === 'enterprise' && '31+ posts'}
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="border-b border-navy/10 bg-beige/20">
+                    <td className="p-6 text-sm font-medium text-navy">90-Day Credit Rollover</td>
+                    {pricingTiers.map((tier) => (
+                      <td key={tier.id} className="p-6 text-center">
+                        <span className="text-lime text-lg">✓</span>
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="border-b border-navy/10">
+                    <td className="p-6 text-sm font-medium text-navy">All 6 Credential Tiers</td>
+                    {pricingTiers.map((tier) => (
+                      <td key={tier.id} className="p-6 text-center">
+                        <span className="text-lime text-lg">✓</span>
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="border-b border-navy/10 bg-beige/20">
+                    <td className="p-6 text-sm font-medium text-navy">JSON-LD Schema & EEAT Badges</td>
+                    {pricingTiers.map((tier) => (
+                      <td key={tier.id} className="p-6 text-center">
+                        <span className="text-lime text-lg">✓</span>
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="border-b border-navy/10">
+                    <td className="p-6 text-sm font-medium text-navy">SOC-2 Compliant Platform</td>
+                    {pricingTiers.map((tier) => (
+                      <td key={tier.id} className="p-6 text-center">
+                        <span className="text-lime text-lg">✓</span>
+                      </td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td className="p-6"></td>
+                    {pricingTiers.map((tier) => (
+                      <td key={tier.id} className="p-6 text-center">
+                        <a
+                          href="/brand-dashboard"
+                          className="inline-block w-full px-6 py-3 bg-coral text-white font-semibold rounded-full hover:bg-coral/90 transition-all shadow-md hover:shadow-lg text-sm"
+                        >
+                          Start Today
+                        </a>
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={0.3}>
+            <p className="text-center text-sm text-navy/40 mt-8">
+              All plans include month-to-month billing • Cancel anytime • No long-term contracts
+            </p>
+          </FadeIn>
         </div>
       </section>
 
