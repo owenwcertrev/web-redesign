@@ -105,13 +105,13 @@ export default function ExpertDashboardPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild className="!bg-coral hover:!bg-coral/90 !text-white !border-coral">
-                <Link href="https://dashboard.certrev.com/auth/login?tab=brand">
+                <Link href="https://dashboard.certrev.com/auth/signup?tab=brand">
                   Sign Up as Brand
                   <Building2 className="w-5 h-5" />
                 </Link>
               </Button>
               <Button size="lg" asChild className="!bg-navy hover:!bg-navy/90 !text-white !border-navy">
-                <Link href="https://dashboard.certrev.com/auth/login?tab=expert">
+                <Link href="https://dashboard.certrev.com/auth/signup?tab=expert">
                   Sign Up as Expert
                   <GraduationCap className="w-5 h-5" />
                 </Link>

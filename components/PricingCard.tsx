@@ -87,7 +87,7 @@ export default function PricingCard({ tier }: PricingCardProps) {
 
               {/* CTA Button */}
               <motion.a
-                href="https://dashboard.certrev.com/auth/login?tab=brand"
+                href="https://dashboard.certrev.com/auth/signup?tab=brand"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="block w-full text-center px-8 py-4 bg-coral text-white font-semibold rounded-full hover:bg-coral/90 transition-all shadow-md hover:shadow-lg mb-3"

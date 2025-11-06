@@ -67,7 +67,7 @@ export default function Navigation() {
                   asChild
                   className={`!bg-coral hover:!bg-coral/90 !text-white !border-coral transition-all duration-300 ${brandHovered || brandExpanded ? 'rounded-l-none' : ''}`}
                 >
-                  <Link href="https://dashboard.certrev.com/auth/login?tab=brand">Brand Dashboard</Link>
+                  <Link href="/brand-dashboard">Brand Dashboard</Link>
                 </Button>
               </div>
             </div>
@@ -86,7 +86,7 @@ export default function Navigation() {
                   asChild
                   className={`!bg-navy hover:!bg-navy/90 !text-white !border-navy transition-all duration-300 ${expertHovered || expertExpanded ? 'rounded-r-none' : ''}`}
                 >
-                  <Link href="https://dashboard.certrev.com/auth/login?tab=expert">Expert Dashboard</Link>
+                  <Link href="/expert-dashboard">Expert Dashboard</Link>
                 </Button>
                 <div
                   className="overflow-hidden transition-all duration-300 ease-out"
@@ -151,10 +151,10 @@ export default function Navigation() {
             </Link>
             <div className="pt-3 space-y-2 border-t border-black/5">
               <Button variant="primary" size="sm" className="w-full !bg-coral hover:!bg-coral/90 !text-white !border-coral" asChild>
-                <Link href="https://dashboard.certrev.com/auth/login?tab=brand">Brand Dashboard</Link>
+                <Link href="/brand-dashboard">Brand Dashboard</Link>
               </Button>
               <Button variant="primary" size="sm" className="w-full !bg-navy hover:!bg-navy/90 !text-white !border-navy" asChild>
-                <Link href="https://dashboard.certrev.com/auth/login?tab=expert">Expert Dashboard</Link>
+                <Link href="/expert-dashboard">Expert Dashboard</Link>
               </Button>
             </div>
           </div>
