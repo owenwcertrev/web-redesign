@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
           `).join('')
 
           await resend.emails.send({
-          from: 'CertREV E-E-A-T Analysis <systems@certrev.com>',
+          from: 'CertREV E-E-A-T Analysis <noreply@mail.certrev.com>',
           to: email,
           subject: `Your E-E-A-T Analysis Results for ${new URL(url).hostname}`,
           html: `

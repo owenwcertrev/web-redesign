@@ -40,8 +40,8 @@ export async function POST(request: NextRequest) {
     if (resend) {
       try {
         await resend.emails.send({
-          from: 'CertREV Contact Form <systems@certrev.com>',
-          to: 'owen@certrev.com',
+          from: 'CertREV Contact Form <noreply@mail.certrev.com>',
+          to: 'systems@certrev.com',
           subject: `Contact Form Submission from ${name}`,
           html: `
             <h2>New Contact Form Submission</h2>

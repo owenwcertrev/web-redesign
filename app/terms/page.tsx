@@ -213,7 +213,7 @@ export default function TermsPage() {
               {/* Section 14 */}
               <h2 className="text-3xl font-bold text-navy font-serif mt-12 mb-4">14. Copyright Claims (DMCA)</h2>
               <p className="text-black/80 leading-relaxed mb-6">
-                If you believe content on the Platform infringes your rights, send a notice containing the elements of 17 U.S.C. §512(c)(3) to <a href="mailto:support@certrev.com" className="text-coral hover:underline">support@certrev.com</a> with subject "DMCA Notice." We may remove or disable access to the material and notify the submitter. Counter-notices must follow §512(g).
+                If you believe content on the Platform infringes your rights, send a notice containing the elements of 17 U.S.C. §512(c)(3) to <a href="mailto:owen@certrev.com" className="text-coral hover:underline">owen@certrev.com</a> with subject "DMCA Notice." We may remove or disable access to the material and notify the submitter. Counter-notices must follow §512(g).
               </p>
 
               {/* Section 15 */}
@@ -231,7 +231,7 @@ export default function TermsPage() {
               {/* Section 17 */}
               <h2 className="text-3xl font-bold text-navy font-serif mt-12 mb-4">17. Communications</h2>
               <p className="text-black/80 leading-relaxed mb-6">
-                We may contact you at the email tied to your account about your use of the Services and updates to these Terms. Support: <a href="mailto:support@certrev.com" className="text-coral hover:underline">support@certrev.com</a>.
+                We may contact you at the email tied to your account about your use of the Services and updates to these Terms. Support: <a href="mailto:owen@certrev.com" className="text-coral hover:underline">owen@certrev.com</a>.
               </p>
 
               {/* Section 18 */}

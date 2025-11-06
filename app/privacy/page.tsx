@@ -68,7 +68,7 @@ export default function PrivacyPage() {
               {/* Company */}
               <h2 className="text-3xl font-bold text-navy font-serif mt-12 mb-4">Company</h2>
               <p className="text-black/80 leading-relaxed mb-6">
-                CertREV operates the certrev.com website and the CERT Reviewed service ("CertREV," "we," "us"). To contact us with questions about this privacy policy, email <a href="mailto:support@certrev.com" className="text-coral hover:underline">support@certrev.com</a> or <a href="mailto:certreviewed@gmail.com" className="text-coral hover:underline">certreviewed@gmail.com</a>.
+                CertREV operates the certrev.com website and the CERT Reviewed service ("CertREV," "we," "us"). To contact us with questions about this privacy policy, email <a href="mailto:owen@certrev.com" className="text-coral hover:underline">owen@certrev.com</a>.
               </p>
 
               {/* Scope */}

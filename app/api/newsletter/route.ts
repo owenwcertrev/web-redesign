@@ -33,8 +33,8 @@ export async function POST(request: NextRequest) {
     if (resend) {
       try {
         await resend.emails.send({
-          from: 'CertREV Newsletter <systems@certrev.com>',
-          to: 'owen@certrev.com',
+          from: 'CertREV Newsletter <noreply@mail.certrev.com>',
+          to: 'systems@certrev.com',
           subject: 'New Newsletter Subscription',
           html: `
             <h2>New Newsletter Subscriber</h2>

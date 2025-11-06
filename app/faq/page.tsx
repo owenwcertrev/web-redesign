@@ -536,7 +536,7 @@ export default function FAQPage() {
         },
         {
           question: 'Who do I contact for platform or payment support?',
-          answer: 'Use the in-platform chat or email certreviewed@gmail.com for assignment, tech, or payment queries—responses within two business days.'
+          answer: 'Use the in-platform chat or email owen@certrev.com for assignment, tech, or payment queries—responses within two business days.'
         }
       ]
     },
