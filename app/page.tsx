@@ -329,12 +329,6 @@ export default function Home() {
                     preview="Official Google documentation on Experience, Expertise, Authoritativeness, and Trust signals."
                   />
                 </p>
-                <Button size="lg" asChild>
-                  <Link href="/how-it-works">
-                    See How It Works
-                    <ArrowRight className="w-5 h-5" />
-                  </Link>
-                </Button>
               </div>
             </FadeIn>
 
