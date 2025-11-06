@@ -53,21 +53,21 @@ export default function PricingSlider({ value, onChange, min = 2, max = 56 }: Pr
               to right,
               #D4E157 0%,
               #D4E157 ${percentage}%,
-              #E8E4DB ${percentage}%,
-              #E8E4DB 100%
+              #FFFFFF ${percentage}%,
+              #FFFFFF 100%
             );
             border-radius: 1.25rem;
             height: 1.25rem;
-            border: 3px solid rgba(10, 27, 63, 0.25);
-            box-shadow: inset 0 1px 3px rgba(10, 27, 63, 0.1);
+            border: 3px solid #0A1B3F;
+            box-shadow: 0 2px 4px rgba(10, 27, 63, 0.1);
           }
 
           input[type="range"]::-moz-range-track {
-            background: #E8E4DB;
+            background: #FFFFFF;
             border-radius: 1.25rem;
             height: 1.25rem;
-            border: 3px solid rgba(10, 27, 63, 0.25);
-            box-shadow: inset 0 1px 3px rgba(10, 27, 63, 0.1);
+            border: 3px solid #0A1B3F;
+            box-shadow: 0 2px 4px rgba(10, 27, 63, 0.1);
           }
 
           input[type="range"]::-moz-range-progress {
