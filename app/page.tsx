@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import Button from '@/components/Button'
 import TierCard from '@/components/TierCard'
-import SplitSignupButton from '@/components/SplitSignupButton'
 import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Upload, FileCheck, Search, CheckCircle2, Shield, Eye } from 'lucide-react'
 import CitationMarker from '@/components/trust/CitationMarker'
 import ConfidenceMeter from '@/components/trust/ConfidenceMeter'
@@ -185,15 +184,27 @@ export default function Home() {
               transition={{ delay: 1 }}
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-2xl mx-auto"
             >
-              <Button size="lg" variant="secondary" asChild className="w-full sm:w-auto">
-                <Link href="/book-demo">Book Demo</Link>
+              <Button size="lg" asChild className="w-full sm:w-auto !bg-coral hover:!bg-coral/90 !text-white !border-coral">
+                <Link href="https://dashboard.certrev.com/auth/signup?tab=brand">
+                  Sign Up as Brand
+                </Link>
               </Button>
-              <div className="w-full sm:w-auto flex justify-center">
-                <SplitSignupButton />
-              </div>
               <Button size="lg" variant="secondary" asChild className="w-full sm:w-auto">
-                <Link href="#verification-process">See How It Works</Link>
+                <Link href="/book-demo">Book a Demo</Link>
               </Button>
+            </motion.div>
+
+            {/* Secondary CTA */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
+              className="mt-6"
+            >
+              <Link href="#verification-process" className="text-navy hover:text-coral transition-colors font-medium inline-flex items-center gap-2">
+                See How It Works
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </motion.div>
           </div>
         </div>
