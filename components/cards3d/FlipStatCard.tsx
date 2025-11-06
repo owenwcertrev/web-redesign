@@ -1,9 +1,10 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useMemo } from 'react'
 import { LucideIcon } from 'lucide-react'
 import TextureOverlay from '../TextureOverlay'
+import { usePrefersReducedMotion } from '@/hooks/usePerformance'
 
 interface FlipStatCardProps {
   stat: string
@@ -25,6 +26,18 @@ export default function FlipStatCard({
   gradient = 'from-navy/10 to-lime/10'
 }: FlipStatCardProps) {
   const [isFlipped, setIsFlipped] = useState(false)
+  const prefersReducedMotion = usePrefersReducedMotion()
+
+  // Memoize animation variants to prevent recreation on every render
+  const flipTransition = useMemo(
+    () => ({
+      duration: prefersReducedMotion ? 0.1 : 0.4,
+      type: 'spring' as const,
+      stiffness: 200, // Reduced from 260 for better performance
+      damping: 25,
+    }),
+    [prefersReducedMotion]
+  )
 
   return (
     <div
@@ -34,15 +47,10 @@ export default function FlipStatCard({
     >
       <motion.div
         className="relative w-full h-full"
-        style={{ transformStyle: 'preserve-3d' }}
+        style={{ transformStyle: 'preserve-3d', willChange: isFlipped ? 'transform' : 'auto' }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
-        whileHover={{ scale: 1.01 }}
-        transition={{
-          duration: 0.4,
-          type: 'spring',
-          stiffness: 260,
-          damping: 25
-        }}
+        whileHover={prefersReducedMotion ? {} : { scale: 1.01 }}
+        transition={flipTransition}
       >
         {/* Front */}
         <div
@@ -93,18 +101,25 @@ export default function FlipStatCard({
             </h3>
 
             <div className="space-y-2.5 flex-grow overflow-hidden relative z-10">
-              {backDetails.map((detail, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: isFlipped ? 0.2 + i * 0.08 : 0 }}
-                  className="flex items-start gap-2.5"
-                >
-                  <div className="w-1.5 h-1.5 rounded-full bg-lime mt-1.5 flex-shrink-0" />
-                  <span className="text-white/90 leading-snug text-sm">{detail}</span>
-                </motion.div>
-              ))}
+              <AnimatePresence>
+                {isFlipped && backDetails.map((detail, i) => (
+                  <motion.div
+                    key={detail}
+                    initial={prefersReducedMotion ? false : { opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      delay: prefersReducedMotion ? 0 : 0.2 + i * 0.08,
+                      duration: 0.3,
+                      ease: [0.4, 0, 0.2, 1]
+                    }}
+                    className="flex items-start gap-2.5"
+                  >
+                    <div className="w-1.5 h-1.5 rounded-full bg-lime mt-1.5 flex-shrink-0" />
+                    <span className="text-white/90 leading-snug text-sm">{detail}</span>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
 
             <div className="mt-3 pt-3 border-t border-white/20 flex-shrink-0 relative z-10">
