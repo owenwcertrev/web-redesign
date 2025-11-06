@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     description: 'Expert fact-checking infrastructure for health, wellness, finance, and professional service brands. Human validation in an AI-powered world.',
     images: [
       {
-        url: '/og-image.png', // TODO: Replace with actual image
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'CertREV - Expert Content Verification',
@@ -49,12 +49,15 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'CertREV - Expert Content Verification',
     description: 'Expert fact-checking infrastructure for health, wellness, finance, and professional service brands.',
-    images: ['/twitter-image.png'], // TODO: Replace with actual image
+    images: ['/og-image.png'],
     creator: '@certrev',
   },
   icons: {
-    icon: '/favicon.ico', // TODO: Replace with actual favicon
-    apple: '/apple-touch-icon.png', // TODO: Replace with actual icon
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
   viewport: {
@@ -79,7 +82,7 @@ export default function RootLayout({
     '@type': 'Organization',
     name: 'CertREV',
     url: 'https://certrev.com',
-    logo: 'https://certrev.com/logo.png', // TODO: Replace with actual logo
+    logo: 'https://certrev.com/logo.png',
     description: 'Expert fact-checking infrastructure for health, wellness, finance, and professional service brands.',
     contactPoint: {
       '@type': 'ContactPoint',
