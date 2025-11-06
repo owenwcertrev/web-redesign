@@ -73,7 +73,7 @@ export default function PricingCard({ tier }: PricingCardProps) {
               <p className="text-navy/60 mb-6">{tier.description}</p>
 
               {/* Price */}
-              <div className="mb-6">
+              <div className="mb-8">
                 <div className="flex items-baseline gap-2">
                   <span className="text-5xl md:text-6xl font-bold text-coral font-serif">
                     ${tier.price.toLocaleString()}
@@ -83,26 +83,6 @@ export default function PricingCard({ tier }: PricingCardProps) {
                 <p className="text-sm text-navy/50 mt-2">
                   {tier.credits} credits • ${tier.pricePerCredit}/credit
                 </p>
-              </div>
-
-              {/* Features */}
-              <div className="space-y-2 mb-8">
-                <div className="flex items-center gap-2 text-sm text-navy/60">
-                  <Check className="w-4 h-4 text-lime" />
-                  <span>90-day credit rollover</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-navy/60">
-                  <Check className="w-4 h-4 text-lime" />
-                  <span>Access to all 6 credential tiers</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-navy/60">
-                  <Check className="w-4 h-4 text-lime" />
-                  <span>JSON-LD schema & EEAT badges</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-navy/60">
-                  <Check className="w-4 h-4 text-lime" />
-                  <span>SOC-2 compliant platform</span>
-                </div>
               </div>
 
               {/* CTA Button */}
@@ -120,12 +100,12 @@ export default function PricingCard({ tier }: PricingCardProps) {
               </p>
             </div>
 
-            {/* Right Column: Example spending scenarios */}
+            {/* Right Column: Example spending scenarios & Features */}
             <div className="lg:border-l lg:border-navy/10 lg:pl-12">
               <p className="text-sm font-semibold text-navy/60 uppercase tracking-wide mb-4">
                 Example Spending
               </p>
-              <div className="space-y-3">
+              <div className="space-y-3 mb-8">
                 {tier.examples.map((example, idx) => (
                   <motion.div
                     key={idx}
@@ -140,6 +120,31 @@ export default function PricingCard({ tier }: PricingCardProps) {
                     <p className="text-navy/70 text-sm leading-relaxed">{example}</p>
                   </motion.div>
                 ))}
+              </div>
+
+              {/* Features */}
+              <div className="pt-6 border-t border-navy/10">
+                <p className="text-sm font-semibold text-navy/60 uppercase tracking-wide mb-4">
+                  Included Features
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-navy/60">
+                    <Check className="w-4 h-4 text-lime" />
+                    <span>90-day credit rollover</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-navy/60">
+                    <Check className="w-4 h-4 text-lime" />
+                    <span>Access to all 6 credential tiers</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-navy/60">
+                    <Check className="w-4 h-4 text-lime" />
+                    <span>JSON-LD schema & EEAT badges</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-navy/60">
+                    <Check className="w-4 h-4 text-lime" />
+                    <span>SOC-2 compliant platform</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
