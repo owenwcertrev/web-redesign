@@ -189,15 +189,15 @@ export default function EEATMeterPage() {
                 whileInView={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
-                className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-2xl mx-auto"
               >
-                <Button size="lg" asChild className="!bg-coral hover:!bg-coral/90 !text-white !border-coral shadow-2xl">
+                <Button size="lg" asChild className="w-full sm:w-auto !bg-coral hover:!bg-coral/90 !text-white !border-coral shadow-2xl">
                   <Link href="/contact">
                     Request Early Access
                     <Mail className="w-5 h-5" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="secondary" asChild className="shadow-xl">
+                <Button size="lg" variant="secondary" asChild className="w-full sm:w-auto shadow-xl">
                   <Link href="/book-demo">
                     Schedule Demo
                     <ArrowRight className="w-5 h-5" />

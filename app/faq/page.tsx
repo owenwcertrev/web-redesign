@@ -763,16 +763,16 @@ export default function FAQPage() {
                 <p className="text-black/70 mb-6 text-lg max-w-2xl mx-auto">
                   Can't find what you're looking for? Our team is here to help.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-2xl mx-auto">
                   <a
                     href="/contact"
-                    className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-coral text-white font-semibold rounded-full hover:bg-coral/90 transition-all shadow-md hover:shadow-lg"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-coral text-white font-semibold rounded-full hover:bg-coral/90 transition-all shadow-md hover:shadow-lg"
                   >
                     Contact Us
                   </a>
                   <a
                     href="/book-demo"
-                    className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-navy font-semibold rounded-full border-2 border-navy/20 hover:border-navy/30 transition-all"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-navy font-semibold rounded-full border-2 border-navy/20 hover:border-navy/30 transition-all"
                   >
                     Schedule Demo
                   </a>

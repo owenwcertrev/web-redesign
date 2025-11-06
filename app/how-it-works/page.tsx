@@ -357,21 +357,21 @@ export default function HowItWorksPage() {
               whileInView={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-2xl mx-auto"
             >
-              <Button size="lg" asChild className="shadow-2xl !bg-coral hover:!bg-coral/90 !text-white !border-coral">
+              <Button size="lg" asChild className="w-full sm:w-auto shadow-2xl !bg-coral hover:!bg-coral/90 !text-white !border-coral">
                 <Link href="/brand-dashboard">
                   Sign Up as Brand
                   <Building2 className="w-5 h-5" />
                 </Link>
               </Button>
-              <Button size="lg" asChild className="shadow-2xl !bg-navy hover:!bg-navy/90 !text-white !border-navy">
+              <Button size="lg" asChild className="w-full sm:w-auto shadow-2xl !bg-navy hover:!bg-navy/90 !text-white !border-navy">
                 <Link href="/expert-dashboard">
                   Sign Up as Expert
                   <GraduationCap className="w-5 h-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="secondary" asChild className="shadow-2xl">
+              <Button size="lg" variant="secondary" asChild className="w-full sm:w-auto shadow-2xl">
                 <Link href="/book-demo">
                   Schedule Demo
                 </Link>

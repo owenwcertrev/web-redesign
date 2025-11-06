@@ -10,11 +10,11 @@ export default function SplitSignupButton() {
 
   return (
     <div
-      className="relative inline-flex"
+      className="relative inline-flex w-full sm:w-auto"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="flex items-center gap-0">
+      <div className="flex items-center gap-0 w-full sm:w-auto justify-center">
         <AnimatePresence>
           {isHovered ? (
             <>
@@ -83,7 +83,7 @@ export default function SplitSignupButton() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="px-6 sm:px-8 py-3 sm:py-4 bg-coral text-white font-semibold text-base sm:text-lg rounded-2xl border-2 border-coral shadow-lg cursor-pointer whitespace-nowrap">
+              <div className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-coral text-white font-semibold text-base sm:text-lg rounded-2xl border-2 border-coral shadow-lg cursor-pointer whitespace-nowrap text-center">
                 Sign Up
               </div>
             </motion.div>

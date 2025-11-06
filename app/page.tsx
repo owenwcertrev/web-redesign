@@ -178,13 +178,15 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1 }}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-2xl mx-auto"
             >
-              <Button size="lg" variant="secondary" asChild>
+              <Button size="lg" variant="secondary" asChild className="w-full sm:w-auto">
                 <Link href="/book-demo">Book Demo</Link>
               </Button>
-              <SplitSignupButton />
-              <Button size="lg" variant="secondary" asChild>
+              <div className="w-full sm:w-auto flex justify-center">
+                <SplitSignupButton />
+              </div>
+              <Button size="lg" variant="secondary" asChild className="w-full sm:w-auto">
                 <Link href="#verification-process">See How It Works</Link>
               </Button>
             </motion.div>
