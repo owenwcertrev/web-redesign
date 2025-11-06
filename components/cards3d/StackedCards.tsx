@@ -28,7 +28,7 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const prefersReducedMotion = usePrefersReducedMotion()
 
-  // Memoize card positions - only recalculate when expandedIndex changes
+  // Memoize card positions - only recalculate when expandedIndex or cards change
   const cardPositions = useMemo<CardPosition[]>(() => {
     return cards.map((_, index) => {
       const isExpanded = expandedIndex === index
@@ -50,7 +50,7 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
 
       return { zIndex, yOffset, scale, rotateX }
     })
-  }, [cards.length, expandedIndex])
+  }, [cards, expandedIndex])
 
   // Memoized transition config
   const springTransition = useMemo(() => {
@@ -85,14 +85,11 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
           const isHovered = hoveredIndex === index
           const position = cardPositions[index]
 
-          // Memoized hover animation
-          const hoverAnimation = useMemo(() => {
-            if (isExpanded || prefersReducedMotion) return {}
-            return {
-              scale: position.scale * 1.02,
-              y: position.yOffset - 5,
-            }
-          }, [isExpanded, prefersReducedMotion, position.scale, position.yOffset])
+          // Inline hover animation (can't use useMemo inside map)
+          const hoverAnimation = (isExpanded || prefersReducedMotion) ? {} : {
+            scale: position.scale * 1.02,
+            y: position.yOffset - 5,
+          }
 
           return (
             <motion.div

@@ -42,6 +42,12 @@ export default function TiltCard({
   const glowX = useTransform(x, [0, 1], ['0%', '100%'])
   const glowY = useTransform(y, [0, 1], ['0%', '100%'])
 
+  // Memoize glow background transform (must be before early return)
+  const glowBackground = useTransform(
+    glowX,
+    (xVal) => `radial-gradient(circle at ${xVal} 50%, ${glowColor}, transparent 60%)`
+  )
+
   // Memoized mouse move handler
   const handleMouseMoveRaw = useCallback((e: MouseEvent<HTMLDivElement>) => {
     // Skip tilt on touch devices or reduced motion
@@ -101,10 +107,7 @@ export default function TiltCard({
         <motion.div
           className="absolute inset-0 rounded-2xl opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"
           style={{
-            background: useTransform(
-              glowX,
-              (xVal) => `radial-gradient(circle at ${xVal} 50%, ${glowColor}, transparent 60%)`
-            ),
+            background: glowBackground,
           }}
         />
 

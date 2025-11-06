@@ -115,7 +115,7 @@ export default function Carousel3D({ items, className = '' }: Carousel3DProps) {
       // Inactive cards: faster duration-based animation
       return {
         duration: 0.4,
-        ease: [0.4, 0, 0.2, 1], // easeInOut
+        ease: [0.4, 0, 0.2, 1] as const, // easeInOut
       }
     }
   }, [prefersReducedMotion])
