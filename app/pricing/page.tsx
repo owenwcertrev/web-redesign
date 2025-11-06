@@ -104,40 +104,40 @@ const pricingTiers: PricingTier[] = [
 // Define expert tier reference data
 const expertTiers = [
   {
-    tier: 1,
-    name: 'Certified Professional',
+    tierNumber: 1,
+    tierName: 'Certified Professional',
     credits: 1,
-    examples: 'Certified Wellness Coach, Personal Trainer, Nutrition Coach'
+    credentials: ['Certified Wellness Coach', 'Personal Trainer', 'Nutrition Coach']
   },
   {
-    tier: 2,
-    name: 'Licensed Practitioner',
+    tierNumber: 2,
+    tierName: 'Licensed Practitioner',
     credits: 2,
-    examples: 'RN, IBCLC, Licensed Therapist, Doula'
+    credentials: ['RN', 'IBCLC', 'Licensed Therapist', 'Doula']
   },
   {
-    tier: 3,
-    name: 'Credentialed Specialist',
+    tierNumber: 3,
+    tierName: 'Credentialed Specialist',
     credits: 3,
-    examples: 'RD, NP, PharmD, CPA'
+    credentials: ['RD', 'NP', 'PharmD', 'CPA']
   },
   {
-    tier: 4,
-    name: 'Senior Specialist',
+    tierNumber: 4,
+    tierName: 'Senior Specialist',
     credits: 4,
-    examples: 'Senior NP, Clinical Specialist, MBA'
+    credentials: ['Senior NP', 'Clinical Specialist', 'MBA']
   },
   {
-    tier: 5,
-    name: 'Practice Leader',
+    tierNumber: 5,
+    tierName: 'Practice Leader',
     credits: 5,
-    examples: 'PhD, JD, Practice Owner'
+    credentials: ['PhD', 'JD', 'Practice Owner']
   },
   {
-    tier: 6,
-    name: 'Industry Authority',
+    tierNumber: 6,
+    tierName: 'Industry Authority',
     credits: 6,
-    examples: 'MD, PhD (Research), C-Suite Executive'
+    credentials: ['MD', 'PhD (Research)', 'C-Suite Executive']
   }
 ]
 
@@ -298,12 +298,12 @@ export default function PricingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {expertTiers.map((tier, idx) => (
-              <FadeIn key={tier.tier} delay={0.1 * idx}>
+              <FadeIn key={tier.tierNumber} delay={0.1 * idx}>
                 <TierCard
-                  tier={tier.tier}
-                  name={tier.name}
+                  tierNumber={tier.tierNumber}
+                  tierName={tier.tierName}
                   credits={tier.credits}
-                  examples={tier.examples}
+                  credentials={tier.credentials}
                 />
               </FadeIn>
             ))}
