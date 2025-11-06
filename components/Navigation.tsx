@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { Menu, X, User } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
 import Button from './Button'
 
 export default function Navigation() {
@@ -48,34 +47,25 @@ export default function Navigation() {
               onClick={() => setBrandExpanded(!brandExpanded)}
             >
               <div className="flex items-center">
-                <AnimatePresence>
-                  {(brandHovered || brandExpanded) && (
-                    <motion.div
-                      initial={{ width: 0, opacity: 0 }}
-                      animate={{ width: 40, opacity: 1 }}
-                      exit={{ width: 0, opacity: 0 }}
-                      transition={{
-                        type: 'spring',
-                        stiffness: 300,
-                        damping: 25,
-                        mass: 0.5
-                      }}
-                      className="overflow-hidden"
-                    >
-                      <Link
-                        href="https://dashboard.certrev.com/auth/login"
-                        className="flex items-center justify-center w-10 h-10 bg-navy hover:bg-navy/90 transition-colors rounded-l-lg border-2 border-r-0 border-navy"
-                      >
-                        <User className="w-4 h-4 text-white" />
-                      </Link>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <div
+                  className="overflow-hidden transition-all duration-300 ease-out"
+                  style={{
+                    width: (brandHovered || brandExpanded) ? '40px' : '0px',
+                    opacity: (brandHovered || brandExpanded) ? 1 : 0,
+                  }}
+                >
+                  <Link
+                    href="https://dashboard.certrev.com/auth/login"
+                    className="flex items-center justify-center w-10 h-10 bg-navy hover:bg-navy/90 transition-colors rounded-l-lg border-2 border-r-0 border-navy"
+                  >
+                    <User className="w-4 h-4 text-white" />
+                  </Link>
+                </div>
                 <Button
                   variant="primary"
                   size="sm"
                   asChild
-                  className={`!bg-coral hover:!bg-coral/90 !text-white !border-coral ${brandHovered || brandExpanded ? 'rounded-l-none' : ''}`}
+                  className={`!bg-coral hover:!bg-coral/90 !text-white !border-coral transition-all duration-300 ${brandHovered || brandExpanded ? 'rounded-l-none' : ''}`}
                 >
                   <Link href="https://dashboard.certrev.com/auth/login?tab=brand">Brand Dashboard</Link>
                 </Button>
@@ -94,33 +84,24 @@ export default function Navigation() {
                   variant="primary"
                   size="sm"
                   asChild
-                  className={`!bg-navy hover:!bg-navy/90 !text-white !border-navy ${expertHovered || expertExpanded ? 'rounded-r-none' : ''}`}
+                  className={`!bg-navy hover:!bg-navy/90 !text-white !border-navy transition-all duration-300 ${expertHovered || expertExpanded ? 'rounded-r-none' : ''}`}
                 >
                   <Link href="https://dashboard.certrev.com/auth/login?tab=expert">Expert Dashboard</Link>
                 </Button>
-                <AnimatePresence>
-                  {(expertHovered || expertExpanded) && (
-                    <motion.div
-                      initial={{ width: 0, opacity: 0 }}
-                      animate={{ width: 40, opacity: 1 }}
-                      exit={{ width: 0, opacity: 0 }}
-                      transition={{
-                        type: 'spring',
-                        stiffness: 300,
-                        damping: 25,
-                        mass: 0.5
-                      }}
-                      className="overflow-hidden"
-                    >
-                      <Link
-                        href="https://dashboard.certrev.com/auth/login"
-                        className="flex items-center justify-center w-10 h-10 bg-coral hover:bg-coral/90 transition-colors rounded-r-lg border-2 border-l-0 border-coral"
-                      >
-                        <User className="w-4 h-4 text-white" />
-                      </Link>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <div
+                  className="overflow-hidden transition-all duration-300 ease-out"
+                  style={{
+                    width: (expertHovered || expertExpanded) ? '40px' : '0px',
+                    opacity: (expertHovered || expertExpanded) ? 1 : 0,
+                  }}
+                >
+                  <Link
+                    href="https://dashboard.certrev.com/auth/login"
+                    className="flex items-center justify-center w-10 h-10 bg-coral hover:bg-coral/90 transition-colors rounded-r-lg border-2 border-l-0 border-coral"
+                  >
+                    <User className="w-4 h-4 text-white" />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

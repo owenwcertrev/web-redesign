@@ -22,10 +22,10 @@ import Testimonial from '@/components/Testimonial'
 import ExpertProfile from '@/components/ExpertProfile'
 import ExpertCarousel from '@/components/ExpertCarousel'
 import { featureFlags } from '@/config/features'
+import { fadeUpVariants, scaleUpVariants, viewportConfig } from '@/lib/animationVariants'
 
-export default function Home() {
-  // Stacked cards content for the process
-  const processCards = [
+// Move static content outside component to prevent recreation on every render
+const processCards = [
     {
       id: 'submit',
       content: (
@@ -85,7 +85,7 @@ export default function Home() {
     },
   ]
 
-
+export default function Home() {
   return (
     <div className="overflow-hidden">
       {/* Hero Section with Depth */}
@@ -211,10 +211,11 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0, duration: 0.6 }}
+              variants={fadeUpVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportConfig}
+              transition={{ duration: 0.6 }}
             >
               <FlipStatCard
                 stat="88%"
@@ -233,9 +234,10 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              variants={fadeUpVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportConfig}
               transition={{ delay: 0.1, duration: 0.6 }}
             >
               <FlipStatCard
@@ -255,9 +257,10 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              variants={fadeUpVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportConfig}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
               <FlipStatCard
@@ -277,9 +280,10 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              variants={fadeUpVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportConfig}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
               <FlipStatCard
