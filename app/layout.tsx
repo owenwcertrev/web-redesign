@@ -4,6 +4,7 @@ import './globals.css'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import SmoothResize from '@/components/SmoothResize'
+import CrispChat from '@/components/CrispChat'
 
 const dmSans = DM_Sans({ subsets: ['latin'] })
 
@@ -26,6 +27,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <CrispChat />
       </body>
     </html>
   )
