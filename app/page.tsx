@@ -1,16 +1,10 @@
 'use client'
 
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import Button from '@/components/Button'
 import TierCard from '@/components/TierCard'
-import NewsletterSignup from '@/components/NewsletterSignup'
-import FadeIn from '@/components/animations/FadeIn'
-import DepthHero from '@/components/cards3d/DepthHero'
-import FlipStatCard from '@/components/cards3d/FlipStatCard'
-import StackedCards from '@/components/cards3d/StackedCards'
-import TiltCard from '@/components/cards3d/TiltCard'
-import Carousel3D from '@/components/cards3d/Carousel3D'
 import SplitSignupButton from '@/components/SplitSignupButton'
 import { TrendingUp, Users, AlertCircle, ShoppingBag, ArrowRight, Upload, FileCheck, Search, CheckCircle2, Shield, Eye } from 'lucide-react'
 import CitationMarker from '@/components/trust/CitationMarker'
@@ -18,11 +12,22 @@ import ConfidenceMeter from '@/components/trust/ConfidenceMeter'
 import TrustIndicator from '@/components/trust/TrustIndicator'
 import OrganicShape from '@/components/OrganicShape'
 import TextureOverlay from '@/components/TextureOverlay'
-import Testimonial from '@/components/Testimonial'
-import ExpertProfile from '@/components/ExpertProfile'
-import ExpertCarousel from '@/components/ExpertCarousel'
 import { featureFlags } from '@/config/features'
 import { fadeUpVariants, scaleUpVariants, viewportConfig } from '@/lib/animationVariants'
+
+// Lazy load components that are below the fold
+// These will only be downloaded when needed, reducing initial bundle size
+const FadeIn = dynamic(() => import('@/components/animations/FadeIn'), { ssr: true })
+const DepthHero = dynamic(() => import('@/components/cards3d/DepthHero'), { ssr: true })
+const FlipStatCard = dynamic(() => import('@/components/cards3d/FlipStatCard'), { ssr: false })
+const StackedCards = dynamic(() => import('@/components/cards3d/StackedCards'), { ssr: false })
+const TiltCard = dynamic(() => import('@/components/cards3d/TiltCard'), { ssr: false })
+const Carousel3D = dynamic(() => import('@/components/cards3d/Carousel3D'), { ssr: false })
+const NewsletterSignup = dynamic(() => import('@/components/NewsletterSignup'), { ssr: false })
+const Testimonial = dynamic(() => import('@/components/Testimonial'), { ssr: false })
+const ExpertProfile = dynamic(() => import('@/components/ExpertProfile'), { ssr: false })
+const ExpertCarousel = dynamic(() => import('@/components/ExpertCarousel'), { ssr: false })
+const LazySection = dynamic(() => import('@/components/LazySection'), { ssr: true })
 
 // Move static content outside component to prevent recreation on every render
 const processCards = [
@@ -195,6 +200,7 @@ export default function Home() {
       </DepthHero>
 
       {/* Flip Stat Cards - Why Expert Validation Matters - Asymmetric spacing */}
+      <LazySection>
       <section className="pt-16 pb-12 sm:pt-20 sm:pb-16 md:pt-28 md:pb-24 px-4 bg-white relative overflow-hidden">
         <TextureOverlay type="grain" opacity={0.2} />
         <div className="max-w-[1400px] mx-auto relative z-10">
@@ -304,8 +310,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </LazySection>
 
       {/* Trust Infrastructure Section - Bold Split Layout */}
+      <LazySection>
       <section className="relative bg-white pt-16 pb-20 sm:pt-20 sm:pb-24 md:pt-24 md:pb-32 px-4 overflow-hidden">
         <OrganicShape variant="blob2" color="lime" className="top-10 right-10 w-[600px] h-[600px]" opacity={0.15} />
         <OrganicShape variant="blob4" color="coral" className="bottom-10 left-10 w-[500px] h-[500px]" opacity={0.12} />
@@ -364,8 +372,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </LazySection>
 
       {/* Stacked Cards - Layered Process */}
+      <LazySection>
       <section id="verification-process" className="py-16 sm:py-20 md:py-28 px-4 bg-white relative overflow-hidden">
         <TextureOverlay type="paper" opacity={0.2} />
         <div className="max-w-4xl mx-auto relative z-10">
@@ -386,9 +396,11 @@ export default function Home() {
           <StackedCards cards={processCards} />
         </div>
       </section>
+      </LazySection>
 
 
       {/* Expert Tiers Carousel */}
+      <LazySection>
       <section className="relative bg-beige py-16 sm:py-20 md:py-28 px-4 overflow-visible">
         <OrganicShape variant="blob1" color="coral" className="top-0 left-0 w-96 h-96" opacity={0.06} />
         <div className="max-w-7xl mx-auto relative z-10">
@@ -493,8 +505,10 @@ export default function Home() {
           />
         </div>
       </section>
+      </LazySection>
 
       {/* Trust Principles - Modern Card Design */}
+      <LazySection>
       <section className="pt-16 pb-12 sm:pt-24 sm:pb-20 md:pt-32 md:pb-28 px-4 bg-white relative overflow-hidden">
         <TextureOverlay type="grain" opacity={0.08} />
         <div className="max-w-7xl mx-auto relative z-10">
@@ -599,8 +613,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </LazySection>
 
       {/* Social Proof Section - Testimonials & Experts - Asymmetric spacing */}
+      <LazySection>
       <section className="relative bg-white pt-16 pb-20 sm:pt-20 sm:pb-24 md:pt-24 md:pb-32 px-4 overflow-hidden">
         <TextureOverlay type="grain" opacity={0.15} />
         <OrganicShape variant="blob4" color="lime" className="top-0 right-0 w-96 h-96" opacity={0.08} />
@@ -723,6 +739,7 @@ export default function Home() {
           )}
         </div>
       </section>
+      </LazySection>
 
       {/* The Human Layer - Hidden for MVP */}
       {/* <section className="relative bg-beige pt-16 pb-12 sm:pt-24 sm:pb-20 md:pt-32 md:pb-28 px-4 overflow-hidden">
@@ -804,6 +821,7 @@ export default function Home() {
       </section> */}
 
       {/* Final CTA Section - Asymmetric spacing */}
+      <LazySection>
       <section className="relative bg-white pt-16 pb-20 sm:pt-24 sm:pb-28 md:pt-32 md:pb-36 px-4 overflow-hidden">
         <TextureOverlay type="grain" opacity={0.15} />
         <OrganicShape variant="blob2" color="coral" className="top-0 left-0 w-96 h-96" opacity={0.08} />
@@ -832,6 +850,7 @@ export default function Home() {
           </FadeIn>
         </div>
       </section>
+      </LazySection>
     </div>
   )
 }
