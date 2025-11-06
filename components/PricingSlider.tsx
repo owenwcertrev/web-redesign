@@ -54,8 +54,8 @@ export default function PricingSlider({ value, onChange, min = 2, max = 56 }: Pr
                 to right,
                 #D4E157 0%,
                 #D4E157 ${percentage}%,
-                #FFFFFF ${percentage}%,
-                #FFFFFF 100%
+                #E8E4DB ${percentage}%,
+                #E8E4DB 100%
               );
               border-radius: 1.25rem;
               height: 1.25rem;
@@ -64,7 +64,7 @@ export default function PricingSlider({ value, onChange, min = 2, max = 56 }: Pr
             }
 
             .pricing-slider::-moz-range-track {
-              background: #FFFFFF;
+              background: #E8E4DB;
               border-radius: 1.25rem;
               height: 1.25rem;
               border: 3px solid #0A1B3F;
