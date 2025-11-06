@@ -254,7 +254,7 @@ export default function PricingPage() {
           </FadeIn>
 
           <FadeIn delay={0.3}>
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               <PricingCard tier={currentTier} />
             </div>
           </FadeIn>

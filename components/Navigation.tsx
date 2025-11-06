@@ -33,6 +33,9 @@ export default function Navigation() {
             <Link href="/how-it-works" className="text-black hover:text-coral transition-colors text-base">
               How It Works
             </Link>
+            <Link href="/pricing" className="text-black hover:text-coral transition-colors text-base">
+              Pricing
+            </Link>
           </div>
 
           {/* Dashboard CTAs - Desktop and Tablet */}
@@ -157,6 +160,13 @@ export default function Navigation() {
               onClick={() => setMobileMenuOpen(false)}
             >
               How It Works
+            </Link>
+            <Link
+              href="/pricing"
+              className="block py-2 text-black hover:text-coral transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Pricing
             </Link>
             <div className="pt-3 space-y-2 border-t border-black/5">
               <Button variant="primary" size="sm" className="w-full !bg-coral hover:!bg-coral/90 !text-white !border-coral" asChild>

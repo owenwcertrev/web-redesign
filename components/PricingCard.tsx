@@ -45,7 +45,7 @@ export default function PricingCard({ tier }: PricingCardProps) {
           </motion.div>
         )}
 
-        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border-2 border-navy/10 relative overflow-hidden">
+        <div className="bg-white rounded-3xl p-8 md:p-10 shadow-xl border-2 border-navy/10 relative overflow-hidden">
           <TextureOverlay type="paper" opacity={0.2} />
           <OrganicShape
             variant="blob1"
@@ -60,33 +60,68 @@ export default function PricingCard({ tier }: PricingCardProps) {
             opacity={0.06}
           />
 
-          <div className="relative z-10">
-            {/* Tier Name */}
-            <h3 className="text-3xl md:text-4xl font-bold text-navy font-serif mb-2">
-              {tier.name}
-            </h3>
+          {/* Two-column layout on desktop, single column on mobile */}
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            {/* Left Column: Plan details */}
+            <div>
+              {/* Tier Name */}
+              <h3 className="text-3xl md:text-4xl font-bold text-navy font-serif mb-2">
+                {tier.name}
+              </h3>
 
-            {/* Description */}
-            <p className="text-navy/60 mb-6">{tier.description}</p>
+              {/* Description */}
+              <p className="text-navy/60 mb-6">{tier.description}</p>
 
-            {/* Price */}
-            <div className="mb-6">
-              <div className="flex items-baseline gap-2">
-                <span className="text-5xl md:text-6xl font-bold text-coral font-serif">
-                  ${tier.price.toLocaleString()}
-                </span>
-                <span className="text-xl text-navy/60">/month</span>
+              {/* Price */}
+              <div className="mb-6">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-5xl md:text-6xl font-bold text-coral font-serif">
+                    ${tier.price.toLocaleString()}
+                  </span>
+                  <span className="text-xl text-navy/60">/month</span>
+                </div>
+                <p className="text-sm text-navy/50 mt-2">
+                  {tier.credits} credits • ${tier.pricePerCredit}/credit
+                </p>
               </div>
-              <p className="text-sm text-navy/50 mt-2">
-                {tier.credits} credits • ${tier.pricePerCredit}/credit
+
+              {/* Features */}
+              <div className="space-y-2 mb-8">
+                <div className="flex items-center gap-2 text-sm text-navy/60">
+                  <Check className="w-4 h-4 text-lime" />
+                  <span>90-day credit rollover</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-navy/60">
+                  <Check className="w-4 h-4 text-lime" />
+                  <span>Access to all 6 credential tiers</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-navy/60">
+                  <Check className="w-4 h-4 text-lime" />
+                  <span>JSON-LD schema & EEAT badges</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-navy/60">
+                  <Check className="w-4 h-4 text-lime" />
+                  <span>SOC-2 compliant platform</span>
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <motion.a
+                href="/brand-dashboard"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="block w-full text-center px-8 py-4 bg-coral text-white font-semibold rounded-full hover:bg-coral/90 transition-all shadow-md hover:shadow-lg mb-3"
+              >
+                Start Today
+              </motion.a>
+
+              <p className="text-center text-xs text-navy/40">
+                No long-term contract • Cancel anytime
               </p>
             </div>
 
-            {/* Divider */}
-            <div className="h-px bg-navy/10 mb-6" />
-
-            {/* Example Spending Scenarios */}
-            <div className="mb-8">
+            {/* Right Column: Example spending scenarios */}
+            <div className="lg:border-l lg:border-navy/10 lg:pl-12">
               <p className="text-sm font-semibold text-navy/60 uppercase tracking-wide mb-4">
                 Example Spending
               </p>
@@ -107,40 +142,6 @@ export default function PricingCard({ tier }: PricingCardProps) {
                 ))}
               </div>
             </div>
-
-            {/* Features */}
-            <div className="mb-8 space-y-2">
-              <div className="flex items-center gap-2 text-sm text-navy/60">
-                <Check className="w-4 h-4 text-lime" />
-                <span>90-day credit rollover</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-navy/60">
-                <Check className="w-4 h-4 text-lime" />
-                <span>Access to all 6 credential tiers</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-navy/60">
-                <Check className="w-4 h-4 text-lime" />
-                <span>JSON-LD schema & EEAT badges</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-navy/60">
-                <Check className="w-4 h-4 text-lime" />
-                <span>SOC-2 compliant platform</span>
-              </div>
-            </div>
-
-            {/* CTA Button */}
-            <motion.a
-              href="/brand-dashboard"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="block w-full text-center px-8 py-4 bg-coral text-white font-semibold rounded-full hover:bg-coral/90 transition-all shadow-md hover:shadow-lg"
-            >
-              Start Today
-            </motion.a>
-
-            <p className="text-center text-xs text-navy/40 mt-4">
-              No long-term contract • Cancel anytime
-            </p>
           </div>
         </div>
       </motion.div>
