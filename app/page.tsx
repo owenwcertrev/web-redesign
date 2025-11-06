@@ -114,7 +114,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 sm:mb-8 leading-tight font-serif"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 leading-tight font-serif"
             >
               <span className="text-navy">
                 Turn Content Into
@@ -129,7 +129,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-lg sm:text-xl md:text-2xl text-black/70 mb-10 sm:mb-12 max-w-3xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg md:text-xl lg:text-2xl text-black/70 mb-10 sm:mb-12 max-w-3xl mx-auto leading-relaxed"
             >
               Human-in-the-loop expert validation that satisfies Google's E-E-A-T, protects your organic traffic, and converts skeptical consumers
             </motion.p>
@@ -141,17 +141,17 @@ export default function Home() {
               transition={{ delay: 0.8, duration: 0.6 }}
               className="max-w-4xl mx-auto mb-12 relative"
             >
-              <div className="bg-white rounded-2xl p-6 sm:p-8 md:p-10 border-2 border-navy/10 shadow-xl relative overflow-hidden">
+              <div className="bg-white rounded-2xl p-4 sm:p-6 md:p-8 lg:p-10 border-2 border-navy/10 shadow-xl relative overflow-hidden">
                 <TextureOverlay type="paper" opacity={0.2} />
                 <div className="relative z-10">
-                  <div className="flex items-center gap-2 mb-6 sm:mb-8 justify-center">
+                  <div className="flex items-center gap-2 mb-4 sm:mb-6 md:mb-8 justify-center">
                     <div className="w-2 h-2 rounded-full bg-lime animate-pulse" />
                     <span className="text-xs font-semibold uppercase tracking-wider text-navy/80">
                       Real-Time Trust Metrics
                     </span>
                   </div>
 
-                  <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                     <div className="space-y-3">
                       <ConfidenceMeter score={94} label="Expert Match Quality" showPercentage />
                     </div>

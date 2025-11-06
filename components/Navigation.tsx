@@ -142,28 +142,28 @@ export default function Navigation() {
           <div className="px-4 py-4 space-y-3">
             <Link
               href="/book-demo"
-              className="block py-2 text-black hover:text-coral transition-colors"
+              className="block py-3 text-base text-black hover:text-coral transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               Book Demo
             </Link>
             <Link
               href="/eeat-meter"
-              className="block py-2 text-black hover:text-coral transition-colors"
+              className="block py-3 text-base text-black hover:text-coral transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               E-E-A-T Meter
             </Link>
             <Link
               href="/how-it-works"
-              className="block py-2 text-black hover:text-coral transition-colors"
+              className="block py-3 text-base text-black hover:text-coral transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               How It Works
             </Link>
             <Link
               href="/pricing"
-              className="block py-2 text-black hover:text-coral transition-colors"
+              className="block py-3 text-base text-black hover:text-coral transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               Pricing

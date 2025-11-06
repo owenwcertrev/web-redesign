@@ -38,10 +38,11 @@ export default function SplitSignupButton() {
                 >
                   <Link
                     href="/brand-dashboard"
-                    className="flex items-center gap-2 px-6 py-4 bg-coral hover:bg-coral/90 text-white font-semibold text-lg rounded-l-2xl border-2 border-coral shadow-lg transition-all hover:shadow-xl whitespace-nowrap"
+                    className="flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-coral hover:bg-coral/90 text-white font-semibold text-base sm:text-lg rounded-l-2xl border-2 border-coral shadow-lg transition-all hover:shadow-xl whitespace-nowrap"
                   >
-                    <Building2 className="w-5 h-5" />
-                    Sign Up as Brand
+                    <Building2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden xs:inline">Sign Up as Brand</span>
+                    <span className="xs:hidden">Brand</span>
                   </Link>
                 </motion.div>
               </motion.div>
@@ -66,10 +67,11 @@ export default function SplitSignupButton() {
                 >
                   <Link
                     href="/expert-dashboard"
-                    className="flex items-center gap-2 px-6 py-4 bg-navy hover:bg-navy/90 text-white font-semibold text-lg rounded-r-2xl border-2 border-navy shadow-lg transition-all hover:shadow-xl whitespace-nowrap"
+                    className="flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-navy hover:bg-navy/90 text-white font-semibold text-base sm:text-lg rounded-r-2xl border-2 border-navy shadow-lg transition-all hover:shadow-xl whitespace-nowrap"
                   >
-                    <GraduationCap className="w-5 h-5" />
-                    Sign Up as Expert
+                    <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden xs:inline">Sign Up as Expert</span>
+                    <span className="xs:hidden">Expert</span>
                   </Link>
                 </motion.div>
               </motion.div>
@@ -81,7 +83,7 @@ export default function SplitSignupButton() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="px-8 py-4 bg-coral text-white font-semibold text-lg rounded-2xl border-2 border-coral shadow-lg cursor-pointer whitespace-nowrap">
+              <div className="px-6 sm:px-8 py-3 sm:py-4 bg-coral text-white font-semibold text-base sm:text-lg rounded-2xl border-2 border-coral shadow-lg cursor-pointer whitespace-nowrap">
                 Sign Up
               </div>
             </motion.div>

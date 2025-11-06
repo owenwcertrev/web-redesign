@@ -31,7 +31,7 @@ export default function TierCard({ tierNumber, tierName, credits, credentials }:
       <motion.div
         whileHover={{ scale: 1.01, y: -4 }}
         transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-        className={`relative ${style.bg} rounded-2xl p-8 border-2 ${style.accent} min-h-[480px] flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow`}
+        className={`relative ${style.bg} rounded-2xl p-6 sm:p-7 md:p-8 border-2 ${style.accent} min-h-[400px] sm:min-h-[440px] md:min-h-[480px] flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow`}
       >
         {/* Texture overlay */}
         <TextureOverlay type="paper" opacity={0.3} />
@@ -54,12 +54,12 @@ export default function TierCard({ tierNumber, tierName, credits, credentials }:
           </div>
 
           {/* Tier name - serif for warmth */}
-          <h3 className="text-3xl font-bold mb-4 leading-tight font-serif">
+          <h3 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 leading-tight font-serif">
             {tierName}
           </h3>
 
           {/* Credits display - clear and friendly */}
-          <div className="text-lg mb-6 font-semibold text-coral">
+          <div className="text-base sm:text-lg mb-4 sm:mb-6 font-semibold text-coral">
             {credits} CertCredit{credits > 1 ? 's' : ''}
           </div>
 

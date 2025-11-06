@@ -28,7 +28,7 @@ export default function FlipStatCard({
 
   return (
     <div
-      className="h-full min-h-[380px] cursor-pointer group"
+      className="h-full min-h-[300px] sm:min-h-[340px] md:min-h-[380px] cursor-pointer group"
       style={{ perspective: '1500px' }}
       onClick={() => setIsFlipped(!isFlipped)}
     >
@@ -49,16 +49,16 @@ export default function FlipStatCard({
           className="absolute inset-0 backface-hidden"
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <div className="relative h-full flex flex-col bg-white rounded-2xl p-8 border-2 border-navy/10 shadow-md group-hover:shadow-lg group-hover:border-navy/20 transition-all overflow-hidden">
+          <div className="relative h-full flex flex-col bg-white rounded-2xl p-6 sm:p-7 md:p-8 border-2 border-navy/10 shadow-md group-hover:shadow-lg group-hover:border-navy/20 transition-all overflow-hidden">
             <TextureOverlay type="paper" opacity={0.3} />
 
             {/* Click indicator */}
             <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-coral/40 group-hover:bg-coral transition-all group-hover:scale-150 relative z-10" />
 
-            <Icon className="w-12 h-12 text-coral mb-4 group-hover:scale-105 transition-transform flex-shrink-0 relative z-10" />
+            <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-coral mb-3 sm:mb-4 group-hover:scale-105 transition-transform flex-shrink-0 relative z-10" />
 
-            <div className="mb-4 flex-shrink-0 relative z-10">
-              <div className="text-5xl font-bold text-navy mb-2 font-serif">
+            <div className="mb-3 sm:mb-4 flex-shrink-0 relative z-10">
+              <div className="text-4xl sm:text-5xl font-bold text-navy mb-2 font-serif">
                 {stat}
               </div>
               <div className="text-xs font-semibold text-navy/70 uppercase tracking-wider">
@@ -80,15 +80,15 @@ export default function FlipStatCard({
             transform: 'rotateY(180deg)',
           }}
         >
-          <div className="h-full flex flex-col bg-navy rounded-2xl p-6 border-2 border-navy shadow-lg overflow-hidden relative">
+          <div className="h-full flex flex-col bg-navy rounded-2xl p-5 sm:p-6 border-2 border-navy shadow-lg overflow-hidden relative">
             <TextureOverlay type="paper" opacity={0.2} />
 
-            <div className="flex items-start justify-between mb-3 flex-shrink-0 relative z-10">
-              <Icon className="w-8 h-8 text-lime opacity-90" />
+            <div className="flex items-start justify-between mb-2.5 sm:mb-3 flex-shrink-0 relative z-10">
+              <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-lime opacity-90" />
               <div className="w-2 h-2 rounded-full bg-lime" />
             </div>
 
-            <h3 className="text-lg font-bold mb-3 flex-shrink-0 text-white font-serif relative z-10">
+            <h3 className="text-base sm:text-lg font-bold mb-2.5 sm:mb-3 flex-shrink-0 text-white font-serif relative z-10">
               {backTitle}
             </h3>
 

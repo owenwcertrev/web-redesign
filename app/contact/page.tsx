@@ -158,14 +158,14 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <div className="bg-beige rounded-16 p-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Mail className="w-6 h-6 text-navy" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-navy/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-navy" />
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1 text-black">Email</h3>
                       <a
                         href="mailto:owen@certrev.com"
-                        className="text-navy hover:underline"
+                        className="text-navy hover:underline text-sm sm:text-base"
                       >
                         owen@certrev.com
                       </a>
@@ -175,14 +175,14 @@ export default function ContactPage() {
 
                 <div className="bg-beige rounded-16 p-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Phone className="w-6 h-6 text-navy" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-navy/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-navy" />
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1 text-black">Phone</h3>
                       <a
                         href="tel:213-304-9637"
-                        className="text-navy hover:underline"
+                        className="text-navy hover:underline text-sm sm:text-base"
                       >
                         213-304-9637
                       </a>
@@ -192,12 +192,12 @@ export default function ContactPage() {
 
                 <div className="bg-beige rounded-16 p-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-6 h-6 text-navy" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-navy/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-navy" />
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1 text-black">Address</h3>
-                      <address className="not-italic text-black/70">
+                      <address className="not-italic text-black/70 text-sm sm:text-base">
                         500 Westover Dr. #33166<br />
                         Sanford, NC 27330
                       </address>

@@ -335,26 +335,26 @@ export default function PricingPage() {
           </FadeIn>
 
           <FadeIn delay={0.2}>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
               <table className="w-full bg-white rounded-2xl shadow-lg border-2 border-navy/10">
                 <thead>
                   <tr className="border-b-2 border-navy/10">
-                    <th className="p-6 text-left text-sm font-semibold text-navy/60 uppercase tracking-wide bg-beige/30">
+                    <th className="p-3 sm:p-4 md:p-6 text-left text-xs sm:text-sm font-semibold text-navy/60 uppercase tracking-wide bg-beige/30">
                       Features
                     </th>
                     {pricingTiers.map((tier) => (
-                      <th key={tier.id} className="p-6 text-center min-w-[180px]">
-                        <div className="flex flex-col items-center gap-2">
+                      <th key={tier.id} className="p-3 sm:p-4 md:p-6 text-center min-w-[140px] sm:min-w-[160px] md:min-w-[180px]">
+                        <div className="flex flex-col items-center gap-1 sm:gap-2">
                           {tier.isPopular && (
-                            <span className="inline-block bg-lime text-navy px-3 py-1 rounded-full text-xs font-bold">
-                              Most Popular
+                            <span className="inline-block bg-lime text-navy px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-bold">
+                              Popular
                             </span>
                           )}
-                          <span className="text-lg font-bold text-navy font-serif">{tier.name}</span>
-                          <span className="text-2xl font-bold text-coral font-serif">
+                          <span className="text-sm sm:text-base md:text-lg font-bold text-navy font-serif">{tier.name}</span>
+                          <span className="text-lg sm:text-xl md:text-2xl font-bold text-coral font-serif">
                             ${tier.price.toLocaleString()}
                           </span>
-                          <span className="text-xs text-navy/50">/month</span>
+                          <span className="text-xs text-navy/50">/mo</span>
                         </div>
                       </th>
                     ))}
@@ -362,25 +362,25 @@ export default function PricingPage() {
                 </thead>
                 <tbody>
                   <tr className="border-b border-navy/10">
-                    <td className="p-6 text-sm font-medium text-navy">Credits Included</td>
+                    <td className="p-3 sm:p-4 md:p-6 text-xs sm:text-sm font-medium text-navy">Credits Included</td>
                     {pricingTiers.map((tier) => (
-                      <td key={tier.id} className="p-6 text-center text-sm text-navy/70">
+                      <td key={tier.id} className="p-3 sm:p-4 md:p-6 text-center text-xs sm:text-sm text-navy/70">
                         {tier.credits} credits
                       </td>
                     ))}
                   </tr>
                   <tr className="border-b border-navy/10 bg-beige/20">
-                    <td className="p-6 text-sm font-medium text-navy">Price Per Credit</td>
+                    <td className="p-3 sm:p-4 md:p-6 text-xs sm:text-sm font-medium text-navy">Price Per Credit</td>
                     {pricingTiers.map((tier) => (
-                      <td key={tier.id} className="p-6 text-center text-sm text-navy/70">
+                      <td key={tier.id} className="p-3 sm:p-4 md:p-6 text-center text-xs sm:text-sm text-navy/70">
                         ${tier.pricePerCredit}/credit
                       </td>
                     ))}
                   </tr>
                   <tr className="border-b border-navy/10">
-                    <td className="p-6 text-sm font-medium text-navy">Ideal Monthly Posts</td>
+                    <td className="p-3 sm:p-4 md:p-6 text-xs sm:text-sm font-medium text-navy">Ideal Monthly Posts</td>
                     {pricingTiers.map((tier) => (
-                      <td key={tier.id} className="p-6 text-center text-sm text-navy/70">
+                      <td key={tier.id} className="p-3 sm:p-4 md:p-6 text-center text-xs sm:text-sm text-navy/70">
                         {tier.id === 'mini' && '2-3 posts'}
                         {tier.id === 'starter' && '4-6 posts'}
                         {tier.id === 'core-seo' && '7-12 posts'}
@@ -391,34 +391,34 @@ export default function PricingPage() {
                     ))}
                   </tr>
                   <tr className="border-b border-navy/10 bg-beige/20">
-                    <td className="p-6 text-sm font-medium text-navy">90-Day Credit Rollover</td>
+                    <td className="p-3 sm:p-4 md:p-6 text-xs sm:text-sm font-medium text-navy">90-Day Credit Rollover</td>
                     {pricingTiers.map((tier) => (
-                      <td key={tier.id} className="p-6 text-center">
-                        <span className="text-navy text-lg">✓</span>
+                      <td key={tier.id} className="p-3 sm:p-4 md:p-6 text-center">
+                        <span className="text-navy text-base sm:text-lg">✓</span>
                       </td>
                     ))}
                   </tr>
                   <tr className="border-b border-navy/10">
-                    <td className="p-6 text-sm font-medium text-navy">All 6 Credential Tiers</td>
+                    <td className="p-3 sm:p-4 md:p-6 text-xs sm:text-sm font-medium text-navy">All 6 Credential Tiers</td>
                     {pricingTiers.map((tier) => (
-                      <td key={tier.id} className="p-6 text-center">
-                        <span className="text-navy text-lg">✓</span>
+                      <td key={tier.id} className="p-3 sm:p-4 md:p-6 text-center">
+                        <span className="text-navy text-base sm:text-lg">✓</span>
                       </td>
                     ))}
                   </tr>
                   <tr className="border-b border-navy/10 bg-beige/20">
-                    <td className="p-6 text-sm font-medium text-navy">JSON-LD Schema & EEAT Badges</td>
+                    <td className="p-3 sm:p-4 md:p-6 text-xs sm:text-sm font-medium text-navy">JSON-LD Schema & EEAT Badges</td>
                     {pricingTiers.map((tier) => (
-                      <td key={tier.id} className="p-6 text-center">
-                        <span className="text-navy text-lg">✓</span>
+                      <td key={tier.id} className="p-3 sm:p-4 md:p-6 text-center">
+                        <span className="text-navy text-base sm:text-lg">✓</span>
                       </td>
                     ))}
                   </tr>
                   <tr>
-                    <td className="p-6 text-sm font-medium text-navy">SOC-2 Compliant Platform</td>
+                    <td className="p-3 sm:p-4 md:p-6 text-xs sm:text-sm font-medium text-navy">SOC-2 Compliant Platform</td>
                     {pricingTiers.map((tier) => (
-                      <td key={tier.id} className="p-6 text-center">
-                        <span className="text-navy text-lg">✓</span>
+                      <td key={tier.id} className="p-3 sm:p-4 md:p-6 text-center">
+                        <span className="text-navy text-base sm:text-lg">✓</span>
                       </td>
                     ))}
                   </tr>

@@ -83,8 +83,8 @@ export default function ExpertCarousel({
   // Calculate display index for dots
   const displayIndex = ((currentIndex - items.length) % items.length + items.length) % items.length
 
-  // Calculate card width and gap
-  const gapRem = 1.5 // 24px gap
+  // Calculate card width and gap (smaller gap on mobile)
+  const gapRem = typeof window !== 'undefined' && window.innerWidth < 640 ? 1.0 : 1.5 // 16px mobile, 24px desktop
   const translateX = -(currentIndex * (100 / cardsPerView)) - (currentIndex * gapRem)
 
   return (
@@ -100,7 +100,7 @@ export default function ExpertCarousel({
       {/* Carousel Container */}
       <div className="overflow-hidden" ref={constraintsRef}>
         <motion.div
-          className="flex gap-6"
+          className="flex gap-4 sm:gap-6"
           animate={{
             x: `calc(${translateX}% - ${translateX / 100 * gapRem}rem)`
           }}

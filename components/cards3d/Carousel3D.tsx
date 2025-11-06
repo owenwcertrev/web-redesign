@@ -105,7 +105,7 @@ export default function Carousel3D({ items, className = '' }: Carousel3DProps) {
                 onClick={() => !isActive && setCurrentIndex(index)}
               >
                 <div
-                  className={`w-[400px] ${
+                  className={`w-full max-w-[400px] ${
                     isActive ? 'cursor-default' : 'cursor-pointer hover:scale-105'
                   } transition-transform`}
                 >

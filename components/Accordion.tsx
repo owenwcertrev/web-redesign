@@ -33,15 +33,15 @@ export default function Accordion({ items, category }: AccordionProps) {
         >
           <button
             onClick={() => toggleItem(index)}
-            className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-beige/30 transition-colors"
+            className="w-full px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between text-left hover:bg-beige/30 transition-colors"
           >
-            <span className="font-semibold text-navy pr-4">{item.question}</span>
+            <span className="font-semibold text-sm sm:text-base text-navy pr-3 sm:pr-4">{item.question}</span>
             <motion.div
               animate={{ rotate: openIndex === index ? 180 : 0 }}
               transition={{ duration: 0.2 }}
               className="flex-shrink-0"
             >
-              <ChevronDown className="w-5 h-5 text-coral" />
+              <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-coral" />
             </motion.div>
           </button>
           <AnimatePresence>
@@ -53,7 +53,7 @@ export default function Accordion({ items, category }: AccordionProps) {
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 className="overflow-hidden"
               >
-                <div className="px-6 pb-4 pt-2 text-black/70 leading-relaxed">
+                <div className="px-4 sm:px-6 pb-3 sm:pb-4 pt-2 text-sm sm:text-base text-black/70 leading-relaxed">
                   {item.answer}
                 </div>
               </motion.div>

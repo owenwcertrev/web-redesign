@@ -61,24 +61,24 @@ export default function PricingCard({ tier }: PricingCardProps) {
           />
 
           {/* Two-column layout on desktop, single column on mobile */}
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12">
             {/* Left Column: Plan details */}
             <div>
               {/* Tier Name */}
-              <h3 className="text-3xl md:text-4xl font-bold text-navy font-serif mb-2">
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-navy font-serif mb-2">
                 {tier.name}
               </h3>
 
               {/* Description */}
-              <p className="text-navy/60 mb-6">{tier.description}</p>
+              <p className="text-sm sm:text-base text-navy/60 mb-4 sm:mb-6">{tier.description}</p>
 
               {/* Price */}
-              <div className="mb-8">
+              <div className="mb-6 sm:mb-8">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl md:text-6xl font-bold text-coral font-serif">
+                  <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-coral font-serif">
                     ${tier.price.toLocaleString()}
                   </span>
-                  <span className="text-xl text-navy/60">/month</span>
+                  <span className="text-lg sm:text-xl text-navy/60">/month</span>
                 </div>
                 <p className="text-sm text-navy/50 mt-2">
                   {tier.credits} credits • ${tier.pricePerCredit}/credit
@@ -101,7 +101,7 @@ export default function PricingCard({ tier }: PricingCardProps) {
             </div>
 
             {/* Right Column: Example spending scenarios & Features */}
-            <div className="lg:border-l lg:border-navy/10 lg:pl-12">
+            <div className="md:border-l md:border-navy/10 md:pl-8 lg:pl-12">
               <p className="text-sm font-semibold text-navy/60 uppercase tracking-wide mb-4">
                 Example Spending
               </p>
