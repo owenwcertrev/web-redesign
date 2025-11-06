@@ -56,28 +56,28 @@ export default function PricingSlider({ value, onChange, min = 2, max = 56 }: Pr
               #E8E4DB ${percentage}%,
               #E8E4DB 100%
             );
-            border-radius: 1rem;
-            height: 1rem;
-            border: 2px solid rgba(10, 27, 63, 0.1);
+            border-radius: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid rgba(10, 27, 63, 0.15);
           }
 
           input[type="range"]::-moz-range-track {
             background: #E8E4DB;
-            border-radius: 1rem;
-            height: 1rem;
-            border: 2px solid rgba(10, 27, 63, 0.1);
+            border-radius: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid rgba(10, 27, 63, 0.15);
           }
 
           input[type="range"]::-moz-range-progress {
             background: #D4E157;
-            border-radius: 1rem;
-            height: 1rem;
+            border-radius: 1.25rem;
+            height: 1.25rem;
           }
 
           input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            margin-top: -6px;
+            margin-top: -7px;
             background: #0A1B3F;
             height: 2rem;
             width: 2rem;
@@ -120,13 +120,6 @@ export default function PricingSlider({ value, onChange, min = 2, max = 56 }: Pr
           onChange={(e) => onChange(Number(e.target.value))}
           className="w-full"
         />
-      </div>
-
-      {/* Frequency indicators */}
-      <div className="flex justify-between text-xs text-navy/40 mt-2 px-2">
-        <span>1-2 posts/week</span>
-        <span>3-5 posts/week</span>
-        <span>6-12 posts/week</span>
       </div>
     </div>
   )
