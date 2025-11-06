@@ -483,7 +483,7 @@ export default function PricingPage() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-2xl mx-auto">
                   <a
-                    href="/brand-dashboard"
+                    href="https://dashboard.certrev.com/auth/login?tab=brand"
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-coral text-white font-semibold rounded-full hover:bg-coral/90 transition-all shadow-md hover:shadow-lg"
                   >
                     Start Today

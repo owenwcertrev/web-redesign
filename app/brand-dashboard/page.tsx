@@ -105,13 +105,13 @@ export default function BrandDashboardPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild className="!bg-coral hover:!bg-coral/90 !text-white !border-coral">
-                <Link href="/brand-dashboard">
+                <Link href="https://dashboard.certrev.com/auth/login?tab=brand">
                   Sign Up as Brand
                   <Building2 className="w-5 h-5" />
                 </Link>
               </Button>
               <Button size="lg" asChild className="!bg-navy hover:!bg-navy/90 !text-white !border-navy">
-                <Link href="/expert-dashboard">
+                <Link href="https://dashboard.certrev.com/auth/login?tab=expert">
                   Sign Up as Expert
                   <GraduationCap className="w-5 h-5" />
                 </Link>
