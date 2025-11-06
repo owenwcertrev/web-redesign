@@ -1,26 +1,40 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useState, useMemo, useCallback } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { usePrefersReducedMotion } from '@/hooks/usePerformance'
 
 interface Carousel3DProps {
   items: ReactNode[]
   className?: string
 }
 
+// Position calculation results
+interface CardPosition {
+  x: number
+  z: number
+  rotateY: number
+  scale: number
+  opacity: number
+  zIndex: number
+  visible: boolean // NEW: Only render visible cards
+}
+
 export default function Carousel3D({ items, className = '' }: Carousel3DProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const prefersReducedMotion = usePrefersReducedMotion()
 
-  const navigate = (direction: 'prev' | 'next') => {
+  const navigate = useCallback((direction: 'prev' | 'next') => {
     if (direction === 'prev') {
       setCurrentIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1))
     } else {
       setCurrentIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1))
     }
-  }
+  }, [items.length])
 
-  const getCardPosition = (index: number) => {
+  // Memoize position calculations - only recalculate when currentIndex changes
+  const getCardPosition = useCallback((index: number): CardPosition => {
     const diff = index - currentIndex
     const position = ((diff + items.length) % items.length)
 
@@ -33,6 +47,7 @@ export default function Carousel3D({ items, className = '' }: Carousel3DProps) {
         scale: 1,
         opacity: 1,
         zIndex: 30,
+        visible: true,
       }
     } else if (position === 1 || position === items.length - 1) {
       // Adjacent cards
@@ -44,6 +59,7 @@ export default function Carousel3D({ items, className = '' }: Carousel3DProps) {
         scale: 0.85,
         opacity: 0.6,
         zIndex: 20,
+        visible: true,
       }
     } else if (position === 2 || position === items.length - 2) {
       // Far cards
@@ -55,9 +71,10 @@ export default function Carousel3D({ items, className = '' }: Carousel3DProps) {
         scale: 0.7,
         opacity: 0.3,
         zIndex: 10,
+        visible: true,
       }
     } else {
-      // Hidden cards
+      // Hidden cards - DON'T RENDER
       return {
         x: 0,
         z: -800,
@@ -65,9 +82,43 @@ export default function Carousel3D({ items, className = '' }: Carousel3DProps) {
         scale: 0.5,
         opacity: 0,
         zIndex: 0,
+        visible: false,
       }
     }
-  }
+  }, [currentIndex, items.length])
+
+  // Only render visible cards (5 instead of all 6)
+  const visibleCards = useMemo(() => {
+    return items
+      .map((item, index) => ({
+        item,
+        index,
+        position: getCardPosition(index),
+      }))
+      .filter(card => card.position.visible)
+  }, [items, getCardPosition])
+
+  // Optimized transitions - active card gets spring, others get faster easing
+  const getTransition = useCallback((isActive: boolean) => {
+    if (prefersReducedMotion) {
+      return { duration: 0.1 }
+    }
+
+    if (isActive) {
+      // Active card: smooth spring animation
+      return {
+        type: 'spring' as const,
+        stiffness: 200, // Reduced from 260
+        damping: 30,
+      }
+    } else {
+      // Inactive cards: faster duration-based animation
+      return {
+        duration: 0.4,
+        ease: [0.4, 0, 0.2, 1], // easeInOut
+      }
+    }
+  }, [prefersReducedMotion])
 
   return (
     <div className={`relative ${className}`}>
@@ -77,17 +128,18 @@ export default function Carousel3D({ items, className = '' }: Carousel3DProps) {
         style={{ perspective: '2000px', perspectiveOrigin: 'center' }}
       >
         <AnimatePresence initial={false}>
-          {items.map((item, index) => {
-            const position = getCardPosition(index)
+          {visibleCards.map(({ item, index, position }) => {
             const isActive = index === currentIndex
 
             return (
               <motion.div
-                key={index}
+                key={`carousel-card-${index}`}
                 className="absolute"
                 style={{
                   transformStyle: 'preserve-3d',
                   zIndex: position.zIndex,
+                  // Add will-change hint ONLY to active card for GPU acceleration
+                  willChange: isActive ? 'transform, opacity' : 'auto',
                 }}
                 initial={false}
                 animate={{
@@ -97,11 +149,7 @@ export default function Carousel3D({ items, className = '' }: Carousel3DProps) {
                   scale: position.scale,
                   opacity: position.opacity,
                 }}
-                transition={{
-                  type: 'spring',
-                  stiffness: 260,
-                  damping: 30,
-                }}
+                transition={getTransition(isActive)}
                 onClick={() => !isActive && setCurrentIndex(index)}
               >
                 <div
@@ -112,7 +160,7 @@ export default function Carousel3D({ items, className = '' }: Carousel3DProps) {
                   {item}
                 </div>
 
-                {/* Shadow */}
+                {/* Shadow - simplified calculation for performance */}
                 <div
                   className="absolute inset-0 bg-black/20 rounded-2xl blur-2xl -z-10"
                   style={{
