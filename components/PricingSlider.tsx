@@ -38,12 +38,12 @@ export default function PricingSlider({ value, onChange, min = 2, max = 56 }: Pr
       </div>
 
       {/* Slider */}
-      <div className="relative py-8">
+      <div className="relative py-6">
         {/* Visual track background */}
-        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-5 bg-beige rounded-full border-2 border-navy shadow-sm">
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-2 bg-beige/60 rounded-full border border-navy/20">
           {/* Filled portion */}
           <div
-            className="absolute inset-y-0 left-0 bg-lime rounded-full transition-all duration-200"
+            className="absolute inset-y-0 left-0 bg-lime/80 rounded-full transition-all duration-200"
             style={{ width: `${percentage}%` }}
           />
         </div>
@@ -63,34 +63,34 @@ export default function PricingSlider({ value, onChange, min = 2, max = 56 }: Pr
 
             .pricing-slider::-webkit-slider-track {
               background: transparent;
-              height: 1.25rem;
+              height: 0.5rem;
             }
 
             .pricing-slider::-moz-range-track {
               background: transparent;
-              height: 1.25rem;
+              height: 0.5rem;
             }
 
             .pricing-slider::-webkit-slider-thumb {
               -webkit-appearance: none;
               appearance: none;
               background: #0A1B3F;
-              height: 2.5rem;
-              width: 2.5rem;
+              height: 1.5rem;
+              width: 1.5rem;
               border-radius: 50%;
-              border: 4px solid white;
-              box-shadow: 0 2px 8px rgba(10, 27, 63, 0.3);
+              border: 3px solid white;
+              box-shadow: 0 2px 6px rgba(10, 27, 63, 0.2);
               transition: all 0.2s ease;
               cursor: grab;
             }
 
             .pricing-slider::-moz-range-thumb {
               background: #0A1B3F;
-              height: 2.5rem;
-              width: 2.5rem;
+              height: 1.5rem;
+              width: 1.5rem;
               border-radius: 50%;
-              border: 4px solid white;
-              box-shadow: 0 2px 8px rgba(10, 27, 63, 0.3);
+              border: 3px solid white;
+              box-shadow: 0 2px 6px rgba(10, 27, 63, 0.2);
               transition: all 0.2s ease;
               cursor: grab;
             }
@@ -104,13 +104,13 @@ export default function PricingSlider({ value, onChange, min = 2, max = 56 }: Pr
             }
 
             .pricing-slider:hover::-webkit-slider-thumb {
-              transform: scale(1.1);
-              box-shadow: 0 4px 12px rgba(10, 27, 63, 0.4);
+              transform: scale(1.15);
+              box-shadow: 0 3px 10px rgba(10, 27, 63, 0.3);
             }
 
             .pricing-slider:hover::-moz-range-thumb {
-              transform: scale(1.1);
-              box-shadow: 0 4px 12px rgba(10, 27, 63, 0.4);
+              transform: scale(1.15);
+              box-shadow: 0 3px 10px rgba(10, 27, 63, 0.3);
             }
 
             .pricing-slider:focus {
