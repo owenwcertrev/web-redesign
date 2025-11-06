@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -24,34 +27,27 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // For MVP, just log the contact form submission
-    console.log('Contact form submission:', { name, email, company, message })
-
-    // TODO: Integrate with Airtable or send email notification
-    // Example with sending email via SendGrid:
-    // const sgMail = require('@sendgrid/mail')
-    // sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-    // await sgMail.send({
-    //   to: 'owen@certrev.com',
-    //   from: 'noreply@certrev.com',
-    //   subject: `Contact Form: ${name}`,
-    //   text: `Name: ${name}\nEmail: ${email}\nCompany: ${company}\nMessage: ${message}`,
-    // })
-
-    // Example with Airtable:
-    // const Airtable = require('airtable')
-    // const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID)
-    // await base('Contact Form').create([
-    //   {
-    //     fields: {
-    //       Name: name,
-    //       Email: email,
-    //       Company: company || '',
-    //       Message: message,
-    //       'Submitted At': new Date().toISOString(),
-    //     },
-    //   },
-    // ])
+    // Send email notification via Resend
+    try {
+      await resend.emails.send({
+        from: 'CertREV Contact Form <systems@certrev.com>',
+        to: 'owen@certrev.com',
+        subject: `Contact Form Submission from ${name}`,
+        html: `
+          <h2>New Contact Form Submission</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          ${company ? `<p><strong>Company:</strong> ${company}</p>` : ''}
+          <p><strong>Message:</strong></p>
+          <p>${message.replace(/\n/g, '<br>')}</p>
+          <hr>
+          <p><small>Reply to: ${email}</small></p>
+        `,
+      })
+    } catch (emailError) {
+      console.error('Error sending email:', emailError)
+      // Continue even if email fails - don't block the user
+    }
 
     return NextResponse.json({
       success: true,

@@ -38,8 +38,8 @@ const confidenceConfig = {
   },
   unverified: {
     color: 'text-navy',
-    bg: 'bg-charcoal/5',
-    border: 'border-charcoal/20',
+    bg: 'bg-black/5',
+    border: 'border-black/20',
     glow: '',
     icon: Info,
   },
@@ -89,7 +89,7 @@ export default function CitationMarker({
             transition={{ duration: 0.15 }}
             className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none"
           >
-            <div className="bg-white/95 backdrop-blur-xl border border-charcoal/10 rounded-xl shadow-2xl p-4 min-w-[280px] max-w-[400px]">
+            <div className="bg-white/95 backdrop-blur-xl border border-black/10 rounded-xl shadow-2xl p-4 min-w-[280px] max-w-[400px]">
               {/* Confidence Indicator */}
               <div className="flex items-center gap-2 mb-2">
                 <Icon className={`w-4 h-4 ${config.color}`} />
@@ -100,20 +100,20 @@ export default function CitationMarker({
 
               {/* Source */}
               {source && (
-                <p className="text-xs text-charcoal/90 font-medium mb-1">
+                <p className="text-xs text-black/90 font-medium mb-1">
                   {source}
                 </p>
               )}
 
               {/* Preview */}
               {preview && (
-                <p className="text-xs text-charcoal/70 leading-relaxed">
+                <p className="text-xs text-black/70 leading-relaxed">
                   {preview}
                 </p>
               )}
 
               {/* Arrow */}
-              <div className={`absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] w-2 h-2 rotate-45 bg-white/95 border-r border-b border-charcoal/10`} />
+              <div className={`absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] w-2 h-2 rotate-45 bg-white/95 border-r border-b border-black/10`} />
             </div>
           </motion.div>
         )}

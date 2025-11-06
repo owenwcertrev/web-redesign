@@ -45,7 +45,7 @@ export default function ConfidenceMeter({
     if (score >= 80) return { from: '#77AB95', to: '#5B8DEF', text: 'text-lime' }
     if (score >= 60) return { from: '#5B8DEF', to: '#A7C4BC', text: 'text-navy' }
     if (score >= 40) return { from: '#F18239', to: '#5B8DEF', text: 'text-coral' }
-    return { from: '#9CA3AF', to: '#6B7280', text: 'text-charcoal/50' }
+    return { from: '#9CA3AF', to: '#6B7280', text: 'text-black/50' }
   }
 
   const colors = getColor(score)
@@ -54,7 +54,7 @@ export default function ConfidenceMeter({
     <div className={`space-y-2 ${className}`}>
       {/* Label */}
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-charcoal/70">{label}</span>
+        <span className="text-sm font-medium text-black/70">{label}</span>
         {showPercentage && (
           <motion.span
             className="text-sm font-mono font-bold text-navy"
@@ -69,7 +69,7 @@ export default function ConfidenceMeter({
       </div>
 
       {/* Meter Container */}
-      <div className="relative h-2 bg-charcoal/5 rounded-full overflow-hidden backdrop-blur-sm border border-charcoal/5">
+      <div className="relative h-2 bg-black/5 rounded-full overflow-hidden backdrop-blur-sm border border-black/5">
         {/* Shimmer Background */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"
           style={{
@@ -95,7 +95,7 @@ export default function ConfidenceMeter({
       </div>
 
       {/* Precision Indicator (monospace technical detail) */}
-      <div className="flex items-center justify-between text-[10px] font-mono text-charcoal/30">
+      <div className="flex items-center justify-between text-[10px] font-mono text-black/30">
         <span>0</span>
         <span className="text-[9px]">PRECISION SCORE</span>
         <span>100</span>

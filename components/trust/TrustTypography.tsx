@@ -16,21 +16,21 @@ interface TrustTypographyProps {
 const verificationStyles = {
   verified: {
     weight: 'font-semibold',
-    color: 'text-charcoal',
+    color: 'text-black',
     glow: 'shadow-[0_0_20px_rgba(119,171,149,0.15)]',
     opacity: 'opacity-100',
     scale: 1,
   },
   pending: {
     weight: 'font-medium',
-    color: 'text-charcoal/70',
+    color: 'text-black/70',
     glow: '',
     opacity: 'opacity-90',
     scale: 0.995,
   },
   unverified: {
     weight: 'font-normal',
-    color: 'text-charcoal/50',
+    color: 'text-black/50',
     glow: '',
     opacity: 'opacity-70',
     scale: 0.99,

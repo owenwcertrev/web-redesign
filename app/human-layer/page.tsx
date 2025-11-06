@@ -124,10 +124,10 @@ export default function HumanLayerPage() {
         <div className="max-w-6xl mx-auto">
           <FadeIn>
             <div className="text-center mb-12">
-              <div className="inline-block mb-4 px-6 py-2 bg-cream rounded-full border border-navy/20">
+              <div className="inline-block mb-4 px-6 py-2 bg-beige rounded-full border border-navy/20">
                 <span className="text-sm font-medium text-navy">FEATURED ARTICLE</span>
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold text-charcoal">
+              <h2 className="text-4xl md:text-5xl font-bold text-black">
                 Latest Insights
               </h2>
             </div>
@@ -135,7 +135,7 @@ export default function HumanLayerPage() {
 
           <TiltCard intensity={0.6} glowColor="rgba(119, 171, 149, 0.2)">
             <Link href={`/human-layer/${articles[0].id}`} className="block">
-              <div className="bg-white rounded-3xl overflow-hidden shadow-2xl border border-charcoal/10">
+              <div className="bg-white rounded-3xl overflow-hidden shadow-2xl border border-black/10">
                 <div className="grid md:grid-cols-5">
                   <div className={`md:col-span-2 h-64 md:h-auto bg-gradient-to-br ${articles[0].gradient} flex items-center justify-center`}>
                     {(() => {
@@ -146,21 +146,21 @@ export default function HumanLayerPage() {
                   <div className="md:col-span-3 p-10">
                     <div className="flex items-center gap-2 mb-4">
                       <span className="text-sm text-navy font-medium uppercase tracking-wide">{articles[0].category}</span>
-                      <span className="text-charcoal/30">•</span>
-                      <div className="flex items-center gap-1 text-sm text-charcoal/60">
+                      <span className="text-black/30">•</span>
+                      <div className="flex items-center gap-1 text-sm text-black/60">
                         <Calendar className="w-3 h-3" />
                         {articles[0].date}
                       </div>
-                      <span className="text-charcoal/30">•</span>
-                      <div className="flex items-center gap-1 text-sm text-charcoal/60">
+                      <span className="text-black/30">•</span>
+                      <div className="flex items-center gap-1 text-sm text-black/60">
                         <Clock className="w-3 h-3" />
                         {articles[0].readTime}
                       </div>
                     </div>
-                    <h3 className="text-3xl md:text-4xl font-bold mb-4 text-charcoal group-hover:text-navy transition-colors">
+                    <h3 className="text-3xl md:text-4xl font-bold mb-4 text-black group-hover:text-navy transition-colors">
                       {articles[0].title}
                     </h3>
-                    <p className="text-charcoal/70 mb-6 leading-relaxed text-lg">
+                    <p className="text-black/70 mb-6 leading-relaxed text-lg">
                       {articles[0].excerpt}
                     </p>
                     <div className="inline-flex items-center gap-2 text-navy font-medium group-hover:gap-4 transition-all">
@@ -175,14 +175,14 @@ export default function HumanLayerPage() {
       </section>
 
       {/* Article Grid - Tilt Cards */}
-      <section className="py-20 px-4 bg-gradient-to-b from-white to-cream">
+      <section className="py-20 px-4 bg-gradient-to-b from-white to-beige">
         <div className="max-w-7xl mx-auto">
           <FadeIn>
             <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-charcoal">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-black">
                 Recent Articles
               </h2>
-              <p className="text-xl text-charcoal/70">
+              <p className="text-xl text-black/70">
                 Expert insights on trust, AI, and content strategy
               </p>
             </div>
@@ -199,7 +199,7 @@ export default function HumanLayerPage() {
               >
                 <TiltCard intensity={0.7} glowColor={`rgba(${index % 2 === 0 ? '119, 171, 149' : '91, 141, 239'}, 0.2)`}>
                   <Link href={`/human-layer/${article.id}`} className="block group">
-                    <div className="bg-white rounded-2xl overflow-hidden shadow-xl border border-charcoal/10 h-full">
+                    <div className="bg-white rounded-2xl overflow-hidden shadow-xl border border-black/10 h-full">
                       <div className={`h-48 bg-gradient-to-br ${article.gradient} flex items-center justify-center relative overflow-hidden`}>
                         {(() => {
                           const Icon = article.icon
@@ -210,19 +210,19 @@ export default function HumanLayerPage() {
                       <div className="p-6">
                         <div className="flex items-center gap-2 mb-3 text-xs">
                           <span className="text-navy font-medium uppercase tracking-wide">{article.category}</span>
-                          <span className="text-charcoal/30">•</span>
-                          <div className="flex items-center gap-1 text-charcoal/60">
+                          <span className="text-black/30">•</span>
+                          <div className="flex items-center gap-1 text-black/60">
                             <Clock className="w-3 h-3" />
                             {article.readTime}
                           </div>
                         </div>
-                        <h3 className="text-xl font-bold mb-3 text-charcoal group-hover:text-navy transition-colors">
+                        <h3 className="text-xl font-bold mb-3 text-black group-hover:text-navy transition-colors">
                           {article.title}
                         </h3>
-                        <p className="text-charcoal/70 mb-4 text-sm leading-relaxed line-clamp-3">
+                        <p className="text-black/70 mb-4 text-sm leading-relaxed line-clamp-3">
                           {article.excerpt}
                         </p>
-                        <div className="flex items-center gap-1 text-sm text-charcoal/60 mb-4">
+                        <div className="flex items-center gap-1 text-sm text-black/60 mb-4">
                           <Calendar className="w-3 h-3" />
                           {article.date}
                         </div>
@@ -243,11 +243,11 @@ export default function HumanLayerPage() {
       <section className="py-32 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <FadeIn>
-            <div className="bg-gradient-to-br from-lime-light to-cream rounded-3xl p-12 md:p-16 text-center shadow-2xl border border-lime/20">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-charcoal">
+            <div className="bg-gradient-to-br from-lime-light to-beige rounded-3xl p-12 md:p-16 text-center shadow-2xl border border-lime/20">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">
                 Stay Informed
               </h2>
-              <p className="text-lg md:text-xl text-charcoal/70 mb-10 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-lg md:text-xl text-black/70 mb-10 max-w-2xl mx-auto leading-relaxed">
                 Get insights on trust, expertise, and content strategy delivered to your inbox. No spam, just valuable insights for brands navigating the AI age.
               </p>
               <NewsletterSignup />

@@ -46,12 +46,12 @@ export default function ContactPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-cream py-20 px-4">
+      <section className="bg-beige py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-semibold mb-6 text-charcoal leading-tight">
+          <h1 className="text-4xl md:text-5xl font-semibold mb-6 text-black leading-tight">
             Get in Touch
           </h1>
-          <p className="text-xl text-charcoal/80 max-w-2xl mx-auto">
+          <p className="text-xl text-black/80 max-w-2xl mx-auto">
             Have questions about CertREV? We're here to help you build trust infrastructure for your brand.
           </p>
         </div>
@@ -63,7 +63,7 @@ export default function ContactPage() {
           <div className="grid md:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div>
-              <h2 className="text-2xl font-semibold mb-6 text-charcoal">
+              <h2 className="text-2xl font-semibold mb-6 text-black">
                 Send Us a Message
               </h2>
 
@@ -77,7 +77,7 @@ export default function ContactPage() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-charcoal mb-2">
+                    <label htmlFor="name" className="block text-sm font-medium text-black mb-2">
                       Name *
                     </label>
                     <input
@@ -92,7 +92,7 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-charcoal mb-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-black mb-2">
                       Email *
                     </label>
                     <input
@@ -107,7 +107,7 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="company" className="block text-sm font-medium text-charcoal mb-2">
+                    <label htmlFor="company" className="block text-sm font-medium text-black mb-2">
                       Company (optional)
                     </label>
                     <input
@@ -121,7 +121,7 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-charcoal mb-2">
+                    <label htmlFor="message" className="block text-sm font-medium text-black mb-2">
                       Message *
                     </label>
                     <textarea
@@ -151,18 +151,18 @@ export default function ContactPage() {
 
             {/* Contact Info */}
             <div>
-              <h2 className="text-2xl font-semibold mb-6 text-charcoal">
+              <h2 className="text-2xl font-semibold mb-6 text-black">
                 Contact Information
               </h2>
 
               <div className="space-y-6">
-                <div className="bg-cream rounded-16 p-6">
+                <div className="bg-beige rounded-16 p-6">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center flex-shrink-0">
                       <Mail className="w-6 h-6 text-navy" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1 text-charcoal">Email</h3>
+                      <h3 className="font-semibold mb-1 text-black">Email</h3>
                       <a
                         href="mailto:owen@certrev.com"
                         className="text-navy hover:underline"
@@ -173,13 +173,13 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="bg-cream rounded-16 p-6">
+                <div className="bg-beige rounded-16 p-6">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center flex-shrink-0">
                       <Phone className="w-6 h-6 text-navy" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1 text-charcoal">Phone</h3>
+                      <h3 className="font-semibold mb-1 text-black">Phone</h3>
                       <a
                         href="tel:213-304-9637"
                         className="text-navy hover:underline"
@@ -190,14 +190,14 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="bg-cream rounded-16 p-6">
+                <div className="bg-beige rounded-16 p-6">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center flex-shrink-0">
                       <MapPin className="w-6 h-6 text-navy" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1 text-charcoal">Address</h3>
-                      <address className="not-italic text-charcoal/70">
+                      <h3 className="font-semibold mb-1 text-black">Address</h3>
+                      <address className="not-italic text-black/70">
                         500 Westover Dr. #33166<br />
                         Sanford, NC 27330
                       </address>

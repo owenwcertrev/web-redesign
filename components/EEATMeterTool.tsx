@@ -70,17 +70,17 @@ export default function EEATMeterTool() {
     <div className="w-full">
       {/* Tool Interface */}
       <div className="bg-white rounded-16 p-8 shadow-base mb-8">
-        <h2 className="text-2xl font-semibold mb-3 text-charcoal text-center">
+        <h2 className="text-2xl font-semibold mb-3 text-black text-center">
           Is your brand content unshakably credible, authoritative, & discoverable?
         </h2>
-        <p className="text-charcoal/70 text-center mb-8">
+        <p className="text-black/70 text-center mb-8">
           Analyze any website's E-E-A-T score for free
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* URL Input */}
           <div className="relative">
-            <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal/40" />
+            <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black/40" />
             <input
               type="url"
               value={url}
@@ -102,7 +102,7 @@ export default function EEATMeterTool() {
             </button>
           ) : (
             <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal/40" />
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black/40" />
               <input
                 type="email"
                 value={email}
@@ -125,7 +125,7 @@ export default function EEATMeterTool() {
           </div>
         )}
 
-        <p className="text-xs text-charcoal/50 text-center mt-4">
+        <p className="text-xs text-black/50 text-center mt-4">
           Your data is secure. We never share your information.
         </p>
       </div>
@@ -135,7 +135,7 @@ export default function EEATMeterTool() {
         <div className="space-y-8 animate-in fade-in duration-500">
           {/* E-E-A-T Score Visualization */}
           <div className="bg-white rounded-16 p-8 shadow-base">
-            <h3 className="text-2xl font-semibold mb-8 text-center text-charcoal">
+            <h3 className="text-2xl font-semibold mb-8 text-center text-black">
               Your E-E-A-T Score
             </h3>
             <div className="flex justify-center mb-8">
@@ -144,39 +144,39 @@ export default function EEATMeterTool() {
 
             {/* Breakdown */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-cream rounded-12">
+              <div className="text-center p-4 bg-beige rounded-12">
                 <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.experience}</div>
-                <div className="text-sm text-charcoal/70">Experience</div>
-                <div className="text-xs text-charcoal/50">out of 25</div>
+                <div className="text-sm text-black/70">Experience</div>
+                <div className="text-xs text-black/50">out of 25</div>
               </div>
-              <div className="text-center p-4 bg-cream rounded-12">
+              <div className="text-center p-4 bg-beige rounded-12">
                 <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.expertise}</div>
-                <div className="text-sm text-charcoal/70">Expertise</div>
-                <div className="text-xs text-charcoal/50">out of 25</div>
+                <div className="text-sm text-black/70">Expertise</div>
+                <div className="text-xs text-black/50">out of 25</div>
               </div>
-              <div className="text-center p-4 bg-cream rounded-12">
+              <div className="text-center p-4 bg-beige rounded-12">
                 <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.authoritativeness}</div>
-                <div className="text-sm text-charcoal/70">Authoritativeness</div>
-                <div className="text-xs text-charcoal/50">out of 25</div>
+                <div className="text-sm text-black/70">Authoritativeness</div>
+                <div className="text-xs text-black/50">out of 25</div>
               </div>
-              <div className="text-center p-4 bg-cream rounded-12">
+              <div className="text-center p-4 bg-beige rounded-12">
                 <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.trustworthiness}</div>
-                <div className="text-sm text-charcoal/70">Trustworthiness</div>
-                <div className="text-xs text-charcoal/50">out of 25</div>
+                <div className="text-sm text-black/70">Trustworthiness</div>
+                <div className="text-xs text-black/50">out of 25</div>
               </div>
             </div>
           </div>
 
           {/* What's Missing Section */}
           <div className="bg-white rounded-16 p-8 shadow-base">
-            <h3 className="text-2xl font-semibold mb-6 text-charcoal">
+            <h3 className="text-2xl font-semibold mb-6 text-black">
               Opportunities for Improvement
             </h3>
             <ul className="space-y-3">
               {results.issues.map((issue, index) => (
-                <li key={index} className="flex items-start gap-3 p-3 rounded-12 hover:bg-cream/50 transition-colors">
+                <li key={index} className="flex items-start gap-3 p-3 rounded-12 hover:bg-beige/50 transition-colors">
                   {getIssueIcon(issue.type)}
-                  <span className="text-charcoal/80 flex-1">{issue.message}</span>
+                  <span className="text-black/80 flex-1">{issue.message}</span>
                 </li>
               ))}
             </ul>
@@ -184,7 +184,7 @@ export default function EEATMeterTool() {
 
           {/* How CertREV Helps */}
           <div className="bg-white rounded-16 p-8 shadow-base">
-            <h3 className="text-2xl font-semibold mb-6 text-charcoal">
+            <h3 className="text-2xl font-semibold mb-6 text-black">
               How CertREV Can Boost Your Score
             </h3>
             <div className="grid md:grid-cols-2 gap-4">
@@ -192,8 +192,8 @@ export default function EEATMeterTool() {
                 <div className="mb-2">
                   <VerificationBadge size="sm" />
                 </div>
-                <h4 className="font-semibold mb-2 text-charcoal">Expert Attribution</h4>
-                <p className="text-sm text-charcoal/70">
+                <h4 className="font-semibold mb-2 text-black">Expert Attribution</h4>
+                <p className="text-sm text-black/70">
                   Add credentialed expert signatures to your content
                 </p>
               </div>
@@ -201,8 +201,8 @@ export default function EEATMeterTool() {
                 <div className="mb-2">
                   <VerificationBadge size="sm" />
                 </div>
-                <h4 className="font-semibold mb-2 text-charcoal">Verification Badges</h4>
-                <p className="text-sm text-charcoal/70">
+                <h4 className="font-semibold mb-2 text-black">Verification Badges</h4>
+                <p className="text-sm text-black/70">
                   Display trust signals that consumers recognize
                 </p>
               </div>
@@ -210,8 +210,8 @@ export default function EEATMeterTool() {
                 <div className="mb-2">
                   <VerificationBadge size="sm" />
                 </div>
-                <h4 className="font-semibold mb-2 text-charcoal">Structured Data</h4>
-                <p className="text-sm text-charcoal/70">
+                <h4 className="font-semibold mb-2 text-black">Structured Data</h4>
+                <p className="text-sm text-black/70">
                   Implement proper schema markup for search engines
                 </p>
               </div>
@@ -219,8 +219,8 @@ export default function EEATMeterTool() {
                 <div className="mb-2">
                   <VerificationBadge size="sm" />
                 </div>
-                <h4 className="font-semibold mb-2 text-charcoal">Authority Building</h4>
-                <p className="text-sm text-charcoal/70">
+                <h4 className="font-semibold mb-2 text-black">Authority Building</h4>
+                <p className="text-sm text-black/70">
                   Connect with recognized industry experts
                 </p>
               </div>

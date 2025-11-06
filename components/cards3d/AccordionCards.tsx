@@ -63,7 +63,7 @@ export default function AccordionCards({ cards, className = '' }: AccordionCards
                     className="relative"
                   >
                     {/* Collapsed preview - extract title from content */}
-                    <div className="p-6 bg-white border-2 border-charcoal/10 hover:border-navy/30 transition-colors">
+                    <div className="p-6 bg-white border-2 border-black/10 hover:border-navy/30 transition-colors">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           {/* Extract the step badge and title from content */}

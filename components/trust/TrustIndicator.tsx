@@ -109,7 +109,7 @@ export default function TrustIndicator({
         </span>
       ) : (
         <div className="flex flex-col">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal/50">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-black/50">
             {displayLabel}
           </span>
           <span className={`text-sm font-mono font-semibold ${config.color}`}>

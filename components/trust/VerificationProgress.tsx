@@ -15,9 +15,9 @@ interface VerificationProgressProps {
 const stateConfig = {
   pending: {
     icon: Loader2,
-    color: 'text-charcoal/40',
-    bgColor: 'bg-charcoal/5',
-    borderColor: 'border-charcoal/10',
+    color: 'text-black/40',
+    bgColor: 'bg-black/5',
+    borderColor: 'border-black/10',
     label: 'PENDING',
     spinning: false,
   },
@@ -138,7 +138,7 @@ export default function VerificationProgress({
 
             {/* Message */}
             {message && (
-              <p className="text-sm text-charcoal/80 mb-2 leading-relaxed">
+              <p className="text-sm text-black/80 mb-2 leading-relaxed">
                 {message}
               </p>
             )}
@@ -146,8 +146,8 @@ export default function VerificationProgress({
             {/* Timestamp */}
             {timestamp && (
               <div className="flex items-center gap-2">
-                <div className="h-px flex-1 bg-gradient-to-r from-charcoal/10 to-transparent" />
-                <span className="text-[10px] font-mono text-charcoal/40 tracking-wider">
+                <div className="h-px flex-1 bg-gradient-to-r from-black/10 to-transparent" />
+                <span className="text-[10px] font-mono text-black/40 tracking-wider">
                   {timestamp}
                 </span>
               </div>

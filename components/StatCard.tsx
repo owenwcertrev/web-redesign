@@ -29,8 +29,8 @@ export default function StatCard({ stat, description, source, icon: Icon }: Stat
       <div className="text-5xl font-bold bg-gradient-to-br from-navy to-lime bg-clip-text text-transparent mb-4">
         {stat}
       </div>
-      <p className="text-charcoal/80 mb-3 leading-relaxed flex-grow">{description}</p>
-      <p className="text-xs text-charcoal/50 font-medium mt-auto">{source}</p>
+      <p className="text-black/80 mb-3 leading-relaxed flex-grow">{description}</p>
+      <p className="text-xs text-black/50 font-medium mt-auto">{source}</p>
     </motion.div>
   )
 }

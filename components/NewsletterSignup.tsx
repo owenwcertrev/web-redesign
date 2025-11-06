@@ -47,7 +47,7 @@ export default function NewsletterSignup() {
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
       <div className="flex gap-2">
         <div className="relative flex-1">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal/40" />
+          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-black/40" />
           <input
             type="email"
             value={email}
@@ -64,7 +64,7 @@ export default function NewsletterSignup() {
       {error && (
         <p className="mt-2 text-sm text-red-600">{error}</p>
       )}
-      <p className="mt-2 text-xs text-charcoal/60 text-center">
+      <p className="mt-2 text-xs text-black/60 text-center">
         We respect your privacy. Unsubscribe at any time.
       </p>
     </form>

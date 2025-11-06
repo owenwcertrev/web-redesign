@@ -14,8 +14,8 @@ interface GlassMorphCardProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
 const variantStyles = {
   default: {
     bg: 'bg-white/60',
-    border: 'border-charcoal/10',
-    hoverBorder: 'hover:border-charcoal/20',
+    border: 'border-black/10',
+    hoverBorder: 'hover:border-black/20',
     glow: '',
   },
   primary: {
@@ -67,10 +67,10 @@ export default function GlassMorphCard({
       {/* Precision corner indicators */}
       {borderPrecision && (
         <>
-          <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-charcoal/20" />
-          <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-charcoal/20" />
-          <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-charcoal/20" />
-          <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-charcoal/20" />
+          <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-black/20" />
+          <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-black/20" />
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-black/20" />
+          <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-black/20" />
         </>
       )}
 

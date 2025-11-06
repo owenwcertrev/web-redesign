@@ -494,13 +494,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <div className="inline-block mb-6 px-6 py-3 bg-cream rounded-full border-2 border-navy/10">
+              <div className="inline-block mb-6 px-6 py-3 bg-beige rounded-full border-2 border-navy/10">
                 <span className="text-sm font-semibold text-navy tracking-wide">TRUST PRINCIPLES</span>
               </div>
-              <h2 className="text-5xl md:text-6xl font-bold mb-8 text-charcoal font-serif leading-tight">
+              <h2 className="text-5xl md:text-6xl font-bold mb-8 text-black font-serif leading-tight">
                 Built on Trust Principles
               </h2>
-              <p className="text-xl text-charcoal/70 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-xl text-black/70 max-w-2xl mx-auto leading-relaxed">
                 Expert verification, FTC compliance, and complete transparency
               </p>
             </div>
@@ -519,13 +519,13 @@ export default function Home() {
                   <div className="w-16 h-16 bg-lime rounded-full flex items-center justify-center mb-6 shadow-sm relative z-10">
                     <Shield className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-charcoal mb-4 font-serif relative z-10">Expert Verified</h3>
-                  <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow relative z-10">
+                  <h3 className="text-2xl font-bold text-black mb-4 font-serif relative z-10">Expert Verified</h3>
+                  <p className="text-black/70 mb-6 leading-relaxed flex-grow relative z-10">
                     Every piece of content reviewed by credentialed professionals with verified expertise
                   </p>
                   <ul className="space-y-3 relative z-10">
                     {['Board-certified professionals', 'Licensed practitioners', 'Industry specialists'].map((item, i) => (
-                      <li key={i} className="flex items-center gap-3 text-sm text-charcoal/80">
+                      <li key={i} className="flex items-center gap-3 text-sm text-black/80">
                         <div className="w-1.5 h-1.5 bg-lime rounded-full flex-shrink-0" />
                         {item}
                       </li>
@@ -547,13 +547,13 @@ export default function Home() {
                   <div className="w-16 h-16 bg-navy rounded-full flex items-center justify-center mb-6 shadow-sm relative z-10">
                     <CheckCircle2 className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-charcoal mb-4 font-serif relative z-10">FTC Compliant</h3>
-                  <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow relative z-10">
+                  <h3 className="text-2xl font-bold text-black mb-4 font-serif relative z-10">FTC Compliant</h3>
+                  <p className="text-black/70 mb-6 leading-relaxed flex-grow relative z-10">
                     All claims meet regulatory standards for consumer protection and advertising truth
                   </p>
                   <ul className="space-y-3 relative z-10">
                     {['Substantiation requirements', 'Endorsement guidelines', 'Health claim compliance'].map((item, i) => (
-                      <li key={i} className="flex items-center gap-3 text-sm text-charcoal/80">
+                      <li key={i} className="flex items-center gap-3 text-sm text-black/80">
                         <div className="w-1.5 h-1.5 bg-navy rounded-full flex-shrink-0" />
                         {item}
                       </li>
@@ -575,13 +575,13 @@ export default function Home() {
                   <div className="w-16 h-16 bg-coral rounded-full flex items-center justify-center mb-6 shadow-sm relative z-10">
                     <Eye className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-charcoal mb-4 font-serif relative z-10">Fully Transparent</h3>
-                  <p className="text-charcoal/70 mb-6 leading-relaxed flex-grow relative z-10">
+                  <h3 className="text-2xl font-bold text-black mb-4 font-serif relative z-10">Fully Transparent</h3>
+                  <p className="text-black/70 mb-6 leading-relaxed flex-grow relative z-10">
                     Complete audit trail from submission to certification with public verification
                   </p>
                   <ul className="space-y-3 relative z-10">
                     {['Expert credentials disclosed', 'Review history tracked', 'Public badge verification'].map((item, i) => (
-                      <li key={i} className="flex items-center gap-3 text-sm text-charcoal/80">
+                      <li key={i} className="flex items-center gap-3 text-sm text-black/80">
                         <div className="w-1.5 h-1.5 bg-coral rounded-full flex-shrink-0" />
                         {item}
                       </li>

@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -17,22 +20,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // For MVP, just log the subscription
-    console.log(`Newsletter subscription: ${email}`)
-
-    // TODO: Integrate with email service (Mailchimp, ConvertKit, etc.)
-    // Example with Mailchimp:
-    // const response = await fetch(`https://usX.api.mailchimp.com/3.0/lists/${listId}/members`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Authorization': `Bearer ${process.env.MAILCHIMP_API_KEY}`,
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     email_address: email,
-    //     status: 'subscribed',
-    //   }),
-    // })
+    // Send notification email via Resend
+    try {
+      await resend.emails.send({
+        from: 'CertREV Newsletter <systems@certrev.com>',
+        to: 'owen@certrev.com',
+        subject: 'New Newsletter Subscription',
+        html: `
+          <h2>New Newsletter Subscriber</h2>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Subscribed at:</strong> ${new Date().toLocaleString()}</p>
+        `,
+      })
+    } catch (emailError) {
+      console.error('Error sending notification:', emailError)
+      // Continue even if email fails - don't block the user
+    }
 
     return NextResponse.json({
       success: true,

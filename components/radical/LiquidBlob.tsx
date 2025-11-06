@@ -11,10 +11,10 @@ interface LiquidBlobProps {
 }
 
 const variantColors = {
-  verified: 'from-verification via-verification-light to-verification',
-  processing: 'from-primary via-accent to-primary',
-  warning: 'from-alert via-amber-400 to-alert',
-  default: 'from-charcoal/20 via-charcoal/10 to-charcoal/20',
+  verified: 'from-lime via-lime-light to-lime',
+  processing: 'from-navy via-coral to-navy',
+  warning: 'from-coral via-amber-400 to-coral',
+  default: 'from-black/20 via-black/10 to-black/20',
 }
 
 const sizes = {

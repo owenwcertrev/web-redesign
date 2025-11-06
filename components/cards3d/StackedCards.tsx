@@ -91,7 +91,7 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="absolute bottom-4 right-4 w-10 h-10 bg-charcoal rounded-full flex items-center justify-center shadow-lg"
+                    className="absolute bottom-4 right-4 w-10 h-10 bg-black rounded-full flex items-center justify-center shadow-lg"
                   >
                     <ChevronUp className="w-5 h-5 text-white" />
                   </motion.div>

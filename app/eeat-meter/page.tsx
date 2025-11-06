@@ -383,7 +383,7 @@ export default function EEATMeterPage() {
                 'Compound effect over time'
               ]}
               icon={ShoppingBag}
-              gradient="from-charcoal/10 to-charcoal/20"
+              gradient="from-black/10 to-black/20"
             />
           </div>
         </div>

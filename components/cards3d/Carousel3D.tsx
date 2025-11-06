@@ -129,9 +129,9 @@ export default function Carousel3D({ items, className = '' }: Carousel3DProps) {
       <div className="flex items-center justify-center gap-4 mt-8">
         <button
           onClick={() => navigate('prev')}
-          className="w-12 h-12 rounded-full bg-white border-2 border-charcoal/10 hover:border-navy/30 hover:bg-navy/5 transition-all flex items-center justify-center group shadow-lg"
+          className="w-12 h-12 rounded-full bg-white border-2 border-black/10 hover:border-navy/30 hover:bg-navy/5 transition-all flex items-center justify-center group shadow-lg"
         >
-          <ChevronLeft className="w-5 h-5 text-charcoal/60 group-hover:text-navy transition-colors" />
+          <ChevronLeft className="w-5 h-5 text-black/60 group-hover:text-navy transition-colors" />
         </button>
 
         {/* Indicators */}
@@ -143,7 +143,7 @@ export default function Carousel3D({ items, className = '' }: Carousel3DProps) {
               className={`h-2 rounded-full transition-all ${
                 index === currentIndex
                   ? 'w-8 bg-navy'
-                  : 'w-2 bg-charcoal/20 hover:bg-charcoal/40'
+                  : 'w-2 bg-black/20 hover:bg-black/40'
               }`}
             />
           ))}
@@ -151,9 +151,9 @@ export default function Carousel3D({ items, className = '' }: Carousel3DProps) {
 
         <button
           onClick={() => navigate('next')}
-          className="w-12 h-12 rounded-full bg-white border-2 border-charcoal/10 hover:border-navy/30 hover:bg-navy/5 transition-all flex items-center justify-center group shadow-lg"
+          className="w-12 h-12 rounded-full bg-white border-2 border-black/10 hover:border-navy/30 hover:bg-navy/5 transition-all flex items-center justify-center group shadow-lg"
         >
-          <ChevronRight className="w-5 h-5 text-charcoal/60 group-hover:text-navy transition-colors" />
+          <ChevronRight className="w-5 h-5 text-black/60 group-hover:text-navy transition-colors" />
         </button>
       </div>
     </div>
