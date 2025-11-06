@@ -24,6 +24,11 @@ export default function Footer() {
             <h4 className="font-semibold text-navy mb-4 font-serif">Product</h4>
             <ul className="space-y-3">
               <li>
+                <Link href="/pricing" className="text-black/70 hover:text-coral transition-colors text-sm">
+                  Pricing
+                </Link>
+              </li>
+              <li>
                 <Link href="/eeat-meter" className="text-black/70 hover:text-coral transition-colors text-sm">
                   E-E-A-T Meter
                 </Link>
@@ -58,8 +63,22 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Legal & Contact */}
           <div>
+            <h4 className="font-semibold text-navy mb-4 font-serif">Legal</h4>
+            <ul className="space-y-3 mb-6">
+              <li>
+                <Link href="/privacy" className="text-black/70 hover:text-coral transition-colors text-sm">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="text-black/70 hover:text-coral transition-colors text-sm">
+                  Terms of Service
+                </Link>
+              </li>
+            </ul>
+
             <h4 className="font-semibold text-navy mb-4 font-serif">Contact</h4>
             <ul className="space-y-3 text-sm text-black/70">
               <li>
@@ -71,10 +90,6 @@ export default function Footer() {
                 <a href="tel:213-304-9637" className="hover:text-coral transition-colors">
                   213-304-9637
                 </a>
-              </li>
-              <li className="pt-2">
-                500 Westover Dr. #33166<br />
-                Sanford, NC 27330
               </li>
             </ul>
           </div>
