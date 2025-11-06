@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy initialize Resend to avoid build-time errors
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    console.warn('RESEND_API_KEY not configured - emails will not be sent')
+    return null
+  }
+  return new Resend(apiKey)
+}
 
 function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -28,25 +36,28 @@ export async function POST(request: NextRequest) {
     }
 
     // Send email notification via Resend
-    try {
-      await resend.emails.send({
-        from: 'CertREV Contact Form <systems@certrev.com>',
-        to: 'owen@certrev.com',
-        subject: `Contact Form Submission from ${name}`,
-        html: `
-          <h2>New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          ${company ? `<p><strong>Company:</strong> ${company}</p>` : ''}
-          <p><strong>Message:</strong></p>
-          <p>${message.replace(/\n/g, '<br>')}</p>
-          <hr>
-          <p><small>Reply to: ${email}</small></p>
-        `,
-      })
-    } catch (emailError) {
-      console.error('Error sending email:', emailError)
-      // Continue even if email fails - don't block the user
+    const resend = getResendClient()
+    if (resend) {
+      try {
+        await resend.emails.send({
+          from: 'CertREV Contact Form <systems@certrev.com>',
+          to: 'owen@certrev.com',
+          subject: `Contact Form Submission from ${name}`,
+          html: `
+            <h2>New Contact Form Submission</h2>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            ${company ? `<p><strong>Company:</strong> ${company}</p>` : ''}
+            <p><strong>Message:</strong></p>
+            <p>${message.replace(/\n/g, '<br>')}</p>
+            <hr>
+            <p><small>Reply to: ${email}</small></p>
+          `,
+        })
+      } catch (emailError) {
+        console.error('Error sending email:', emailError)
+        // Continue even if email fails - don't block the user
+      }
     }
 
     return NextResponse.json({

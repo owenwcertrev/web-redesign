@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy initialize Resend to avoid build-time errors
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    console.warn('RESEND_API_KEY not configured - emails will not be sent')
+    return null
+  }
+  return new Resend(apiKey)
+}
 
 function isValidURL(url: string): boolean {
   try {
@@ -71,21 +79,23 @@ export async function POST(request: NextRequest) {
 
     // If email provided, send detailed report
     if (email) {
-      try {
-        const issuesHtml = analysis.issues.map(issue => {
-          const color = issue.severity === 'high' ? '#E8603C' : issue.severity === 'medium' ? '#D4E157' : '#0A1B3F'
-          return `
-            <div style="margin: 12px 0; padding: 12px; border-left: 4px solid ${color}; background: #f5f5f5;">
-              <strong style="color: ${color};">${issue.severity.toUpperCase()}:</strong> ${issue.message}
-            </div>
-          `
-        }).join('')
+      const resend = getResendClient()
+      if (resend) {
+        try {
+          const issuesHtml = analysis.issues.map(issue => {
+            const color = issue.severity === 'high' ? '#E8603C' : issue.severity === 'medium' ? '#D4E157' : '#0A1B3F'
+            return `
+              <div style="margin: 12px 0; padding: 12px; border-left: 4px solid ${color}; background: #f5f5f5;">
+                <strong style="color: ${color};">${issue.severity.toUpperCase()}:</strong> ${issue.message}
+              </div>
+            `
+          }).join('')
 
-        const suggestionsHtml = analysis.suggestions.map(s => `
-          <li style="margin: 8px 0;">${s}</li>
-        `).join('')
+          const suggestionsHtml = analysis.suggestions.map(s => `
+            <li style="margin: 8px 0;">${s}</li>
+          `).join('')
 
-        await resend.emails.send({
+          await resend.emails.send({
           from: 'CertREV E-E-A-T Analysis <systems@certrev.com>',
           to: email,
           subject: `Your E-E-A-T Analysis Results for ${new URL(url).hostname}`,
@@ -131,10 +141,11 @@ export async function POST(request: NextRequest) {
               </p>
             </div>
           `,
-        })
-      } catch (emailError) {
-        console.error('Error sending analysis email:', emailError)
-        // Continue even if email fails - don't block the user
+          })
+        } catch (emailError) {
+          console.error('Error sending analysis email:', emailError)
+          // Continue even if email fails - don't block the user
+        }
       }
     }
 
