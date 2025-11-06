@@ -170,16 +170,17 @@ const pricingFAQs = [
 ]
 
 export default function PricingPage() {
-  const [postsPerMonth, setPostsPerMonth] = useState(13) // Start at Core SEO range
+  const [postsPerMonth, setPostsPerMonth] = useState(9) // Start at Core SEO range
 
   // Map slider value to appropriate pricing tier
+  // Ranges aligned to ~3 credits per review average
   const currentTier = useMemo(() => {
-    if (postsPerMonth <= 5) return pricingTiers[0] // Mini
-    if (postsPerMonth <= 12) return pricingTiers[1] // Starter
-    if (postsPerMonth <= 24) return pricingTiers[2] // Core SEO
-    if (postsPerMonth <= 36) return pricingTiers[3] // Accelerate
-    if (postsPerMonth <= 48) return pricingTiers[4] // Authority
-    return pricingTiers[5] // Enterprise
+    if (postsPerMonth <= 3) return pricingTiers[0] // Mini (6 credits ÷ 3 = 2 posts)
+    if (postsPerMonth <= 6) return pricingTiers[1] // Starter (14 credits ÷ 3 ≈ 4-5 posts)
+    if (postsPerMonth <= 12) return pricingTiers[2] // Core SEO (27 credits ÷ 3 = 9 posts)
+    if (postsPerMonth <= 20) return pricingTiers[3] // Accelerate (49 credits ÷ 3 ≈ 16 posts)
+    if (postsPerMonth <= 30) return pricingTiers[4] // Authority (75 credits ÷ 3 = 25 posts)
+    return pricingTiers[5] // Enterprise (129 credits ÷ 3 = 43 posts)
   }, [postsPerMonth])
 
   return (
