@@ -58,14 +58,16 @@ export default function PricingSlider({ value, onChange, min = 2, max = 56 }: Pr
             );
             border-radius: 1.25rem;
             height: 1.25rem;
-            border: 2px solid rgba(10, 27, 63, 0.15);
+            border: 3px solid rgba(10, 27, 63, 0.25);
+            box-shadow: inset 0 1px 3px rgba(10, 27, 63, 0.1);
           }
 
           input[type="range"]::-moz-range-track {
             background: #E8E4DB;
             border-radius: 1.25rem;
             height: 1.25rem;
-            border: 2px solid rgba(10, 27, 63, 0.15);
+            border: 3px solid rgba(10, 27, 63, 0.25);
+            box-shadow: inset 0 1px 3px rgba(10, 27, 63, 0.1);
           }
 
           input[type="range"]::-moz-range-progress {
