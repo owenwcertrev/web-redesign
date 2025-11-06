@@ -18,8 +18,8 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <Image src="/logo.png" alt="CertREV" width={32} height={32} className="w-8 h-8" />
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <Image src="/logo.png" alt="CertREV" width={48} height={48} className="w-12 h-12" />
             <span className="text-2xl font-bold text-navy">CertREV</span>
           </Link>
 
