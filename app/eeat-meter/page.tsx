@@ -338,7 +338,7 @@ export default function EEATMeterPage() {
                 'Expert attribution prevents penalties'
               ]}
               icon={TrendingUp}
-              gradient="from-primary/10 to-primary/20"
+              gradient="from-navy/10 to-navy/20"
             />
 
             <FlipStatCard
@@ -353,7 +353,7 @@ export default function EEATMeterPage() {
                 'Verified content drives conversions'
               ]}
               icon={Users}
-              gradient="from-verification/10 to-verification/20"
+              gradient="from-lime/10 to-lime/20"
             />
 
             <FlipStatCard
@@ -368,7 +368,7 @@ export default function EEATMeterPage() {
                 'Demonstrates due diligence'
               ]}
               icon={AlertCircle}
-              gradient="from-alert/10 to-alert/20"
+              gradient="from-coral/10 to-coral/20"
             />
 
             <FlipStatCard

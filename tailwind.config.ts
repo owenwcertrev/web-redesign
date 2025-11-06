@@ -33,23 +33,6 @@ const config: Config = {
         },
         white: '#FFFFFF',
         black: '#000000',
-        // Legacy aliases for gradual migration
-        primary: {
-          DEFAULT: '#0A1B3F',
-          hover: '#0A1B3F',
-        },
-        verification: {
-          DEFAULT: '#D4E157',
-          light: '#E8F5A0',
-          dark: '#A8B43E',
-        },
-        cream: {
-          DEFAULT: '#E8E4DB',
-          secondary: '#F5F5F5',
-        },
-        charcoal: '#000000',
-        accent: '#E8603C',
-        alert: '#E8603C',
       },
       fontFamily: {
         script: ['Allura', 'cursive'],

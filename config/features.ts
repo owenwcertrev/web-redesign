@@ -47,14 +47,14 @@ export const featureFlags = {
  */
 export function isFeatureEnabled(feature: string): boolean {
   const keys = feature.split('.')
-  let current: any = featureFlags
+  let current: unknown = featureFlags
 
   for (const key of keys) {
-    if (current[key] === undefined) {
+    if (typeof current !== 'object' || current === null || !(key in current)) {
       console.warn(`Feature flag not found: ${feature}`)
       return false
     }
-    current = current[key]
+    current = (current as Record<string, unknown>)[key]
   }
 
   return current === true

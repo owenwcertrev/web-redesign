@@ -22,7 +22,7 @@ export default function FlipStatCard({
   backTitle,
   backDetails,
   icon: Icon,
-  gradient = 'from-primary/10 to-verification/10'
+  gradient = 'from-navy/10 to-lime/10'
 }: FlipStatCardProps) {
   const [isFlipped, setIsFlipped] = useState(false)
 
