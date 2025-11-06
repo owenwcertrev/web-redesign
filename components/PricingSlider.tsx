@@ -39,80 +39,82 @@ export default function PricingSlider({ value, onChange, min = 2, max = 56 }: Pr
 
       {/* Slider */}
       <div className="relative py-4">
-        <style jsx>{`
-          input[type="range"] {
-            -webkit-appearance: none;
-            appearance: none;
-            background: transparent;
-            cursor: pointer;
-            width: 100%;
-          }
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            .pricing-slider {
+              -webkit-appearance: none;
+              appearance: none;
+              background: transparent;
+              cursor: pointer;
+              width: 100%;
+            }
 
-          input[type="range"]::-webkit-slider-track {
-            background: linear-gradient(
-              to right,
-              #D4E157 0%,
-              #D4E157 ${percentage}%,
-              #FFFFFF ${percentage}%,
-              #FFFFFF 100%
-            );
-            border-radius: 1.25rem;
-            height: 1.25rem;
-            border: 3px solid #0A1B3F;
-            box-shadow: 0 2px 4px rgba(10, 27, 63, 0.1);
-          }
+            .pricing-slider::-webkit-slider-track {
+              background: linear-gradient(
+                to right,
+                #D4E157 0%,
+                #D4E157 ${percentage}%,
+                #FFFFFF ${percentage}%,
+                #FFFFFF 100%
+              );
+              border-radius: 1.25rem;
+              height: 1.25rem;
+              border: 3px solid #0A1B3F;
+              box-shadow: 0 2px 4px rgba(10, 27, 63, 0.1);
+            }
 
-          input[type="range"]::-moz-range-track {
-            background: #FFFFFF;
-            border-radius: 1.25rem;
-            height: 1.25rem;
-            border: 3px solid #0A1B3F;
-            box-shadow: 0 2px 4px rgba(10, 27, 63, 0.1);
-          }
+            .pricing-slider::-moz-range-track {
+              background: #FFFFFF;
+              border-radius: 1.25rem;
+              height: 1.25rem;
+              border: 3px solid #0A1B3F;
+              box-shadow: 0 2px 4px rgba(10, 27, 63, 0.1);
+            }
 
-          input[type="range"]::-moz-range-progress {
-            background: #D4E157;
-            border-radius: 1.25rem;
-            height: 1.25rem;
-          }
+            .pricing-slider::-moz-range-progress {
+              background: #D4E157;
+              border-radius: 1.25rem;
+              height: 1.25rem;
+            }
 
-          input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            margin-top: -7px;
-            background: #0A1B3F;
-            height: 2rem;
-            width: 2rem;
-            border-radius: 50%;
-            border: 4px solid white;
-            box-shadow: 0 2px 8px rgba(10, 27, 63, 0.2);
-            transition: all 0.2s ease;
-          }
+            .pricing-slider::-webkit-slider-thumb {
+              -webkit-appearance: none;
+              appearance: none;
+              margin-top: -7px;
+              background: #0A1B3F;
+              height: 2rem;
+              width: 2rem;
+              border-radius: 50%;
+              border: 4px solid white;
+              box-shadow: 0 2px 8px rgba(10, 27, 63, 0.2);
+              transition: all 0.2s ease;
+            }
 
-          input[type="range"]::-moz-range-thumb {
-            background: #0A1B3F;
-            height: 2rem;
-            width: 2rem;
-            border-radius: 50%;
-            border: 4px solid white;
-            box-shadow: 0 2px 8px rgba(10, 27, 63, 0.2);
-            transition: all 0.2s ease;
-          }
+            .pricing-slider::-moz-range-thumb {
+              background: #0A1B3F;
+              height: 2rem;
+              width: 2rem;
+              border-radius: 50%;
+              border: 4px solid white;
+              box-shadow: 0 2px 8px rgba(10, 27, 63, 0.2);
+              transition: all 0.2s ease;
+            }
 
-          input[type="range"]:hover::-webkit-slider-thumb {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(10, 27, 63, 0.3);
-          }
+            .pricing-slider:hover::-webkit-slider-thumb {
+              transform: scale(1.1);
+              box-shadow: 0 4px 12px rgba(10, 27, 63, 0.3);
+            }
 
-          input[type="range"]:hover::-moz-range-thumb {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(10, 27, 63, 0.3);
-          }
+            .pricing-slider:hover::-moz-range-thumb {
+              transform: scale(1.1);
+              box-shadow: 0 4px 12px rgba(10, 27, 63, 0.3);
+            }
 
-          input[type="range"]:focus {
-            outline: none;
-          }
-        `}</style>
+            .pricing-slider:focus {
+              outline: none;
+            }
+          `
+        }} />
 
         <input
           type="range"
@@ -120,7 +122,7 @@ export default function PricingSlider({ value, onChange, min = 2, max = 56 }: Pr
           max={max}
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="w-full"
+          className="pricing-slider"
         />
       </div>
     </div>
