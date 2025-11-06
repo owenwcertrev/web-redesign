@@ -1,8 +1,9 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { ReactNode, useState } from 'react'
+import { motion, Variants } from 'framer-motion'
+import { ReactNode, useState, useMemo, useCallback } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
+import { usePrefersReducedMotion } from '@/hooks/usePerformance'
 
 interface Card {
   id: string
@@ -14,9 +15,67 @@ interface StackedCardsProps {
   className?: string
 }
 
+// Memoized position calculator
+interface CardPosition {
+  zIndex: number
+  yOffset: number
+  scale: number
+  rotateX: number
+}
+
 export default function StackedCards({ cards, className = '' }: StackedCardsProps) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const prefersReducedMotion = usePrefersReducedMotion()
+
+  // Memoize card positions - only recalculate when expandedIndex changes
+  const cardPositions = useMemo<CardPosition[]>(() => {
+    return cards.map((_, index) => {
+      const isExpanded = expandedIndex === index
+      const isAfterExpanded = expandedIndex !== null && index > expandedIndex
+
+      let zIndex = cards.length - index
+      let yOffset = index * 20
+      let scale = 1 - index * 0.03
+      let rotateX = -index * 2
+
+      if (isExpanded) {
+        zIndex = 1000
+        yOffset = 0
+        scale = 1.05
+        rotateX = 0
+      } else if (isAfterExpanded) {
+        yOffset = (expandedIndex * 20) + ((index - expandedIndex) * 20) + 100
+      }
+
+      return { zIndex, yOffset, scale, rotateX }
+    })
+  }, [cards.length, expandedIndex])
+
+  // Memoized transition config
+  const springTransition = useMemo(() => {
+    if (prefersReducedMotion) {
+      return { duration: 0.2 }
+    }
+    return {
+      type: 'spring' as const,
+      stiffness: 200, // Reduced from 300
+      damping: 30,
+    }
+  }, [prefersReducedMotion])
+
+  // Memoized callbacks
+  const handleCardClick = useCallback((index: number) => {
+    setExpandedIndex(prev => prev === index ? null : index)
+  }, [])
+
+  const handleHoverStart = useCallback((index: number) => {
+    setHoveredIndex(index)
+  }, [])
+
+  const handleHoverEnd = useCallback(() => {
+    setHoveredIndex(null)
+  }, [])
 
   return (
     <div className={`relative ${className}`} style={{ perspective: '2000px' }}>
@@ -24,44 +83,37 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
         {cards.map((card, index) => {
           const isExpanded = expandedIndex === index
           const isHovered = hoveredIndex === index
-          const isAfterExpanded = expandedIndex !== null && index > expandedIndex
+          const position = cardPositions[index]
 
-          let zIndex = cards.length - index
-          let yOffset = index * 20
-          let scale = 1 - index * 0.03
-          let rotateX = -index * 2
-
-          if (isExpanded) {
-            zIndex = 1000
-            yOffset = 0
-            scale = 1.05
-            rotateX = 0
-          } else if (isAfterExpanded) {
-            yOffset = (expandedIndex! * 20) + ((index - expandedIndex!) * 20) + 100
-          }
+          // Memoized hover animation
+          const hoverAnimation = useMemo(() => {
+            if (isExpanded || prefersReducedMotion) return {}
+            return {
+              scale: position.scale * 1.02,
+              y: position.yOffset - 5,
+            }
+          }, [isExpanded, prefersReducedMotion, position.scale, position.yOffset])
 
           return (
             <motion.div
               key={card.id}
               className="absolute inset-x-0 cursor-pointer group"
               style={{
-                zIndex,
+                zIndex: position.zIndex,
                 transformStyle: 'preserve-3d',
+                // Add will-change only to hovered or expanded cards
+                willChange: (isHovered || isExpanded) ? 'transform' : 'auto',
               }}
               animate={{
-                y: yOffset,
-                scale,
-                rotateX,
+                y: position.yOffset,
+                scale: position.scale,
+                rotateX: position.rotateX,
               }}
-              transition={{
-                type: 'spring',
-                stiffness: 300,
-                damping: 30,
-              }}
-              onClick={() => setExpandedIndex(isExpanded ? null : index)}
-              onHoverStart={() => setHoveredIndex(index)}
-              onHoverEnd={() => setHoveredIndex(null)}
-              whileHover={!isExpanded ? { scale: scale * 1.02, y: yOffset - 5 } : {}}
+              transition={springTransition}
+              onClick={() => handleCardClick(index)}
+              onHoverStart={() => handleHoverStart(index)}
+              onHoverEnd={handleHoverEnd}
+              whileHover={hoverAnimation}
             >
               {/* Enhanced Shadow with depth */}
               <div
