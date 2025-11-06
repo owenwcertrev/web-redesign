@@ -45,6 +45,18 @@ export default function BrandDashboardPage() {
           <p className="text-xl text-black/80 max-w-2xl mx-auto mb-8">
             Manage your content verification projects, track expert reviews, and access your trust infrastructure
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" asChild className="!bg-coral hover:!bg-coral/90 !text-white !border-coral">
+              <Link href="https://dashboard.certrev.com/auth/signup?tab=brand">
+                Sign Up as Brand
+              </Link>
+            </Button>
+            <Button size="lg" variant="secondary" asChild>
+              <Link href="https://dashboard.certrev.com/auth/login?tab=brand">
+                Sign In →
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 

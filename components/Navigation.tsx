@@ -8,10 +8,7 @@ import Button from './Button'
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [brandHovered, setBrandHovered] = useState(false)
-  const [expertHovered, setExpertHovered] = useState(false)
-  const [brandExpanded, setBrandExpanded] = useState(false)
-  const [expertExpanded, setExpertExpanded] = useState(false)
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-beige border-b border-black/10 shadow-sm">
@@ -41,70 +38,63 @@ export default function Navigation() {
 
           {/* Dashboard CTAs - Desktop and Tablet */}
           <div className="hidden md:flex items-center gap-3">
-            {/* Brand Dashboard - Orange button with Blue icon (left) */}
-            <div
-              className="relative"
-              onMouseEnter={() => setBrandHovered(true)}
-              onMouseLeave={() => setBrandHovered(false)}
-              onClick={() => setBrandExpanded(!brandExpanded)}
+            {/* Brand Dashboard Preview */}
+            <Button
+              variant="primary"
+              size="sm"
+              asChild
+              className="!bg-coral hover:!bg-coral/90 !text-white !border-coral"
             >
-              <div className="flex items-center">
-                <div
-                  className="overflow-hidden transition-all duration-300 ease-out"
-                  style={{
-                    width: (brandHovered || brandExpanded) ? '40px' : '0px',
-                    opacity: (brandHovered || brandExpanded) ? 1 : 0,
-                  }}
-                >
-                  <Link
-                    href="https://dashboard.certrev.com/auth/login"
-                    className="flex items-center justify-center w-10 h-10 bg-navy hover:bg-navy/90 transition-colors rounded-l-lg border-2 border-r-0 border-navy"
-                  >
-                    <User className="w-4 h-4 text-white" />
-                  </Link>
-                </div>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  asChild
-                  className={`!bg-coral hover:!bg-coral/90 !text-white !border-coral transition-all duration-300 ${brandHovered || brandExpanded ? 'rounded-l-none' : ''}`}
-                >
-                  <Link href="/brand-dashboard">Brand Dashboard</Link>
-                </Button>
-              </div>
-            </div>
+              <Link href="/brand-dashboard">Brand Dashboard</Link>
+            </Button>
 
-            {/* Expert Dashboard - Blue button with Orange icon (right) */}
-            <div
-              className="relative"
-              onMouseEnter={() => setExpertHovered(true)}
-              onMouseLeave={() => setExpertHovered(false)}
-              onClick={() => setExpertExpanded(!expertExpanded)}
+            {/* Expert Dashboard Preview */}
+            <Button
+              variant="primary"
+              size="sm"
+              asChild
+              className="!bg-navy hover:!bg-navy/90 !text-white !border-navy"
             >
-              <div className="flex items-center">
-                <Button
-                  variant="primary"
-                  size="sm"
-                  asChild
-                  className={`!bg-navy hover:!bg-navy/90 !text-white !border-navy transition-all duration-300 ${expertHovered || expertExpanded ? 'rounded-r-none' : ''}`}
-                >
-                  <Link href="/expert-dashboard">Expert Dashboard</Link>
-                </Button>
-                <div
-                  className="overflow-hidden transition-all duration-300 ease-out"
-                  style={{
-                    width: (expertHovered || expertExpanded) ? '40px' : '0px',
-                    opacity: (expertHovered || expertExpanded) ? 1 : 0,
-                  }}
-                >
+              <Link href="/expert-dashboard">Expert Dashboard</Link>
+            </Button>
+
+            {/* Profile Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                className="flex items-center justify-center w-10 h-10 bg-navy/10 hover:bg-navy/20 transition-colors rounded-lg border-2 border-navy/20 hover:border-navy/30"
+                aria-label="Profile menu"
+              >
+                <User className="w-5 h-5 text-navy" />
+              </button>
+
+              {/* Dropdown Menu */}
+              {profileDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border-2 border-navy/10 py-2 z-50">
                   <Link
-                    href="https://dashboard.certrev.com/auth/login"
-                    className="flex items-center justify-center w-10 h-10 bg-coral hover:bg-coral/90 transition-colors rounded-r-lg border-2 border-l-0 border-coral"
+                    href="https://dashboard.certrev.com/auth/login?tab=brand"
+                    className="block px-4 py-2 text-sm text-black hover:bg-beige transition-colors"
+                    onClick={() => setProfileDropdownOpen(false)}
                   >
-                    <User className="w-4 h-4 text-white" />
+                    Brand Login
+                  </Link>
+                  <Link
+                    href="https://dashboard.certrev.com/auth/login?tab=expert"
+                    className="block px-4 py-2 text-sm text-black hover:bg-beige transition-colors"
+                    onClick={() => setProfileDropdownOpen(false)}
+                  >
+                    Expert Login
+                  </Link>
+                  <div className="border-t border-navy/10 my-2"></div>
+                  <Link
+                    href="https://dashboard.certrev.com/auth/signup"
+                    className="block px-4 py-2 text-sm text-coral font-semibold hover:bg-beige transition-colors"
+                    onClick={() => setProfileDropdownOpen(false)}
+                  >
+                    Sign Up
                   </Link>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
@@ -153,11 +143,27 @@ export default function Navigation() {
             </Link>
             <div className="pt-3 space-y-2 border-t border-black/5">
               <Button variant="primary" size="sm" className="w-full !bg-coral hover:!bg-coral/90 !text-white !border-coral" asChild>
-                <Link href="/brand-dashboard">Brand Dashboard</Link>
+                <Link href="/brand-dashboard" onClick={() => setMobileMenuOpen(false)}>Brand Dashboard</Link>
               </Button>
               <Button variant="primary" size="sm" className="w-full !bg-navy hover:!bg-navy/90 !text-white !border-navy" asChild>
-                <Link href="/expert-dashboard">Expert Dashboard</Link>
+                <Link href="/expert-dashboard" onClick={() => setMobileMenuOpen(false)}>Expert Dashboard</Link>
               </Button>
+              <div className="pt-3 space-y-2 border-t border-black/5">
+                <Link
+                  href="https://dashboard.certrev.com/auth/login"
+                  className="block py-2 px-4 text-center text-sm text-navy font-semibold border-2 border-navy rounded-lg hover:bg-navy hover:text-white transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="https://dashboard.certrev.com/auth/signup"
+                  className="block py-2 px-4 text-center text-sm text-white font-semibold bg-coral rounded-lg hover:bg-coral/90 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign Up
+                </Link>
+              </div>
             </div>
           </div>
         </div>

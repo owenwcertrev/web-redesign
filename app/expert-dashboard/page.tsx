@@ -45,6 +45,18 @@ export default function ExpertDashboardPage() {
           <p className="text-xl text-black/80 max-w-2xl mx-auto mb-8">
             Manage review assignments, submit verifications, and track your impact as a CertREV expert
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" asChild className="!bg-navy hover:!bg-navy/90 !text-white !border-navy">
+              <Link href="https://dashboard.certrev.com/auth/signup?tab=expert">
+                Join Expert Network
+              </Link>
+            </Button>
+            <Button size="lg" variant="secondary" asChild>
+              <Link href="https://dashboard.certrev.com/auth/login?tab=expert">
+                Sign In →
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 
