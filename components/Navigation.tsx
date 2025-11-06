@@ -63,7 +63,7 @@ export default function Navigation() {
                       className="overflow-hidden"
                     >
                       <Link
-                        href="/brand-dashboard"
+                        href="https://dashboard.certrev.com/auth/login"
                         className="flex items-center justify-center w-10 h-10 bg-navy hover:bg-navy/90 transition-colors rounded-l-lg border-2 border-r-0 border-navy"
                       >
                         <User className="w-4 h-4 text-white" />
@@ -113,7 +113,7 @@ export default function Navigation() {
                       className="overflow-hidden"
                     >
                       <Link
-                        href="/expert-dashboard"
+                        href="https://dashboard.certrev.com/auth/login"
                         className="flex items-center justify-center w-10 h-10 bg-coral hover:bg-coral/90 transition-colors rounded-r-lg border-2 border-l-0 border-coral"
                       >
                         <User className="w-4 h-4 text-white" />
