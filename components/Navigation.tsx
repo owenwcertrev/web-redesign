@@ -8,7 +8,6 @@ import Button from './Button'
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-beige border-b border-black/10 shadow-sm">
@@ -58,44 +57,14 @@ export default function Navigation() {
               <Link href="/expert-dashboard">Expert Dashboard</Link>
             </Button>
 
-            {/* Profile Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className="flex items-center justify-center w-10 h-10 bg-navy/10 hover:bg-navy/20 transition-colors rounded-lg border-2 border-navy/20 hover:border-navy/30"
-                aria-label="Profile menu"
-              >
-                <User className="w-5 h-5 text-navy" />
-              </button>
-
-              {/* Dropdown Menu */}
-              {profileDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border-2 border-navy/10 py-2 z-50">
-                  <Link
-                    href="https://dashboard.certrev.com/auth/login"
-                    className="block px-4 py-2 text-sm text-black hover:bg-beige transition-colors"
-                    onClick={() => setProfileDropdownOpen(false)}
-                  >
-                    Brand Login
-                  </Link>
-                  <Link
-                    href="https://dashboard.certrev.com/auth/login"
-                    className="block px-4 py-2 text-sm text-black hover:bg-beige transition-colors"
-                    onClick={() => setProfileDropdownOpen(false)}
-                  >
-                    Expert Login
-                  </Link>
-                  <div className="border-t border-navy/10 my-2"></div>
-                  <Link
-                    href="https://dashboard.certrev.com/auth/signup"
-                    className="block px-4 py-2 text-sm text-coral font-semibold hover:bg-beige transition-colors"
-                    onClick={() => setProfileDropdownOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
-                </div>
-              )}
-            </div>
+            {/* Profile Login Button */}
+            <Link
+              href="https://dashboard.certrev.com/auth/login"
+              className="flex items-center justify-center w-10 h-10 bg-navy/10 hover:bg-navy/20 transition-colors rounded-lg border-2 border-navy/20 hover:border-navy/30"
+              aria-label="Sign in"
+            >
+              <User className="w-5 h-5 text-navy" />
+            </Link>
           </div>
 
           {/* Mobile menu button */}
