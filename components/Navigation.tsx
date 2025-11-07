@@ -20,29 +20,29 @@ export default function Navigation() {
           </Link>
 
           {/* Desktop Navigation - Right aligned */}
-          <div className="hidden lg:flex items-center gap-12 ml-auto mr-12">
-            <Link href="/book-demo" className="text-black hover:text-coral transition-colors text-base">
+          <div className="hidden lg:flex items-center gap-12 ml-auto mr-12 flex-shrink-0">
+            <Link href="/book-demo" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
               Book Demo
             </Link>
-            <Link href="/eeat-meter" className="text-black hover:text-coral transition-colors text-base">
+            <Link href="/eeat-meter" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
               E-E-A-T Meter
             </Link>
-            <Link href="/how-it-works" className="text-black hover:text-coral transition-colors text-base">
+            <Link href="/how-it-works" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
               How It Works
             </Link>
-            <Link href="/pricing" className="text-black hover:text-coral transition-colors text-base">
+            <Link href="/pricing" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
               Pricing
             </Link>
           </div>
 
           {/* Dashboard CTAs - Desktop and Tablet */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3 flex-shrink-0">
             {/* Brand Dashboard Preview */}
             <Button
               variant="primary"
               size="sm"
               asChild
-              className="!bg-coral hover:!bg-coral/90 !text-white !border-coral"
+              className="!bg-coral hover:!bg-coral/90 !text-white !border-coral whitespace-nowrap"
             >
               <Link href="/brand-dashboard">Brand Dashboard</Link>
             </Button>
@@ -52,7 +52,7 @@ export default function Navigation() {
               variant="primary"
               size="sm"
               asChild
-              className="!bg-navy hover:!bg-navy/90 !text-white !border-navy"
+              className="!bg-navy hover:!bg-navy/90 !text-white !border-navy whitespace-nowrap"
             >
               <Link href="/expert-dashboard">Expert Dashboard</Link>
             </Button>
@@ -60,7 +60,7 @@ export default function Navigation() {
             {/* Profile Login Button */}
             <Link
               href="https://dashboard.certrev.com/auth/login"
-              className="flex items-center justify-center w-10 h-10 bg-navy/10 hover:bg-navy/20 transition-colors rounded-lg border-2 border-navy/20 hover:border-navy/30"
+              className="flex items-center justify-center w-10 h-10 bg-navy/10 hover:bg-navy/20 transition-colors rounded-lg border-2 border-navy/20 hover:border-navy/30 flex-shrink-0"
               aria-label="Sign in"
             >
               <User className="w-5 h-5 text-navy" />
