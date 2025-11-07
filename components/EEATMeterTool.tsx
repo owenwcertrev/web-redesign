@@ -333,24 +333,11 @@ export default function EEATMeterTool() {
               {results.score < 50 && (
                 <>
                   <h3 className="text-2xl font-semibold mb-3 text-navy">
-                    Here's How Expert Attribution Boosts Your Score
+                    Let's Get Experts on Your Content
                   </h3>
-                  <p className="text-black/70 mb-4">
-                    Without expert bylines and credentials, your content is missing up to <strong>18 points</strong> across Experience (+8) and Expertise (+10) categories. Adding credentialed expert reviewers with proper attribution closes this gap.
+                  <p className="text-black/70 mb-6">
+                    The gap between your current score and industry leaders isn't about content quality - it's about attribution. You need credentialed professionals reviewing and signing your work. That's what we do.
                   </p>
-                  <div className="bg-beige/50 rounded-lg p-4 mb-4 text-left max-w-xl mx-auto">
-                    <p className="text-sm font-semibold text-navy mb-2">What expert verification adds:</p>
-                    <ul className="text-sm text-black/70 space-y-1">
-                      <li>• <strong>Author presence:</strong> +9 points (Experience +4, Expertise +5)</li>
-                      <li>• <strong>Displayed credentials:</strong> +5 points (Experience +2, Expertise +3)</li>
-                      <li>• <strong>Schema markup:</strong> +4 points (enables search engine verification)</li>
-                    </ul>
-                  </div>
-                  <div className="bg-white rounded-lg p-4 mb-4 inline-block">
-                    <p className="text-sm text-black/60 mb-2">Example path to 75+:</p>
-                    <p className="text-lg"><strong>12-15 expert reviews</strong></p>
-                    <p className="text-xs text-black/50 mt-1">Pricing varies by plan and volume</p>
-                  </div>
                 </>
               )}
               {results.score >= 50 && results.score < 70 && (
