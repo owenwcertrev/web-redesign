@@ -82,48 +82,42 @@ export default function EEATMeterPage() {
         </div>
       </DepthHero>
 
-      {/* E-E-A-T Meter Tool - Move to top */}
+      {/* E-E-A-T Meter Tool - Lead with the tool */}
       <section className="bg-beige py-20 px-4 relative overflow-hidden">
         <TextureOverlay type="paper" opacity={0.3} />
         <OrganicShape variant="blob3" color="lime" className="absolute -bottom-20 -right-20 w-96 h-96" opacity={0.06} />
         <div className="max-w-4xl mx-auto relative z-10">
           <FadeIn>
-            <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-navy font-serif">
+            <div className="text-center mb-8">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-navy font-serif">
                 See How Your Content Measures Up
               </h2>
-              <p className="text-xl text-black/70 mb-6 max-w-2xl mx-auto leading-relaxed">
-                Get a comprehensive E-E-A-T score in 30 seconds. No signup required.
+              <p className="text-xl text-black/70 mb-8 max-w-2xl mx-auto leading-relaxed">
+                Get your E-E-A-T score in 30 seconds. No signup required.
               </p>
-              <div className="bg-white rounded-2xl p-6 max-w-3xl mx-auto border-2 border-navy/10 shadow-lg mb-10">
-                <div className="flex items-start gap-3">
-                  <BarChart className="w-6 h-6 text-navy flex-shrink-0 mt-1" />
-                  <div className="text-left">
-                    <h3 className="font-bold text-navy mb-3">What You'll Get:</h3>
-                    <ul className="text-sm text-black/70 leading-relaxed space-y-3">
-                      <li className="flex items-start gap-2">
-                        <span className="text-navy font-bold">•</span>
-                        <span><strong>Your E-E-A-T score (0-100)</strong> across Experience, Expertise, Authoritativeness, and Trustworthiness</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-navy font-bold">•</span>
-                        <span><strong>Domain authority metrics:</strong> organic keywords, estimated traffic, and ranking potential</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-navy font-bold">•</span>
-                        <span><strong>Missing trust signals:</strong> author credentials, expert bylines, schema markup gaps</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-navy font-bold">•</span>
-                        <span><strong>Personalized recommendations</strong> to boost credibility with expert verification</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
             </div>
           </FadeIn>
+
           <EEATMeterTool />
+
+          <div className="mt-12 grid md:grid-cols-4 gap-4 text-center">
+            <div className="bg-white rounded-xl p-4 border-2 border-navy/10 shadow-sm">
+              <div className="text-2xl font-bold text-navy mb-1">0-100</div>
+              <div className="text-sm text-black/60">E-E-A-T Score</div>
+            </div>
+            <div className="bg-white rounded-xl p-4 border-2 border-navy/10 shadow-sm">
+              <div className="text-2xl font-bold text-navy mb-1">4 Factors</div>
+              <div className="text-sm text-black/60">Detailed Breakdown</div>
+            </div>
+            <div className="bg-white rounded-xl p-4 border-2 border-navy/10 shadow-sm">
+              <div className="text-2xl font-bold text-navy mb-1">Live Data</div>
+              <div className="text-sm text-black/60">Domain Authority</div>
+            </div>
+            <div className="bg-white rounded-xl p-4 border-2 border-navy/10 shadow-sm">
+              <div className="text-2xl font-bold text-navy mb-1">Instant</div>
+              <div className="text-sm text-black/60">Results</div>
+            </div>
+          </div>
         </div>
       </section>
 
