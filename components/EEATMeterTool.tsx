@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, FormEvent } from 'react'
+import Link from 'next/link'
 import Button from './Button'
 import ScoreGauge from './ScoreGauge'
-import { Globe, Mail, CheckCircle, XCircle, AlertCircle, ArrowRight } from 'lucide-react'
+import { Globe, Mail, CheckCircle, XCircle, AlertCircle, ArrowRight, Sparkles } from 'lucide-react'
 import VerificationBadge from './VerificationBadge'
 
 interface AnalysisResult {
