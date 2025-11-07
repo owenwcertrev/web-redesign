@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'CertREV FAQ - Questions Answered',
     description: 'Everything about expert content verification, pricing, and E-E-A-T improvement.',
-    images: ['/twitter-image.png'],
+    images: ['/og-image.png'],
   },
   alternates: {
     canonical: 'https://certrev.com/faq',

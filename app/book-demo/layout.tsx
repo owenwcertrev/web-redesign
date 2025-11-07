@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Book a CertREV Demo',
     description: 'Schedule a personalized demo of expert content verification.',
-    images: ['/twitter-image.png'],
+    images: ['/og-image.png'],
   },
   alternates: {
     canonical: 'https://certrev.com/book-demo',

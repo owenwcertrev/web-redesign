@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'How CertREV Works - Expert Content Verification',
     description: 'Simple 3-step expert verification: Submit content, expert review, get verified.',
-    images: ['/twitter-image.png'],
+    images: ['/og-image.png'],
   },
   alternates: {
     canonical: 'https://certrev.com/how-it-works',

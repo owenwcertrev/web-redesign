@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'CertREV Brand Dashboard',
     description: 'Manage content verification projects and track expert reviews.',
-    images: ['/twitter-image.png'],
+    images: ['/og-image.png'],
   },
   alternates: {
     canonical: 'https://certrev.com/brand-dashboard',

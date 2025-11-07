@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'E-E-A-T Meter - Free Content Analysis',
     description: 'Analyze your content\'s E-E-A-T score for free. Improve expertise, authoritativeness, and trust.',
-    images: ['/twitter-image.png'],
+    images: ['/og-image.png'],
   },
   alternates: {
     canonical: 'https://certrev.com/eeat-meter',

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'CertREV Pricing - Flexible Plans',
     description: 'Transparent pricing starting at $199/month. No long-term contracts.',
-    images: ['/twitter-image.png'],
+    images: ['/og-image.png'],
   },
   alternates: {
     canonical: 'https://certrev.com/pricing',
