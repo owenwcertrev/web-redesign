@@ -55,7 +55,7 @@ export default function ForExpertsPage() {
             Use your professional credentials to verify health, wellness, financial, and professional service content. Earn competitive compensation while helping brands combat misinformation.
           </p>
           <Button size="lg" asChild>
-            <Link href="/eeat-meter">
+            <Link href="/contact">
               Apply to Join
               <ArrowRight className="w-5 h-5" />
             </Link>

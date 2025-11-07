@@ -16,7 +16,7 @@ export const featureFlags = {
     pricingTiers: true,
     expertNetwork: false, // Set to true when you have experts to showcase
     humanLayer: true,
-    testimonials: true,
+    testimonials: false, // Replaced with early access CTA
     ctaSection: true,
   },
 

@@ -89,19 +89,19 @@ export default function EEATMeterPage() {
                 <div className="w-8 h-8 rounded-full bg-lime/20 flex items-center justify-center">
                   <span className="text-lime-dark font-bold text-xs">✓</span>
                 </div>
-                <span><strong className="text-navy">15,000+</strong> URLs analyzed</span>
-              </div>
-              <div className="flex items-center gap-2 text-black/60">
-                <div className="w-8 h-8 rounded-full bg-lime/20 flex items-center justify-center">
-                  <span className="text-lime-dark font-bold text-xs">✓</span>
-                </div>
-                <span><strong className="text-navy">500+</strong> credentialed experts</span>
-              </div>
-              <div className="flex items-center gap-2 text-black/60">
-                <div className="w-8 h-8 rounded-full bg-lime/20 flex items-center justify-center">
-                  <span className="text-lime-dark font-bold text-xs">✓</span>
-                </div>
                 <span>Powered by <strong className="text-navy">DataForSEO</strong></span>
+              </div>
+              <div className="flex items-center gap-2 text-black/60">
+                <div className="w-8 h-8 rounded-full bg-lime/20 flex items-center justify-center">
+                  <span className="text-lime-dark font-bold text-xs">✓</span>
+                </div>
+                <span><strong className="text-navy">Free</strong> analysis tool</span>
+              </div>
+              <div className="flex items-center gap-2 text-black/60">
+                <div className="w-8 h-8 rounded-full bg-lime/20 flex items-center justify-center">
+                  <span className="text-lime-dark font-bold text-xs">✓</span>
+                </div>
+                <span><strong className="text-navy">Instant</strong> results</span>
               </div>
             </motion.div>
           </div>

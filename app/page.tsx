@@ -648,35 +648,30 @@ export default function Home() {
             </div>
           </FadeIn>
 
-          {/* Testimonials Grid - Offset Layout */}
-          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16 items-center">
+          {/* Early Access Section */}
+          <div className="max-w-3xl mx-auto mb-12 sm:mb-16">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="md:translate-y-8"
+              className="bg-gradient-to-br from-lime-light to-beige rounded-16 p-8 sm:p-12 border-2 border-lime/30 shadow-lg text-center"
             >
-              <Testimonial
-                quote="CertREV transformed how we approach content credibility. Our organic traffic recovered within 3 months of implementing expert verification."
-                name="Sarah Chen"
-                role="VP of Content"
-                company="WellnessBrand Co."
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="md:-translate-y-8"
-            >
-              <Testimonial
-                quote="As a dermatologist, I appreciate how CertREV makes it easy to lend my expertise to brands I trust. The platform is intuitive and the compensation is fair."
-                name="Dr. James Mitchell"
-                role="Board-Certified Dermatologist"
-                company="CertREV Expert Network"
-              />
+              <div className="inline-block mb-4 px-6 py-2 bg-white rounded-full border-2 border-lime shadow-sm">
+                <span className="text-xs font-semibold text-navy tracking-wide">NOW ACCEPTING BRANDS</span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-bold text-navy font-serif mb-4">
+                Join Our Early Access Program
+              </h3>
+              <p className="text-black/70 text-lg mb-6">
+                We're working with select brands to build the future of content verification. Be among the first to add credentialed expert attribution to your content.
+              </p>
+              <Button size="lg" asChild>
+                <Link href="/contact">
+                  Request Early Access
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </Button>
             </motion.div>
           </div>
 
