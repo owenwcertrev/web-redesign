@@ -60,17 +60,37 @@ export default function EEATMeterPage() {
               transition={{ delay: 0.6 }}
               className="text-xl md:text-2xl text-black/70 mb-4 max-w-2xl mx-auto"
             >
-              Human-in-the-Loop Validation for AI-Powered Content
+              Intelligent Domain Analysis with Redirect Detection
             </motion.p>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="text-lg text-black/60 max-w-2xl mx-auto"
+              className="text-lg text-black/60 max-w-2xl mx-auto mb-6"
             >
-              In an AI-driven world, human-in-the-loop verification is the ultimate trust signal. Get your free content analysis.
+              Our advanced system automatically follows redirects and canonical URLs to analyze the true authority of any domain — ensuring accurate E-E-A-T scores every time.
             </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.0 }}
+              className="flex flex-wrap justify-center gap-4 text-sm"
+            >
+              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-lime/20 shadow-sm">
+                <span className="text-lime mr-2">✓</span>
+                <span className="text-navy font-semibold">Redirect Following</span>
+              </div>
+              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-lime/20 shadow-sm">
+                <span className="text-lime mr-2">✓</span>
+                <span className="text-navy font-semibold">Canonical URL Detection</span>
+              </div>
+              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-lime/20 shadow-sm">
+                <span className="text-lime mr-2">✓</span>
+                <span className="text-navy font-semibold">Real-Time Authority Data</span>
+              </div>
+            </motion.div>
           </div>
         </div>
       </DepthHero>
@@ -169,6 +189,100 @@ export default function EEATMeterPage() {
         </div>
       </section>
 
+      {/* Technical Capabilities Section - NEW */}
+      <section className="bg-navy py-20 px-4 relative overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.1} />
+        <div className="max-w-6xl mx-auto relative z-10">
+          <FadeIn>
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white font-serif">
+                Built for Accuracy & Intelligence
+              </h2>
+              <p className="text-xl text-white/80">
+                Advanced domain analysis technology that understands your intent
+              </p>
+            </div>
+          </FadeIn>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0 }}
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border-2 border-white/20"
+            >
+              <div className="w-12 h-12 rounded-xl bg-lime/20 flex items-center justify-center mb-4">
+                <ArrowRight className="w-6 h-6 text-lime" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3 font-serif">Redirect Following</h3>
+              <p className="text-white/80 text-sm leading-relaxed mb-3">
+                Automatically follows HTTP redirects (301, 302, 307, 308) to analyze the destination domain, not just the entry point.
+              </p>
+              <div className="text-xs text-lime font-mono bg-navy/50 rounded px-2 py-1 inline-block">
+                nyt.com → nytimes.com
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.15 }}
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border-2 border-white/20"
+            >
+              <div className="w-12 h-12 rounded-xl bg-coral/20 flex items-center justify-center mb-4">
+                <FileCheck className="w-6 h-6 text-coral" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3 font-serif">Canonical Detection</h3>
+              <p className="text-white/80 text-sm leading-relaxed mb-3">
+                Extracts canonical URLs from HTML to identify the authoritative version of duplicate or similar pages.
+              </p>
+              <div className="text-xs text-coral font-mono bg-navy/50 rounded px-2 py-1 inline-block">
+                &lt;link rel="canonical"&gt;
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border-2 border-white/20"
+            >
+              <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-4">
+                <BarChart className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3 font-serif">Real Authority Data</h3>
+              <p className="text-white/80 text-sm leading-relaxed mb-3">
+                Fetches live domain metrics via DataForSEO API — organic keywords, traffic, and domain rank based on actual search data.
+              </p>
+              <div className="text-xs text-white font-mono bg-navy/50 rounded px-2 py-1 inline-block">
+                21M+ keywords analyzed
+              </div>
+            </motion.div>
+          </div>
+
+          <div className="mt-10 bg-lime-light/10 backdrop-blur-sm rounded-2xl p-6 border-2 border-lime/20">
+            <div className="flex items-start gap-3">
+              <Sparkles className="w-6 h-6 text-lime flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">Example: NYT Analysis</h3>
+                <p className="text-white/90 text-sm leading-relaxed">
+                  When you enter <span className="font-mono bg-navy/50 px-2 py-0.5 rounded">nyt.com</span>, our system:
+                </p>
+                <ol className="text-white/80 text-sm mt-3 space-y-2 list-decimal list-inside">
+                  <li>Follows the redirect to <span className="font-mono bg-navy/50 px-2 py-0.5 rounded text-white">nytimes.com</span></li>
+                  <li>Extracts the canonical URL <span className="font-mono bg-navy/50 px-2 py-0.5 rounded text-white">https://www.nytimes.com</span></li>
+                  <li>Queries DataForSEO for <span className="font-mono bg-navy/50 px-2 py-0.5 rounded text-white">nytimes.com</span> metrics</li>
+                  <li>Returns accurate scores: <span className="text-lime font-semibold">25/25 Authoritativeness</span>, <span className="text-lime font-semibold">21M+ keywords</span>, <span className="text-lime font-semibold">58/100 overall</span></li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* E-E-A-T Meter Tool */}
       <section className="bg-beige py-32 px-4 relative overflow-hidden">
         <TextureOverlay type="paper" opacity={0.3} />
@@ -179,9 +293,25 @@ export default function EEATMeterPage() {
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-navy font-serif">
                 Get Your Free E-E-A-T Analysis
               </h2>
-              <p className="text-xl text-black/70 mb-10 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-xl text-black/70 mb-6 max-w-2xl mx-auto leading-relaxed">
                 Enter any URL to get a comprehensive analysis of its E-E-A-T score, authority metrics, and actionable recommendations.
               </p>
+              <div className="bg-white rounded-2xl p-6 max-w-3xl mx-auto border-2 border-navy/10 shadow-lg mb-10">
+                <div className="flex items-start gap-3 mb-4">
+                  <Sparkles className="w-5 h-5 text-coral flex-shrink-0 mt-1" />
+                  <div className="text-left">
+                    <h3 className="font-bold text-navy mb-2">Smart Domain Resolution</h3>
+                    <p className="text-sm text-black/70 leading-relaxed">
+                      Our analyzer automatically handles redirects and canonical URLs. Enter <span className="font-mono bg-beige px-2 py-0.5 rounded">nyt.com</span> and we'll analyze the authoritative domain <span className="font-mono bg-beige px-2 py-0.5 rounded">nytimes.com</span> — giving you accurate authority scores based on 21M+ keywords and real traffic data.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <span className="bg-lime-light px-3 py-1 rounded-full text-lime-dark font-semibold">HTTP Redirects (301, 302, 307, 308)</span>
+                  <span className="bg-lime-light px-3 py-1 rounded-full text-lime-dark font-semibold">Canonical URLs</span>
+                  <span className="bg-lime-light px-3 py-1 rounded-full text-lime-dark font-semibold">DataForSEO Integration</span>
+                </div>
+              </div>
             </div>
           </FadeIn>
           <EEATMeterTool />
