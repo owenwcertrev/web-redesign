@@ -4,6 +4,9 @@ import { analyzeURL } from '@/lib/services/url-analyzer'
 import { getDataForSEOMetrics } from '@/lib/services/dataforseo-api'
 import { calculateEEATScores, identifyIssues, generateSuggestions } from '@/lib/services/eeat-scorer'
 
+// Force Node.js runtime for Buffer support and external API calls
+export const runtime = 'nodejs'
+
 // Lazy initialize Resend to avoid build-time errors
 function getResendClient() {
   const apiKey = process.env.RESEND_API_KEY
