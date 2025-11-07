@@ -49,10 +49,10 @@ export default function Navigation() {
 
             {/* Expert Dashboard Preview */}
             <Button
-              variant="primary"
+              variant="secondary"
               size="sm"
               asChild
-              className="!bg-navy hover:!bg-navy/90 !text-white !border-navy whitespace-nowrap"
+              className="whitespace-nowrap"
             >
               <Link href="/expert-dashboard">Expert Dashboard</Link>
             </Button>
@@ -114,23 +114,16 @@ export default function Navigation() {
               <Button variant="primary" size="sm" className="w-full !bg-coral hover:!bg-coral/90 !text-white !border-coral" asChild>
                 <Link href="/brand-dashboard" onClick={() => setMobileMenuOpen(false)}>Brand Dashboard</Link>
               </Button>
-              <Button variant="primary" size="sm" className="w-full !bg-navy hover:!bg-navy/90 !text-white !border-navy" asChild>
+              <Button variant="secondary" size="sm" className="w-full" asChild>
                 <Link href="/expert-dashboard" onClick={() => setMobileMenuOpen(false)}>Expert Dashboard</Link>
               </Button>
-              <div className="pt-3 space-y-2 border-t border-black/5">
+              <div className="pt-3 border-t border-black/5">
                 <Link
                   href="https://dashboard.certrev.com/auth/login"
                   className="block py-2 px-4 text-center text-sm text-navy font-semibold border-2 border-navy rounded-lg hover:bg-navy hover:text-white transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Sign In
-                </Link>
-                <Link
-                  href="https://dashboard.certrev.com/auth/signup"
-                  className="block py-2 px-4 text-center text-sm text-white font-semibold bg-coral rounded-lg hover:bg-coral/90 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Sign Up
                 </Link>
               </div>
             </div>

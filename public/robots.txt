@@ -1,0 +1,12 @@
+# robots.txt for CertREV
+# Allow all crawlers to access marketing site
+
+User-agent: *
+Allow: /
+
+# Block dashboard preview pages from indexing
+Disallow: /brand-dashboard
+Disallow: /expert-dashboard
+
+# Sitemap location
+Sitemap: https://certrev.com/sitemap.xml

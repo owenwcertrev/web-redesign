@@ -10,10 +10,10 @@ const dmSans = DM_Sans({ subsets: ['latin'] })
 export const metadata: Metadata = {
   metadataBase: new URL('https://certrev.com'),
   title: {
-    default: 'CertREV - Expert Content Verification for Health, Wellness & Professional Services',
+    default: 'Expert Content Verification Platform | CertREV',
     template: '%s | CertREV'
   },
-  description: 'Expert fact-checking infrastructure for health, wellness, finance, and professional service brands. Human validation in an AI-powered world.',
+  description: 'Connect your content with credentialed experts. Boost E-E-A-T scores, build consumer trust, and protect organic traffic with verified content.',
   keywords: ['content verification', 'expert fact-checking', 'E-E-A-T', 'health content validation', 'medical content review', 'credentialed experts', 'trust infrastructure'],
   authors: [{ name: 'CertREV' }],
   creator: 'CertREV',

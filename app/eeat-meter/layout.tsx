@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'E-E-A-T Meter - Free Content Analysis Tool | CertREV',
-  description: 'Analyze your content\'s Experience, Expertise, Authoritativeness, and Trustworthiness (E-E-A-T) score. Free tool to evaluate content quality and identify improvement opportunities for better Google rankings.',
+  description: 'Free tool to analyze your content\'s E-E-A-T score. Get instant expert recommendations and boost your Google rankings with credibility insights.',
   keywords: ['E-E-A-T analyzer', 'content quality tool', 'EEAT score', 'Google quality guidelines', 'content credibility checker', 'expertise analysis'],
   openGraph: {
     title: 'E-E-A-T Meter - Analyze Your Content Quality',

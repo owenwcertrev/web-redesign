@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'How CertREV Works - Expert Content Verification Process',
-  description: 'Discover how CertREV connects your content with credentialed experts for fact-checking and validation. Simple 3-step process: Submit, Review, Verify. Boost E-E-A-T scores with expert-verified content.',
+  description: 'Simple 3-step expert verification process: Submit, Review, Verify. Connect your content with credentialed experts and boost E-E-A-T scores.',
   keywords: ['content verification process', 'expert review workflow', 'fact-checking service', 'E-E-A-T improvement', 'content credibility'],
   openGraph: {
     title: 'How CertREV Works - Expert Content Verification Process',

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'FAQ - Frequently Asked Questions | CertREV',
-  description: 'Get answers about CertREV\'s expert verification process, pricing, turnaround times, and how we help improve your content\'s E-E-A-T scores. Learn about credential tiers, expert qualifications, and more.',
+  description: 'Answers about expert verification, pricing, turnaround times, and E-E-A-T scores. Learn about credential tiers and expert qualifications.',
   keywords: ['CertREV FAQ', 'content verification questions', 'expert review FAQ', 'E-E-A-T questions', 'verification pricing questions'],
   openGraph: {
     title: 'CertREV FAQ - Your Questions Answered',

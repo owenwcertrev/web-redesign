@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Contact Us - Get in Touch | CertREV',
-  description: 'Contact CertREV for questions about expert content verification, partnership opportunities, or custom solutions. Email owen@certrev.com or use our contact form for a quick response.',
+  description: 'Questions about expert content verification? Contact us for partnership opportunities or custom solutions. Email owen@certrev.com for quick response.',
   keywords: ['contact CertREV', 'expert verification contact', 'customer support', 'partnership inquiry', 'content verification support'],
   openGraph: {
     title: 'Contact CertREV - We\'re Here to Help',

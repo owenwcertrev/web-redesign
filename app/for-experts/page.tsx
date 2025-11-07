@@ -7,7 +7,7 @@ import { ArrowRight, DollarSign, Clock, Award, TrendingUp, CheckCircle, Users } 
 
 export const metadata: Metadata = {
   title: 'Join Our Expert Network | CertREV',
-  description: 'Use your expertise to help brands build trustworthy content. Flexible work, competitive compensation, professional recognition. Join credentialed professionals earning $50-200/hour reviewing content.',
+  description: 'Join credentialed professionals earning $50-200/hour reviewing content. Flexible work, competitive compensation, professional recognition.',
   keywords: ['become expert reviewer', 'expert network', 'credentialed professional work', 'content review jobs', 'flexible expert work', 'fact-checking jobs'],
   openGraph: {
     title: 'Join Our Expert Network - Earn as a Credentialed Professional',
