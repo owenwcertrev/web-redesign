@@ -180,7 +180,8 @@ function calculateExpertiseScore(
 
 /**
  * Authoritativeness Score (0-25)
- * Factors: Domain rank, backlinks, citations
+ * Factors: Domain rank (estimated), organic traffic, keyword rankings, citations
+ * Note: Without backlinks API, using organic performance as authority proxy
  */
 function calculateAuthoritativenessScore(
   page: PageAnalysis,
@@ -188,7 +189,7 @@ function calculateAuthoritativenessScore(
 ): number {
   let score = 0
 
-  // Domain Rank (0-10 points) - DataForSEO's 0-100 scale
+  // Domain Rank (0-10 points) - Estimated from organic performance
   const domainRank = dataforseo.domainRank
   if (domainRank >= 80) {
     score += 10
@@ -202,29 +203,27 @@ function calculateAuthoritativenessScore(
     score += 2
   }
 
-  // Backlinks (0-10 points)
-  const backlinks = dataforseo.backlinks
-  if (backlinks >= 100000) {
-    score += 10
-  } else if (backlinks >= 10000) {
+  // Organic Keywords (0-8 points) - proxy for domain authority
+  const keywords = dataforseo.organicKeywords
+  if (keywords >= 100000) {
     score += 8
-  } else if (backlinks >= 1000) {
+  } else if (keywords >= 10000) {
     score += 6
-  } else if (backlinks >= 100) {
+  } else if (keywords >= 1000) {
     score += 4
-  } else if (backlinks >= 10) {
+  } else if (keywords >= 100) {
     score += 2
   }
 
-  // Referring domains (0-5 points)
-  const domains = dataforseo.referringMainDomains
-  if (domains >= 1000) {
+  // Organic Traffic (0-7 points) - indicates established authority
+  const traffic = dataforseo.organicTraffic
+  if (traffic >= 1000000) {
+    score += 7
+  } else if (traffic >= 100000) {
     score += 5
-  } else if (domains >= 500) {
-    score += 4
-  } else if (domains >= 100) {
+  } else if (traffic >= 10000) {
     score += 3
-  } else if (domains >= 10) {
+  } else if (traffic >= 1000) {
     score += 2
   }
 
@@ -233,7 +232,8 @@ function calculateAuthoritativenessScore(
 
 /**
  * Trustworthiness Score (0-25)
- * Factors: SSL, schema markup, spam score
+ * Factors: SSL, schema markup, page quality signals, organic presence
+ * Note: Spam score not available without backlinks API
  */
 function calculateTrustworthinessScore(
   page: PageAnalysis,
@@ -241,9 +241,9 @@ function calculateTrustworthinessScore(
 ): number {
   let score = 0
 
-  // SSL/Security (0-5 points)
+  // SSL/Security (0-7 points) - Critical trust signal
   if (page.hasSSL) {
-    score += 5
+    score += 7
   }
 
   // Schema markup (0-8 points)
@@ -260,16 +260,14 @@ function calculateTrustworthinessScore(
     score += 2
   }
 
-  // Spam score (0-7 points) - Lower is better (DataForSEO 0-100%)
-  const spamScore = dataforseo.spamScore
-  if (spamScore <= 5) {
-    score += 7
-  } else if (spamScore <= 10) {
+  // Organic presence (0-5 points) - proxy for trustworthiness
+  // Sites with organic traffic are typically trustworthy
+  if (dataforseo.organicKeywords > 10000) {
     score += 5
-  } else if (spamScore <= 20) {
+  } else if (dataforseo.organicKeywords > 1000) {
     score += 3
-  } else if (spamScore <= 40) {
-    score += 1
+  } else if (dataforseo.organicKeywords > 100) {
+    score += 2
   }
 
   // Page quality signals (0-5 points)
@@ -338,19 +336,19 @@ export function identifyIssues(
     issues.push({
       severity: 'high',
       category: 'authoritativeness',
-      title: 'Low Domain Rank',
-      description: `Your domain rank is ${dataforseo.domainRank}/100, which is below average.`,
-      impact: 'Low domain rank makes it harder to rank for competitive keywords.',
+      title: 'Low Organic Visibility',
+      description: `Your domain has limited organic search presence (estimated rank: ${dataforseo.domainRank}/100).`,
+      impact: 'Low organic visibility makes it harder to rank for competitive keywords.',
     })
   }
 
-  if (dataforseo.backlinks < 100) {
+  if (dataforseo.organicKeywords < 100) {
     issues.push({
       severity: 'high',
       category: 'authoritativeness',
-      title: 'Few Backlinks',
-      description: `Only ${dataforseo.backlinks} backlinks detected.`,
-      impact: 'Backlinks are crucial for building authoritativeness.',
+      title: 'Limited Keyword Rankings',
+      description: `Domain ranks for only ${dataforseo.organicKeywords} organic keywords.`,
+      impact: 'Limited keyword rankings indicate low domain authority in search engines.',
     })
   }
 
@@ -385,13 +383,13 @@ export function identifyIssues(
     })
   }
 
-  if (dataforseo.spamScore > 10) {
+  if (dataforseo.organicTraffic < 1000 && dataforseo.organicKeywords > 100) {
     issues.push({
       severity: 'medium',
-      category: 'trustworthiness',
-      title: 'Elevated Spam Score',
-      description: `Spam score is ${dataforseo.spamScore}%. Recommended: below 10%.`,
-      impact: 'High spam score can trigger manual reviews or penalties.',
+      category: 'authoritativeness',
+      title: 'Low Organic Traffic',
+      description: `Despite ranking for keywords, organic traffic is low (${Math.round(dataforseo.organicTraffic)} estimated monthly visits).`,
+      impact: 'Low traffic suggests poor rankings or low-value keyword targeting.',
     })
   }
 
@@ -471,17 +469,17 @@ export function generateSuggestions(
   if (dataforseo.domainRank < 40) {
     suggestions.push({
       category: 'authoritativeness',
-      title: 'Build Domain Authority',
-      description: 'Focus on earning high-quality backlinks from authoritative sites in your industry. Guest posting, PR, and expert partnerships can help.',
+      title: 'Improve Organic Search Presence',
+      description: 'Focus on creating comprehensive, expert-reviewed content that ranks for relevant keywords. Partner with credentialed experts to boost authority.',
       priority: 'high',
     })
   }
 
-  if (dataforseo.backlinks < 1000) {
+  if (dataforseo.organicKeywords < 1000) {
     suggestions.push({
       category: 'authoritativeness',
-      title: 'Increase Backlink Profile',
-      description: 'Create linkable assets (research, tools, guides) and promote them to earn more backlinks from relevant sites.',
+      title: 'Expand Keyword Coverage',
+      description: 'Create in-depth content targeting long-tail keywords in your niche. Quality content reviewed by experts will naturally rank better.',
       priority: 'medium',
     })
   }

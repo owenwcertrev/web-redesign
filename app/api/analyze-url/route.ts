@@ -69,12 +69,9 @@ export async function POST(request: NextRequest) {
       suggestions: suggestions.map(s => s.description),
       metrics: {
         domainRank: dataforSEOMetrics.domainRank,
-        pageRank: dataforSEOMetrics.pageRank,
-        backlinks: dataforSEOMetrics.backlinks,
-        referringDomains: dataforSEOMetrics.referringMainDomains,
-        spamScore: dataforSEOMetrics.spamScore,
         organicKeywords: dataforSEOMetrics.organicKeywords,
         organicTraffic: dataforSEOMetrics.organicTraffic,
+        organicTrafficValue: dataforSEOMetrics.organicTrafficValue,
         wordCount: pageAnalysis.wordCount,
         readabilityScore: pageAnalysis.readabilityScore,
       },
