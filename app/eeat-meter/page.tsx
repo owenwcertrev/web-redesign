@@ -9,9 +9,8 @@ import TiltCard from '@/components/cards3d/TiltCard'
 import FadeIn from '@/components/animations/FadeIn'
 import TextureOverlay from '@/components/TextureOverlay'
 import OrganicShape from '@/components/OrganicShape'
-import ConfidenceMeter from '@/components/trust/ConfidenceMeter'
 import EEATMeterTool from '@/components/EEATMeterTool'
-import { BarChart, FileCheck, TrendingUp, Users, AlertCircle, ShoppingBag, Sparkles, ArrowRight, Mail } from 'lucide-react'
+import { BarChart, FileCheck, TrendingUp, Users, AlertCircle, ShoppingBag, Sparkles, ArrowRight } from 'lucide-react'
 
 export default function EEATMeterPage() {
   return (
@@ -95,101 +94,42 @@ export default function EEATMeterPage() {
         </div>
       </DepthHero>
 
-      {/* Sample Report Preview - Tilt Cards */}
-      <section className="bg-white py-20 px-4 relative overflow-hidden">
-        <TextureOverlay type="grain" opacity={0.15} />
-        <div className="max-w-6xl mx-auto relative z-10">
+      {/* E-E-A-T Meter Tool - Move to top */}
+      <section className="bg-beige py-20 px-4 relative overflow-hidden">
+        <TextureOverlay type="paper" opacity={0.3} />
+        <OrganicShape variant="blob3" color="lime" className="absolute -bottom-20 -right-20 w-96 h-96" opacity={0.06} />
+        <div className="max-w-4xl mx-auto relative z-10">
           <FadeIn>
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-navy font-serif">
-                Your Customized Analysis Includes
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-navy font-serif">
+                Analyze Your Website Now
               </h2>
-              <p className="text-xl text-black/70">
-                Authority score and content health metrics
+              <p className="text-xl text-black/70 mb-6 max-w-2xl mx-auto leading-relaxed">
+                Get instant insights into your content's E-E-A-T score, authority metrics, and what's holding you back from ranking higher.
               </p>
+              <div className="bg-white rounded-2xl p-6 max-w-3xl mx-auto border-2 border-navy/10 shadow-lg mb-10">
+                <div className="flex items-start gap-3 mb-4">
+                  <Sparkles className="w-5 h-5 text-coral flex-shrink-0 mt-1" />
+                  <div className="text-left">
+                    <h3 className="font-bold text-navy mb-2">Smart Domain Resolution</h3>
+                    <p className="text-sm text-black/70 leading-relaxed">
+                      Our analyzer automatically handles redirects and canonical URLs. Enter <span className="font-mono bg-beige px-2 py-0.5 rounded">nyt.com</span> and we'll analyze the authoritative domain <span className="font-mono bg-beige px-2 py-0.5 rounded">nytimes.com</span> — giving you accurate authority scores based on 21M+ keywords and real traffic data.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <span className="bg-lime-light px-3 py-1 rounded-full text-lime-dark font-semibold">HTTP Redirects (301, 302, 307, 308)</span>
+                  <span className="bg-lime-light px-3 py-1 rounded-full text-lime-dark font-semibold">Canonical URLs</span>
+                  <span className="bg-lime-light px-3 py-1 rounded-full text-lime-dark font-semibold">DataForSEO Integration</span>
+                </div>
+              </div>
             </div>
           </FadeIn>
-
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0 }}
-            >
-              <TiltCard intensity={0.7} glowColor="rgba(10, 27, 63, 0.2)">
-                <div className="bg-beige rounded-2xl p-8 border-2 border-navy/20 shadow-xl h-full relative overflow-hidden">
-                  <TextureOverlay type="paper" opacity={0.3} />
-                  <div className="flex items-center gap-3 mb-6 relative z-10">
-                    <div className="w-12 h-12 rounded-xl bg-navy/10 flex items-center justify-center">
-                      <BarChart className="w-6 h-6 text-navy" />
-                    </div>
-                    <h3 className="text-xl font-bold text-navy font-serif">
-                      Estimated Semrush Authority Score
-                    </h3>
-                  </div>
-                  <div className="bg-white rounded-xl p-6 mb-4 border-2 border-navy/10 relative z-10">
-                    <ConfidenceMeter score={67} label="Authority Score" showPercentage={false} />
-                    <div className="text-center mt-4">
-                      <div className="text-5xl font-bold text-navy">67</div>
-                      <div className="text-xs text-black/50 mt-1">Domain Authority</div>
-                    </div>
-                  </div>
-                  <p className="text-sm text-black/70 leading-relaxed relative z-10">
-                    A calibrated snapshot of your domain's credibility based on backlinks, press coverage, and organic traffic
-                  </p>
-                </div>
-              </TiltCard>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              <TiltCard intensity={0.7} glowColor="rgba(212, 225, 87, 0.2)">
-                <div className="bg-white rounded-2xl p-8 border-2 border-lime/20 shadow-xl h-full relative overflow-hidden">
-                  <TextureOverlay type="paper" opacity={0.3} />
-                  <div className="flex items-center gap-3 mb-6 relative z-10">
-                    <div className="w-12 h-12 rounded-xl bg-lime/20 flex items-center justify-center">
-                      <FileCheck className="w-6 h-6 text-lime" />
-                    </div>
-                    <h3 className="text-xl font-bold text-navy font-serif">
-                      Blog Content Health Check
-                    </h3>
-                  </div>
-                  <div className="bg-beige rounded-xl p-6 mb-4 border-2 border-lime/10 relative z-10">
-                    <div className="space-y-3 text-sm">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lime text-lg">✓</span>
-                        <span className="text-black/70">SSL Certificate Present</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-coral text-lg">✗</span>
-                        <span className="text-black/70">Missing Author Bylines</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-coral text-lg">✗</span>
-                        <span className="text-black/70">No Expert Schema Markup</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-coral text-lg">⚠</span>
-                        <span className="text-black/70">Limited Expert Reviews</span>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-sm text-black/70 leading-relaxed relative z-10">
-                    Analysis of missing best practices like author bylines, expert reviews, structured data, and helpfulness signals
-                  </p>
-                </div>
-              </TiltCard>
-            </motion.div>
-          </div>
+          <EEATMeterTool />
         </div>
       </section>
 
-      {/* Technical Capabilities Section - NEW */}
+      {/* Technical Capabilities Section */}
       <section className="bg-navy py-20 px-4 relative overflow-hidden">
         <TextureOverlay type="grain" opacity={0.1} />
         <div className="max-w-6xl mx-auto relative z-10">
@@ -280,41 +220,6 @@ export default function EEATMeterPage() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* E-E-A-T Meter Tool */}
-      <section className="bg-beige py-32 px-4 relative overflow-hidden">
-        <TextureOverlay type="paper" opacity={0.3} />
-        <OrganicShape variant="blob3" color="lime" className="absolute -bottom-20 -right-20 w-96 h-96" opacity={0.06} />
-        <div className="max-w-4xl mx-auto relative z-10">
-          <FadeIn>
-            <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-navy font-serif">
-                Get Your Free E-E-A-T Analysis
-              </h2>
-              <p className="text-xl text-black/70 mb-6 max-w-2xl mx-auto leading-relaxed">
-                Enter any URL to get a comprehensive analysis of its E-E-A-T score, authority metrics, and actionable recommendations.
-              </p>
-              <div className="bg-white rounded-2xl p-6 max-w-3xl mx-auto border-2 border-navy/10 shadow-lg mb-10">
-                <div className="flex items-start gap-3 mb-4">
-                  <Sparkles className="w-5 h-5 text-coral flex-shrink-0 mt-1" />
-                  <div className="text-left">
-                    <h3 className="font-bold text-navy mb-2">Smart Domain Resolution</h3>
-                    <p className="text-sm text-black/70 leading-relaxed">
-                      Our analyzer automatically handles redirects and canonical URLs. Enter <span className="font-mono bg-beige px-2 py-0.5 rounded">nyt.com</span> and we'll analyze the authoritative domain <span className="font-mono bg-beige px-2 py-0.5 rounded">nytimes.com</span> — giving you accurate authority scores based on 21M+ keywords and real traffic data.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2 text-xs">
-                  <span className="bg-lime-light px-3 py-1 rounded-full text-lime-dark font-semibold">HTTP Redirects (301, 302, 307, 308)</span>
-                  <span className="bg-lime-light px-3 py-1 rounded-full text-lime-dark font-semibold">Canonical URLs</span>
-                  <span className="bg-lime-light px-3 py-1 rounded-full text-lime-dark font-semibold">DataForSEO Integration</span>
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-          <EEATMeterTool />
         </div>
       </section>
 
