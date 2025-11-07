@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { analyzeURL } from '@/lib/services/url-analyzer'
+import { getDomainMetrics, getBacklinkMetrics } from '@/lib/services/semrush-api'
+import { getMozMetrics } from '@/lib/services/moz-api'
+import { calculateEEATScores, identifyIssues, generateSuggestions } from '@/lib/services/eeat-scorer'
 
 // Lazy initialize Resend to avoid build-time errors
 function getResendClient() {
@@ -32,50 +36,50 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // For MVP, return mock data
-    // Later: integrate with actual analysis tools (Semrush API, custom crawlers)
+    // Perform comprehensive E-E-A-T analysis
+    console.log('Starting E-E-A-T analysis for:', url)
+
+    // Run all analyses in parallel for speed
+    const [pageAnalysis, semrushMetrics, mozMetrics] = await Promise.all([
+      analyzeURL(url),
+      getDomainMetrics(url),
+      getMozMetrics(url),
+    ])
+
+    // Calculate E-E-A-T scores
+    const scores = calculateEEATScores(pageAnalysis, semrushMetrics, mozMetrics)
+
+    // Identify issues and generate suggestions
+    const issues = identifyIssues(pageAnalysis, semrushMetrics, mozMetrics, scores)
+    const suggestions = generateSuggestions(pageAnalysis, semrushMetrics, mozMetrics, scores)
+
+    // Format analysis results for frontend
     const analysis = {
-      score: 65,
+      score: scores.overall,
       breakdown: {
-        experience: 18,
-        expertise: 12,
-        authoritativeness: 20,
-        trustworthiness: 15,
+        experience: scores.experience,
+        expertise: scores.expertise,
+        authoritativeness: scores.authoritativeness,
+        trustworthiness: scores.trustworthiness,
       },
-      issues: [
-        {
-          type: 'missing',
-          severity: 'high',
-          message: '73% of articles lack expert bylines',
-        },
-        {
-          type: 'missing',
-          severity: 'high',
-          message: 'No structured data for author credentials',
-        },
-        {
-          type: 'warning',
-          severity: 'medium',
-          message: 'Limited expert reviews on key content',
-        },
-        {
-          type: 'warning',
-          severity: 'medium',
-          message: 'Low domain authority score (estimate based on backlinks)',
-        },
-        {
-          type: 'good',
-          severity: 'low',
-          message: 'Strong backlink profile detected',
-        },
-      ],
-      suggestions: [
-        'Add expert attribution to your content',
-        'Implement author schema markup',
-        'Build relationships with credentialed experts',
-        'Improve E-E-A-T signals with verification badges',
-      ],
+      issues: issues.map(issue => ({
+        type: issue.severity === 'critical' || issue.severity === 'high' ? 'missing' : issue.severity === 'medium' ? 'warning' : 'good',
+        severity: issue.severity,
+        message: issue.title,
+        description: issue.description,
+      })),
+      suggestions: suggestions.map(s => s.description),
+      metrics: {
+        domainAuthority: mozMetrics.domainAuthority,
+        pageAuthority: mozMetrics.pageAuthority,
+        backlinks: semrushMetrics.backlinks,
+        referringDomains: semrushMetrics.referringDomains,
+        wordCount: pageAnalysis.wordCount,
+        readabilityScore: pageAnalysis.readabilityScore,
+      },
     }
+
+    console.log('E-E-A-T analysis complete:', { url, score: scores.overall })
 
     // If email provided, send detailed report
     if (email) {
