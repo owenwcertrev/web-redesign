@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
-import { analyzeURL } from '@/lib/services/url-analyzer'
+import { analyzeURL, getAuthoritativeDomain } from '@/lib/services/url-analyzer'
 import { getDataForSEOMetrics } from '@/lib/services/dataforseo-api'
 import { calculateEEATScores, identifyIssues, generateSuggestions } from '@/lib/services/eeat-scorer'
 
@@ -55,21 +55,30 @@ export async function POST(request: NextRequest) {
     // Perform comprehensive E-E-A-T analysis with DataForSEO
     console.log('Starting E-E-A-T analysis for:', normalizedUrl)
 
-    // Run page analysis and DataForSEO API in parallel for speed
-    const [pageAnalysis, dataforSEOMetrics] = await Promise.all([
-      analyzeURL(normalizedUrl).catch((err) => {
-        console.error('Page analysis failed:', err.message)
-        throw new Error(`Failed to analyze page: ${err.message}`)
-      }),
-      getDataForSEOMetrics(normalizedUrl).catch((err) => {
-        console.error('DataForSEO API failed:', err.message)
-        // Don't fail the entire request if DataForSEO fails - use estimated metrics
-        return null
-      }),
-    ])
+    // First, analyze the page to get redirects and canonical URL
+    const pageAnalysis = await analyzeURL(normalizedUrl).catch((err) => {
+      console.error('Page analysis failed:', err.message)
+      throw new Error(`Failed to analyze page: ${err.message}`)
+    })
+
+    // Get the authoritative domain (canonical > finalUrl > original)
+    const authoritativeDomain = getAuthoritativeDomain(pageAnalysis)
+    console.log('Domain resolution:', {
+      entered: normalizedUrl,
+      finalUrl: pageAnalysis.finalUrl,
+      canonical: pageAnalysis.canonicalUrl,
+      authoritative: authoritativeDomain,
+    })
+
+    // Fetch DataForSEO metrics using the authoritative domain
+    const dataforSEOMetrics = await getDataForSEOMetrics(`https://${authoritativeDomain}`).catch((err) => {
+      console.error('DataForSEO API failed:', err.message)
+      // Don't fail the entire request if DataForSEO fails - use estimated metrics
+      return null
+    })
 
     // Use actual metrics or fallback to estimated ones
-    const metricsToUse = dataforSEOMetrics || await getDataForSEOMetrics(normalizedUrl)
+    const metricsToUse = dataforSEOMetrics || await getDataForSEOMetrics(`https://${authoritativeDomain}`)
 
     // Debug logging for DataForSEO metrics
     console.log('DataForSEO Metrics for', normalizedUrl, ':', {
@@ -103,6 +112,12 @@ export async function POST(request: NextRequest) {
         expertise: scores.expertise,
         authoritativeness: scores.authoritativeness,
         trustworthiness: scores.trustworthiness,
+      },
+      domainInfo: {
+        entered: normalizedUrl,
+        analyzed: authoritativeDomain,
+        redirected: pageAnalysis.finalUrl !== normalizedUrl,
+        canonical: pageAnalysis.canonicalUrl,
       },
       issues: issues.map(issue => ({
         type: issue.severity === 'critical' || issue.severity === 'high' ? 'missing' : issue.severity === 'medium' ? 'warning' : 'good',

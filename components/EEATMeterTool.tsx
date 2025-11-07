@@ -141,9 +141,16 @@ export default function EEATMeterTool() {
         <div className="space-y-8 animate-in fade-in duration-500">
           {/* E-E-A-T Score Visualization */}
           <div className="bg-white rounded-16 p-8 shadow-base">
-            <h3 className="text-2xl font-semibold mb-8 text-center text-black">
+            <h3 className="text-2xl font-semibold mb-2 text-center text-black">
               Your E-E-A-T Score
             </h3>
+            {results.domainInfo && results.domainInfo.redirected && (
+              <p className="text-sm text-black/60 text-center mb-6">
+                Analyzing <span className="font-semibold text-navy">{results.domainInfo.analyzed}</span>
+                {results.domainInfo.entered !== `https://${results.domainInfo.analyzed}` &&
+                  ` (redirected from ${new URL(results.domainInfo.entered).hostname})`}
+              </p>
+            )}
             <div className="flex justify-center mb-8">
               <ScoreGauge score={results.score} label="Overall E-E-A-T Score" />
             </div>

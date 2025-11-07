@@ -7,7 +7,7 @@ import * as path from 'path'
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
 
-import { analyzeURL } from '../lib/services/url-analyzer'
+import { analyzeURL, getAuthoritativeDomain } from '../lib/services/url-analyzer'
 import { getDataForSEOMetrics } from '../lib/services/dataforseo-api'
 import { calculateEEATScores, identifyIssues } from '../lib/services/eeat-scorer'
 
@@ -22,6 +22,9 @@ async function debugURL(url: string) {
   const pageAnalysis = await analyzeURL(url)
 
   console.log(`Title: ${pageAnalysis.title}`)
+  console.log(`Original URL: ${pageAnalysis.url}`)
+  console.log(`Final URL (after redirects): ${pageAnalysis.finalUrl}`)
+  console.log(`Canonical URL: ${pageAnalysis.canonicalUrl || 'None'}`)
   console.log(`Word Count: ${pageAnalysis.wordCount}`)
   console.log(`Readability Score: ${pageAnalysis.readabilityScore}`)
   console.log(`Has SSL: ${pageAnalysis.hasSSL}`)
@@ -41,10 +44,14 @@ async function debugURL(url: string) {
   console.log(`Links: ${pageAnalysis.links.internal} internal, ${pageAnalysis.links.external} external`)
   console.log(`Citations: ${pageAnalysis.citations}`)
 
+  // Get authoritative domain for DataForSEO
+  const authoritativeDomain = getAuthoritativeDomain(pageAnalysis)
+  console.log(`\nAuthoritative Domain: ${authoritativeDomain}`)
+
   // DataForSEO Analysis
   console.log(`\n\n🌐 DATAFORSEO METRICS`)
   console.log('='.repeat(80))
-  const dataforSEOMetrics = await getDataForSEOMetrics(url)
+  const dataforSEOMetrics = await getDataForSEOMetrics(`https://${authoritativeDomain}`)
 
   console.log(`Domain Rank: ${dataforSEOMetrics.domainRank}/100`)
   console.log(`Organic Keywords: ${dataforSEOMetrics.organicKeywords.toLocaleString()}`)

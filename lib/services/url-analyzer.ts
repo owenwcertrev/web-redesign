@@ -8,6 +8,8 @@ import { EEAT_CONFIG } from '../eeat-config'
 
 export interface PageAnalysis {
   url: string
+  finalUrl: string // URL after following redirects
+  canonicalUrl: string | null // Canonical URL from <link rel="canonical">
   title: string
   metaDescription: string
   wordCount: number
@@ -49,24 +51,29 @@ export async function analyzeURL(url: string): Promise<PageAnalysis> {
   // Validate and normalize URL
   const normalizedUrl = normalizeURL(url)
 
-  // Fetch the page
-  const html = await fetchPage(normalizedUrl)
+  // Fetch the page (follows redirects automatically)
+  const { html, finalUrl } = await fetchPage(normalizedUrl)
 
   // Parse with Cheerio
   const $ = cheerio.load(html)
 
+  // Extract canonical URL from HTML
+  const canonicalUrl = extractCanonicalUrl($)
+
   // Extract all data
   const analysis: PageAnalysis = {
     url: normalizedUrl,
+    finalUrl: finalUrl,
+    canonicalUrl: canonicalUrl,
     title: extractTitle($),
     metaDescription: extractMetaDescription($),
     wordCount: countWords($),
     headings: extractHeadings($),
-    hasSSL: normalizedUrl.startsWith('https://'),
+    hasSSL: finalUrl.startsWith('https://'), // Use final URL for SSL check
     authors: extractAuthors($),
     schemaMarkup: extractSchemaMarkup($),
     images: analyzeImages($),
-    links: analyzeLinks($, normalizedUrl),
+    links: analyzeLinks($, finalUrl), // Use final URL for link analysis
     citations: countCitations($),
     readabilityScore: calculateReadability($),
   }
@@ -90,20 +97,25 @@ function normalizeURL(url: string): string {
 }
 
 /**
- * Fetches HTML content from a URL
+ * Fetches HTML content from a URL, following redirects
+ * Returns both the HTML and the final URL after redirects
  */
-async function fetchPage(url: string): Promise<string> {
+async function fetchPage(url: string): Promise<{ html: string, finalUrl: string }> {
   const response = await fetch(url, {
     headers: {
       'User-Agent': 'CertREV E-E-A-T Analyzer/1.0 (https://certrev.com)',
     },
+    redirect: 'follow', // Follow redirects automatically (up to 20 by default)
   })
 
   if (!response.ok) {
     throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
   }
 
-  return await response.text()
+  const html = await response.text()
+  const finalUrl = response.url // This contains the final URL after redirects
+
+  return { html, finalUrl }
 }
 
 /**
@@ -118,6 +130,45 @@ function extractTitle($: cheerio.CheerioAPI): string {
  */
 function extractMetaDescription($: cheerio.CheerioAPI): string {
   return $('meta[name="description"]').attr('content') || ''
+}
+
+/**
+ * Extracts canonical URL from HTML
+ */
+function extractCanonicalUrl($: cheerio.CheerioAPI): string | null {
+  const canonical = $('link[rel="canonical"]').attr('href')
+  return canonical || null
+}
+
+/**
+ * Gets the authoritative domain for a page
+ * Priority: canonical URL > final URL after redirects > original URL
+ */
+export function getAuthoritativeDomain(analysis: PageAnalysis): string {
+  // Try canonical URL first
+  if (analysis.canonicalUrl) {
+    try {
+      const url = new URL(analysis.canonicalUrl)
+      return url.hostname.replace('www.', '')
+    } catch {
+      // Invalid canonical URL, fall through
+    }
+  }
+
+  // Try final URL after redirects
+  try {
+    const url = new URL(analysis.finalUrl)
+    return url.hostname.replace('www.', '')
+  } catch {
+    // Fall back to original URL
+    try {
+      const url = new URL(analysis.url)
+      return url.hostname.replace('www.', '')
+    } catch {
+      // Last resort: return the URL as-is
+      return analysis.url.replace('www.', '').split('/')[0]
+    }
+  }
 }
 
 /**
