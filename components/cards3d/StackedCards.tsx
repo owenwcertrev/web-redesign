@@ -28,29 +28,46 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const prefersReducedMotion = usePrefersReducedMotion()
 
-  // Memoize card positions - only recalculate when expandedIndex or cards change
+  // Detect mobile/tablet
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Set up mobile detection
+  useMemo(() => {
+    if (typeof window !== 'undefined') {
+      const checkMobile = () => setIsMobile(window.innerWidth < 768)
+      checkMobile()
+      window.addEventListener('resize', checkMobile)
+      return () => window.removeEventListener('resize', checkMobile)
+    }
+  }, [])
+
+  // Memoize card positions - only recalculate when expandedIndex, cards, or viewport changes
   const cardPositions = useMemo<CardPosition[]>(() => {
     return cards.map((_, index) => {
       const isExpanded = expandedIndex === index
       const isAfterExpanded = expandedIndex !== null && index > expandedIndex
 
       let zIndex = cards.length - index
-      let yOffset = index * 20
-      let scale = 1 - index * 0.03
-      let rotateX = -index * 2
+      // Increased mobile spacing: 60px vs 20px on desktop
+      let yOffset = index * (isMobile ? 60 : 20)
+      // Less aggressive scale on mobile
+      let scale = 1 - index * (isMobile ? 0.01 : 0.03)
+      // No 3D rotation on mobile for better compatibility
+      let rotateX = isMobile ? 0 : -index * 2
 
       if (isExpanded) {
         zIndex = 1000
         yOffset = 0
-        scale = 1.05
+        scale = isMobile ? 1 : 1.05
         rotateX = 0
       } else if (isAfterExpanded) {
-        yOffset = (expandedIndex * 20) + ((index - expandedIndex) * 20) + 100
+        const baseOffset = isMobile ? 60 : 20
+        yOffset = (expandedIndex * baseOffset) + ((index - expandedIndex) * baseOffset) + (isMobile ? 150 : 100)
       }
 
       return { zIndex, yOffset, scale, rotateX }
     })
-  }, [cards, expandedIndex])
+  }, [cards, expandedIndex, isMobile])
 
   // Memoized transition config
   const springTransition = useMemo(() => {
@@ -78,8 +95,20 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
   }, [])
 
   return (
-    <div className={`relative ${className}`} style={{ perspective: '2000px' }}>
-      <div className="relative" style={{ minHeight: '400px' }}>
+    <div
+      className={`relative ${className}`}
+      style={{
+        // Disable 3D perspective on mobile for better compatibility
+        perspective: isMobile ? 'none' : '2000px'
+      }}
+    >
+      <div
+        className="relative"
+        style={{
+          // Responsive min-height
+          minHeight: isMobile ? '500px' : '400px'
+        }}
+      >
         {cards.map((card, index) => {
           const isExpanded = expandedIndex === index
           const isHovered = hoveredIndex === index
@@ -97,7 +126,8 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
               className="absolute inset-x-0 cursor-pointer group"
               style={{
                 zIndex: position.zIndex,
-                transformStyle: 'preserve-3d',
+                // Disable preserve-3d on mobile
+                transformStyle: isMobile ? 'flat' : 'preserve-3d',
                 // Add will-change only to hovered or expanded cards
                 willChange: (isHovered || isExpanded) ? 'transform' : 'auto',
               }}
@@ -108,9 +138,12 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
               }}
               transition={springTransition}
               onClick={() => handleCardClick(index)}
-              onHoverStart={() => handleHoverStart(index)}
-              onHoverEnd={handleHoverEnd}
+              onHoverStart={() => !isMobile && handleHoverStart(index)}
+              onHoverEnd={() => !isMobile && handleHoverEnd()}
+              onTouchStart={() => isMobile && handleHoverStart(index)}
+              onTouchEnd={() => isMobile && handleHoverEnd()}
               whileHover={hoverAnimation}
+              whileTap={isMobile ? { scale: position.scale * 0.98 } : {}}
             >
               {/* Enhanced Shadow with depth */}
               <div
@@ -124,14 +157,14 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
               }`}>
                 {card.content}
 
-                {/* Expand/Collapse Icon - appears on hover */}
+                {/* Expand/Collapse Icon - always visible on mobile, hover on desktop */}
                 {!isExpanded && (
                   <motion.div
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: isHovered ? 1 : 0 }}
-                    className="absolute bottom-4 right-4 w-10 h-10 bg-navy rounded-full flex items-center justify-center shadow-lg"
+                    animate={{ opacity: isMobile || isHovered ? 1 : 0 }}
+                    className={`absolute bottom-3 right-3 ${isMobile ? 'w-14 h-14' : 'w-10 h-10'} bg-navy rounded-full flex items-center justify-center shadow-lg`}
                   >
-                    <ChevronDown className="w-5 h-5 text-white" />
+                    <ChevronDown className={`${isMobile ? 'w-6 h-6' : 'w-5 h-5'} text-white`} />
                   </motion.div>
                 )}
 
@@ -140,9 +173,9 @@ export default function StackedCards({ cards, className = '' }: StackedCardsProp
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="absolute bottom-4 right-4 w-10 h-10 bg-black rounded-full flex items-center justify-center shadow-lg"
+                    className={`absolute bottom-3 right-3 ${isMobile ? 'w-14 h-14' : 'w-10 h-10'} bg-black rounded-full flex items-center justify-center shadow-lg`}
                   >
-                    <ChevronUp className="w-5 h-5 text-white" />
+                    <ChevronUp className={`${isMobile ? 'w-6 h-6' : 'w-5 h-5'} text-white`} />
                   </motion.div>
                 )}
               </div>

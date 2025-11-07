@@ -33,15 +33,15 @@ const processCards = [
     {
       id: 'submit',
       content: (
-        <div className="bg-navy/5 p-10 rounded-2xl border-2 border-navy/20 relative overflow-hidden shadow-md">
+        <div className="bg-navy/5 p-4 sm:p-6 md:p-10 rounded-2xl border-2 border-navy/20 relative overflow-hidden shadow-md">
           <TextureOverlay type="paper" opacity={0.3} />
-          <div className="flex items-start gap-4 mb-6 relative z-10">
-            <div className="w-14 h-14 rounded-2xl bg-navy flex items-center justify-center shadow-sm">
-              <Upload className="w-7 h-7 text-white" />
+          <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6 relative z-10">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-2xl bg-navy flex items-center justify-center shadow-sm flex-shrink-0">
+              <Upload className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-navy mb-3 font-serif">Submit Content</h3>
-              <p className="text-black/70 text-lg leading-relaxed">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-navy mb-2 sm:mb-3 font-serif">Submit Content</h3>
+              <p className="text-black/70 text-sm sm:text-base md:text-lg leading-relaxed">
                 Upload your articles, blog posts, or landing pages through our dashboard. Our AI performs initial screening to identify claims that need expert validation.
               </p>
             </div>
@@ -52,15 +52,15 @@ const processCards = [
     {
       id: 'review',
       content: (
-        <div className="bg-lime/10 p-10 rounded-2xl border-2 border-lime relative overflow-hidden shadow-md">
+        <div className="bg-lime/10 p-4 sm:p-6 md:p-10 rounded-2xl border-2 border-lime relative overflow-hidden shadow-md">
           <TextureOverlay type="paper" opacity={0.3} />
-          <div className="flex items-start gap-4 mb-6 relative z-10">
-            <div className="w-14 h-14 rounded-2xl bg-lime flex items-center justify-center shadow-sm">
-              <Search className="w-7 h-7 text-navy" />
+          <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6 relative z-10">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-2xl bg-lime flex items-center justify-center shadow-sm flex-shrink-0">
+              <Search className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-navy" />
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-navy mb-3 font-serif">Expert Review</h3>
-              <p className="text-black/70 text-lg leading-relaxed">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-navy mb-2 sm:mb-3 font-serif">Expert Review</h3>
+              <p className="text-black/70 text-sm sm:text-base md:text-lg leading-relaxed">
                 Credentialed professionals verify claims, check sources, validate accuracy against current research, and ensure regulatory compliance.
               </p>
             </div>
@@ -71,15 +71,15 @@ const processCards = [
     {
       id: 'certify',
       content: (
-        <div className="bg-coral/10 p-10 rounded-2xl border-2 border-coral relative overflow-hidden shadow-md">
+        <div className="bg-coral/10 p-4 sm:p-6 md:p-10 rounded-2xl border-2 border-coral relative overflow-hidden shadow-md">
           <TextureOverlay type="paper" opacity={0.3} />
-          <div className="flex items-start gap-4 mb-6 relative z-10">
-            <div className="w-14 h-14 rounded-2xl bg-coral flex items-center justify-center shadow-sm">
-              <CheckCircle2 className="w-7 h-7 text-white" />
+          <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6 relative z-10">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-2xl bg-coral flex items-center justify-center shadow-sm flex-shrink-0">
+              <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-navy mb-3 font-serif">Get Certified</h3>
-              <p className="text-black/70 text-lg leading-relaxed">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-navy mb-2 sm:mb-3 font-serif">Get Certified</h3>
+              <p className="text-black/70 text-sm sm:text-base md:text-lg leading-relaxed">
                 Receive verification badges, expert signatures, and structured data markup that boost credibility with consumers and search engines alike.
               </p>
             </div>
