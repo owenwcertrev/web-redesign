@@ -113,7 +113,7 @@ async function getDomainRankOverview(domain: string): Promise<any> {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Authorization': 'Basic ' + btoa(`${getDataForSEOLogin()}:${getDataForSEOPassword()}`),
+      'Authorization': 'Basic ' + Buffer.from(`${getDataForSEOLogin()}:${getDataForSEOPassword()}`).toString('base64'),
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(requestBody),
@@ -227,7 +227,7 @@ export async function getBulkSpamScores(domains: string[]): Promise<Record<strin
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Authorization': 'Basic ' + btoa(`${getDataForSEOLogin()}:${getDataForSEOPassword()}`),
+      'Authorization': 'Basic ' + Buffer.from(`${getDataForSEOLogin()}:${getDataForSEOPassword()}`).toString('base64'),
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(requestBody),
@@ -275,7 +275,7 @@ export async function getBulkRanks(domains: string[]): Promise<Record<string, { 
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Authorization': 'Basic ' + btoa(`${getDataForSEOLogin()}:${getDataForSEOPassword()}`),
+      'Authorization': 'Basic ' + Buffer.from(`${getDataForSEOLogin()}:${getDataForSEOPassword()}`).toString('base64'),
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(requestBody),
