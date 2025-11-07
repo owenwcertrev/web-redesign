@@ -45,11 +45,11 @@ export default function EEATMeterPage() {
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-8 leading-tight font-serif"
             >
               <span className="text-navy">
-                E-E-A-T
+                Discover Your Content's
               </span>
               <br />
               <span className="text-coral">
-                Meter
+                Credibility Score
               </span>
             </motion.h1>
 
@@ -57,37 +57,25 @@ export default function EEATMeterPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-xl md:text-2xl text-black/70 mb-4 max-w-2xl mx-auto"
+              className="text-xl md:text-2xl text-black/70 mb-8 max-w-3xl mx-auto leading-relaxed"
             >
-              Unlock Your Content's Full Potential
-            </motion.p>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="text-lg text-black/60 max-w-2xl mx-auto mb-6"
-            >
-              Discover your content's credibility score and learn exactly how expert verification can boost your rankings, traffic, and conversions.
+              60% of consumers doubt AI-generated content. Find out if your content has the expert signals needed to rank higher and convert skeptical audiences.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.0 }}
+              transition={{ delay: 0.8 }}
               className="flex flex-wrap justify-center gap-4 text-sm"
             >
-              <div className="bg-lime-light/50 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-lime/30">
-                <span className="text-lime-dark mr-2">✓</span>
-                <span className="text-navy font-semibold">Free Analysis</span>
+              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-navy/20 shadow-sm">
+                <span className="text-navy font-semibold">Instant E-E-A-T Analysis</span>
               </div>
-              <div className="bg-lime-light/50 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-lime/30">
-                <span className="text-lime-dark mr-2">✓</span>
-                <span className="text-navy font-semibold">Instant Results</span>
+              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-navy/20 shadow-sm">
+                <span className="text-navy font-semibold">Domain Authority Insights</span>
               </div>
-              <div className="bg-lime-light/50 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-lime/30">
-                <span className="text-lime-dark mr-2">✓</span>
-                <span className="text-navy font-semibold">Actionable Insights</span>
+              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-navy/20 shadow-sm">
+                <span className="text-navy font-semibold">Expert Verification Roadmap</span>
               </div>
             </motion.div>
           </div>
@@ -102,32 +90,32 @@ export default function EEATMeterPage() {
           <FadeIn>
             <div className="text-center mb-12">
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-navy font-serif">
-                See Your Score in 30 Seconds
+                See How Your Content Measures Up
               </h2>
               <p className="text-xl text-black/70 mb-6 max-w-2xl mx-auto leading-relaxed">
-                See how your content stacks up and get a personalized roadmap to higher rankings.
+                Get a comprehensive E-E-A-T score in 30 seconds. No signup required.
               </p>
-              <div className="bg-white rounded-2xl p-6 max-w-3xl mx-auto border-2 border-lime/20 shadow-lg mb-10">
+              <div className="bg-white rounded-2xl p-6 max-w-3xl mx-auto border-2 border-navy/10 shadow-lg mb-10">
                 <div className="flex items-start gap-3">
-                  <Sparkles className="w-6 h-6 text-lime-dark flex-shrink-0 mt-1" />
+                  <BarChart className="w-6 h-6 text-navy flex-shrink-0 mt-1" />
                   <div className="text-left">
-                    <h3 className="font-bold text-navy mb-2">Your free analysis includes:</h3>
-                    <ul className="text-sm text-black/70 leading-relaxed space-y-2">
+                    <h3 className="font-bold text-navy mb-3">What You'll Get:</h3>
+                    <ul className="text-sm text-black/70 leading-relaxed space-y-3">
                       <li className="flex items-start gap-2">
-                        <span className="text-lime-dark font-bold">✓</span>
-                        <span><strong>Your E-E-A-T score</strong> — comprehensive credibility assessment across 4 key factors</span>
+                        <span className="text-navy font-bold">•</span>
+                        <span><strong>Your E-E-A-T score (0-100)</strong> across Experience, Expertise, Authoritativeness, and Trustworthiness</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-lime-dark font-bold">✓</span>
-                        <span><strong>Content quality insights</strong> — readability, structure, and technical optimization</span>
+                        <span className="text-navy font-bold">•</span>
+                        <span><strong>Domain authority metrics:</strong> organic keywords, estimated traffic, and ranking potential</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-lime-dark font-bold">✓</span>
-                        <span><strong>Authority benchmarks</strong> — see how you compare to industry leaders</span>
+                        <span className="text-navy font-bold">•</span>
+                        <span><strong>Missing trust signals:</strong> author credentials, expert bylines, schema markup gaps</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-lime-dark font-bold">✓</span>
-                        <span><strong>Expert verification opportunities</strong> — ways to add credibility that drives results</span>
+                        <span className="text-navy font-bold">•</span>
+                        <span><strong>Personalized recommendations</strong> to boost credibility with expert verification</span>
                       </li>
                     </ul>
                   </div>
@@ -146,10 +134,10 @@ export default function EEATMeterPage() {
           <FadeIn>
             <div className="text-center mb-12">
               <h2 className="text-4xl md:text-5xl font-bold mb-4 text-navy font-serif">
-                How Expert Verification Elevates Your Content
+                How Expert Verification Fixes Your E-E-A-T Score
               </h2>
               <p className="text-xl text-black/70 max-w-3xl mx-auto">
-                Turn insights into action with credentialed experts
+                Credentialed professionals add the trust signals Google and consumers demand
               </p>
             </div>
           </FadeIn>
@@ -167,13 +155,13 @@ export default function EEATMeterPage() {
                   <div className="w-12 h-12 rounded-xl bg-lime/20 flex items-center justify-center mb-4 relative z-10">
                     <Users className="w-6 h-6 text-lime-dark" />
                   </div>
-                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Add Real Experience</h3>
+                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Add Expert Experience</h3>
                   <p className="text-black/70 text-sm leading-relaxed mb-4 relative z-10">
-                    Connect with credentialed experts who bring first-hand knowledge and real-world expertise to your content.
+                    Board-certified dermatologists, registered dietitians (RDN), licensed nurses (RN), and certified professionals verify your claims against current research and industry standards.
                   </p>
                   <div className="bg-white rounded-xl p-4 border-2 border-lime/30 relative z-10">
-                    <p className="text-sm font-semibold text-navy mb-2">What you get:</p>
-                    <p className="text-xs text-black/70">Expert bylines, credentials, and authentic experience that sets you apart from AI content</p>
+                    <p className="text-sm font-semibold text-navy mb-2">Result:</p>
+                    <p className="text-xs text-black/70">First-hand expertise signals that separate human knowledge from AI-generated content</p>
                   </div>
                 </div>
               </TiltCard>
@@ -191,13 +179,13 @@ export default function EEATMeterPage() {
                   <div className="w-12 h-12 rounded-xl bg-lime/20 flex items-center justify-center mb-4 relative z-10">
                     <FileCheck className="w-6 h-6 text-lime-dark" />
                   </div>
-                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Build Authority</h3>
+                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Build Authority Signals</h3>
                   <p className="text-black/70 text-sm leading-relaxed mb-4 relative z-10">
-                    Showcase verified credentials, professional certifications, and structured data that search engines love.
+                    Expert bylines with credentials, schema markup Google recognizes, and verification badges create the authority signals search engines prioritize for E-E-A-T compliance.
                   </p>
                   <div className="bg-white rounded-xl p-4 border-2 border-lime/30 relative z-10">
-                    <p className="text-sm font-semibold text-navy mb-2">What you get:</p>
-                    <p className="text-xs text-black/70">Schema markup, verification badges, and expert attribution that boosts your search visibility</p>
+                    <p className="text-sm font-semibold text-navy mb-2">Result:</p>
+                    <p className="text-xs text-black/70">Protection against algorithm updates and improved rankings for competitive keywords</p>
                   </div>
                 </div>
               </TiltCard>
@@ -215,13 +203,13 @@ export default function EEATMeterPage() {
                   <div className="w-12 h-12 rounded-xl bg-lime/20 flex items-center justify-center mb-4 relative z-10">
                     <TrendingUp className="w-6 h-6 text-lime-dark" />
                   </div>
-                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Earn Trust</h3>
+                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Earn Consumer Trust</h3>
                   <p className="text-black/70 text-sm leading-relaxed mb-4 relative z-10">
-                    Display trust signals that consumers and search engines recognize, especially critical for YMYL content.
+                    Transparent expert reviews, verification seals, and credibility markers convert skeptical consumers — especially critical for health, wellness, finance, and professional service content.
                   </p>
                   <div className="bg-white rounded-xl p-4 border-2 border-lime/30 relative z-10">
-                    <p className="text-sm font-semibold text-navy mb-2">What you get:</p>
-                    <p className="text-xs text-black/70">Expert reviews, verification seals, and credibility markers that drive conversions</p>
+                    <p className="text-sm font-semibold text-navy mb-2">Result:</p>
+                    <p className="text-xs text-black/70">40% higher purchase intent and improved conversion rates from verified content</p>
                   </div>
                 </div>
               </TiltCard>
@@ -294,38 +282,39 @@ export default function EEATMeterPage() {
           <div className="bg-beige rounded-3xl p-10 md:p-14 border-2 border-navy/10 shadow-xl relative overflow-hidden">
             <TextureOverlay type="paper" opacity={0.3} />
             <h3 className="text-3xl font-bold mb-6 text-navy font-serif relative z-10">
-              Why E-E-A-T Matters for Your Brand
+              Why E-E-A-T Matters for YMYL Content
             </h3>
             <p className="text-lg text-black/80 mb-6 leading-relaxed relative z-10">
               Health, wellness, financial, and legal content falls under Google's "Your Money or Your Life" (YMYL) category — content
-              that can impact health, safety, or financial well-being. Google applies stricter E-E-A-T standards to
-              YMYL content.
+              that can impact health, safety, or financial well-being. Google applies the strictest E-E-A-T standards to YMYL content,
+              requiring verified expert credentials from Tier 1-3 professionals (MDs, CPAs, JDs, RNs, RDNs).
             </p>
             <p className="text-lg text-black/80 mb-4 leading-relaxed font-semibold relative z-10">
-              Without verified expert attribution, brands risk:
+              Without expert-verified content, YMYL brands face:
             </p>
             <ul className="grid md:grid-cols-2 gap-4 text-black/80 mb-6 relative z-10">
-              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border-2 border-coral/20">
-                <span className="text-coral font-bold">•</span>
-                <span>Significant drops in organic traffic (HubSpot saw 88% decline)</span>
+              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border-2 border-navy/10">
+                <span className="text-navy font-bold">•</span>
+                <span><strong>88% traffic drops</strong> from algorithm updates (HubSpot case study)</span>
               </li>
-              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border-2 border-coral/20">
-                <span className="text-coral font-bold">•</span>
-                <span>Lower search rankings for competitive keywords</span>
+              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border-2 border-navy/10">
+                <span className="text-navy font-bold">•</span>
+                <span><strong>Lower rankings</strong> for competitive keywords without expert attribution</span>
               </li>
-              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border-2 border-coral/20">
-                <span className="text-coral font-bold">•</span>
-                <span>Reduced consumer trust and conversion rates</span>
+              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border-2 border-navy/10">
+                <span className="text-navy font-bold">•</span>
+                <span><strong>60% consumer doubt</strong> for AI-generated or anonymous content</span>
               </li>
-              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border-2 border-coral/20">
-                <span className="text-coral font-bold">•</span>
-                <span>FTC compliance issues for unsubstantiated claims</span>
+              <li className="flex items-start gap-3 bg-white rounded-xl p-4 border-2 border-navy/10">
+                <span className="text-navy font-bold">•</span>
+                <span><strong>$51,744 average FTC fine</strong> per violation for unsubstantiated health/wellness claims</span>
               </li>
             </ul>
-            <p className="text-lg text-black/80 leading-relaxed relative z-10">
-              Expert validation through CertREV helps brands across health, wellness, finance, and professional services meet E-E-A-T standards, protect their SEO
-              performance, and build lasting consumer trust.
-            </p>
+            <div className="bg-lime-light/30 rounded-2xl p-6 border-2 border-lime/30 relative z-10">
+              <p className="text-lg text-black/90 leading-relaxed">
+                <strong className="text-navy">Expert verification through CertREV</strong> helps brands meet E-E-A-T standards, protect organic traffic from algorithm penalties, ensure regulatory compliance, and convert skeptical consumers into customers.
+              </p>
+            </div>
           </div>
         </div>
       </section>
