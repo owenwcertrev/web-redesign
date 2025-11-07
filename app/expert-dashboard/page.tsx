@@ -51,7 +51,7 @@ export default function ExpertDashboardPage() {
                 Join Expert Network
               </Link>
             </Button>
-            <Button size="lg" asChild className="!bg-navy hover:!bg-navy/90 !text-white !border-navy">
+            <Button size="lg" variant="secondary" asChild>
               <Link href="https://dashboard.certrev.com/auth/login">
                 Sign In →
               </Link>

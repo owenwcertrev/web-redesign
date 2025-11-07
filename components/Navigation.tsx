@@ -49,10 +49,10 @@ export default function Navigation() {
 
             {/* Expert Dashboard Preview */}
             <Button
-              variant="secondary"
+              variant="primary"
               size="sm"
               asChild
-              className="whitespace-nowrap"
+              className="!bg-navy hover:!bg-navy/90 !text-white !border-navy whitespace-nowrap"
             >
               <Link href="/expert-dashboard">Expert Dashboard</Link>
             </Button>
@@ -114,7 +114,7 @@ export default function Navigation() {
               <Button variant="primary" size="sm" className="w-full !bg-coral hover:!bg-coral/90 !text-white !border-coral" asChild>
                 <Link href="/brand-dashboard" onClick={() => setMobileMenuOpen(false)}>Brand Dashboard</Link>
               </Button>
-              <Button variant="secondary" size="sm" className="w-full" asChild>
+              <Button variant="primary" size="sm" className="w-full !bg-navy hover:!bg-navy/90 !text-white !border-navy" asChild>
                 <Link href="/expert-dashboard" onClick={() => setMobileMenuOpen(false)}>Expert Dashboard</Link>
               </Button>
               <div className="pt-3 border-t border-black/5">
