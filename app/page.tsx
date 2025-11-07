@@ -648,7 +648,7 @@ export default function Home() {
             </div>
           </FadeIn>
 
-          {/* Early Access Section */}
+          {/* CTA Section */}
           <div className="max-w-3xl mx-auto mb-12 sm:mb-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -658,20 +658,27 @@ export default function Home() {
               className="bg-gradient-to-br from-lime-light to-beige rounded-16 p-8 sm:p-12 border-2 border-lime/30 shadow-lg text-center"
             >
               <div className="inline-block mb-4 px-6 py-2 bg-white rounded-full border-2 border-lime shadow-sm">
-                <span className="text-xs font-semibold text-navy tracking-wide">NOW ACCEPTING BRANDS</span>
+                <span className="text-xs font-semibold text-navy tracking-wide">GET STARTED TODAY</span>
               </div>
               <h3 className="text-2xl sm:text-3xl font-bold text-navy font-serif mb-4">
-                Join Our Early Access Program
+                Start Adding Expert Attribution to Your Content
               </h3>
               <p className="text-black/70 text-lg mb-6">
-                We're working with select brands to build the future of content verification. Be among the first to add credentialed expert attribution to your content.
+                Sign up as a brand and connect your content with credentialed experts. Improve your E-E-A-T scores and build trust with your audience.
               </p>
-              <Button size="lg" asChild>
-                <Link href="/contact">
-                  Request Early Access
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" asChild>
+                  <Link href="https://dashboard.certrev.com/signup?type=brand">
+                    Sign Up as Brand
+                    <ArrowRight className="w-5 h-5" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="secondary" asChild>
+                  <Link href="/contact">
+                    Schedule Demo
+                  </Link>
+                </Button>
+              </div>
             </motion.div>
           </div>
 
