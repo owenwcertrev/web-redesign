@@ -347,9 +347,9 @@ export default function EEATMeterTool() {
                     </ul>
                   </div>
                   <div className="bg-white rounded-lg p-4 mb-4 inline-block">
-                    <p className="text-sm text-black/60 mb-2">Typical path to 75+:</p>
-                    <p className="text-lg"><strong>12-15 expert reviews</strong> (~$1,920-2,400/month)</p>
-                    <p className="text-xs text-black/50 mt-1">Core SEO or Growth Plan</p>
+                    <p className="text-sm text-black/60 mb-2">Example path to 75+:</p>
+                    <p className="text-lg"><strong>12-15 expert reviews</strong></p>
+                    <p className="text-xs text-black/50 mt-1">Pricing varies by plan and volume</p>
                   </div>
                 </>
               )}
@@ -362,9 +362,9 @@ export default function EEATMeterTool() {
                     With expert-verified content, you could reach industry-leading scores (75+) and protect against algorithm penalties. <strong>3-day turnaround</strong> on first review.
                   </p>
                   <div className="bg-white rounded-lg p-4 mb-4 inline-block">
-                    <p className="text-sm text-black/60 mb-2">Estimated to reach 75+:</p>
-                    <p className="text-lg"><strong>8-12 expert reviews</strong> (~$1,280-1,920/month)</p>
-                    <p className="text-xs text-black/50 mt-1">Starter or Core SEO Plan</p>
+                    <p className="text-sm text-black/60 mb-2">Example path to 75+:</p>
+                    <p className="text-lg"><strong>8-12 expert reviews</strong></p>
+                    <p className="text-xs text-black/50 mt-1">Pricing varies by plan and volume</p>
                   </div>
                 </>
               )}
@@ -378,8 +378,8 @@ export default function EEATMeterTool() {
                   </p>
                   <div className="bg-white rounded-lg p-4 mb-4 inline-block">
                     <p className="text-sm text-black/60 mb-2">Maintain your advantage:</p>
-                    <p className="text-lg"><strong>4-8 expert reviews/month</strong> (~$640-1,280)</p>
-                    <p className="text-xs text-black/50 mt-1">Starter Plan</p>
+                    <p className="text-lg"><strong>4-8 expert reviews/month</strong></p>
+                    <p className="text-xs text-black/50 mt-1">Pricing varies by plan and volume</p>
                   </div>
                 </>
               )}
