@@ -46,15 +46,28 @@ export async function getDataForSEOMetrics(url: string): Promise<DataForSEOMetri
     return getEstimatedMetrics()
   }
 
+  console.log('DataForSEO API: Fetching metrics for', url)
+
   try {
     const cleanUrl = normalizeUrl(url)
     const domain = extractDomain(cleanUrl)
 
+    console.log('DataForSEO API: Normalized domain:', domain)
+
     const domainData = await getDomainRankOverview(domain)
+
+    console.log('DataForSEO API: Raw response data:', {
+      organicKeywords: domainData.organicKeywords,
+      organicTraffic: domainData.organicTraffic,
+      organicTrafficValue: domainData.organicTrafficValue,
+      hasPositionDistribution: !!domainData.positionDistribution,
+    })
 
     // Estimate domain rank from organic performance
     // Using position distribution and keyword count as proxy
     const estimatedRank = estimateDomainRank(domainData)
+
+    console.log('DataForSEO API: Estimated domain rank:', estimatedRank)
 
     return {
       // Estimated authority (based on organic performance)

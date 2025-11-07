@@ -71,8 +71,25 @@ export async function POST(request: NextRequest) {
     // Use actual metrics or fallback to estimated ones
     const metricsToUse = dataforSEOMetrics || await getDataForSEOMetrics(normalizedUrl)
 
+    // Debug logging for DataForSEO metrics
+    console.log('DataForSEO Metrics for', normalizedUrl, ':', {
+      domainRank: metricsToUse.domainRank,
+      organicKeywords: metricsToUse.organicKeywords,
+      organicTraffic: metricsToUse.organicTraffic,
+      organicTrafficValue: metricsToUse.organicTrafficValue,
+    })
+
     // Calculate E-E-A-T scores
     const scores = calculateEEATScores(pageAnalysis, metricsToUse)
+
+    // Debug logging for scores
+    console.log('E-E-A-T Scores:', {
+      overall: scores.overall,
+      experience: scores.experience,
+      expertise: scores.expertise,
+      authoritativeness: scores.authoritativeness,
+      trustworthiness: scores.trustworthiness,
+    })
 
     // Identify issues and generate suggestions
     const issues = identifyIssues(pageAnalysis, metricsToUse, scores)
