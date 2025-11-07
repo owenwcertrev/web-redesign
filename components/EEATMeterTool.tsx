@@ -130,8 +130,23 @@ export default function EEATMeterTool() {
         </form>
 
         {error && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-12 text-red-700">
-            {error}
+          <div className="mt-4 p-4 bg-red-50 border-2 border-red-200 rounded-16">
+            <div className="flex items-start gap-3 mb-3">
+              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h4 className="font-semibold text-red-900 mb-1">Analysis Error</h4>
+                <p className="text-red-700 text-sm">{error}</p>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg p-3 border border-red-100">
+              <p className="text-xs font-semibold text-black/70 mb-2">Troubleshooting tips:</p>
+              <ul className="text-xs text-black/60 space-y-1">
+                <li>• Make sure the URL is publicly accessible (not behind a login)</li>
+                <li>• Try adding or removing "www" from the domain</li>
+                <li>• Verify the website is online and responding</li>
+                <li>• Check if you entered the correct domain spelling</li>
+              </ul>
+            </div>
           </div>
         )}
 

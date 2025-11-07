@@ -58,7 +58,22 @@ export async function POST(request: NextRequest) {
     // First, analyze the page to get redirects and canonical URL
     const pageAnalysis = await analyzeURL(normalizedUrl).catch((err) => {
       console.error('Page analysis failed:', err.message)
-      throw new Error(`Failed to analyze page: ${err.message}`)
+
+      // Provide user-friendly error messages
+      if (err.message.includes('Failed to fetch')) {
+        if (err.message.includes('404')) {
+          throw new Error('We couldn\'t find that page. Please check the URL and try again.')
+        } else if (err.message.includes('403') || err.message.includes('401')) {
+          throw new Error('This website is blocking automated access. Please try a different URL.')
+        } else if (err.message.includes('500') || err.message.includes('502') || err.message.includes('503')) {
+          throw new Error('The website is experiencing technical issues. Please try again later.')
+        } else if (err.message.includes('timeout') || err.message.includes('ECONNREFUSED')) {
+          throw new Error('Unable to connect to this website. Please verify the URL is correct and try again.')
+        }
+      }
+
+      // Generic fallback
+      throw new Error('We couldn\'t analyze this URL. Please verify it\'s a valid, publicly accessible website.')
     })
 
     // Get the authoritative domain (canonical > finalUrl > original)

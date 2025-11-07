@@ -101,21 +101,34 @@ function normalizeURL(url: string): string {
  * Returns both the HTML and the final URL after redirects
  */
 async function fetchPage(url: string): Promise<{ html: string, finalUrl: string }> {
-  const response = await fetch(url, {
-    headers: {
-      'User-Agent': 'CertREV E-E-A-T Analyzer/1.0 (https://certrev.com)',
-    },
-    redirect: 'follow', // Follow redirects automatically (up to 20 by default)
-  })
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'CertREV E-E-A-T Analyzer/1.0 (https://certrev.com)',
+      },
+      redirect: 'follow', // Follow redirects automatically (up to 20 by default)
+      signal: AbortSignal.timeout(15000), // 15 second timeout
+    })
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
+    }
+
+    const html = await response.text()
+    const finalUrl = response.url // This contains the final URL after redirects
+
+    return { html, finalUrl }
+  } catch (err) {
+    // Handle network errors
+    if (err instanceof Error) {
+      if (err.name === 'AbortError') {
+        throw new Error(`Failed to fetch ${url}: timeout - The website took too long to respond`)
+      } else if (err.message.includes('fetch failed') || err.message.includes('ENOTFOUND')) {
+        throw new Error(`Failed to fetch ${url}: Unable to connect - Check if the domain is correct`)
+      }
+    }
+    throw err
   }
-
-  const html = await response.text()
-  const finalUrl = response.url // This contains the final URL after redirects
-
-  return { html, finalUrl }
 }
 
 /**
