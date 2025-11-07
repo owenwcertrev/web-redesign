@@ -14,6 +14,12 @@ interface AnalysisResult {
     authoritativeness: number
     trustworthiness: number
   }
+  domainInfo?: {
+    entered: string
+    analyzed: string
+    redirected: boolean
+    canonical: string | null
+  }
   issues: Array<{
     type: 'missing' | 'warning' | 'good'
     severity: 'high' | 'medium' | 'low'
