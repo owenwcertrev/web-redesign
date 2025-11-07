@@ -59,7 +59,7 @@ export default function EEATMeterPage() {
               transition={{ delay: 0.6 }}
               className="text-xl md:text-2xl text-black/70 mb-4 max-w-2xl mx-auto"
             >
-              Intelligent Domain Analysis with Redirect Detection
+              Is Your Content Invisible to Google?
             </motion.p>
 
             <motion.p
@@ -68,7 +68,7 @@ export default function EEATMeterPage() {
               transition={{ delay: 0.8 }}
               className="text-lg text-black/60 max-w-2xl mx-auto mb-6"
             >
-              Our advanced system automatically follows redirects and canonical URLs to analyze the true authority of any domain — ensuring accurate E-E-A-T scores every time.
+              Without verified expert credentials, your content may be getting buried — no matter how good it is. Find out where you stand in 30 seconds.
             </motion.p>
 
             <motion.div
@@ -77,17 +77,17 @@ export default function EEATMeterPage() {
               transition={{ delay: 1.0 }}
               className="flex flex-wrap justify-center gap-4 text-sm"
             >
-              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-lime/20 shadow-sm">
-                <span className="text-lime mr-2">✓</span>
-                <span className="text-navy font-semibold">Redirect Following</span>
+              <div className="bg-coral/10 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-coral/30">
+                <span className="text-coral mr-2">⚠</span>
+                <span className="text-navy font-semibold">Missing Expert Bylines?</span>
               </div>
-              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-lime/20 shadow-sm">
-                <span className="text-lime mr-2">✓</span>
-                <span className="text-navy font-semibold">Canonical URL Detection</span>
+              <div className="bg-coral/10 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-coral/30">
+                <span className="text-coral mr-2">⚠</span>
+                <span className="text-navy font-semibold">No Verified Credentials?</span>
               </div>
-              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-lime/20 shadow-sm">
-                <span className="text-lime mr-2">✓</span>
-                <span className="text-navy font-semibold">Real-Time Authority Data</span>
+              <div className="bg-coral/10 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-coral/30">
+                <span className="text-coral mr-2">⚠</span>
+                <span className="text-navy font-semibold">Traffic Declining?</span>
               </div>
             </motion.div>
           </div>
@@ -102,25 +102,35 @@ export default function EEATMeterPage() {
           <FadeIn>
             <div className="text-center mb-12">
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-navy font-serif">
-                Analyze Your Website Now
+                See Your Score in 30 Seconds
               </h2>
               <p className="text-xl text-black/70 mb-6 max-w-2xl mx-auto leading-relaxed">
-                Get instant insights into your content's E-E-A-T score, authority metrics, and what's holding you back from ranking higher.
+                Discover what's hurting your rankings and how expert verification can fix it — instantly and free.
               </p>
-              <div className="bg-white rounded-2xl p-6 max-w-3xl mx-auto border-2 border-navy/10 shadow-lg mb-10">
-                <div className="flex items-start gap-3 mb-4">
-                  <Sparkles className="w-5 h-5 text-coral flex-shrink-0 mt-1" />
+              <div className="bg-white rounded-2xl p-6 max-w-3xl mx-auto border-2 border-coral/20 shadow-lg mb-10">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-6 h-6 text-coral flex-shrink-0 mt-1" />
                   <div className="text-left">
-                    <h3 className="font-bold text-navy mb-2">Smart Domain Resolution</h3>
-                    <p className="text-sm text-black/70 leading-relaxed">
-                      Our analyzer automatically handles redirects and canonical URLs. Enter <span className="font-mono bg-beige px-2 py-0.5 rounded">nyt.com</span> and we'll analyze the authoritative domain <span className="font-mono bg-beige px-2 py-0.5 rounded">nytimes.com</span> — giving you accurate authority scores based on 21M+ keywords and real traffic data.
-                    </p>
+                    <h3 className="font-bold text-navy mb-2">You'll discover:</h3>
+                    <ul className="text-sm text-black/70 leading-relaxed space-y-2">
+                      <li className="flex items-start gap-2">
+                        <span className="text-coral font-bold">•</span>
+                        <span><strong>Your E-E-A-T score</strong> — how Google sees your content's credibility</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-coral font-bold">•</span>
+                        <span><strong>Missing trust signals</strong> — author bylines, credentials, expert reviews</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-coral font-bold">•</span>
+                        <span><strong>Domain authority gaps</strong> — where you rank vs. competitors</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-coral font-bold">•</span>
+                        <span><strong>How CertREV can help</strong> — specific fixes to boost your score</span>
+                      </li>
+                    </ul>
                   </div>
-                </div>
-                <div className="flex flex-wrap gap-2 text-xs">
-                  <span className="bg-lime-light px-3 py-1 rounded-full text-lime-dark font-semibold">HTTP Redirects (301, 302, 307, 308)</span>
-                  <span className="bg-lime-light px-3 py-1 rounded-full text-lime-dark font-semibold">Canonical URLs</span>
-                  <span className="bg-lime-light px-3 py-1 rounded-full text-lime-dark font-semibold">DataForSEO Integration</span>
                 </div>
               </div>
             </div>
@@ -129,17 +139,17 @@ export default function EEATMeterPage() {
         </div>
       </section>
 
-      {/* Technical Capabilities Section */}
-      <section className="bg-navy py-20 px-4 relative overflow-hidden">
-        <TextureOverlay type="grain" opacity={0.1} />
+      {/* What Happens After You See Your Score */}
+      <section className="bg-white py-20 px-4 relative overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.15} />
         <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white font-serif">
-                Built for Accuracy & Intelligence
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-navy font-serif">
+                Your Score Reveals the Problem.<br />CertREV Delivers the Solution.
               </h2>
-              <p className="text-xl text-white/80">
-                Advanced domain analysis technology that understands your intent
+              <p className="text-xl text-black/70 max-w-3xl mx-auto">
+                Most brands score below 50/100 — here's how we fix it
               </p>
             </div>
           </FadeIn>
@@ -150,18 +160,23 @@ export default function EEATMeterPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0 }}
-              className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border-2 border-white/20"
             >
-              <div className="w-12 h-12 rounded-xl bg-lime/20 flex items-center justify-center mb-4">
-                <ArrowRight className="w-6 h-6 text-lime" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3 font-serif">Redirect Following</h3>
-              <p className="text-white/80 text-sm leading-relaxed mb-3">
-                Automatically follows HTTP redirects (301, 302, 307, 308) to analyze the destination domain, not just the entry point.
-              </p>
-              <div className="text-xs text-lime font-mono bg-navy/50 rounded px-2 py-1 inline-block">
-                nyt.com → nytimes.com
-              </div>
+              <TiltCard intensity={0.6} glowColor="rgba(232, 96, 60, 0.2)">
+                <div className="bg-beige rounded-2xl p-6 border-2 border-coral/20 shadow-xl h-full relative overflow-hidden">
+                  <TextureOverlay type="paper" opacity={0.3} />
+                  <div className="w-12 h-12 rounded-xl bg-coral/20 flex items-center justify-center mb-4 relative z-10">
+                    <AlertCircle className="w-6 h-6 text-coral" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Low Experience Score?</h3>
+                  <p className="text-black/70 text-sm leading-relaxed mb-4 relative z-10">
+                    Your content lacks first-hand expertise signals that separate human knowledge from AI-generated fluff.
+                  </p>
+                  <div className="bg-white rounded-xl p-4 border-2 border-lime/20 relative z-10">
+                    <p className="text-sm font-semibold text-lime-dark mb-2">✓ CertREV Fix:</p>
+                    <p className="text-xs text-black/70">Connect with credentialed experts who add verified experience to your content</p>
+                  </div>
+                </div>
+              </TiltCard>
             </motion.div>
 
             <motion.div
@@ -169,18 +184,23 @@ export default function EEATMeterPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.15 }}
-              className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border-2 border-white/20"
             >
-              <div className="w-12 h-12 rounded-xl bg-coral/20 flex items-center justify-center mb-4">
-                <FileCheck className="w-6 h-6 text-coral" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3 font-serif">Canonical Detection</h3>
-              <p className="text-white/80 text-sm leading-relaxed mb-3">
-                Extracts canonical URLs from HTML to identify the authoritative version of duplicate or similar pages.
-              </p>
-              <div className="text-xs text-coral font-mono bg-navy/50 rounded px-2 py-1 inline-block">
-                &lt;link rel="canonical"&gt;
-              </div>
+              <TiltCard intensity={0.6} glowColor="rgba(232, 96, 60, 0.2)">
+                <div className="bg-beige rounded-2xl p-6 border-2 border-coral/20 shadow-xl h-full relative overflow-hidden">
+                  <TextureOverlay type="paper" opacity={0.3} />
+                  <div className="w-12 h-12 rounded-xl bg-coral/20 flex items-center justify-center mb-4 relative z-10">
+                    <FileCheck className="w-6 h-6 text-coral" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Missing Expertise?</h3>
+                  <p className="text-black/70 text-sm leading-relaxed mb-4 relative z-10">
+                    No author bylines, credentials, or schema markup means Google can't verify who wrote your content.
+                  </p>
+                  <div className="bg-white rounded-xl p-4 border-2 border-lime/20 relative z-10">
+                    <p className="text-sm font-semibold text-lime-dark mb-2">✓ CertREV Fix:</p>
+                    <p className="text-xs text-black/70">Expert attribution with credentials, badges, and structured data that search engines recognize</p>
+                  </div>
+                </div>
+              </TiltCard>
             </motion.div>
 
             <motion.div
@@ -188,37 +208,24 @@ export default function EEATMeterPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border-2 border-white/20"
             >
-              <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-4">
-                <BarChart className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3 font-serif">Real Authority Data</h3>
-              <p className="text-white/80 text-sm leading-relaxed mb-3">
-                Fetches live domain metrics via DataForSEO API — organic keywords, traffic, and domain rank based on actual search data.
-              </p>
-              <div className="text-xs text-white font-mono bg-navy/50 rounded px-2 py-1 inline-block">
-                21M+ keywords analyzed
-              </div>
+              <TiltCard intensity={0.6} glowColor="rgba(232, 96, 60, 0.2)">
+                <div className="bg-beige rounded-2xl p-6 border-2 border-coral/20 shadow-xl h-full relative overflow-hidden">
+                  <TextureOverlay type="paper" opacity={0.3} />
+                  <div className="w-12 h-12 rounded-xl bg-coral/20 flex items-center justify-center mb-4 relative z-10">
+                    <TrendingUp className="w-6 h-6 text-coral" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Low Trust Score?</h3>
+                  <p className="text-black/70 text-sm leading-relaxed mb-4 relative z-10">
+                    Without expert reviews and verification badges, consumers doubt your claims — especially in health, finance, and wellness.
+                  </p>
+                  <div className="bg-white rounded-xl p-4 border-2 border-lime/20 relative z-10">
+                    <p className="text-sm font-semibold text-lime-dark mb-2">✓ CertREV Fix:</p>
+                    <p className="text-xs text-black/70">Verified expert reviews and trust badges that consumers and search engines both recognize</p>
+                  </div>
+                </div>
+              </TiltCard>
             </motion.div>
-          </div>
-
-          <div className="mt-10 bg-lime-light/10 backdrop-blur-sm rounded-2xl p-6 border-2 border-lime/20">
-            <div className="flex items-start gap-3">
-              <Sparkles className="w-6 h-6 text-lime flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2">Example: NYT Analysis</h3>
-                <p className="text-white/90 text-sm leading-relaxed">
-                  When you enter <span className="font-mono bg-navy/50 px-2 py-0.5 rounded">nyt.com</span>, our system:
-                </p>
-                <ol className="text-white/80 text-sm mt-3 space-y-2 list-decimal list-inside">
-                  <li>Follows the redirect to <span className="font-mono bg-navy/50 px-2 py-0.5 rounded text-white">nytimes.com</span></li>
-                  <li>Extracts the canonical URL <span className="font-mono bg-navy/50 px-2 py-0.5 rounded text-white">https://www.nytimes.com</span></li>
-                  <li>Queries DataForSEO for <span className="font-mono bg-navy/50 px-2 py-0.5 rounded text-white">nytimes.com</span> metrics</li>
-                  <li>Returns accurate scores: <span className="text-lime font-semibold">25/25 Authoritativeness</span>, <span className="text-lime font-semibold">21M+ keywords</span>, <span className="text-lime font-semibold">58/100 overall</span></li>
-                </ol>
-              </div>
-            </div>
           </div>
         </div>
       </section>
