@@ -51,7 +51,7 @@ export default function BrandDashboardPage() {
                 Sign Up as Brand
               </Link>
             </Button>
-            <Button size="lg" variant="secondary" asChild>
+            <Button size="lg" variant="outline" asChild>
               <Link href="https://dashboard.certrev.com/auth/login">
                 Sign In →
               </Link>
