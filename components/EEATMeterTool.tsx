@@ -42,12 +42,18 @@ export default function EEATMeterTool() {
         body: JSON.stringify({ url, email }),
       })
 
-      if (!response.ok) throw new Error('Failed to analyze URL')
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('API Error:', response.status, errorData)
+        throw new Error(errorData.error || 'Failed to analyze URL')
+      }
 
       const data = await response.json()
       setResults(data.analysis)
     } catch (err) {
-      setError('Unable to analyze this URL. Please check the URL and try again.')
+      console.error('Analysis error:', err)
+      const errorMessage = err instanceof Error ? err.message : 'Unable to analyze this URL. Please check the URL and try again.'
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }

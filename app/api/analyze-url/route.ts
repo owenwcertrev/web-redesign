@@ -30,29 +30,53 @@ export async function POST(request: NextRequest) {
   try {
     const { url, email } = await request.json()
 
-    // Validate URL
-    if (!url || !isValidURL(url)) {
+    // Validate URL format
+    if (!url || typeof url !== 'string' || url.trim() === '') {
       return NextResponse.json(
-        { error: 'Invalid URL provided' },
+        { error: 'URL is required' },
+        { status: 400 }
+      )
+    }
+
+    // Normalize URL before validation
+    let normalizedUrl = url.trim()
+    if (!normalizedUrl.startsWith('http://') && !normalizedUrl.startsWith('https://')) {
+      normalizedUrl = 'https://' + normalizedUrl
+    }
+
+    // Validate URL structure
+    if (!isValidURL(normalizedUrl)) {
+      return NextResponse.json(
+        { error: 'Invalid URL format. Please enter a valid domain (e.g., example.com)' },
         { status: 400 }
       )
     }
 
     // Perform comprehensive E-E-A-T analysis with DataForSEO
-    console.log('Starting E-E-A-T analysis for:', url)
+    console.log('Starting E-E-A-T analysis for:', normalizedUrl)
 
     // Run page analysis and DataForSEO API in parallel for speed
     const [pageAnalysis, dataforSEOMetrics] = await Promise.all([
-      analyzeURL(url),
-      getDataForSEOMetrics(url),
+      analyzeURL(normalizedUrl).catch((err) => {
+        console.error('Page analysis failed:', err.message)
+        throw new Error(`Failed to analyze page: ${err.message}`)
+      }),
+      getDataForSEOMetrics(normalizedUrl).catch((err) => {
+        console.error('DataForSEO API failed:', err.message)
+        // Don't fail the entire request if DataForSEO fails - use estimated metrics
+        return null
+      }),
     ])
 
+    // Use actual metrics or fallback to estimated ones
+    const metricsToUse = dataforSEOMetrics || await getDataForSEOMetrics(normalizedUrl)
+
     // Calculate E-E-A-T scores
-    const scores = calculateEEATScores(pageAnalysis, dataforSEOMetrics)
+    const scores = calculateEEATScores(pageAnalysis, metricsToUse)
 
     // Identify issues and generate suggestions
-    const issues = identifyIssues(pageAnalysis, dataforSEOMetrics, scores)
-    const suggestions = generateSuggestions(pageAnalysis, dataforSEOMetrics, scores)
+    const issues = identifyIssues(pageAnalysis, metricsToUse, scores)
+    const suggestions = generateSuggestions(pageAnalysis, metricsToUse, scores)
 
     // Format analysis results for frontend
     const analysis = {
@@ -71,10 +95,10 @@ export async function POST(request: NextRequest) {
       })),
       suggestions: suggestions.map(s => s.description),
       metrics: {
-        domainRank: dataforSEOMetrics.domainRank,
-        organicKeywords: dataforSEOMetrics.organicKeywords,
-        organicTraffic: dataforSEOMetrics.organicTraffic,
-        organicTrafficValue: dataforSEOMetrics.organicTrafficValue,
+        domainRank: metricsToUse.domainRank,
+        organicKeywords: metricsToUse.organicKeywords,
+        organicTraffic: metricsToUse.organicTraffic,
+        organicTrafficValue: metricsToUse.organicTrafficValue,
         wordCount: pageAnalysis.wordCount,
         readabilityScore: pageAnalysis.readabilityScore,
       },
