@@ -72,14 +72,14 @@ export default function Navigation() {
               {profileDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border-2 border-navy/10 py-2 z-50">
                   <Link
-                    href="https://dashboard.certrev.com/auth/login?tab=brand"
+                    href="https://dashboard.certrev.com/auth/login"
                     className="block px-4 py-2 text-sm text-black hover:bg-beige transition-colors"
                     onClick={() => setProfileDropdownOpen(false)}
                   >
                     Brand Login
                   </Link>
                   <Link
-                    href="https://dashboard.certrev.com/auth/login?tab=expert"
+                    href="https://dashboard.certrev.com/auth/login"
                     className="block px-4 py-2 text-sm text-black hover:bg-beige transition-colors"
                     onClick={() => setProfileDropdownOpen(false)}
                   >

@@ -185,12 +185,12 @@ export default function Home() {
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-2xl mx-auto"
             >
               <Button size="lg" asChild className="w-full sm:w-auto !bg-coral hover:!bg-coral/90 !text-white !border-coral">
-                <Link href="https://dashboard.certrev.com/auth/signup?tab=brand">
+                <Link href="https://dashboard.certrev.com/auth/signup?type=brand">
                   Sign Up as Brand
                 </Link>
               </Button>
               <Button size="lg" asChild className="w-full sm:w-auto !bg-navy hover:!bg-navy/90 !text-white !border-navy">
-                <Link href="https://dashboard.certrev.com/auth/signup?tab=expert">
+                <Link href="https://dashboard.certrev.com/auth/signup?type=expert">
                   Join as Expert
                 </Link>
               </Button>

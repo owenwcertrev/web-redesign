@@ -37,7 +37,7 @@ export default function SplitSignupButton() {
                   transition={{ delay: 0.15, duration: 0.2 }}
                 >
                   <Link
-                    href="https://dashboard.certrev.com/auth/signup?tab=brand"
+                    href="https://dashboard.certrev.com/auth/signup?type=brand"
                     className="flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-coral hover:bg-coral/90 text-white font-semibold text-base sm:text-lg rounded-l-2xl border-2 border-coral shadow-lg transition-all hover:shadow-xl whitespace-nowrap"
                   >
                     <Building2 className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -66,7 +66,7 @@ export default function SplitSignupButton() {
                   transition={{ delay: 0.15, duration: 0.2 }}
                 >
                   <Link
-                    href="https://dashboard.certrev.com/auth/signup?tab=expert"
+                    href="https://dashboard.certrev.com/auth/signup?type=expert"
                     className="flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-navy hover:bg-navy/90 text-white font-semibold text-base sm:text-lg rounded-r-2xl border-2 border-navy shadow-lg transition-all hover:shadow-xl whitespace-nowrap"
                   >
                     <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5" />
