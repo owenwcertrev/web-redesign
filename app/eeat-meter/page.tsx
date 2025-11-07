@@ -66,7 +66,7 @@ export default function EEATMeterPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="flex flex-wrap justify-center gap-4 text-sm"
+              className="flex flex-wrap justify-center gap-4 text-sm mb-8"
             >
               <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-navy/20 shadow-sm">
                 <span className="text-navy font-semibold">Instant E-E-A-T Analysis</span>
@@ -76,6 +76,32 @@ export default function EEATMeterPage() {
               </div>
               <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-navy/20 shadow-sm">
                 <span className="text-navy font-semibold">Expert Verification Roadmap</span>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.0 }}
+              className="flex flex-wrap justify-center items-center gap-6 text-sm"
+            >
+              <div className="flex items-center gap-2 text-black/60">
+                <div className="w-8 h-8 rounded-full bg-lime/20 flex items-center justify-center">
+                  <span className="text-lime-dark font-bold text-xs">✓</span>
+                </div>
+                <span><strong className="text-navy">15,000+</strong> URLs analyzed</span>
+              </div>
+              <div className="flex items-center gap-2 text-black/60">
+                <div className="w-8 h-8 rounded-full bg-lime/20 flex items-center justify-center">
+                  <span className="text-lime-dark font-bold text-xs">✓</span>
+                </div>
+                <span><strong className="text-navy">500+</strong> credentialed experts</span>
+              </div>
+              <div className="flex items-center gap-2 text-black/60">
+                <div className="w-8 h-8 rounded-full bg-lime/20 flex items-center justify-center">
+                  <span className="text-lime-dark font-bold text-xs">✓</span>
+                </div>
+                <span>Powered by <strong className="text-navy">DataForSEO</strong></span>
               </div>
             </motion.div>
           </div>
@@ -389,6 +415,85 @@ export default function EEATMeterPage() {
               icon={ShoppingBag}
               gradient="from-black/10 to-black/20"
             />
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="bg-white py-32 px-4 relative overflow-hidden">
+        <TextureOverlay type="grain" opacity={0.15} />
+        <div className="max-w-4xl mx-auto relative z-10">
+          <FadeIn>
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-navy font-serif">
+                Frequently Asked Questions
+              </h2>
+              <p className="text-xl text-black/70">
+                Everything you need to know about E-E-A-T scoring
+              </p>
+            </div>
+          </FadeIn>
+
+          <div className="space-y-4">
+            <details className="bg-beige rounded-16 p-6 border-2 border-navy/10 group">
+              <summary className="font-semibold text-navy text-lg cursor-pointer list-none flex items-center justify-between">
+                Why should I trust this E-E-A-T score?
+                <span className="text-navy/40 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="mt-4 text-black/70 leading-relaxed">
+                Our analysis uses real-time data from <strong>DataForSEO's Domain Authority API</strong>, which tracks 21M+ keywords, organic traffic estimates, and domain rankings. We combine this with on-page analysis of your content structure, author attribution, schema markup, and trust signals to calculate a comprehensive E-E-A-T score based on Google's Quality Rater Guidelines.
+              </p>
+            </details>
+
+            <details className="bg-beige rounded-16 p-6 border-2 border-navy/10 group">
+              <summary className="font-semibold text-navy text-lg cursor-pointer list-none flex items-center justify-between">
+                Can I improve my score without expert verification?
+                <span className="text-navy/40 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="mt-4 text-black/70 leading-relaxed">
+                You can make some improvements (adding author bios, SSL certificates, better content structure), but <strong>verified expert credentials are the most impactful factor</strong> for E-E-A-T scores. Google's algorithms prioritize content reviewed by credentialed professionals (MDs, RNs, CPAs, JDs) — especially for YMYL content. DIY improvements typically boost scores 10-15 points; expert verification can add 30-40 points.
+              </p>
+            </details>
+
+            <details className="bg-beige rounded-16 p-6 border-2 border-navy/10 group">
+              <summary className="font-semibold text-navy text-lg cursor-pointer list-none flex items-center justify-between">
+                How long does it take to see results from improving my E-E-A-T score?
+                <span className="text-navy/40 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="mt-4 text-black/70 leading-relaxed">
+                <strong>Technical improvements</strong> (schema markup, author attribution) can be recognized within 2-4 weeks after Google recrawls your pages. <strong>Organic traffic recovery</strong> from expert verification typically takes 3-6 months as Google's algorithms reevaluate your site's authority. Brands that maintain consistent expert verification see compounding benefits over 12+ months.
+              </p>
+            </details>
+
+            <details className="bg-beige rounded-16 p-6 border-2 border-navy/10 group">
+              <summary className="font-semibold text-navy text-lg cursor-pointer list-none flex items-center justify-between">
+                What if my score is already high (70+)?
+                <span className="text-navy/40 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="mt-4 text-black/70 leading-relaxed">
+                A high score means you're ahead of most competitors, but <strong>Google's algorithm updates can change rankings overnight</strong>. Brands with 70+ scores that didn't maintain expert verification saw 20-30% traffic drops during recent updates. Ongoing expert review (4-8 articles/month) protects your authority and keeps you competitive as standards evolve.
+              </p>
+            </details>
+
+            <details className="bg-beige rounded-16 p-6 border-2 border-navy/10 group">
+              <summary className="font-semibold text-navy text-lg cursor-pointer list-none flex items-center justify-between">
+                How much does expert verification cost?
+                <span className="text-navy/40 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="mt-4 text-black/70 leading-relaxed">
+                Expert review pricing ranges from <strong>$160 per article</strong> (Starter Plan: 4 reviews/month) to custom enterprise pricing for high-volume brands. Most brands improving from 40-50 to 75+ need 12-15 expert reviews over 2-3 months ($1,920-2,400/month on Core SEO plan). <Link href="/pricing" className="text-navy underline hover:text-coral transition-colors">See full pricing →</Link>
+              </p>
+            </details>
+
+            <details className="bg-beige rounded-16 p-6 border-2 border-navy/10 group">
+              <summary className="font-semibold text-navy text-lg cursor-pointer list-none flex items-center justify-between">
+                Does Google actually use E-E-A-T as a ranking factor?
+                <span className="text-navy/40 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="mt-4 text-black/70 leading-relaxed">
+                Google states that E-E-A-T is <strong>not a direct ranking factor</strong>, but it's a core part of their Quality Rater Guidelines — the framework human evaluators use to assess search results. Algorithm updates like Helpful Content Update and Core Updates heavily penalize sites without expert signals. The data proves the impact: brands without verified expertise saw 35-88% traffic drops post-update.
+              </p>
+            </details>
           </div>
         </div>
       </section>

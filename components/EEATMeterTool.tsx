@@ -31,7 +31,6 @@ interface AnalysisResult {
 export default function EEATMeterTool() {
   const [url, setUrl] = useState('')
   const [email, setEmail] = useState('')
-  const [showEmailField, setShowEmailField] = useState(false)
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState<AnalysisResult | null>(null)
   const [error, setError] = useState('')
@@ -103,27 +102,25 @@ export default function EEATMeterTool() {
             />
           </div>
 
-          {/* Optional Email Field */}
-          {!showEmailField ? (
-            <button
-              type="button"
-              onClick={() => setShowEmailField(true)}
-              className="text-navy hover:underline text-sm"
-            >
-              + Add email to receive detailed report
-            </button>
-          ) : (
+          {/* Email Field with Value Prop */}
+          <div className="bg-lime-light/30 rounded-16 p-4 border-2 border-lime/20">
+            <div className="flex items-start gap-2 mb-3">
+              <Sparkles className="w-4 h-4 text-lime-dark flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-black/70">
+                <strong className="text-navy">Get your competitive analysis + 5 quick wins</strong> to boost your score by 20 points (email subscribers only)
+              </p>
+            </div>
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black/40" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com (optional)"
-                className="w-full pl-12 pr-4 py-3 rounded-16 border-2 border-black/10 focus:border-navy focus:outline-none transition-colors"
+                placeholder="your@email.com (optional but recommended)"
+                className="w-full pl-12 pr-4 py-3 rounded-16 border-2 border-lime/30 focus:border-lime focus:outline-none transition-colors bg-white"
               />
             </div>
-          )}
+          </div>
 
           <Button type="submit" size="lg" loading={loading} className="w-full">
             {loading ? 'Analyzing...' : 'Analyze Content'}
@@ -162,7 +159,7 @@ export default function EEATMeterTool() {
             </div>
 
             {/* Breakdown */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               <div className="text-center p-4 bg-beige rounded-12">
                 <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.experience}</div>
                 <div className="text-sm text-black/70">Experience</div>
@@ -182,6 +179,49 @@ export default function EEATMeterTool() {
                 <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.trustworthiness}</div>
                 <div className="text-sm text-black/70">Trustworthiness</div>
                 <div className="text-xs text-black/50">out of 25</div>
+              </div>
+            </div>
+
+            {/* Benchmark Comparison */}
+            <div className="bg-beige rounded-12 p-6 border-2 border-navy/10">
+              <h4 className="font-semibold text-navy mb-4 text-center">How Does Your Score Compare?</h4>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-black/70">Fortune 500 Health/Wellness Brands</span>
+                  <span className="font-semibold text-navy">75-85</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-black/70">Mid-Market DTC Brands</span>
+                  <span className="font-semibold text-navy">55-70</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-black/70">Startup/New Brands</span>
+                  <span className="font-semibold text-navy">30-50</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-black/70">AI-Generated (No Expert Review)</span>
+                  <span className="font-semibold text-navy">15-25</span>
+                </div>
+                <div className="h-px bg-navy/20 my-3"></div>
+                <div className="flex items-center justify-between bg-white rounded-lg p-3 border-2 border-coral/30">
+                  <span className="text-sm font-semibold text-navy">Your Score</span>
+                  <span className="text-2xl font-bold text-coral">{results.score}</span>
+                </div>
+                {results.score < 50 && (
+                  <p className="text-xs text-black/60 text-center mt-3">
+                    Below industry standard for established brands
+                  </p>
+                )}
+                {results.score >= 50 && results.score < 70 && (
+                  <p className="text-xs text-black/60 text-center mt-3">
+                    Room for improvement to reach industry-leading levels
+                  </p>
+                )}
+                {results.score >= 70 && (
+                  <p className="text-xs text-lime-dark text-center mt-3">
+                    Strong foundation — maintain with ongoing expert verification
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -267,17 +307,70 @@ export default function EEATMeterTool() {
             </div>
           )}
 
-          {/* CTA */}
-          <div className="bg-lime-light rounded-16 p-8 text-center">
-            <h3 className="text-2xl font-semibold mb-3 text-lime-dark">
-              Ready to Improve Your Score?
-            </h3>
-            <p className="text-lime-dark/80 mb-6">
-              Connect with credentialed experts and start building trust
-            </p>
+          {/* Score-Based CTA */}
+          <div className={`rounded-16 p-8 ${
+            results.score < 50 ? 'bg-coral/10 border-2 border-coral/30' :
+            results.score < 70 ? 'bg-navy/5 border-2 border-navy/20' :
+            'bg-lime-light border-2 border-lime/30'
+          }`}>
+            <div className="text-center mb-6">
+              {results.score < 50 && (
+                <>
+                  <h3 className="text-2xl font-semibold mb-3 text-navy">
+                    Your Score is Critical — Protect Your Organic Traffic
+                  </h3>
+                  <p className="text-black/70 mb-4">
+                    Sites with scores below 50 saw an average <strong>35% traffic drop</strong> in the last Google algorithm update. Expert verification can bring you to 75+ in 60-90 days.
+                  </p>
+                  <div className="bg-white rounded-lg p-4 mb-4 inline-block">
+                    <p className="text-sm text-black/60 mb-2">Estimated to reach 75+:</p>
+                    <p className="text-lg"><strong>12-15 expert reviews</strong> (~$1,920-2,400/month)</p>
+                    <p className="text-xs text-black/50 mt-1">Core SEO or Growth Plan</p>
+                  </div>
+                </>
+              )}
+              {results.score >= 50 && results.score < 70 && (
+                <>
+                  <h3 className="text-2xl font-semibold mb-3 text-navy">
+                    You're Close — Start Expert Verification Today
+                  </h3>
+                  <p className="text-black/70 mb-4">
+                    With expert-verified content, you could reach industry-leading scores (75+) and protect against algorithm penalties. <strong>3-day turnaround</strong> on first review.
+                  </p>
+                  <div className="bg-white rounded-lg p-4 mb-4 inline-block">
+                    <p className="text-sm text-black/60 mb-2">Estimated to reach 75+:</p>
+                    <p className="text-lg"><strong>8-12 expert reviews</strong> (~$1,280-1,920/month)</p>
+                    <p className="text-xs text-black/50 mt-1">Starter or Core SEO Plan</p>
+                  </div>
+                </>
+              )}
+              {results.score >= 70 && (
+                <>
+                  <h3 className="text-2xl font-semibold mb-3 text-lime-dark">
+                    Strong Foundation — Maintain Your Competitive Edge
+                  </h3>
+                  <p className="text-black/70 mb-4">
+                    You're ahead of most brands. <strong>Ongoing expert verification</strong> protects your authority as Google's algorithms evolve. Join 200+ brands maintaining E-E-A-T compliance.
+                  </p>
+                  <div className="bg-white rounded-lg p-4 mb-4 inline-block">
+                    <p className="text-sm text-black/60 mb-2">Maintain your advantage:</p>
+                    <p className="text-lg"><strong>4-8 expert reviews/month</strong> (~$640-1,280)</p>
+                    <p className="text-xs text-black/50 mt-1">Starter Plan</p>
+                  </div>
+                </>
+              )}
+            </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg">Get Started with CertREV</Button>
-              <Button size="lg" variant="secondary">Schedule a Demo</Button>
+              <Link href="/pricing">
+                <Button size="lg">
+                  {results.score < 50 ? 'See Pricing & Get Started' :
+                   results.score < 70 ? 'Start Your First Review' :
+                   'View Plans'}
+                </Button>
+              </Link>
+              <Link href="/contact">
+                <Button size="lg" variant="secondary">Book Free Consultation</Button>
+              </Link>
             </div>
           </div>
         </div>
