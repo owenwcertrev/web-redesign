@@ -6,8 +6,14 @@
 
 import { EEAT_CONFIG } from '../eeat-config'
 
-const DATAFORSEO_LOGIN = process.env.DATAFORSEO_LOGIN
-const DATAFORSEO_PASSWORD = process.env.DATAFORSEO_PASSWORD
+// Use functions to get credentials lazily (allows env vars to be set after module load)
+function getDataForSEOLogin(): string | undefined {
+  return process.env.DATAFORSEO_LOGIN
+}
+
+function getDataForSEOPassword(): string | undefined {
+  return process.env.DATAFORSEO_PASSWORD
+}
 
 export interface DataForSEOMetrics {
   // Note: Backlinks API requires $100/month subscription
@@ -32,7 +38,10 @@ export interface DataForSEOMetrics {
  * Note: Only using organic metrics - backlinks API requires $100/month subscription
  */
 export async function getDataForSEOMetrics(url: string): Promise<DataForSEOMetrics> {
-  if (!DATAFORSEO_LOGIN || !DATAFORSEO_PASSWORD) {
+  const login = getDataForSEOLogin()
+  const password = getDataForSEOPassword()
+
+  if (!login || !password) {
     console.warn('DataForSEO credentials not configured, returning estimated metrics')
     return getEstimatedMetrics()
   }
@@ -91,7 +100,7 @@ async function getDomainRankOverview(domain: string): Promise<any> {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Authorization': 'Basic ' + btoa(`${DATAFORSEO_LOGIN}:${DATAFORSEO_PASSWORD}`),
+      'Authorization': 'Basic ' + btoa(`${getDataForSEOLogin()}:${getDataForSEOPassword()}`),
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(requestBody),
@@ -189,7 +198,7 @@ function estimateDomainRank(domainData: any): number {
  * Cost: $0.02 per request (can check up to 1,000 domains at once)
  */
 export async function getBulkSpamScores(domains: string[]): Promise<Record<string, number>> {
-  if (!DATAFORSEO_LOGIN || !DATAFORSEO_PASSWORD) {
+  if (!getDataForSEOLogin() || !getDataForSEOPassword()) {
     console.warn('DataForSEO credentials not configured')
     return {}
   }
@@ -205,7 +214,7 @@ export async function getBulkSpamScores(domains: string[]): Promise<Record<strin
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Authorization': 'Basic ' + btoa(`${DATAFORSEO_LOGIN}:${DATAFORSEO_PASSWORD}`),
+      'Authorization': 'Basic ' + btoa(`${getDataForSEOLogin()}:${getDataForSEOPassword()}`),
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(requestBody),
@@ -236,7 +245,7 @@ export async function getBulkSpamScores(domains: string[]): Promise<Record<strin
  * Cost: $0.02 per request (can check up to 1,000 domains at once)
  */
 export async function getBulkRanks(domains: string[]): Promise<Record<string, { rank: number, backlinks: number }>> {
-  if (!DATAFORSEO_LOGIN || !DATAFORSEO_PASSWORD) {
+  if (!getDataForSEOLogin() || !getDataForSEOPassword()) {
     console.warn('DataForSEO credentials not configured')
     return {}
   }
@@ -253,7 +262,7 @@ export async function getBulkRanks(domains: string[]): Promise<Record<string, { 
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Authorization': 'Basic ' + btoa(`${DATAFORSEO_LOGIN}:${DATAFORSEO_PASSWORD}`),
+      'Authorization': 'Basic ' + btoa(`${getDataForSEOLogin()}:${getDataForSEOPassword()}`),
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(requestBody),

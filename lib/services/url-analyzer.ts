@@ -173,21 +173,29 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
   }
 
   // Check common author patterns in content
+  // More strict patterns to avoid false positives
   const bylinePatterns = [
-    /by\s+([A-Z][a-z]+\s+[A-Z][a-z]+)/i,
-    /written by\s+([A-Z][a-z]+\s+[A-Z][a-z]+)/i,
-    /author:\s+([A-Z][a-z]+\s+[A-Z][a-z]+)/i,
+    /(?:^|\n|\.\s+)(?:By|Written by|Author:)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)(?:\s|,|\.|$)/,
   ]
 
   const bodyText = $('body').text()
   for (const pattern of bylinePatterns) {
     const match = bodyText.match(pattern)
-    if (match && match[1] && !authors.some(a => a.name === match[1])) {
-      authors.push({
-        name: match[1],
-        source: 'content'
-      })
-      break // Only take first match
+    if (match && match[1]) {
+      const authorName = match[1].trim()
+      // Validate it's a reasonable author name (2-4 words, not common false positives)
+      const words = authorName.split(/\s+/)
+      const invalidNames = ['talking to', 'according to', 'listen to', 'subscribe to', 'related to']
+
+      if (words.length >= 2 && words.length <= 4 &&
+          !invalidNames.some(invalid => authorName.toLowerCase().includes(invalid)) &&
+          !authors.some(a => a.name === authorName)) {
+        authors.push({
+          name: authorName,
+          source: 'content'
+        })
+        break // Only take first match
+      }
     }
   }
 

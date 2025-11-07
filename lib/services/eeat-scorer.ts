@@ -70,6 +70,7 @@ export function calculateEEATScores(
 /**
  * Experience Score (0-25)
  * Factors: Author credentials, content quality, citations
+ * Adjusted to be more lenient for high-authority sites
  */
 function calculateExperienceScore(
   page: PageAnalysis,
@@ -77,35 +78,43 @@ function calculateExperienceScore(
 ): number {
   let score = 0
 
-  // Author credentials (0-10 points)
+  // Author credentials (0-8 points)
   if (page.authors.length > 0) {
-    score += 5
+    score += 4
     // Bonus for credentials
     if (page.authors.some(a => a.credentials)) {
-      score += 3
+      score += 2
     }
     // Bonus for schema markup author
     if (page.authors.some(a => a.source === 'schema')) {
       score += 2
     }
+  } else if (dataforseo.domainRank >= 85) {
+    // High-authority domains get partial credit (assumed experience)
+    score += 3
+  } else if (dataforseo.domainRank >= 70) {
+    score += 2
   }
 
-  // Content quality (0-10 points)
+  // Content quality (0-12 points)
   const wordCount = page.wordCount
   if (wordCount >= EEAT_CONFIG.content.optimalWordCount) {
-    score += 5
+    score += 6
   } else if (wordCount >= EEAT_CONFIG.content.minWordCount) {
-    score += 3
+    score += 4
   }
 
+  // More lenient readability scoring (technical content can be harder to read)
   if (page.readabilityScore >= 50 && page.readabilityScore <= 70) {
     score += 3 // Optimal readability
-  } else if (page.readabilityScore >= 40 && page.readabilityScore <= 80) {
-    score += 2
+  } else if (page.readabilityScore >= 30 && page.readabilityScore <= 80) {
+    score += 2 // Acceptable for technical content
+  } else if (page.readabilityScore > 0) {
+    score += 1 // At least some readability
   }
 
   if (page.headings.h2.length >= 3) {
-    score += 2
+    score += 3
   }
 
   // Citations (0-5 points)
@@ -122,7 +131,8 @@ function calculateExperienceScore(
 
 /**
  * Expertise Score (0-25)
- * Factors: Author credentials, schema markup, citations
+ * Factors: Author credentials, schema markup, citations, domain authority
+ * Adjusted: High-authority domains get partial credit even without explicit author markup
  */
 function calculateExpertiseScore(
   page: PageAnalysis,
@@ -130,11 +140,18 @@ function calculateExpertiseScore(
 ): number {
   let score = 0
 
-  // Author presence and credentials (0-12 points)
+  // Author presence and credentials (0-10 points)
   if (page.authors.length === 0) {
-    score += 0 // Critical issue
+    // Give partial credit for high-authority domains (assumed editorial oversight)
+    if (dataforseo.domainRank >= 85) {
+      score += 5 // Top-tier sites likely have strict editorial standards
+    } else if (dataforseo.domainRank >= 70) {
+      score += 4
+    } else if (dataforseo.domainRank >= 50) {
+      score += 2
+    }
   } else {
-    score += 6
+    score += 5
 
     // Bonus for multiple authors
     if (page.authors.length > 1) {
@@ -143,17 +160,17 @@ function calculateExpertiseScore(
 
     // Bonus for credentials
     if (page.authors.some(a => a.credentials)) {
-      score += 4
+      score += 3
     }
   }
 
-  // Schema markup (0-8 points)
+  // Schema markup (0-6 points)
   const hasRelevantSchema = page.schemaMarkup.some(s =>
     EEAT_CONFIG.schemaTypes.includes(s.type)
   )
 
   if (hasRelevantSchema) {
-    score += 4
+    score += 3
   }
 
   // Bonus for person/organization schema
@@ -163,15 +180,25 @@ function calculateExpertiseScore(
 
   // Bonus for medical/health schema
   if (page.schemaMarkup.some(s => s.type === 'MedicalWebPage' || s.type === 'HealthTopicContent')) {
-    score += 2
+    score += 1
   }
 
-  // Citations/references (0-5 points)
+  // Citations/references (0-4 points)
   if (page.citations >= 10) {
-    score += 5
+    score += 4
   } else if (page.citations >= 5) {
     score += 3
   } else if (page.citations >= 1) {
+    score += 2
+  }
+
+  // Content depth bonus (0-5 points)
+  // Comprehensive content suggests expertise
+  if (page.wordCount >= 2000) {
+    score += 5
+  } else if (page.wordCount >= 1000) {
+    score += 3
+  } else if (page.wordCount >= 500) {
     score += 2
   }
 
