@@ -5,8 +5,7 @@
 
 import { EEAT_CONFIG, calculateOverallScore } from '../eeat-config'
 import type { PageAnalysis } from './url-analyzer'
-import type { SemrushDomainMetrics, SemrushBacklinkData } from './semrush-api'
-import type { MozMetrics } from './moz-api'
+import type { DataForSEOMetrics } from './dataforseo-api'
 
 export interface EEATScore {
   overall: number
@@ -23,8 +22,7 @@ export interface EEATAnalysisResult {
   suggestions: Suggestion[]
   metrics: {
     page: PageAnalysis
-    semrush: SemrushDomainMetrics
-    moz: MozMetrics
+    dataforseo: DataForSEOMetrics
   }
 }
 
@@ -48,13 +46,12 @@ export interface Suggestion {
  */
 export function calculateEEATScores(
   page: PageAnalysis,
-  semrush: SemrushDomainMetrics,
-  moz: MozMetrics
+  dataforseo: DataForSEOMetrics
 ): EEATScore {
-  const experience = calculateExperienceScore(page, semrush, moz)
-  const expertise = calculateExpertiseScore(page, semrush, moz)
-  const authoritativeness = calculateAuthoritativenessScore(page, semrush, moz)
-  const trustworthiness = calculateTrustworthinessScore(page, semrush, moz)
+  const experience = calculateExperienceScore(page, dataforseo)
+  const expertise = calculateExpertiseScore(page, dataforseo)
+  const authoritativeness = calculateAuthoritativenessScore(page, dataforseo)
+  const trustworthiness = calculateTrustworthinessScore(page, dataforseo)
 
   return {
     overall: calculateOverallScore({
@@ -76,8 +73,7 @@ export function calculateEEATScores(
  */
 function calculateExperienceScore(
   page: PageAnalysis,
-  semrush: SemrushDomainMetrics,
-  moz: MozMetrics
+  dataforseo: DataForSEOMetrics
 ): number {
   let score = 0
 
@@ -130,8 +126,7 @@ function calculateExperienceScore(
  */
 function calculateExpertiseScore(
   page: PageAnalysis,
-  semrush: SemrushDomainMetrics,
-  moz: MozMetrics
+  dataforseo: DataForSEOMetrics
 ): number {
   let score = 0
 
@@ -185,31 +180,30 @@ function calculateExpertiseScore(
 
 /**
  * Authoritativeness Score (0-25)
- * Factors: Domain authority, backlinks, citations
+ * Factors: Domain rank, backlinks, citations
  */
 function calculateAuthoritativenessScore(
   page: PageAnalysis,
-  semrush: SemrushDomainMetrics,
-  moz: MozMetrics
+  dataforseo: DataForSEOMetrics
 ): number {
   let score = 0
 
-  // Domain Authority (0-10 points)
-  const da = moz.domainAuthority
-  if (da >= 80) {
+  // Domain Rank (0-10 points) - DataForSEO's 0-100 scale
+  const domainRank = dataforseo.domainRank
+  if (domainRank >= 80) {
     score += 10
-  } else if (da >= 60) {
+  } else if (domainRank >= 60) {
     score += 8
-  } else if (da >= 40) {
+  } else if (domainRank >= 40) {
     score += 6
-  } else if (da >= 20) {
+  } else if (domainRank >= 20) {
     score += 4
   } else {
     score += 2
   }
 
   // Backlinks (0-10 points)
-  const backlinks = semrush.backlinks
+  const backlinks = dataforseo.backlinks
   if (backlinks >= 100000) {
     score += 10
   } else if (backlinks >= 10000) {
@@ -223,7 +217,7 @@ function calculateAuthoritativenessScore(
   }
 
   // Referring domains (0-5 points)
-  const domains = semrush.referringDomains
+  const domains = dataforseo.referringMainDomains
   if (domains >= 1000) {
     score += 5
   } else if (domains >= 500) {
@@ -239,12 +233,11 @@ function calculateAuthoritativenessScore(
 
 /**
  * Trustworthiness Score (0-25)
- * Factors: SSL, schema markup, user signals
+ * Factors: SSL, schema markup, spam score
  */
 function calculateTrustworthinessScore(
   page: PageAnalysis,
-  semrush: SemrushDomainMetrics,
-  moz: MozMetrics
+  dataforseo: DataForSEOMetrics
 ): number {
   let score = 0
 
@@ -267,8 +260,8 @@ function calculateTrustworthinessScore(
     score += 2
   }
 
-  // Spam score (0-7 points) - Lower is better
-  const spamScore = moz.spamScore
+  // Spam score (0-7 points) - Lower is better (DataForSEO 0-100%)
+  const spamScore = dataforseo.spamScore
   if (spamScore <= 5) {
     score += 7
   } else if (spamScore <= 10) {
@@ -304,8 +297,7 @@ function calculateTrustworthinessScore(
  */
 export function identifyIssues(
   page: PageAnalysis,
-  semrush: SemrushDomainMetrics,
-  moz: MozMetrics,
+  dataforseo: DataForSEOMetrics,
   scores: EEATScore
 ): Issue[] {
   const issues: Issue[] = []
@@ -342,22 +334,22 @@ export function identifyIssues(
   }
 
   // High severity issues
-  if (moz.domainAuthority < 30) {
+  if (dataforseo.domainRank < 30) {
     issues.push({
       severity: 'high',
       category: 'authoritativeness',
-      title: 'Low Domain Authority',
-      description: `Your domain authority is ${moz.domainAuthority}, which is below average.`,
-      impact: 'Low DA makes it harder to rank for competitive keywords.',
+      title: 'Low Domain Rank',
+      description: `Your domain rank is ${dataforseo.domainRank}/100, which is below average.`,
+      impact: 'Low domain rank makes it harder to rank for competitive keywords.',
     })
   }
 
-  if (semrush.backlinks < 100) {
+  if (dataforseo.backlinks < 100) {
     issues.push({
       severity: 'high',
       category: 'authoritativeness',
       title: 'Few Backlinks',
-      description: `Only ${semrush.backlinks} backlinks detected.`,
+      description: `Only ${dataforseo.backlinks} backlinks detected.`,
       impact: 'Backlinks are crucial for building authoritativeness.',
     })
   }
@@ -393,12 +385,12 @@ export function identifyIssues(
     })
   }
 
-  if (moz.spamScore > 10) {
+  if (dataforseo.spamScore > 10) {
     issues.push({
       severity: 'medium',
       category: 'trustworthiness',
       title: 'Elevated Spam Score',
-      description: `Moz spam score is ${moz.spamScore}%. Recommended: below 10%.`,
+      description: `Spam score is ${dataforseo.spamScore}%. Recommended: below 10%.`,
       impact: 'High spam score can trigger manual reviews or penalties.',
     })
   }
@@ -432,8 +424,7 @@ export function identifyIssues(
  */
 export function generateSuggestions(
   page: PageAnalysis,
-  semrush: SemrushDomainMetrics,
-  moz: MozMetrics,
+  dataforseo: DataForSEOMetrics,
   scores: EEATScore
 ): Suggestion[] {
   const suggestions: Suggestion[] = []
@@ -477,7 +468,7 @@ export function generateSuggestions(
   }
 
   // Authoritativeness suggestions
-  if (moz.domainAuthority < 40) {
+  if (dataforseo.domainRank < 40) {
     suggestions.push({
       category: 'authoritativeness',
       title: 'Build Domain Authority',
@@ -486,7 +477,7 @@ export function generateSuggestions(
     })
   }
 
-  if (semrush.backlinks < 1000) {
+  if (dataforseo.backlinks < 1000) {
     suggestions.push({
       category: 'authoritativeness',
       title: 'Increase Backlink Profile',

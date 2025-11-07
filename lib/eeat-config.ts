@@ -58,24 +58,18 @@ export const EEAT_CONFIG = {
     backlinks: 604800,    // 7 days
   },
 
-  // Semrush API endpoints
-  semrush: {
-    baseUrl: 'https://api.semrush.com',
+  // DataForSEO API configuration
+  dataforseo: {
+    baseUrl: 'https://api.dataforseo.com/v3',
     endpoints: {
-      domainOverview: '/analytics/v1/',
-      backlinks: '/analytics/v1/backlinks',
-      organicKeywords: '/analytics/v1/organic',
+      backlinksSummary: '/backlinks/summary/live',
+      backlinksDetail: '/backlinks/backlinks/live',
+      bulkRanks: '/backlinks/bulk_ranks/live',
+      bulkSpamScore: '/backlinks/bulk_spam_score/live',
+      domainOverview: '/dataforseo_labs/google/domain_metrics/live',
     },
-    database: 'us', // Default database (can be changed per request)
-  },
-
-  // Moz API configuration
-  moz: {
-    baseUrl: 'https://lsapi.seomoz.com/v2',
-    endpoints: {
-      urlMetrics: '/url_metrics',
-      linkMetrics: '/link_metrics',
-    },
+    // Rate limit: 2,000 requests per minute
+    rateLimit: 2000,
   },
 
   // Content analysis thresholds

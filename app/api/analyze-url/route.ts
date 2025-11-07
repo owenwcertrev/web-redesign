@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { analyzeURL } from '@/lib/services/url-analyzer'
-import { getDomainMetrics, getBacklinkMetrics } from '@/lib/services/semrush-api'
-import { getMozMetrics } from '@/lib/services/moz-api'
+import { getDataForSEOMetrics } from '@/lib/services/dataforseo-api'
 import { calculateEEATScores, identifyIssues, generateSuggestions } from '@/lib/services/eeat-scorer'
 
 // Lazy initialize Resend to avoid build-time errors
@@ -36,22 +35,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Perform comprehensive E-E-A-T analysis
+    // Perform comprehensive E-E-A-T analysis with DataForSEO
     console.log('Starting E-E-A-T analysis for:', url)
 
-    // Run all analyses in parallel for speed
-    const [pageAnalysis, semrushMetrics, mozMetrics] = await Promise.all([
+    // Run page analysis and DataForSEO API in parallel for speed
+    const [pageAnalysis, dataforSEOMetrics] = await Promise.all([
       analyzeURL(url),
-      getDomainMetrics(url),
-      getMozMetrics(url),
+      getDataForSEOMetrics(url),
     ])
 
     // Calculate E-E-A-T scores
-    const scores = calculateEEATScores(pageAnalysis, semrushMetrics, mozMetrics)
+    const scores = calculateEEATScores(pageAnalysis, dataforSEOMetrics)
 
     // Identify issues and generate suggestions
-    const issues = identifyIssues(pageAnalysis, semrushMetrics, mozMetrics, scores)
-    const suggestions = generateSuggestions(pageAnalysis, semrushMetrics, mozMetrics, scores)
+    const issues = identifyIssues(pageAnalysis, dataforSEOMetrics, scores)
+    const suggestions = generateSuggestions(pageAnalysis, dataforSEOMetrics, scores)
 
     // Format analysis results for frontend
     const analysis = {
@@ -70,16 +68,19 @@ export async function POST(request: NextRequest) {
       })),
       suggestions: suggestions.map(s => s.description),
       metrics: {
-        domainAuthority: mozMetrics.domainAuthority,
-        pageAuthority: mozMetrics.pageAuthority,
-        backlinks: semrushMetrics.backlinks,
-        referringDomains: semrushMetrics.referringDomains,
+        domainRank: dataforSEOMetrics.domainRank,
+        pageRank: dataforSEOMetrics.pageRank,
+        backlinks: dataforSEOMetrics.backlinks,
+        referringDomains: dataforSEOMetrics.referringMainDomains,
+        spamScore: dataforSEOMetrics.spamScore,
+        organicKeywords: dataforSEOMetrics.organicKeywords,
+        organicTraffic: dataforSEOMetrics.organicTraffic,
         wordCount: pageAnalysis.wordCount,
         readabilityScore: pageAnalysis.readabilityScore,
       },
     }
 
-    console.log('E-E-A-T analysis complete:', { url, score: scores.overall })
+    console.log('E-E-A-T analysis complete:', { url, score: scores.overall, cost: '~$0.04-0.06' })
 
     // If email provided, send detailed report
     if (email) {
