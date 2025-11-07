@@ -333,13 +333,21 @@ export default function EEATMeterTool() {
               {results.score < 50 && (
                 <>
                   <h3 className="text-2xl font-semibold mb-3 text-navy">
-                    Your Score is Critical — Protect Your Organic Traffic
+                    Here's How Expert Attribution Boosts Your Score
                   </h3>
                   <p className="text-black/70 mb-4">
-                    Sites with scores below 50 saw an average <strong>35% traffic drop</strong> in the last Google algorithm update. Expert verification can bring you to 75+ in 60-90 days.
+                    Without expert bylines and credentials, your content is missing up to <strong>18 points</strong> across Experience (+8) and Expertise (+10) categories. Adding credentialed expert reviewers with proper attribution closes this gap.
                   </p>
+                  <div className="bg-beige/50 rounded-lg p-4 mb-4 text-left max-w-xl mx-auto">
+                    <p className="text-sm font-semibold text-navy mb-2">What expert verification adds:</p>
+                    <ul className="text-sm text-black/70 space-y-1">
+                      <li>• <strong>Author presence:</strong> +9 points (Experience +4, Expertise +5)</li>
+                      <li>• <strong>Displayed credentials:</strong> +5 points (Experience +2, Expertise +3)</li>
+                      <li>• <strong>Schema markup:</strong> +4 points (enables search engine verification)</li>
+                    </ul>
+                  </div>
                   <div className="bg-white rounded-lg p-4 mb-4 inline-block">
-                    <p className="text-sm text-black/60 mb-2">Estimated to reach 75+:</p>
+                    <p className="text-sm text-black/60 mb-2">Typical path to 75+:</p>
                     <p className="text-lg"><strong>12-15 expert reviews</strong> (~$1,920-2,400/month)</p>
                     <p className="text-xs text-black/50 mt-1">Core SEO or Growth Plan</p>
                   </div>
