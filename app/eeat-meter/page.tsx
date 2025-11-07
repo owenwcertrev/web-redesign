@@ -59,7 +59,7 @@ export default function EEATMeterPage() {
               transition={{ delay: 0.6 }}
               className="text-xl md:text-2xl text-black/70 mb-4 max-w-2xl mx-auto"
             >
-              Is Your Content Invisible to Google?
+              Unlock Your Content's Full Potential
             </motion.p>
 
             <motion.p
@@ -68,7 +68,7 @@ export default function EEATMeterPage() {
               transition={{ delay: 0.8 }}
               className="text-lg text-black/60 max-w-2xl mx-auto mb-6"
             >
-              Without verified expert credentials, your content may be getting buried — no matter how good it is. Find out where you stand in 30 seconds.
+              Discover your content's credibility score and learn exactly how expert verification can boost your rankings, traffic, and conversions.
             </motion.p>
 
             <motion.div
@@ -77,17 +77,17 @@ export default function EEATMeterPage() {
               transition={{ delay: 1.0 }}
               className="flex flex-wrap justify-center gap-4 text-sm"
             >
-              <div className="bg-coral/10 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-coral/30">
-                <span className="text-coral mr-2">⚠</span>
-                <span className="text-navy font-semibold">Missing Expert Bylines?</span>
+              <div className="bg-lime-light/50 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-lime/30">
+                <span className="text-lime-dark mr-2">✓</span>
+                <span className="text-navy font-semibold">Free Analysis</span>
               </div>
-              <div className="bg-coral/10 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-coral/30">
-                <span className="text-coral mr-2">⚠</span>
-                <span className="text-navy font-semibold">No Verified Credentials?</span>
+              <div className="bg-lime-light/50 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-lime/30">
+                <span className="text-lime-dark mr-2">✓</span>
+                <span className="text-navy font-semibold">Instant Results</span>
               </div>
-              <div className="bg-coral/10 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-coral/30">
-                <span className="text-coral mr-2">⚠</span>
-                <span className="text-navy font-semibold">Traffic Declining?</span>
+              <div className="bg-lime-light/50 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-lime/30">
+                <span className="text-lime-dark mr-2">✓</span>
+                <span className="text-navy font-semibold">Actionable Insights</span>
               </div>
             </motion.div>
           </div>
@@ -105,29 +105,29 @@ export default function EEATMeterPage() {
                 See Your Score in 30 Seconds
               </h2>
               <p className="text-xl text-black/70 mb-6 max-w-2xl mx-auto leading-relaxed">
-                Discover what's hurting your rankings and how expert verification can fix it — instantly and free.
+                See how your content stacks up and get a personalized roadmap to higher rankings.
               </p>
-              <div className="bg-white rounded-2xl p-6 max-w-3xl mx-auto border-2 border-coral/20 shadow-lg mb-10">
+              <div className="bg-white rounded-2xl p-6 max-w-3xl mx-auto border-2 border-lime/20 shadow-lg mb-10">
                 <div className="flex items-start gap-3">
-                  <AlertCircle className="w-6 h-6 text-coral flex-shrink-0 mt-1" />
+                  <Sparkles className="w-6 h-6 text-lime-dark flex-shrink-0 mt-1" />
                   <div className="text-left">
-                    <h3 className="font-bold text-navy mb-2">You'll discover:</h3>
+                    <h3 className="font-bold text-navy mb-2">Your free analysis includes:</h3>
                     <ul className="text-sm text-black/70 leading-relaxed space-y-2">
                       <li className="flex items-start gap-2">
-                        <span className="text-coral font-bold">•</span>
-                        <span><strong>Your E-E-A-T score</strong> — how Google sees your content's credibility</span>
+                        <span className="text-lime-dark font-bold">✓</span>
+                        <span><strong>Your E-E-A-T score</strong> — comprehensive credibility assessment across 4 key factors</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-coral font-bold">•</span>
-                        <span><strong>Missing trust signals</strong> — author bylines, credentials, expert reviews</span>
+                        <span className="text-lime-dark font-bold">✓</span>
+                        <span><strong>Content quality insights</strong> — readability, structure, and technical optimization</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-coral font-bold">•</span>
-                        <span><strong>Domain authority gaps</strong> — where you rank vs. competitors</span>
+                        <span className="text-lime-dark font-bold">✓</span>
+                        <span><strong>Authority benchmarks</strong> — see how you compare to industry leaders</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-coral font-bold">•</span>
-                        <span><strong>How CertREV can help</strong> — specific fixes to boost your score</span>
+                        <span className="text-lime-dark font-bold">✓</span>
+                        <span><strong>Expert verification opportunities</strong> — ways to add credibility that drives results</span>
                       </li>
                     </ul>
                   </div>
@@ -146,10 +146,10 @@ export default function EEATMeterPage() {
           <FadeIn>
             <div className="text-center mb-12">
               <h2 className="text-4xl md:text-5xl font-bold mb-4 text-navy font-serif">
-                Your Score Reveals the Problem.<br />CertREV Delivers the Solution.
+                How Expert Verification Elevates Your Content
               </h2>
               <p className="text-xl text-black/70 max-w-3xl mx-auto">
-                Most brands score below 50/100 — here's how we fix it
+                Turn insights into action with credentialed experts
               </p>
             </div>
           </FadeIn>
@@ -161,19 +161,19 @@ export default function EEATMeterPage() {
               viewport={{ once: true }}
               transition={{ delay: 0 }}
             >
-              <TiltCard intensity={0.6} glowColor="rgba(232, 96, 60, 0.2)">
-                <div className="bg-beige rounded-2xl p-6 border-2 border-coral/20 shadow-xl h-full relative overflow-hidden">
+              <TiltCard intensity={0.6} glowColor="rgba(212, 225, 87, 0.2)">
+                <div className="bg-beige rounded-2xl p-6 border-2 border-lime/20 shadow-xl h-full relative overflow-hidden">
                   <TextureOverlay type="paper" opacity={0.3} />
-                  <div className="w-12 h-12 rounded-xl bg-coral/20 flex items-center justify-center mb-4 relative z-10">
-                    <AlertCircle className="w-6 h-6 text-coral" />
+                  <div className="w-12 h-12 rounded-xl bg-lime/20 flex items-center justify-center mb-4 relative z-10">
+                    <Users className="w-6 h-6 text-lime-dark" />
                   </div>
-                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Low Experience Score?</h3>
+                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Add Real Experience</h3>
                   <p className="text-black/70 text-sm leading-relaxed mb-4 relative z-10">
-                    Your content lacks first-hand expertise signals that separate human knowledge from AI-generated fluff.
+                    Connect with credentialed experts who bring first-hand knowledge and real-world expertise to your content.
                   </p>
-                  <div className="bg-white rounded-xl p-4 border-2 border-lime/20 relative z-10">
-                    <p className="text-sm font-semibold text-lime-dark mb-2">✓ CertREV Fix:</p>
-                    <p className="text-xs text-black/70">Connect with credentialed experts who add verified experience to your content</p>
+                  <div className="bg-white rounded-xl p-4 border-2 border-lime/30 relative z-10">
+                    <p className="text-sm font-semibold text-navy mb-2">What you get:</p>
+                    <p className="text-xs text-black/70">Expert bylines, credentials, and authentic experience that sets you apart from AI content</p>
                   </div>
                 </div>
               </TiltCard>
@@ -185,19 +185,19 @@ export default function EEATMeterPage() {
               viewport={{ once: true }}
               transition={{ delay: 0.15 }}
             >
-              <TiltCard intensity={0.6} glowColor="rgba(232, 96, 60, 0.2)">
-                <div className="bg-beige rounded-2xl p-6 border-2 border-coral/20 shadow-xl h-full relative overflow-hidden">
+              <TiltCard intensity={0.6} glowColor="rgba(212, 225, 87, 0.2)">
+                <div className="bg-beige rounded-2xl p-6 border-2 border-lime/20 shadow-xl h-full relative overflow-hidden">
                   <TextureOverlay type="paper" opacity={0.3} />
-                  <div className="w-12 h-12 rounded-xl bg-coral/20 flex items-center justify-center mb-4 relative z-10">
-                    <FileCheck className="w-6 h-6 text-coral" />
+                  <div className="w-12 h-12 rounded-xl bg-lime/20 flex items-center justify-center mb-4 relative z-10">
+                    <FileCheck className="w-6 h-6 text-lime-dark" />
                   </div>
-                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Missing Expertise?</h3>
+                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Build Authority</h3>
                   <p className="text-black/70 text-sm leading-relaxed mb-4 relative z-10">
-                    No author bylines, credentials, or schema markup means Google can't verify who wrote your content.
+                    Showcase verified credentials, professional certifications, and structured data that search engines love.
                   </p>
-                  <div className="bg-white rounded-xl p-4 border-2 border-lime/20 relative z-10">
-                    <p className="text-sm font-semibold text-lime-dark mb-2">✓ CertREV Fix:</p>
-                    <p className="text-xs text-black/70">Expert attribution with credentials, badges, and structured data that search engines recognize</p>
+                  <div className="bg-white rounded-xl p-4 border-2 border-lime/30 relative z-10">
+                    <p className="text-sm font-semibold text-navy mb-2">What you get:</p>
+                    <p className="text-xs text-black/70">Schema markup, verification badges, and expert attribution that boosts your search visibility</p>
                   </div>
                 </div>
               </TiltCard>
@@ -209,19 +209,19 @@ export default function EEATMeterPage() {
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              <TiltCard intensity={0.6} glowColor="rgba(232, 96, 60, 0.2)">
-                <div className="bg-beige rounded-2xl p-6 border-2 border-coral/20 shadow-xl h-full relative overflow-hidden">
+              <TiltCard intensity={0.6} glowColor="rgba(212, 225, 87, 0.2)">
+                <div className="bg-beige rounded-2xl p-6 border-2 border-lime/20 shadow-xl h-full relative overflow-hidden">
                   <TextureOverlay type="paper" opacity={0.3} />
-                  <div className="w-12 h-12 rounded-xl bg-coral/20 flex items-center justify-center mb-4 relative z-10">
-                    <TrendingUp className="w-6 h-6 text-coral" />
+                  <div className="w-12 h-12 rounded-xl bg-lime/20 flex items-center justify-center mb-4 relative z-10">
+                    <TrendingUp className="w-6 h-6 text-lime-dark" />
                   </div>
-                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Low Trust Score?</h3>
+                  <h3 className="text-xl font-bold text-navy mb-3 font-serif relative z-10">Earn Trust</h3>
                   <p className="text-black/70 text-sm leading-relaxed mb-4 relative z-10">
-                    Without expert reviews and verification badges, consumers doubt your claims — especially in health, finance, and wellness.
+                    Display trust signals that consumers and search engines recognize, especially critical for YMYL content.
                   </p>
-                  <div className="bg-white rounded-xl p-4 border-2 border-lime/20 relative z-10">
-                    <p className="text-sm font-semibold text-lime-dark mb-2">✓ CertREV Fix:</p>
-                    <p className="text-xs text-black/70">Verified expert reviews and trust badges that consumers and search engines both recognize</p>
+                  <div className="bg-white rounded-xl p-4 border-2 border-lime/30 relative z-10">
+                    <p className="text-sm font-semibold text-navy mb-2">What you get:</p>
+                    <p className="text-xs text-black/70">Expert reviews, verification seals, and credibility markers that drive conversions</p>
                   </div>
                 </div>
               </TiltCard>
