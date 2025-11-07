@@ -330,7 +330,7 @@ export default function Home() {
 
       {/* Trust Infrastructure Section - Bold Split Layout */}
       <LazySection>
-      <section className="relative bg-white pt-16 pb-20 sm:pt-20 sm:pb-24 md:pt-24 md:pb-32 px-4 overflow-hidden">
+      <section className="hidden md:block relative bg-white pt-16 pb-20 sm:pt-20 sm:pb-24 md:pt-24 md:pb-32 px-4 overflow-hidden">
         <OrganicShape variant="blob2" color="lime" className="top-10 right-10 w-[600px] h-[600px]" opacity={0.15} />
         <OrganicShape variant="blob4" color="coral" className="bottom-10 left-10 w-[500px] h-[500px]" opacity={0.12} />
         <div className="max-w-7xl mx-auto relative z-10">
