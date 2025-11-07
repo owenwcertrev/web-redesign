@@ -255,7 +255,10 @@ function extractSchemaMarkup($: cheerio.CheerioAPI): SchemaMarkup[] {
 function analyzeImages($: cheerio.CheerioAPI): PageAnalysis['images'] {
   const images = $('img')
   const total = images.length
-  const withAlt = images.filter((_, el) => $(el).attr('alt')).length
+  const withAlt = images.filter((_, el) => {
+    const alt = $(el).attr('alt')
+    return alt !== undefined && alt !== ''
+  }).length
 
   return { total, withAlt }
 }
