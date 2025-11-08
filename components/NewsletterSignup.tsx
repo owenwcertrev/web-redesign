@@ -3,6 +3,7 @@
 import { useState, FormEvent } from 'react'
 import Button from './Button'
 import { Mail } from 'lucide-react'
+import { analytics } from '@/lib/analytics'
 
 export default function NewsletterSignup() {
   const [email, setEmail] = useState('')
@@ -26,8 +27,14 @@ export default function NewsletterSignup() {
 
       setSuccess(true)
       setEmail('')
+
+      // Track successful newsletter subscription
+      analytics.subscribeNewsletter(email, true)
     } catch (err) {
       setError('Something went wrong. Please try again.')
+
+      // Track failed newsletter subscription
+      analytics.subscribeNewsletter(email, false)
     } finally {
       setLoading(false)
     }

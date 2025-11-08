@@ -6,6 +6,7 @@ import Button from './Button'
 import ScoreGauge from './ScoreGauge'
 import { Globe, Mail, CheckCircle, XCircle, AlertCircle, ArrowRight, Sparkles } from 'lucide-react'
 import VerificationBadge from './VerificationBadge'
+import { analytics } from '@/lib/analytics'
 
 interface AnalysisResult {
   score: number
@@ -41,6 +42,9 @@ export default function EEATMeterTool() {
     setLoading(true)
     setError('')
 
+    // Track analysis start
+    analytics.eeAtMeter.started(url)
+
     try {
       const response = await fetch('/api/analyze-url', {
         method: 'POST',
@@ -56,10 +60,16 @@ export default function EEATMeterTool() {
 
       const data = await response.json()
       setResults(data.analysis)
+
+      // Track successful analysis
+      analytics.eeAtMeter.completed(url, data.analysis.score)
     } catch (err) {
       console.error('Analysis error:', err)
       const errorMessage = err instanceof Error ? err.message : 'Unable to analyze this URL. Please check the URL and try again.'
       setError(errorMessage)
+
+      // Track failed analysis
+      analytics.eeAtMeter.failed(url, errorMessage)
     } finally {
       setLoading(false)
     }

@@ -4,6 +4,9 @@ import './globals.css'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import SmoothResize from '@/components/SmoothResize'
+import { PostHogProvider, PostHogPageView } from '@/lib/providers/posthog'
+import ErrorBoundary from '@/components/ErrorBoundary'
+import { Suspense } from 'react'
 
 const dmSans = DM_Sans({ subsets: ['latin'] })
 
@@ -121,12 +124,19 @@ export default function RootLayout({
         />
       </head>
       <body className={dmSans.className}>
-        <SmoothResize />
-        <Navigation />
-        <main className="pt-16">
-          {children}
-        </main>
-        <Footer />
+        <PostHogProvider>
+          <ErrorBoundary>
+            <Suspense fallback={null}>
+              <PostHogPageView />
+            </Suspense>
+            <SmoothResize />
+            <Navigation />
+            <main className="pt-16">
+              {children}
+            </main>
+            <Footer />
+          </ErrorBoundary>
+        </PostHogProvider>
       </body>
     </html>
   )

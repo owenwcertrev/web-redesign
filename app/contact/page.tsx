@@ -4,6 +4,7 @@ import { Metadata } from 'next'
 import { useState, FormEvent } from 'react'
 import Button from '@/components/Button'
 import { Mail, Phone, MapPin, Send } from 'lucide-react'
+import { analytics } from '@/lib/analytics'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -32,8 +33,14 @@ export default function ContactPage() {
 
       setSuccess(true)
       setFormData({ name: '', email: '', company: '', message: '' })
+
+      // Track successful contact form submission
+      analytics.submitContact(true)
     } catch (err) {
       setError('Something went wrong. Please try again or email us directly.')
+
+      // Track failed contact form submission
+      analytics.submitContact(false)
     } finally {
       setLoading(false)
     }
