@@ -6,6 +6,8 @@
 import { EEAT_CONFIG, calculateOverallScore } from '../eeat-config'
 import type { PageAnalysis } from './url-analyzer'
 import type { DataForSEOMetrics } from './dataforseo-api'
+import type { NLPAnalysisResult } from './nlp-analyzer'
+import type { ReputationResult } from './reputation-checker'
 
 export interface EEATScore {
   overall: number
@@ -46,11 +48,13 @@ export interface Suggestion {
  */
 export function calculateEEATScores(
   page: PageAnalysis,
-  dataforseo: DataForSEOMetrics
+  dataforseo: DataForSEOMetrics,
+  nlpAnalysis: NLPAnalysisResult | null = null,
+  authorReputations: ReputationResult[] = []
 ): EEATScore {
-  const experience = calculateExperienceScore(page, dataforseo)
-  const expertise = calculateExpertiseScore(page, dataforseo)
-  const authoritativeness = calculateAuthoritativenessScore(page, dataforseo)
+  const experience = calculateExperienceScore(page, dataforseo, nlpAnalysis, authorReputations)
+  const expertise = calculateExpertiseScore(page, dataforseo, nlpAnalysis, authorReputations)
+  const authoritativeness = calculateAuthoritativenessScore(page, dataforseo, authorReputations)
   const trustworthiness = calculateTrustworthinessScore(page, dataforseo)
 
   return {
@@ -69,12 +73,14 @@ export function calculateEEATScores(
 
 /**
  * Experience Score (0-25)
- * Factors: Author credentials, content quality, citations
+ * Factors: Author credentials, content quality, citations, NLP analysis, reputation
  * Adjusted to be more lenient for high-authority sites
  */
 function calculateExperienceScore(
   page: PageAnalysis,
-  dataforseo: DataForSEOMetrics
+  dataforseo: DataForSEOMetrics,
+  nlpAnalysis: NLPAnalysisResult | null,
+  authorReputations: ReputationResult[]
 ): number {
   let score = 0
 
@@ -117,13 +123,68 @@ function calculateExperienceScore(
     score += 3
   }
 
-  // Citations (0-5 points)
-  if (page.citations >= 10) {
-    score += 5
-  } else if (page.citations >= 5) {
-    score += 3
-  } else if (page.citations >= 1) {
-    score += 2
+  // Citations with quality weighting (0-5 points)
+  // Use quality score if available, otherwise fall back to count
+  if (page.citationQuality && page.citationQuality.qualityScore > 0) {
+    // Map quality score (0-100) to points (0-5)
+    const qualityScore = page.citationQuality.qualityScore
+    if (qualityScore >= 80) {
+      score += 5 // Excellent quality citations
+    } else if (qualityScore >= 60) {
+      score += 4 // Good quality citations
+    } else if (qualityScore >= 40) {
+      score += 3 // Moderate quality citations
+    } else if (qualityScore >= 20) {
+      score += 2 // Some quality citations
+    } else if (page.citations > 0) {
+      score += 1 // Has citations but low quality
+    }
+  } else {
+    // Fallback to count-based scoring if quality analysis unavailable
+    if (page.citations >= 10) {
+      score += 5
+    } else if (page.citations >= 5) {
+      score += 3
+    } else if (page.citations >= 1) {
+      score += 2
+    }
+  }
+
+  // NLP-based experience and tone analysis (0-5 points)
+  if (nlpAnalysis) {
+    // Experience signals: first-person accounts, case studies, real examples (0-3 points)
+    const experienceScore = nlpAnalysis.experienceScore
+    if (experienceScore >= 8) {
+      score += 3 // Strong first-person experience signals
+    } else if (experienceScore >= 6) {
+      score += 2 // Some experience signals
+    } else if (experienceScore >= 4) {
+      score += 1 // Minimal experience signals
+    }
+    // Scores below 4 get 0 points (lacks real experience)
+
+    // Tone quality: Penalize promotional content, reward factual tone (0-2 points)
+    const toneScore = nlpAnalysis.toneScore
+    if (toneScore >= 8) {
+      score += 2 // Highly factual, educational tone
+    } else if (toneScore >= 6) {
+      score += 1 // Mostly factual with some promotional elements
+    } else if (toneScore <= 3) {
+      score -= 2 // Heavy promotional tone is penalized
+    }
+  }
+
+  // Author reputation boost (0-3 points)
+  if (authorReputations.length > 0) {
+    const bestReputation = Math.max(...authorReputations.map(r => r.reputationScore))
+    if (bestReputation >= 80) {
+      score += 3 // Excellent reputation with strong professional presence
+    } else if (bestReputation >= 60) {
+      score += 2 // Good reputation with verified credentials
+    } else if (bestReputation >= 40) {
+      score += 1 // Moderate reputation
+    }
+    // Below 40: no bonus (limited or no professional presence)
   }
 
   return Math.min(25, score)
@@ -131,12 +192,14 @@ function calculateExperienceScore(
 
 /**
  * Expertise Score (0-25)
- * Factors: Author credentials, schema markup, citations, domain authority
+ * Factors: Author credentials, schema markup, citations, domain authority, NLP analysis, reputation
  * Adjusted: High-authority domains get partial credit even without explicit author markup
  */
 function calculateExpertiseScore(
   page: PageAnalysis,
-  dataforseo: DataForSEOMetrics
+  dataforseo: DataForSEOMetrics,
+  nlpAnalysis: NLPAnalysisResult | null,
+  authorReputations: ReputationResult[]
 ): number {
   let score = 0
 
@@ -183,13 +246,29 @@ function calculateExpertiseScore(
     score += 1
   }
 
-  // Citations/references (0-4 points)
-  if (page.citations >= 10) {
-    score += 4
-  } else if (page.citations >= 5) {
-    score += 3
-  } else if (page.citations >= 1) {
-    score += 2
+  // Citations/references with quality weighting (0-4 points)
+  // Use quality score if available, otherwise fall back to count
+  if (page.citationQuality && page.citationQuality.qualityScore > 0) {
+    // Map quality score (0-100) to points (0-4)
+    const qualityScore = page.citationQuality.qualityScore
+    if (qualityScore >= 80) {
+      score += 4 // Excellent quality citations
+    } else if (qualityScore >= 60) {
+      score += 3 // Good quality citations
+    } else if (qualityScore >= 40) {
+      score += 2 // Moderate quality citations
+    } else if (page.citations > 0) {
+      score += 1 // Has citations but low quality
+    }
+  } else {
+    // Fallback to count-based scoring if quality analysis unavailable
+    if (page.citations >= 10) {
+      score += 4
+    } else if (page.citations >= 5) {
+      score += 3
+    } else if (page.citations >= 1) {
+      score += 2
+    }
   }
 
   // Content depth bonus (0-5 points)
@@ -202,17 +281,71 @@ function calculateExpertiseScore(
     score += 2
   }
 
+  // NLP-based expertise and authenticity analysis (0-5 points)
+  if (nlpAnalysis) {
+    // Expertise depth: vocabulary sophistication, technical accuracy (0-3 points)
+    const expertiseDepthScore = nlpAnalysis.expertiseDepthScore
+    if (expertiseDepthScore >= 8) {
+      score += 3 // Deep technical knowledge, sophisticated terminology
+    } else if (expertiseDepthScore >= 6) {
+      score += 2 // Good technical content
+    } else if (expertiseDepthScore >= 4) {
+      score += 1 // Surface-level coverage
+    }
+    // Scores below 4 get 0 points (superficial content)
+
+    // AI content detection: Penalize AI-generated content (0-2 points)
+    const aiContentScore = nlpAnalysis.aiContentScore
+    if (aiContentScore >= 8) {
+      score += 2 // Clear human voice, authentic examples
+    } else if (aiContentScore >= 6) {
+      score += 1 // Mostly human-written
+    } else if (aiContentScore <= 3) {
+      score -= 2 // Obvious AI-generated content is penalized
+    }
+    // Scores 4-5 get 0 points (neutral)
+  }
+
+  // Author reputation boost (0-5 points)
+  if (authorReputations.length > 0) {
+    const bestReputation = Math.max(...authorReputations.map(r => r.reputationScore))
+
+    // Check for specific reputation signals that demonstrate expertise
+    const hasPublications = authorReputations.some(r =>
+      r.signals.some(s => s.type === 'publication')
+    )
+    const hasMediaMentions = authorReputations.some(r =>
+      r.signals.some(s => s.type === 'media_mention' && s.authority === 'high')
+    )
+
+    if (bestReputation >= 80) {
+      score += 5 // Excellent reputation with strong professional presence
+    } else if (bestReputation >= 60) {
+      score += 4 // Good reputation with verified credentials
+    } else if (bestReputation >= 40) {
+      score += 2 // Moderate reputation
+    } else if (bestReputation >= 20) {
+      score += 1 // Some reputation
+    }
+
+    // Additional bonus for publications (demonstrates expertise)
+    if (hasPublications) {
+      score += 2
+    }
+  }
+
   return Math.min(25, score)
 }
 
 /**
  * Authoritativeness Score (0-25)
- * Factors: Domain rank (estimated), organic traffic, keyword rankings, citations
+ * Factors: Domain rank (estimated), organic traffic, keyword rankings, citations, author reputation
  * Note: Without backlinks API, using organic performance as authority proxy
  */
 function calculateAuthoritativenessScore(
   page: PageAnalysis,
-  dataforseo: DataForSEOMetrics
+  dataforseo: DataForSEOMetrics,
+  authorReputations: ReputationResult[]
 ): number {
   let score = 0
 
@@ -252,6 +385,28 @@ function calculateAuthoritativenessScore(
     score += 3
   } else if (traffic >= 1000) {
     score += 2
+  }
+
+  // Author reputation boost for authoritativeness (0-3 points)
+  // Well-known authors with media mentions and professional recognition boost authority
+  if (authorReputations.length > 0) {
+    const bestReputation = Math.max(...authorReputations.map(r => r.reputationScore))
+
+    // Check for high-authority signals (media mentions, professional profiles)
+    const hasHighAuthoritySignals = authorReputations.some(r =>
+      r.signals.some(s =>
+        (s.type === 'media_mention' || s.type === 'professional_profile') &&
+        s.authority === 'high'
+      )
+    )
+
+    if (bestReputation >= 80 && hasHighAuthoritySignals) {
+      score += 3 // Highly recognized authority in the field
+    } else if (bestReputation >= 60) {
+      score += 2 // Well-established professional
+    } else if (bestReputation >= 40) {
+      score += 1 // Some professional recognition
+    }
   }
 
   return Math.min(25, score)
@@ -323,9 +478,108 @@ function calculateTrustworthinessScore(
 export function identifyIssues(
   page: PageAnalysis,
   dataforseo: DataForSEOMetrics,
-  scores: EEATScore
+  scores: EEATScore,
+  nlpAnalysis: NLPAnalysisResult | null = null,
+  authorReputations: ReputationResult[] = []
 ): Issue[] {
   const issues: Issue[] = []
+
+  // Author reputation issues
+  if (authorReputations.length > 0) {
+    const bestReputation = Math.max(...authorReputations.map(r => r.reputationScore))
+
+    // Check for negative signals
+    const hasNegativeSignals = authorReputations.some(r =>
+      r.signals.some(s => s.type === 'negative')
+    )
+
+    if (hasNegativeSignals) {
+      const negativeSignals = authorReputations.flatMap(r =>
+        r.signals.filter(s => s.type === 'negative')
+      )
+      const highAuthorityNegative = negativeSignals.some(s => s.authority === 'high')
+
+      issues.push({
+        severity: highAuthorityNegative ? 'critical' : 'high',
+        category: 'expertise',
+        title: 'Author Reputation Concerns',
+        description: `Negative signals detected for author: ${negativeSignals.map(s => s.description).join('; ')}`,
+        impact: 'Negative author reputation can severely impact content credibility and E-E-A-T scores.',
+      })
+    } else if (bestReputation < 20 && page.authors.length > 0) {
+      // Low reputation but author is present
+      issues.push({
+        severity: 'medium',
+        category: 'expertise',
+        title: 'Limited Author Reputation',
+        description: `Author has minimal professional web presence or recognition.`,
+        impact: 'Without verifiable credentials or professional presence, expertise is hard to establish.',
+      })
+    }
+  }
+
+  // NLP-based content quality issues
+  if (nlpAnalysis) {
+    // AI-generated content detection
+    if (nlpAnalysis.aiContentScore <= 3) {
+      issues.push({
+        severity: 'critical',
+        category: 'expertise',
+        title: 'AI-Generated Content Detected',
+        description: 'Content shows strong patterns of AI generation (formulaic structure, generic phrasing, lack of unique voice).',
+        impact: 'Google may penalize AI-generated content that lacks expertise and original insights.',
+      })
+    } else if (nlpAnalysis.aiContentScore <= 5) {
+      issues.push({
+        severity: 'high',
+        category: 'expertise',
+        title: 'Potentially AI-Assisted Content',
+        description: 'Content shows some AI generation patterns. Consider adding more personal voice and unique examples.',
+        impact: 'May reduce perceived expertise and authenticity.',
+      })
+    }
+
+    // Promotional tone detection
+    if (nlpAnalysis.toneScore <= 3) {
+      issues.push({
+        severity: 'high',
+        category: 'experience',
+        title: 'Overly Promotional Tone',
+        description: 'Content is heavily promotional or sales-focused rather than educational.',
+        impact: 'Users and search engines prefer factual, informative content over sales copy.',
+      })
+    } else if (nlpAnalysis.toneScore <= 5) {
+      issues.push({
+        severity: 'medium',
+        category: 'experience',
+        title: 'Mixed Promotional Content',
+        description: 'Content contains noticeable promotional elements that may reduce credibility.',
+        impact: 'Balance informational value with promotional messaging.',
+      })
+    }
+
+    // Experience signals
+    if (nlpAnalysis.experienceScore <= 3) {
+      issues.push({
+        severity: 'high',
+        category: 'experience',
+        title: 'Lacks First-Person Experience',
+        description: 'Content has no clear first-person accounts, case studies, or real-world examples.',
+        impact: 'Google\'s E-E-A-T guidelines emphasize demonstrable experience with the topic.',
+      })
+    }
+
+    // Expertise depth
+    if (nlpAnalysis.expertiseDepthScore <= 3) {
+      issues.push({
+        severity: 'high',
+        category: 'expertise',
+        title: 'Superficial Content',
+        description: 'Content lacks technical depth, sophisticated terminology, or nuanced analysis.',
+        impact: 'Reduces perceived expertise and authority on the topic.',
+      })
+    }
+  }
 
   // Critical issues
   if (!page.hasSSL) {
@@ -450,9 +704,89 @@ export function identifyIssues(
 export function generateSuggestions(
   page: PageAnalysis,
   dataforseo: DataForSEOMetrics,
-  scores: EEATScore
+  scores: EEATScore,
+  nlpAnalysis: NLPAnalysisResult | null = null,
+  authorReputations: ReputationResult[] = []
 ): Suggestion[] {
   const suggestions: Suggestion[] = []
+
+  // Author reputation suggestions
+  if (page.authors.length > 0 && authorReputations.length > 0) {
+    const bestReputation = Math.max(...authorReputations.map(r => r.reputationScore))
+
+    if (bestReputation < 40) {
+      suggestions.push({
+        category: 'expertise',
+        title: 'Build Author Professional Presence',
+        description: 'Create or update LinkedIn profile, contribute to industry publications, speak at conferences, and build professional recognition online.',
+        priority: 'high',
+      })
+    }
+
+    // Check if author has publications
+    const hasPublications = authorReputations.some(r =>
+      r.signals.some(s => s.type === 'publication')
+    )
+
+    if (!hasPublications && bestReputation < 60) {
+      suggestions.push({
+        category: 'expertise',
+        title: 'Publish Research or Articles',
+        description: 'Contribute articles to industry publications, write research papers, or publish case studies to establish thought leadership.',
+        priority: 'medium',
+      })
+    }
+  } else if (page.authors.length === 0) {
+    suggestions.push({
+      category: 'expertise',
+      title: 'Add Verifiable Author Information',
+      description: 'Include author byline with links to professional profiles (LinkedIn, company bio, publications) to establish credibility.',
+      priority: 'high',
+    })
+  }
+
+  // NLP-based content improvement suggestions
+  if (nlpAnalysis) {
+    // AI content suggestions
+    if (nlpAnalysis.aiContentScore <= 5) {
+      suggestions.push({
+        category: 'expertise',
+        title: 'Add Authentic Human Voice',
+        description: 'Replace generic AI-generated phrases with unique insights, specific examples, and personal perspectives. Use varied sentence structures and natural language.',
+        priority: 'high',
+      })
+    }
+
+    // Tone improvement suggestions
+    if (nlpAnalysis.toneScore <= 5) {
+      suggestions.push({
+        category: 'experience',
+        title: 'Reduce Promotional Language',
+        description: 'Focus on educational value and factual information rather than sales messaging. Let the quality of your content speak for itself.',
+        priority: 'high',
+      })
+    }
+
+    // Experience signals suggestions
+    if (nlpAnalysis.experienceScore <= 5) {
+      suggestions.push({
+        category: 'experience',
+        title: 'Demonstrate Real Experience',
+        description: 'Add first-person accounts, detailed case studies, specific metrics from your work, and lessons learned from hands-on experience.',
+        priority: 'high',
+      })
+    }
+
+    // Expertise depth suggestions
+    if (nlpAnalysis.expertiseDepthScore <= 5) {
+      suggestions.push({
+        category: 'expertise',
+        title: 'Increase Technical Depth',
+        description: 'Use industry-specific terminology, provide nuanced analysis, cite research, and demonstrate deep understanding of complex topics.',
+        priority: 'high',
+      })
+    }
+  }
 
   // Experience suggestions
   if (scores.experience < 20) {

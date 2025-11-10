@@ -3,6 +3,8 @@ import { Resend } from 'resend'
 import { analyzeURL, getAuthoritativeDomain } from '@/lib/services/url-analyzer'
 import { getDataForSEOMetrics } from '@/lib/services/dataforseo-api'
 import { calculateEEATScores, identifyIssues, generateSuggestions } from '@/lib/services/eeat-scorer'
+import { analyzeContentWithNLP } from '@/lib/services/nlp-analyzer'
+import { checkAuthorReputation, type ReputationResult } from '@/lib/services/reputation-checker'
 
 // Force Node.js runtime for Buffer support and external API calls
 export const runtime = 'nodejs'
@@ -103,8 +105,50 @@ export async function POST(request: NextRequest) {
       organicTrafficValue: metricsToUse.organicTrafficValue,
     })
 
-    // Calculate E-E-A-T scores
-    const scores = calculateEEATScores(pageAnalysis, metricsToUse)
+    // Perform NLP analysis (optional - graceful fallback if API unavailable)
+    const nlpAnalysis = await analyzeContentWithNLP(
+      pageAnalysis.contentText,
+      pageAnalysis.title,
+      pageAnalysis.wordCount
+    ).catch((err) => {
+      console.error('NLP analysis failed:', err.message)
+      return null // Continue without NLP analysis
+    })
+
+    // Debug logging for NLP analysis
+    if (nlpAnalysis) {
+      console.log('NLP Analysis:', {
+        overallScore: nlpAnalysis.overallScore,
+        toneScore: nlpAnalysis.toneScore,
+        experienceScore: nlpAnalysis.experienceScore,
+        expertiseDepthScore: nlpAnalysis.expertiseDepthScore,
+        aiContentScore: nlpAnalysis.aiContentScore,
+        grammarQualityScore: nlpAnalysis.grammarQualityScore,
+      })
+    }
+
+    // Check author reputation (optional - graceful fallback if API unavailable)
+    const authorReputations: ReputationResult[] = []
+    if (pageAnalysis.authors.length > 0) {
+      // Check reputation for first author (to avoid excessive API usage)
+      const firstAuthor = pageAnalysis.authors[0]
+      const reputation = await checkAuthorReputation(firstAuthor).catch((err) => {
+        console.error('Author reputation check failed:', err.message)
+        return null
+      })
+
+      if (reputation) {
+        authorReputations.push(reputation)
+        console.log('Author Reputation:', {
+          author: reputation.authorName,
+          score: reputation.reputationScore,
+          summary: reputation.summary,
+        })
+      }
+    }
+
+    // Calculate E-E-A-T scores (including NLP and reputation analysis if available)
+    const scores = calculateEEATScores(pageAnalysis, metricsToUse, nlpAnalysis, authorReputations)
 
     // Debug logging for scores
     console.log('E-E-A-T Scores:', {
@@ -115,9 +159,9 @@ export async function POST(request: NextRequest) {
       trustworthiness: scores.trustworthiness,
     })
 
-    // Identify issues and generate suggestions
-    const issues = identifyIssues(pageAnalysis, metricsToUse, scores)
-    const suggestions = generateSuggestions(pageAnalysis, metricsToUse, scores)
+    // Identify issues and generate suggestions (including NLP and reputation analysis if available)
+    const issues = identifyIssues(pageAnalysis, metricsToUse, scores, nlpAnalysis, authorReputations)
+    const suggestions = generateSuggestions(pageAnalysis, metricsToUse, scores, nlpAnalysis, authorReputations)
 
     // Format analysis results for frontend
     const analysis = {

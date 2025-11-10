@@ -5,6 +5,10 @@
 
 import * as cheerio from 'cheerio'
 import { EEAT_CONFIG } from '../eeat-config'
+import {
+  calculateCitationQuality,
+  type CitationQualityResult,
+} from './citation-quality-scorer'
 
 export interface PageAnalysis {
   url: string
@@ -13,6 +17,7 @@ export interface PageAnalysis {
   title: string
   metaDescription: string
   wordCount: number
+  contentText: string // Full page text content for NLP analysis
   headings: {
     h1: string[]
     h2: string[]
@@ -30,6 +35,7 @@ export interface PageAnalysis {
     external: number
   }
   citations: number
+  citationQuality: CitationQualityResult | null
   readabilityScore: number
 }
 
@@ -61,6 +67,13 @@ export async function analyzeURL(url: string): Promise<PageAnalysis> {
   const canonicalUrl = extractCanonicalUrl($)
 
   // Extract all data
+  // Extract citations and calculate quality
+  const citationUrls = extractCitations($)
+  const citationQuality = calculateCitationQuality(citationUrls)
+
+  // Extract content text for NLP analysis
+  const contentText = extractContentText($)
+
   const analysis: PageAnalysis = {
     url: normalizedUrl,
     finalUrl: finalUrl,
@@ -68,13 +81,15 @@ export async function analyzeURL(url: string): Promise<PageAnalysis> {
     title: extractTitle($),
     metaDescription: extractMetaDescription($),
     wordCount: countWords($),
+    contentText: contentText, // Full text for NLP analysis
     headings: extractHeadings($),
     hasSSL: finalUrl.startsWith('https://'), // Use final URL for SSL check
     authors: extractAuthors($),
     schemaMarkup: extractSchemaMarkup($),
     images: analyzeImages($),
     links: analyzeLinks($, finalUrl), // Use final URL for link analysis
-    citations: countCitations($),
+    citations: citationUrls.length, // Total count
+    citationQuality: citationQuality, // Quality breakdown
     readabilityScore: calculateReadability($),
   }
 
@@ -182,6 +197,34 @@ export function getAuthoritativeDomain(analysis: PageAnalysis): string {
       return analysis.url.replace('www.', '').split('/')[0]
     }
   }
+}
+
+/**
+ * Extracts main content text for NLP analysis
+ */
+function extractContentText($: cheerio.CheerioAPI): string {
+  // Clone the DOM to avoid modifying the original
+  const $clone = cheerio.load($.html())
+
+  // Remove non-content elements
+  $clone('script, style, nav, header, footer, aside, .menu, .navigation, .sidebar').remove()
+
+  // Get text from main content areas
+  let text = ''
+
+  // Try to find main content container first
+  const mainContent = $clone('main, article, [role="main"], .content, .post-content').first()
+  if (mainContent.length > 0) {
+    text = mainContent.text()
+  } else {
+    // Fall back to body text
+    text = $clone('body').text()
+  }
+
+  // Clean up whitespace
+  text = text.replace(/\s+/g, ' ').trim()
+
+  return text
 }
 
 /**
@@ -364,39 +407,32 @@ function analyzeLinks($: cheerio.CheerioAPI, baseUrl: string): PageAnalysis['lin
 }
 
 /**
- * Counts citations/references in the content
+ * Extracts citations/references from the content
+ * Returns array of citation URLs/domains for quality analysis
  */
-function countCitations($: cheerio.CheerioAPI): number {
-  // Look for common citation patterns
-  let count = 0
+function extractCitations($: cheerio.CheerioAPI): string[] {
+  const citations: string[] = []
 
-  // Superscript references
-  count += $('sup a').length
-
-  // Numbered references like [1], [2]
-  const text = $('body').text()
-  const numberedRefs = text.match(/\[\d+\]/g)
-  if (numberedRefs) count += numberedRefs.length
-
-  // Links to authoritative domains
-  const authoritativeDomains = [
-    '.gov',
-    '.edu',
-    'nih.gov',
-    'cdc.gov',
-    'who.int',
-    'ncbi.nlm.nih.gov',
-    'pubmed',
-  ]
-
-  $('a[href]').each((_, el) => {
+  // Superscript references with links
+  $('sup a[href]').each((_, el) => {
     const href = $(el).attr('href') || ''
-    if (authoritativeDomains.some(domain => href.includes(domain))) {
-      count++
+    if (href && href.startsWith('http')) {
+      citations.push(href)
     }
   })
 
-  return count
+  // All external links (potential citations)
+  $('a[href]').each((_, el) => {
+    const href = $(el).attr('href') || ''
+    if (href && href.startsWith('http')) {
+      // Avoid duplicates and internal links
+      if (!citations.includes(href)) {
+        citations.push(href)
+      }
+    }
+  })
+
+  return citations
 }
 
 /**
