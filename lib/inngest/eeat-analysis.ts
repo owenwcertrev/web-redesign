@@ -9,8 +9,8 @@ import { inngest } from './client'
 import type { PageAnalysis } from '../services/url-analyzer'
 import { getDataForSEOMetrics } from '../services/dataforseo-api'
 import { analyzeContentWithNLP } from '../services/nlp-analyzer'
-import { checkAuthorReputation, type ReputationResult } from '../services/reputation-checker'
-import { calculateEEATScores, identifyIssues, generateSuggestions } from '../services/eeat-scorer'
+import { checkAuthorReputation, type ReputationResult, type ReputationSignal } from '../services/reputation-checker'
+import { calculateEEATScores, identifyIssues, generateSuggestions, type Issue, type Suggestion } from '../services/eeat-scorer'
 import { Resend } from 'resend'
 
 interface ComprehensiveAnalysisEvent {
@@ -109,7 +109,7 @@ export const comprehensiveEEATAnalysis = inngest.createFunction(
       const resend = new Resend(process.env.RESEND_API_KEY)
 
       const issuesHtml = issues
-        .map((issue) => {
+        .map((issue: Issue) => {
           const color =
             issue.severity === 'critical' || issue.severity === 'high'
               ? '#E8603C'
@@ -126,7 +126,7 @@ export const comprehensiveEEATAnalysis = inngest.createFunction(
         .join('')
 
       const suggestionsHtml = suggestions
-        .map((s) => `<li style="margin: 8px 0;">${s.description}</li>`)
+        .map((s: Suggestion) => `<li style="margin: 8px 0;">${s.description}</li>`)
         .join('')
 
       // NLP Analysis Section
@@ -140,7 +140,7 @@ export const comprehensiveEEATAnalysis = inngest.createFunction(
             <p style="margin: 8px 0;"><strong>Expertise Depth:</strong> ${nlpAnalysis.expertiseDepthScore}/10 (${nlpAnalysis.expertiseDepthScore >= 8 ? 'Deep technical knowledge' : nlpAnalysis.expertiseDepthScore >= 6 ? 'Good technical content' : 'Surface-level'})</p>
             <p style="margin: 8px 0;"><strong>AI Content Detection:</strong> ${nlpAnalysis.aiContentScore}/10 (${nlpAnalysis.aiContentScore >= 8 ? 'Human-written' : nlpAnalysis.aiContentScore >= 6 ? 'Mostly human' : nlpAnalysis.aiContentScore >= 4 ? 'Some AI patterns' : 'Likely AI-generated'})</p>
             <p style="margin: 8px 0;"><strong>Grammar Quality:</strong> ${nlpAnalysis.grammarQualityScore}/10</p>
-            ${nlpAnalysis.flags.length > 0 ? `<p style="margin: 12px 0 4px 0;"><strong>Flags Detected:</strong></p><ul style="margin: 4px 0;">${nlpAnalysis.flags.map((f) => `<li style="color: #e00;">${f}</li>`).join('')}</ul>` : ''}
+            ${nlpAnalysis.flags.length > 0 ? `<p style="margin: 12px 0 4px 0;"><strong>Flags Detected:</strong></p><ul style="margin: 4px 0;">${nlpAnalysis.flags.map((f: string) => `<li style="color: #e00;">${f}</li>`).join('')}</ul>` : ''}
           </div>
         `
         : '<p style="color: #888;">NLP analysis unavailable (OpenAI API not configured)</p>'
@@ -150,17 +150,17 @@ export const comprehensiveEEATAnalysis = inngest.createFunction(
         authorReputations.length > 0
           ? authorReputations
               .map(
-                (rep) => `
+                (rep: ReputationResult) => `
               <h3 style="color: #0A1B3F; margin-top: 24px;">👤 Author Reputation: ${rep.authorName}</h3>
               <div style="background: #f9f9f9; padding: 16px; border-radius: 8px; margin: 12px 0;">
                 <p style="margin: 8px 0;"><strong>Reputation Score:</strong> ${rep.reputationScore}/100</p>
                 <p style="margin: 8px 0;">${rep.summary}</p>
                 <p style="margin: 12px 0 4px 0;"><strong>Signals Found:</strong></p>
                 <ul style="margin: 4px 0;">
-                  <li>Professional Profiles: ${rep.signals.filter((s) => s.type === 'professional_profile').length}</li>
-                  <li>Media Mentions: ${rep.signals.filter((s) => s.type === 'media_mention').length}</li>
-                  <li>Publications: ${rep.signals.filter((s) => s.type === 'publication').length}</li>
-                  ${rep.signals.filter((s) => s.type === 'negative').length > 0 ? `<li style="color: #e00;">⚠️ Negative Signals: ${rep.signals.filter((s) => s.type === 'negative').length}</li>` : ''}
+                  <li>Professional Profiles: ${rep.signals.filter((s: ReputationSignal) => s.type === 'professional_profile').length}</li>
+                  <li>Media Mentions: ${rep.signals.filter((s: ReputationSignal) => s.type === 'media_mention').length}</li>
+                  <li>Publications: ${rep.signals.filter((s: ReputationSignal) => s.type === 'publication').length}</li>
+                  ${rep.signals.filter((s: ReputationSignal) => s.type === 'negative').length > 0 ? `<li style="color: #e00;">⚠️ Negative Signals: ${rep.signals.filter((s: ReputationSignal) => s.type === 'negative').length}</li>` : ''}
                 </ul>
               </div>
             `
