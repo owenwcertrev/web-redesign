@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { analyzeURL, getAuthoritativeDomain } from '@/lib/services/url-analyzer'
 import { getDataForSEOMetrics } from '@/lib/services/dataforseo-api'
-import { calculateEEATScores, identifyIssues, generateSuggestions } from '@/lib/services/eeat-scorer'
+import { calculateEEATScores, calculateInstantEEATScores, identifyIssues, generateSuggestions } from '@/lib/services/eeat-scorer'
 import { analyzeContentWithNLP } from '@/lib/services/nlp-analyzer'
 import { checkAuthorReputation, type ReputationResult } from '@/lib/services/reputation-checker'
+import { inngest } from '@/lib/inngest/client'
 
 // Force Node.js runtime for Buffer support and external API calls
 export const runtime = 'nodejs'
@@ -54,8 +55,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Perform comprehensive E-E-A-T analysis with DataForSEO
-    console.log('Starting E-E-A-T analysis for:', normalizedUrl)
+    // Perform instant E-E-A-T analysis (no external APIs)
+    console.log('Starting instant E-E-A-T analysis for:', normalizedUrl)
 
     // First, analyze the page to get redirects and canonical URL
     const pageAnalysis = await analyzeURL(normalizedUrl).catch((err) => {
@@ -87,90 +88,27 @@ export async function POST(request: NextRequest) {
       authoritative: authoritativeDomain,
     })
 
-    // Fetch DataForSEO metrics using the authoritative domain
-    const dataforSEOMetrics = await getDataForSEOMetrics(`https://${authoritativeDomain}`).catch((err) => {
-      console.error('DataForSEO API failed:', err.message)
-      // Don't fail the entire request if DataForSEO fails - use estimated metrics
-      return null
-    })
+    // Calculate instant E-E-A-T scores (no external APIs - fast)
+    const instantScores = calculateInstantEEATScores(pageAnalysis)
 
-    // Use actual metrics or fallback to estimated ones
-    const metricsToUse = dataforSEOMetrics || await getDataForSEOMetrics(`https://${authoritativeDomain}`)
-
-    // Debug logging for DataForSEO metrics
-    console.log('DataForSEO Metrics for', normalizedUrl, ':', {
-      domainRank: metricsToUse.domainRank,
-      organicKeywords: metricsToUse.organicKeywords,
-      organicTraffic: metricsToUse.organicTraffic,
-      organicTrafficValue: metricsToUse.organicTrafficValue,
-    })
-
-    // Perform NLP analysis (optional - graceful fallback if API unavailable)
-    const nlpAnalysis = await analyzeContentWithNLP(
-      pageAnalysis.contentText,
-      pageAnalysis.title,
-      pageAnalysis.wordCount
-    ).catch((err) => {
-      console.error('NLP analysis failed:', err.message)
-      return null // Continue without NLP analysis
-    })
-
-    // Debug logging for NLP analysis
-    if (nlpAnalysis) {
-      console.log('NLP Analysis:', {
-        overallScore: nlpAnalysis.overallScore,
-        toneScore: nlpAnalysis.toneScore,
-        experienceScore: nlpAnalysis.experienceScore,
-        expertiseDepthScore: nlpAnalysis.expertiseDepthScore,
-        aiContentScore: nlpAnalysis.aiContentScore,
-        grammarQualityScore: nlpAnalysis.grammarQualityScore,
-      })
+    // Generate instant issues and suggestions (without LLM enhancements)
+    const estimatedMetrics = {
+      domainRank: 50,
+      organicKeywords: 0,
+      organicTraffic: 0,
+      organicTrafficValue: 0,
     }
+    const instantIssues = identifyIssues(pageAnalysis, estimatedMetrics, instantScores, null, [])
+    const instantSuggestions = generateSuggestions(pageAnalysis, estimatedMetrics, instantScores, null, [])
 
-    // Check author reputation (optional - graceful fallback if API unavailable)
-    const authorReputations: ReputationResult[] = []
-    if (pageAnalysis.authors.length > 0) {
-      // Check reputation for first author (to avoid excessive API usage)
-      const firstAuthor = pageAnalysis.authors[0]
-      const reputation = await checkAuthorReputation(firstAuthor).catch((err) => {
-        console.error('Author reputation check failed:', err.message)
-        return null
-      })
-
-      if (reputation) {
-        authorReputations.push(reputation)
-        console.log('Author Reputation:', {
-          author: reputation.authorName,
-          score: reputation.reputationScore,
-          summary: reputation.summary,
-        })
-      }
-    }
-
-    // Calculate E-E-A-T scores (including NLP and reputation analysis if available)
-    const scores = calculateEEATScores(pageAnalysis, metricsToUse, nlpAnalysis, authorReputations)
-
-    // Debug logging for scores
-    console.log('E-E-A-T Scores:', {
-      overall: scores.overall,
-      experience: scores.experience,
-      expertise: scores.expertise,
-      authoritativeness: scores.authoritativeness,
-      trustworthiness: scores.trustworthiness,
-    })
-
-    // Identify issues and generate suggestions (including NLP and reputation analysis if available)
-    const issues = identifyIssues(pageAnalysis, metricsToUse, scores, nlpAnalysis, authorReputations)
-    const suggestions = generateSuggestions(pageAnalysis, metricsToUse, scores, nlpAnalysis, authorReputations)
-
-    // Format analysis results for frontend
-    const analysis = {
-      score: scores.overall,
+    // Format instant analysis results
+    const instantAnalysis = {
+      score: instantScores.overall,
       breakdown: {
-        experience: scores.experience,
-        expertise: scores.expertise,
-        authoritativeness: scores.authoritativeness,
-        trustworthiness: scores.trustworthiness,
+        experience: instantScores.experience,
+        expertise: instantScores.expertise,
+        authoritativeness: instantScores.authoritativeness,
+        trustworthiness: instantScores.trustworthiness,
       },
       domainInfo: {
         entered: normalizedUrl,
@@ -178,100 +116,77 @@ export async function POST(request: NextRequest) {
         redirected: pageAnalysis.finalUrl !== normalizedUrl,
         canonical: pageAnalysis.canonicalUrl,
       },
-      issues: issues.map(issue => ({
+      issues: instantIssues.map(issue => ({
         type: issue.severity === 'critical' || issue.severity === 'high' ? 'missing' : issue.severity === 'medium' ? 'warning' : 'good',
         severity: issue.severity,
         message: issue.title,
         description: issue.description,
       })),
-      suggestions: suggestions.map(s => s.description),
+      suggestions: instantSuggestions.map(s => s.description),
       metrics: {
-        domainRank: metricsToUse.domainRank,
-        organicKeywords: metricsToUse.organicKeywords,
-        organicTraffic: metricsToUse.organicTraffic,
-        organicTrafficValue: metricsToUse.organicTrafficValue,
         wordCount: pageAnalysis.wordCount,
         readabilityScore: pageAnalysis.readabilityScore,
+        citations: pageAnalysis.citations,
+        authors: pageAnalysis.authors.length,
+        schemaMarkup: pageAnalysis.schemaMarkup.length,
+        hasSSL: pageAnalysis.hasSSL,
       },
     }
 
-    console.log('E-E-A-T analysis complete:', { url, score: scores.overall, cost: '~$0.04-0.06' })
+    console.log('Instant E-E-A-T analysis complete:', { url, score: instantScores.overall })
 
-    // If email provided, send detailed report
+    // If email provided, trigger comprehensive analysis via Inngest
     if (email) {
-      const resend = getResendClient()
-      if (resend) {
-        try {
-          const issuesHtml = analysis.issues.map(issue => {
-            const color = issue.severity === 'high' ? '#E8603C' : issue.severity === 'medium' ? '#D4E157' : '#0A1B3F'
-            return `
-              <div style="margin: 12px 0; padding: 12px; border-left: 4px solid ${color}; background: #f5f5f5;">
-                <strong style="color: ${color};">${issue.severity.toUpperCase()}:</strong> ${issue.message}
-              </div>
-            `
-          }).join('')
+      try {
+        await inngest.send({
+          name: 'eeat/analysis.comprehensive',
+          data: {
+            url: normalizedUrl,
+            email,
+            pageAnalysis,
+          },
+        })
 
-          const suggestionsHtml = analysis.suggestions.map(s => `
-            <li style="margin: 8px 0;">${s}</li>
-          `).join('')
+        console.log('Triggered comprehensive E-E-A-T analysis for:', email)
 
-          await resend.emails.send({
-          from: 'CertREV E-E-A-T Analysis <noreply@mail.certrev.com>',
-          to: email,
-          subject: `Your E-E-A-T Analysis Results for ${new URL(url).hostname}`,
-          html: `
-            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-              <h1 style="color: #0A1B3F;">Your E-E-A-T Analysis Results</h1>
-              <p><strong>Analyzed URL:</strong> <a href="${url}">${url}</a></p>
-
-              <div style="background: #E8E4DB; padding: 20px; border-radius: 12px; margin: 20px 0;">
-                <h2 style="color: #0A1B3F; margin-top: 0;">Overall Score: ${analysis.score}/100</h2>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;">
-                  <div>
-                    <strong>Experience:</strong> ${analysis.breakdown.experience}/25
-                  </div>
-                  <div>
-                    <strong>Expertise:</strong> ${analysis.breakdown.expertise}/25
-                  </div>
-                  <div>
-                    <strong>Authoritativeness:</strong> ${analysis.breakdown.authoritativeness}/25
-                  </div>
-                  <div>
-                    <strong>Trustworthiness:</strong> ${analysis.breakdown.trustworthiness}/25
-                  </div>
-                </div>
-              </div>
-
-              <h3 style="color: #0A1B3F;">Issues Detected</h3>
-              ${issuesHtml}
-
-              <h3 style="color: #0A1B3F; margin-top: 24px;">Recommendations</h3>
-              <ul style="line-height: 1.8;">
-                ${suggestionsHtml}
-              </ul>
-
-              <div style="margin-top: 32px; padding: 20px; background: #0A1B3F; color: white; border-radius: 12px; text-align: center;">
-                <p style="margin: 0 0 12px 0;">Ready to improve your E-E-A-T score?</p>
-                <a href="https://certrev.com/book-demo" style="display: inline-block; padding: 12px 24px; background: #E8603C; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">Book a Demo</a>
-              </div>
-
-              <p style="text-align: center; color: #666; font-size: 12px; margin-top: 24px;">
-                This is a sample analysis for demonstration purposes. <br>
-                Contact us for a comprehensive E-E-A-T audit.
-              </p>
-            </div>
-          `,
-          })
-        } catch (emailError) {
-          console.error('Error sending analysis email:', emailError)
-          // Continue even if email fails - don't block the user
-        }
+        return NextResponse.json({
+          success: true,
+          instant: instantAnalysis,
+          comprehensive: {
+            status: 'processing',
+            estimatedTime: '2-4 minutes',
+            message: 'Comprehensive analysis with AI-powered insights will be emailed to you shortly',
+            features: [
+              'Domain authority metrics (traffic, keywords, rank)',
+              'AI content quality analysis (tone, experience, AI detection)',
+              'Author reputation verification (profiles, publications, media)',
+              'Enhanced E-E-A-T score with all intelligence layers',
+              'Detailed actionable recommendations'
+            ]
+          },
+        })
+      } catch (inngestError) {
+        console.error('Failed to trigger comprehensive analysis:', inngestError)
+        // Fall through to return instant analysis only
       }
     }
 
+    // No email provided - return instant analysis with upgrade prompt
     return NextResponse.json({
       success: true,
-      analysis,
+      instant: instantAnalysis,
+      comprehensive: {
+        status: 'not_requested',
+        message: 'Want deeper insights? Provide your email for comprehensive AI-powered analysis',
+        features: [
+          'Domain authority metrics from DataForSEO',
+          'AI content quality analysis via OpenAI GPT-4',
+          'Author reputation verification via web search',
+          'Enhanced E-E-A-T score (+8-21 potential points)',
+          'Detect AI-generated content and promotional tone',
+          'Verify author credentials and professional presence'
+        ]
+      },
     })
   } catch (error) {
     console.error('Error analyzing URL:', error)

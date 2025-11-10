@@ -72,6 +72,40 @@ export function calculateEEATScores(
 }
 
 /**
+ * Calculates instant E-E-A-T scores WITHOUT external APIs
+ * Uses only page analysis data - no DataForSEO, NLP, or reputation checking
+ * Fast, synchronous, suitable for immediate display
+ */
+export function calculateInstantEEATScores(page: PageAnalysis): EEATScore {
+  // Create estimated metrics for authoritativeness
+  // Based on basic page quality signals
+  const estimatedMetrics: DataForSEOMetrics = {
+    domainRank: 50, // Neutral default
+    organicKeywords: 0,
+    organicTraffic: 0,
+    organicTrafficValue: 0,
+  }
+
+  const experience = calculateExperienceScore(page, estimatedMetrics, null, [])
+  const expertise = calculateExpertiseScore(page, estimatedMetrics, null, [])
+  const authoritativeness = calculateAuthoritativenessScore(page, estimatedMetrics, [])
+  const trustworthiness = calculateTrustworthinessScore(page, estimatedMetrics)
+
+  return {
+    overall: calculateOverallScore({
+      experience,
+      expertise,
+      authoritativeness,
+      trustworthiness,
+    }),
+    experience,
+    expertise,
+    authoritativeness,
+    trustworthiness,
+  }
+}
+
+/**
  * Experience Score (0-25)
  * Factors: Author credentials, content quality, citations, NLP analysis, reputation
  * Adjusted to be more lenient for high-authority sites
