@@ -118,7 +118,7 @@ export const comprehensiveEEATAnalysis = inngest.createFunction(
               : '#0A1B3F'
           return `
             <div style="margin: 12px 0; padding: 12px; border-left: 4px solid ${color}; background: #f5f5f5;">
-              <strong style="color: ${color};">${issue.severity.toUpperCase()}:</strong> ${issue.message}
+              <strong style="color: ${color};">${issue.severity.toUpperCase()}:</strong> ${issue.title}
               <p style="margin: 4px 0 0 0; color: #666; font-size: 14px;">${issue.description}</p>
             </div>
           `
