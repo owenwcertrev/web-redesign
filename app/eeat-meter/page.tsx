@@ -30,7 +30,7 @@ export default function EEATMeterPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-coral/20 shadow-sm"
+              className="inline-block mb-6 px-4 py-1.5 bg-white rounded-lg border border-coral/30"
             >
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-coral" />
@@ -68,13 +68,13 @@ export default function EEATMeterPage() {
               transition={{ delay: 0.8 }}
               className="flex flex-wrap justify-center gap-4 text-sm mb-8"
             >
-              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-navy/20 shadow-sm">
+              <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-navy/30">
                 <span className="text-navy font-semibold">Instant E-E-A-T Analysis</span>
               </div>
-              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-navy/20 shadow-sm">
+              <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-navy/30">
                 <span className="text-navy font-semibold">Domain Authority Insights</span>
               </div>
-              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-navy/20 shadow-sm">
+              <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-navy/30">
                 <span className="text-navy font-semibold">Expert Verification Roadmap</span>
               </div>
             </motion.div>

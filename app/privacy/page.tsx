@@ -25,7 +25,7 @@ export default function PrivacyPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-6 py-3 bg-white rounded-full border-2 border-lime/20 shadow-sm"
+              className="inline-block mb-6 px-4 py-1.5 bg-white rounded-lg border border-lime/30"
             >
               <div className="flex items-center gap-2">
                 <Shield className="w-4 h-4 text-lime" />
