@@ -93,7 +93,16 @@ export async function POST(request: NextRequest) {
 
     // Generate instant issues and suggestions (without LLM enhancements)
     const estimatedMetrics = {
-      domainRank: 50,
+      domainRank: 50, // Neutral default
+      pageRank: 0,
+      backlinks: 0,
+      referringDomains: 0,
+      referringMainDomains: 0,
+      followedBacklinks: 0,
+      nofollowedBacklinks: 0,
+      govBacklinks: 0,
+      eduBacklinks: 0,
+      spamScore: 0,
       organicKeywords: 0,
       organicTraffic: 0,
       organicTrafficValue: 0,
