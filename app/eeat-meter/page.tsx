@@ -30,11 +30,11 @@ export default function EEATMeterPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-4 py-1.5 bg-white rounded-lg border border-coral/30"
+              className="inline-block mb-6 px-3 py-1 bg-coral/10 rounded-md"
             >
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-coral" />
-                <span className="text-sm font-semibold text-navy tracking-wide">FREE CONTENT ANALYSIS</span>
+                <span className="text-xs font-medium text-navy tracking-wide">FREE CONTENT ANALYSIS</span>
               </div>
             </motion.div>
 
@@ -68,14 +68,14 @@ export default function EEATMeterPage() {
               transition={{ delay: 0.8 }}
               className="flex flex-wrap justify-center gap-4 text-sm mb-8"
             >
-              <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-navy/30">
-                <span className="text-navy font-semibold">Instant E-E-A-T Analysis</span>
+              <div className="bg-navy/5 backdrop-blur-sm px-3 py-1 rounded-md">
+                <span className="text-navy font-medium text-xs">Instant E-E-A-T Analysis</span>
               </div>
-              <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-navy/30">
-                <span className="text-navy font-semibold">Domain Authority Insights</span>
+              <div className="bg-navy/5 backdrop-blur-sm px-3 py-1 rounded-md">
+                <span className="text-navy font-medium text-xs">Domain Authority Insights</span>
               </div>
-              <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-navy/30">
-                <span className="text-navy font-semibold">Expert Verification Roadmap</span>
+              <div className="bg-navy/5 backdrop-blur-sm px-3 py-1 rounded-md">
+                <span className="text-navy font-medium text-xs">Expert Verification Roadmap</span>
               </div>
             </motion.div>
 

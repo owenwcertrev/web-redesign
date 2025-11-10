@@ -183,9 +183,9 @@ export default function HowItWorksPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-4 py-1.5 bg-white rounded-lg border border-coral/30"
+              className="inline-block mb-6 px-3 py-1 bg-coral/10 rounded-md"
             >
-              <span className="text-sm font-semibold text-navy tracking-wide">THE PROCESS</span>
+              <span className="text-xs font-medium text-navy tracking-wide">THE PROCESS</span>
             </motion.div>
 
             <motion.h1
@@ -221,8 +221,8 @@ export default function HowItWorksPage() {
         <div className="max-w-5xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <div className="inline-block mb-6 px-4 py-1.5 bg-coral/10 rounded-lg border border-coral/40">
-                <span className="text-sm font-semibold text-navy tracking-wide">THE JOURNEY</span>
+              <div className="inline-block mb-6 px-3 py-1 bg-coral/10 rounded-md">
+                <span className="text-xs font-medium text-navy tracking-wide">THE JOURNEY</span>
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
                 From Submission to Certification
@@ -244,8 +244,8 @@ export default function HowItWorksPage() {
         <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <div className="inline-block mb-6 px-4 py-1.5 bg-white rounded-lg border border-lime/30">
-                <span className="text-sm font-semibold text-navy tracking-wide">TRUST BUILT IN</span>
+              <div className="inline-block mb-6 px-3 py-1 bg-lime/10 rounded-md">
+                <span className="text-xs font-medium text-navy tracking-wide">TRUST BUILT IN</span>
               </div>
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-navy font-serif">
                 Our Expert Vetting Process

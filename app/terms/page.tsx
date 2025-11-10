@@ -25,11 +25,11 @@ export default function TermsPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-4 py-1.5 bg-white rounded-lg border border-navy/30"
+              className="inline-block mb-6 px-3 py-1 bg-navy/5 rounded-md"
             >
               <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-navy" />
-                <span className="text-sm font-semibold text-navy tracking-wide">LEGAL</span>
+                <span className="text-xs font-medium text-navy tracking-wide">LEGAL</span>
               </div>
             </motion.div>
 

@@ -109,9 +109,9 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-8 px-4 py-1.5 bg-white rounded-lg border border-lime/40"
+              className="inline-block mb-8 px-3 py-1 bg-lime/10 rounded-md"
             >
-              <span className="text-sm font-semibold text-navy tracking-wide">EXPERT VERIFICATION PLATFORM</span>
+              <span className="text-xs font-medium text-navy tracking-wide">EXPERT VERIFICATION PLATFORM</span>
             </motion.div>
 
             <motion.h1
@@ -397,8 +397,8 @@ export default function Home() {
         <div className="max-w-4xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <div className="inline-block mb-6 px-4 py-1.5 bg-lime/10 rounded-lg border border-lime/40">
-                <span className="text-sm font-semibold text-navy tracking-wide">LAYERED PROCESS</span>
+              <div className="inline-block mb-6 px-3 py-1 bg-lime/10 rounded-md">
+                <span className="text-xs font-medium text-navy tracking-wide">LAYERED PROCESS</span>
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
                 Verification in Layers
@@ -422,8 +422,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
-              <div className="inline-block mb-6 px-4 py-1.5 bg-white rounded-lg border border-navy/30">
-                <span className="text-sm font-semibold text-navy">6 EXPERT LEVELS</span>
+              <div className="inline-block mb-6 px-3 py-1 bg-navy/5 rounded-md">
+                <span className="text-xs font-medium text-navy">6 EXPERT LEVELS</span>
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6 text-navy font-serif">
                 Expert Credential Tiers
@@ -530,8 +530,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto relative z-10">
           <FadeIn>
             <div className="text-center mb-20">
-              <div className="inline-block mb-6 px-4 py-1.5 bg-beige rounded-lg border border-navy/30">
-                <span className="text-sm font-semibold text-navy tracking-wide">TRUST PRINCIPLES</span>
+              <div className="inline-block mb-6 px-3 py-1 bg-navy/5 rounded-md">
+                <span className="text-xs font-medium text-navy tracking-wide">TRUST PRINCIPLES</span>
               </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-8 text-black font-serif leading-tight">
                 Built on Trust Principles
@@ -657,8 +657,8 @@ export default function Home() {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="bg-gradient-to-br from-lime-light to-beige rounded-16 p-8 sm:p-12 border-2 border-lime/30 shadow-lg text-center"
             >
-              <div className="inline-block mb-4 px-4 py-1.5 bg-white rounded-lg border border-lime/40">
-                <span className="text-xs font-semibold text-navy tracking-wide">GET STARTED TODAY</span>
+              <div className="inline-block mb-4 px-3 py-1 bg-lime/10 rounded-md">
+                <span className="text-xs font-medium text-navy tracking-wide">GET STARTED TODAY</span>
               </div>
               <h3 className="text-2xl sm:text-3xl font-bold text-navy font-serif mb-4">
                 Start Adding Expert Attribution to Your Content
@@ -687,8 +687,8 @@ export default function Home() {
             <>
               <FadeIn delay={0.2}>
                 <div className="text-center mb-12">
-                  <div className="inline-block mb-4 px-4 py-1.5 bg-lime/10 rounded-lg border border-lime/40">
-                    <span className="text-xs font-semibold text-navy tracking-wide">OUR EXPERTS</span>
+                  <div className="inline-block mb-4 px-3 py-1 bg-lime/10 rounded-md">
+                    <span className="text-xs font-medium text-navy tracking-wide">OUR EXPERTS</span>
                   </div>
                   <h3 className="text-3xl font-bold text-navy font-serif mb-3">
                     Meet Our Expert Network

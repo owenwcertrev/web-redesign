@@ -87,9 +87,9 @@ export default function HumanLayerPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-4 py-1.5 bg-white/80 backdrop-blur-sm rounded-lg border border-lime/40"
+              className="inline-block mb-6 px-3 py-1 bg-lime/10 backdrop-blur-sm rounded-md"
             >
-              <span className="text-sm font-semibold text-navy tracking-wide">INSIGHTS & ANALYSIS</span>
+              <span className="text-xs font-medium text-navy tracking-wide">INSIGHTS & ANALYSIS</span>
             </motion.div>
 
             <motion.h1

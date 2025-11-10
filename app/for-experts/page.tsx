@@ -44,8 +44,8 @@ export default function ForExpertsPage() {
         <OrganicShape variant="blob1" color="lime" className="absolute top-0 right-0 w-96 h-96" opacity={0.15} />
         <OrganicShape variant="blob2" color="coral" className="absolute bottom-0 left-0 w-80 h-80" opacity={0.08} />
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="inline-block mb-6 px-4 py-1.5 bg-white/90 backdrop-blur-sm rounded-lg border border-lime/40">
-            <span className="text-sm font-semibold text-navy tracking-wide">FOR EXPERTS</span>
+          <div className="inline-block mb-6 px-3 py-1 bg-lime/10 backdrop-blur-sm rounded-md">
+            <span className="text-xs font-medium text-navy tracking-wide">FOR EXPERTS</span>
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 text-navy leading-tight font-serif">
             Share Your Expertise.<br />
@@ -68,8 +68,8 @@ export default function ForExpertsPage() {
         <TextureOverlay type="grain" opacity={0.15} />
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-12">
-            <div className="inline-block mb-4 px-4 py-1.5 bg-lime/10 rounded-lg border border-lime/40">
-              <span className="text-xs font-semibold text-navy tracking-wide">BENEFITS</span>
+            <div className="inline-block mb-4 px-3 py-1 bg-lime/10 rounded-md">
+              <span className="text-xs font-medium text-navy tracking-wide">BENEFITS</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-navy font-serif">
               Why Join CertREV

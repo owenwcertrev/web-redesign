@@ -25,11 +25,11 @@ export default function PrivacyPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block mb-6 px-4 py-1.5 bg-white rounded-lg border border-lime/30"
+              className="inline-block mb-6 px-3 py-1 bg-lime/10 rounded-md"
             >
               <div className="flex items-center gap-2">
                 <Shield className="w-4 h-4 text-lime" />
-                <span className="text-sm font-semibold text-navy tracking-wide">YOUR PRIVACY</span>
+                <span className="text-xs font-medium text-navy tracking-wide">YOUR PRIVACY</span>
               </div>
             </motion.div>
 
