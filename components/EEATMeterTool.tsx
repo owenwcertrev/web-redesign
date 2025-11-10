@@ -28,6 +28,21 @@ interface AnalysisResult {
     message: string
   }>
   suggestions: string[]
+  metrics?: {
+    wordCount: number
+    readabilityScore: number
+    citations: number
+    authors: number
+    schemaMarkup: number
+    hasSSL: boolean
+  }
+}
+
+interface ComprehensiveStatus {
+  status: 'processing' | 'not_requested'
+  estimatedTime?: string
+  message: string
+  features: string[]
 }
 
 export default function EEATMeterTool() {
@@ -35,6 +50,7 @@ export default function EEATMeterTool() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState<AnalysisResult | null>(null)
+  const [comprehensiveStatus, setComprehensiveStatus] = useState<ComprehensiveStatus | null>(null)
   const [error, setError] = useState('')
 
   const handleSubmit = async (e: FormEvent) => {
@@ -59,10 +75,19 @@ export default function EEATMeterTool() {
       }
 
       const data = await response.json()
-      setResults(data.analysis)
 
-      // Track successful analysis
-      analytics.eeAtMeter.completed(url, data.analysis.score)
+      // Handle new hybrid API response structure
+      if (data.instant) {
+        setResults(data.instant)
+        setComprehensiveStatus(data.comprehensive || null)
+
+        // Track successful analysis
+        analytics.eeAtMeter.completed(url, data.instant.score)
+      } else if (data.analysis) {
+        // Backwards compatibility with old API response
+        setResults(data.analysis)
+        analytics.eeAtMeter.completed(url, data.analysis.score)
+      }
     } catch (err) {
       console.error('Analysis error:', err)
       const errorMessage = err instanceof Error ? err.message : 'Unable to analyze this URL. Please check the URL and try again.'
@@ -118,7 +143,7 @@ export default function EEATMeterTool() {
             <div className="flex items-start gap-2 mb-3">
               <Sparkles className="w-4 h-4 text-lime-dark flex-shrink-0 mt-0.5" />
               <p className="text-sm text-black/70">
-                <strong className="text-navy">Get your competitive analysis + 5 quick wins</strong> to boost your score by 20 points (email subscribers only)
+                <strong className="text-navy">Get AI-powered comprehensive analysis</strong> with domain authority metrics, content quality assessment, and author reputation verification (optional)
               </p>
             </div>
             <div className="relative">
@@ -127,7 +152,7 @@ export default function EEATMeterTool() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com (optional but recommended)"
+                placeholder="your@email.com (optional - for comprehensive report)"
                 className="w-full pl-12 pr-4 py-3 rounded-16 border-2 border-lime/30 focus:border-lime focus:outline-none transition-colors bg-white"
               />
             </div>
@@ -170,9 +195,16 @@ export default function EEATMeterTool() {
         <div className="space-y-8 animate-in fade-in duration-500">
           {/* E-E-A-T Score Visualization */}
           <div className="bg-white rounded-16 p-8 shadow-base">
-            <h3 className="text-2xl font-semibold mb-2 text-center text-black">
-              Your E-E-A-T Score
-            </h3>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <h3 className="text-2xl font-semibold text-center text-black">
+                Your E-E-A-T Score
+              </h3>
+              {!email && (
+                <span className="text-xs font-semibold text-coral bg-coral/10 px-2 py-1 rounded-md">
+                  INSTANT
+                </span>
+              )}
+            </div>
             {results.domainInfo && results.domainInfo.redirected && (
               <p className="text-sm text-black/60 text-center mb-6">
                 Analyzing <span className="font-semibold text-navy">{results.domainInfo.analyzed}</span>
@@ -312,23 +344,66 @@ export default function EEATMeterTool() {
             </div>
           </div>
 
-          {/* Email Confirmation */}
-          {email && (
-            <div className="bg-lime-light rounded-16 p-6 border-2 border-lime">
+          {/* Comprehensive Analysis Status */}
+          {comprehensiveStatus && (
+            <div className={`rounded-16 p-6 border-2 ${
+              comprehensiveStatus.status === 'processing'
+                ? 'bg-lime-light border-lime'
+                : 'bg-navy/5 border-navy/20'
+            }`}>
               <div className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-lime-dark flex-shrink-0 mt-1" />
-                <div>
-                  <h4 className="font-semibold text-lime-dark mb-2">
-                    Detailed report sent to your email
-                  </h4>
-                  <p className="text-sm text-lime-dark/80 mb-3">Check your inbox for:</p>
-                  <ul className="text-sm text-lime-dark/80 space-y-1 list-disc list-inside">
-                    <li>Complete E-E-A-T breakdown</li>
-                    <li>Estimated Semrush Authority Score</li>
-                    <li>Blog Content Health Check</li>
-                    <li>Personalized recommendations</li>
-                  </ul>
-                </div>
+                {comprehensiveStatus.status === 'processing' ? (
+                  <>
+                    <div className="w-6 h-6 flex-shrink-0 mt-1">
+                      <div className="w-6 h-6 border-2 border-lime-dark border-t-transparent rounded-full animate-spin" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-lime-dark mb-2">
+                        Comprehensive Analysis in Progress
+                      </h4>
+                      <p className="text-sm text-lime-dark/80 mb-3">
+                        {comprehensiveStatus.message}
+                      </p>
+                      <p className="text-xs font-semibold text-lime-dark/70 mb-2">
+                        Estimated time: {comprehensiveStatus.estimatedTime}
+                      </p>
+                      <p className="text-xs font-semibold text-lime-dark/70 mb-2">
+                        Your comprehensive report will include:
+                      </p>
+                      <ul className="text-xs text-lime-dark/80 space-y-1">
+                        {comprehensiveStatus.features.map((feature, index) => (
+                          <li key={index} className="flex items-start gap-2">
+                            <CheckCircle className="w-3 h-3 flex-shrink-0 mt-0.5" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-6 h-6 text-coral flex-shrink-0 mt-1" />
+                    <div>
+                      <h4 className="font-semibold text-navy mb-2">
+                        Upgrade to Comprehensive Analysis
+                      </h4>
+                      <p className="text-sm text-black/70 mb-3">
+                        {comprehensiveStatus.message}
+                      </p>
+                      <p className="text-xs font-semibold text-black/60 mb-2">
+                        Additional insights available with email:
+                      </p>
+                      <ul className="text-xs text-black/60 space-y-1">
+                        {comprehensiveStatus.features.map((feature, index) => (
+                          <li key={index} className="flex items-start gap-2">
+                            <Sparkles className="w-3 h-3 flex-shrink-0 mt-0.5 text-coral" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           )}
