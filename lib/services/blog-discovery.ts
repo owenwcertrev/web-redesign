@@ -117,8 +117,9 @@ export class BlogDiscoveryService {
     const posts: BlogPost[] = [];
 
     try {
-      // Parse using sitemap library
-      const parsed = await parseSitemap(xmlContent);
+      // Parse using sitemap library - convert string to Readable stream
+      const stream = Readable.from([xmlContent]);
+      const parsed = await parseSitemap(stream);
 
       for (const entry of parsed) {
         if (entry.url) {
