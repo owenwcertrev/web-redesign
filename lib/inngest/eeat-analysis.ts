@@ -397,7 +397,7 @@ export const comprehensiveBlogAnalysis = inngest.createFunction(
 
     // Step 2: Run NLP analysis on top 3 posts
     const nlpAnalyses = await step.run('nlp-content-analysis', async () => {
-      const analyses = []
+      const analyses: Array<{ url: string; title: string; nlp: any }> = []
       const topPosts = blogPosts.slice(0, 3) // Analyze top 3 to save costs
 
       for (const post of topPosts) {
