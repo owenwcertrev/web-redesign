@@ -52,7 +52,7 @@ export default function ScoreGauge({ score, label, className }: ScoreGaugeProps)
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className={cn('text-5xl font-bold', getColor(score))}>{score}</span>
+          <span className={cn('text-5xl font-bold', getColor(score))}>{Math.round(score)}</span>
           <span className="text-sm text-black/60 mt-1">out of 100</span>
         </div>
       </div>

@@ -58,8 +58,9 @@ export async function calculateInstantEEATScores(
   )
   const trustworthiness = calculateTrustworthinessCategory(pageAnalysis, undefined, true)
 
-  const overall = experience.totalScore + expertise.totalScore +
-                  authoritativeness.totalScore + trustworthiness.totalScore
+  // Round overall score to 2 decimal places to avoid floating point precision issues
+  const overall = Math.round((experience.totalScore + expertise.totalScore +
+                  authoritativeness.totalScore + trustworthiness.totalScore) * 100) / 100
 
   // Calculate total missed points from single-page limitations
   const totalMissedPoints =
@@ -103,8 +104,9 @@ export function calculateComprehensiveEEATScores(
   const authoritativeness = calculateAuthoritativenessCategory(pageAnalysis, undefined, domainMetrics, authorReputation)
   const trustworthiness = calculateTrustworthinessCategory(pageAnalysis)
 
-  const overall = experience.totalScore + expertise.totalScore +
-                  authoritativeness.totalScore + trustworthiness.totalScore
+  // Round overall score to 2 decimal places to avoid floating point precision issues
+  const overall = Math.round((experience.totalScore + expertise.totalScore +
+                  authoritativeness.totalScore + trustworthiness.totalScore) * 100) / 100
 
   return {
     overall,
@@ -165,8 +167,9 @@ export function calculateBlogEEATScores(
     false // Blog analysis, not single-page
   )
 
-  const overall = experience.totalScore + expertise.totalScore +
-                  authoritativeness.totalScore + trustworthiness.totalScore
+  // Round overall score to 2 decimal places to avoid floating point precision issues
+  const overall = Math.round((experience.totalScore + expertise.totalScore +
+                  authoritativeness.totalScore + trustworthiness.totalScore) * 100) / 100
 
   return {
     overall,
@@ -458,7 +461,8 @@ function createCategoryScore(
   displayName: string,
   variables: EEATVariable[]
 ): EEATCategoryScore {
-  const totalScore = variables.reduce((sum, v) => sum + v.actualScore, 0)
+  // Round to 2 decimal places to avoid floating point precision issues
+  const totalScore = Math.round(variables.reduce((sum, v) => sum + v.actualScore, 0) * 100) / 100
   const maxScore = getCategoryMaxScore(category)
   const percentage = (totalScore / maxScore) * 100
 
