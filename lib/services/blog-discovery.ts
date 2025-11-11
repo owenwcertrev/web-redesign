@@ -555,10 +555,18 @@ export class BlogDiscoveryService {
       console.log('Strategy 1: XML Sitemaps (including robots.txt)');
       const allPosts = await this.fetchSitemapIndex(baseUrl);
 
+      console.log(`[DEBUG] Total URLs fetched from sitemaps: ${allPosts.length}`);
+      if (allPosts.length > 0) {
+        console.log(`[DEBUG] Sample URLs (first 10):`, allPosts.slice(0, 10).map(p => p.url));
+      }
+
       if (allPosts.length > 0) {
         // Filter for blog posts
         const blogPosts = allPosts.filter(post => this.isBlogPost(post.url));
 
+        console.log(`[DEBUG] After isBlogPost filtering: ${blogPosts.length} blog posts`);
+        console.log(`[DEBUG] Sample blog posts (first 10):`, blogPosts.slice(0, 10).map(p => p.url));
+        console.log(`[DEBUG] Sample filtered OUT (first 10):`, allPosts.filter(p => !this.isBlogPost(p.url)).slice(0, 10).map(p => p.url));
         console.log(`\nFound ${blogPosts.length} blog posts out of ${allPosts.length} total URLs`);
 
         if (blogPosts.length > 0) {

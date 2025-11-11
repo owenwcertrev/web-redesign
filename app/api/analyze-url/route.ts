@@ -76,9 +76,16 @@ async function handleBlogAnalysis(domain: string, email?: string) {
     const discovery = await BlogDiscoveryService.discoverBlogPosts(domain, 50)
 
     if (discovery.error || discovery.posts.length === 0) {
+      // Return detailed diagnostic info to help debug
       return NextResponse.json(
         {
           error: discovery.error || 'No blog posts found',
+          debug: {
+            totalUrlsFound: discovery.totalFound || 0,
+            postsAfterFiltering: discovery.posts.length,
+            discoverySource: discovery.source,
+            message: 'Check Vercel server logs for detailed [DEBUG] output showing which URLs were fetched and filtered',
+          },
           suggestion: 'Please ensure your site has a sitemap.xml file with blog posts, or try entering a specific blog post URL.',
         },
         { status: 404 }
