@@ -348,7 +348,8 @@ export class BlogDiscoveryService {
         const nestedPosts = await this.fetchSitemapsInParallel(
           nestedSitemaps.map(s => s.url),
           depth + 1,
-          visitedSitemaps
+          visitedSitemaps,
+          200 // Allow more posts at nested levels for filtering
         );
 
         // Filter out the nested sitemap URLs themselves, keep only the posts
@@ -367,18 +368,112 @@ export class BlogDiscoveryService {
   }
 
   /**
+   * Filter sitemap URLs to prefer English language versions and skip redundant translations
+   * This prevents fetching 40+ language variations when we only need one
+   */
+  private static filterPreferredLanguageSitemaps(urls: string[]): string[] {
+    // Preferred language codes (in priority order)
+    const preferredLanguages = ['en-us', 'en-gb', 'en-ca', 'en-au', 'en'];
+
+    // Check if URLs contain language codes (e.g., /en-us/, /fr-fr/, /de-de/)
+    const languagePattern = /\/([a-z]{2}-[a-z]{2}|[a-z]{2})\//i;
+    const hasLanguageVariations = urls.some(url => languagePattern.test(url));
+
+    if (!hasLanguageVariations) {
+      // No language variations detected, return all URLs
+      return urls;
+    }
+
+    // Group URLs by base path (without language code)
+    const urlGroups = new Map<string, string[]>();
+    const nonLanguageUrls: string[] = [];
+
+    for (const url of urls) {
+      const match = url.match(languagePattern);
+      if (match) {
+        // Extract base path without language code
+        const basePath = url.replace(languagePattern, '/__LANG__/');
+        if (!urlGroups.has(basePath)) {
+          urlGroups.set(basePath, []);
+        }
+        urlGroups.get(basePath)!.push(url);
+      } else {
+        nonLanguageUrls.push(url);
+      }
+    }
+
+    // For each group, select only the preferred language version
+    const selectedUrls: string[] = [...nonLanguageUrls];
+
+    for (const [basePath, groupUrls] of urlGroups) {
+      // Try to find a preferred language version
+      let selected: string | undefined;
+
+      for (const lang of preferredLanguages) {
+        selected = groupUrls.find(url => url.includes(`/${lang}/`));
+        if (selected) break;
+      }
+
+      // If no preferred language found, take the first URL
+      if (!selected && groupUrls.length > 0) {
+        selected = groupUrls[0];
+      }
+
+      if (selected) {
+        selectedUrls.push(selected);
+      }
+    }
+
+    console.log(`[OPTIMIZATION] Filtered ${urls.length} sitemaps → ${selectedUrls.length} (removed ${urls.length - selectedUrls.length} redundant language variations)`);
+
+    return selectedUrls;
+  }
+
+  /**
+   * Prioritize blog-related sitemaps to fetch them first
+   */
+  private static prioritizeBlogSitemaps(urls: string[]): string[] {
+    const blogKeywords = ['blog', 'news', 'article', 'post', 'magazine', 'local-news'];
+
+    const prioritized = [...urls].sort((a, b) => {
+      const aHasBlogKeyword = blogKeywords.some(keyword => a.toLowerCase().includes(keyword));
+      const bHasBlogKeyword = blogKeywords.some(keyword => b.toLowerCase().includes(keyword));
+
+      if (aHasBlogKeyword && !bHasBlogKeyword) return -1;
+      if (!aHasBlogKeyword && bHasBlogKeyword) return 1;
+      return 0;
+    });
+
+    return prioritized;
+  }
+
+  /**
    * P2: Fetch multiple sitemaps in parallel with concurrency control
+   * Includes optimizations for language filtering and early termination
    */
   private static async fetchSitemapsInParallel(
     urls: string[],
     depth: number,
-    visitedSitemaps: Set<string> = new Set()
+    visitedSitemaps: Set<string> = new Set(),
+    maxPostsNeeded: number = 50
   ): Promise<BlogPost[]> {
     const allPosts: BlogPost[] = [];
 
+    // Optimization 1: Filter out redundant language variations
+    let optimizedUrls = this.filterPreferredLanguageSitemaps(urls);
+
+    // Optimization 2: Prioritize blog-related sitemaps
+    optimizedUrls = this.prioritizeBlogSitemaps(optimizedUrls);
+
     // Process in chunks to control concurrency
-    for (let i = 0; i < urls.length; i += this.MAX_CONCURRENT_FETCHES) {
-      const chunk = urls.slice(i, i + this.MAX_CONCURRENT_FETCHES);
+    for (let i = 0; i < optimizedUrls.length; i += this.MAX_CONCURRENT_FETCHES) {
+      // Optimization 3: Early termination if we have enough blog posts
+      if (allPosts.length >= maxPostsNeeded) {
+        console.log(`[OPTIMIZATION] Early termination: Found ${allPosts.length} posts (needed ${maxPostsNeeded})`);
+        break;
+      }
+
+      const chunk = optimizedUrls.slice(i, i + this.MAX_CONCURRENT_FETCHES);
       const chunkResults = await Promise.all(
         chunk.map(url => this.fetchSitemap(url, depth, visitedSitemaps))
       );
@@ -460,7 +555,12 @@ export class BlogDiscoveryService {
     console.log(`Trying ${sitemapsToTry.length} sitemap locations...`);
 
     // Fetch all sitemaps (P2: parallel with concurrency control)
-    const sitemapResults = await this.fetchSitemapsInParallel(sitemapsToTry, 0, visitedSitemaps);
+    const sitemapResults = await this.fetchSitemapsInParallel(
+      sitemapsToTry,
+      0,
+      visitedSitemaps,
+      200 // Fetch enough for filtering and sorting
+    );
 
     // P1: Deduplicate URLs
     for (const post of sitemapResults) {
