@@ -523,32 +523,37 @@ export function detectQualityPatterns(pageAnalysis?: PageAnalysis, posts?: any[]
     })
 
     // Check for duplicate content (title similarity)
-    const duplicateRate = detectDuplicateContent(posts)
-    if (duplicateRate > 20) {
-      score -= 0.5
-      evidence.push({
-        type: 'note',
-        value: `${duplicateRate.toFixed(0)}% title similarity detected (possible duplicate content)`
-      })
-    }
+    try {
+      const duplicateRate = detectDuplicateContent(posts)
+      if (duplicateRate > 20) {
+        score -= 0.5
+        evidence.push({
+          type: 'note',
+          value: `${duplicateRate.toFixed(0)}% title similarity detected (possible duplicate content)`
+        })
+      }
 
-    // Check for keyword cannibalization (similar titles targeting same keywords)
-    const cannibalizationRate = detectKeywordCannibalization(posts)
-    if (cannibalizationRate > 15) {
-      score -= 0.5
-      evidence.push({
-        type: 'note',
-        value: `${cannibalizationRate.toFixed(0)}% keyword overlap (possible cannibalization)`
-      })
-    }
+      // Check for keyword cannibalization (similar titles targeting same keywords)
+      const cannibalizationRate = detectKeywordCannibalization(posts)
+      if (cannibalizationRate > 15) {
+        score -= 0.5
+        evidence.push({
+          type: 'note',
+          value: `${cannibalizationRate.toFixed(0)}% keyword overlap (possible cannibalization)`
+        })
+      }
 
-    // Report quality checks
-    if (duplicateRate <= 10 && cannibalizationRate <= 10) {
-      evidence.push({
-        type: 'metric',
-        value: 'No significant duplicate content or keyword cannibalization detected',
-        label: 'Advanced quality checks'
-      })
+      // Report quality checks
+      if (duplicateRate <= 10 && cannibalizationRate <= 10) {
+        evidence.push({
+          type: 'metric',
+          value: 'No significant duplicate content or keyword cannibalization detected',
+          label: 'Advanced quality checks'
+        })
+      }
+    } catch (error) {
+      console.error('[A5] Error in advanced quality checks:', error)
+      // Continue without advanced checks if they fail
     }
   } else if (pageAnalysis) {
     // Single page analysis

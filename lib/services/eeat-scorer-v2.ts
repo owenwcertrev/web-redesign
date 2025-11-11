@@ -142,43 +142,77 @@ export function calculateBlogEEATScores(
   // 3. Blog-level insights (E6-E7, X6, A6-A7, T6-T7)
   // We should NOT use posts[0] - that's just one article, not representative of SEO strategy
 
-  const experience = calculateExperienceCategory(
-    undefined, // No single pageAnalysis for blog mode
-    blogInsights,
-    nlpAnalysis,
-    false, // Blog analysis, not single-page
-    posts // All scoring based on posts array
-  )
+  console.log('[calculateBlogEEATScores] Starting blog analysis with', posts.length, 'posts')
 
-  const expertise = calculateExpertiseCategory(
-    undefined, // No single pageAnalysis for blog mode
-    blogInsights,
-    nlpAnalysis,
-    authorReputation,
-    false, // Blog analysis, not single-page
-    posts // All scoring based on posts array
-  )
+  let experience, expertise, authoritativeness, trustworthiness
 
-  const authoritativeness = calculateAuthoritativenessCategory(
-    undefined, // No single pageAnalysis for blog mode
-    blogInsights,
-    domainMetrics,
-    authorReputation,
-    posts,
-    undefined,
-    false // Blog analysis, not single-page
-  )
+  try {
+    console.log('[calculateBlogEEATScores] Calculating Experience category...')
+    experience = calculateExperienceCategory(
+      undefined, // No single pageAnalysis for blog mode
+      blogInsights,
+      nlpAnalysis,
+      false, // Blog analysis, not single-page
+      posts // All scoring based on posts array
+    )
+    console.log('[calculateBlogEEATScores] Experience score:', experience.totalScore)
+  } catch (error) {
+    console.error('[calculateBlogEEATScores] ERROR in Experience category:', error)
+    throw new Error(`Experience category failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+  }
 
-  const trustworthiness = calculateTrustworthinessCategory(
-    undefined, // No single pageAnalysis for blog mode
-    blogInsights,
-    false, // Blog analysis, not single-page
-    posts // All scoring based on posts array
-  )
+  try {
+    console.log('[calculateBlogEEATScores] Calculating Expertise category...')
+    expertise = calculateExpertiseCategory(
+      undefined, // No single pageAnalysis for blog mode
+      blogInsights,
+      nlpAnalysis,
+      authorReputation,
+      false, // Blog analysis, not single-page
+      posts // All scoring based on posts array
+    )
+    console.log('[calculateBlogEEATScores] Expertise score:', expertise.totalScore)
+  } catch (error) {
+    console.error('[calculateBlogEEATScores] ERROR in Expertise category:', error)
+    throw new Error(`Expertise category failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+  }
+
+  try {
+    console.log('[calculateBlogEEATScores] Calculating Authoritativeness category...')
+    authoritativeness = calculateAuthoritativenessCategory(
+      undefined, // No single pageAnalysis for blog mode
+      blogInsights,
+      domainMetrics,
+      authorReputation,
+      posts,
+      undefined,
+      false // Blog analysis, not single-page
+    )
+    console.log('[calculateBlogEEATScores] Authoritativeness score:', authoritativeness.totalScore)
+  } catch (error) {
+    console.error('[calculateBlogEEATScores] ERROR in Authoritativeness category:', error)
+    throw new Error(`Authoritativeness category failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+  }
+
+  try {
+    console.log('[calculateBlogEEATScores] Calculating Trustworthiness category...')
+    trustworthiness = calculateTrustworthinessCategory(
+      undefined, // No single pageAnalysis for blog mode
+      blogInsights,
+      false, // Blog analysis, not single-page
+      posts // All scoring based on posts array
+    )
+    console.log('[calculateBlogEEATScores] Trustworthiness score:', trustworthiness.totalScore)
+  } catch (error) {
+    console.error('[calculateBlogEEATScores] ERROR in Trustworthiness category:', error)
+    throw new Error(`Trustworthiness category failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+  }
 
   // Round overall score to 2 decimal places to avoid floating point precision issues
   const overall = Math.round((experience.totalScore + expertise.totalScore +
                   authoritativeness.totalScore + trustworthiness.totalScore) * 100) / 100
+
+  console.log('[calculateBlogEEATScores] Overall score:', overall)
 
   return {
     overall,
@@ -593,15 +627,24 @@ function aggregateVariableAcrossPosts(
   variableId: string,
   detectorFn: (post: any) => EEATVariable
 ): EEATVariable {
-  // Calculate variable for each post
+  // Calculate variable for each post with error handling
   const results = posts.map(post => {
-    const result = detectorFn(post)
-    return {
-      score: result.actualScore,
-      date: extractPostDate(post),
-      evidence: result.evidence
+    try {
+      const result = detectorFn(post)
+      return {
+        score: result.actualScore,
+        date: extractPostDate(post),
+        evidence: result.evidence
+      }
+    } catch (error) {
+      console.error(`[aggregateVariableAcrossPosts] Error detecting ${variableId} for post:`, error)
+      return {
+        score: 0,
+        date: extractPostDate(post),
+        evidence: []
+      }
     }
-  }).filter(r => r.score !== undefined)
+  }).filter(r => r.score !== undefined && !isNaN(r.score))
 
   if (results.length === 0) {
     // Fallback if no posts could be analyzed
@@ -671,33 +714,41 @@ function aggregateVariableAcrossPosts(
   }
 
   // Special handling for X1 (Authors): Add author strategy breakdown
-  if (variableId === 'X1' && posts.length >= 5) {
-    const authorStrategy = getAuthorStrategyBreakdown(posts)
-    if (authorStrategy) {
-      evidence.push({
-        type: 'metric',
-        value: authorStrategy.summary,
-        label: 'Author strategy'
-      })
-      if (authorStrategy.topAuthors) {
+  if (variableId === 'X1' && posts && posts.length >= 5) {
+    try {
+      const authorStrategy = getAuthorStrategyBreakdown(posts)
+      if (authorStrategy) {
         evidence.push({
-          type: 'snippet',
-          value: authorStrategy.topAuthors,
-          label: 'Top authors'
+          type: 'metric',
+          value: authorStrategy.summary,
+          label: 'Author strategy'
         })
+        if (authorStrategy.topAuthors) {
+          evidence.push({
+            type: 'snippet',
+            value: authorStrategy.topAuthors,
+            label: 'Top authors'
+          })
+        }
       }
+    } catch (error) {
+      console.error('[X1] Error getting author strategy breakdown:', error)
     }
   }
 
   // Special handling for A2 (Authors cited elsewhere): Add author coverage breakdown
-  if (variableId === 'A2' && posts.length >= 5) {
-    const authorCoverage = getAuthorCoverageBreakdown(posts)
-    if (authorCoverage) {
-      evidence.push({
-        type: 'metric',
-        value: authorCoverage,
-        label: 'Author coverage'
-      })
+  if (variableId === 'A2' && posts && posts.length >= 5) {
+    try {
+      const authorCoverage = getAuthorCoverageBreakdown(posts)
+      if (authorCoverage) {
+        evidence.push({
+          type: 'metric',
+          value: authorCoverage,
+          label: 'Author coverage'
+        })
+      }
+    } catch (error) {
+      console.error('[A2] Error getting author coverage breakdown:', error)
     }
   }
 
