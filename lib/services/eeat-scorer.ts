@@ -87,10 +87,10 @@ export function estimateDomainRank(page: PageAnalysis): number {
   }
 
   // Schema markup indicates technical sophistication (+0 to +15)
-  if (page.schemaMarkup > 0) {
-    if (page.schemaMarkup >= 5) {
+  if (page.schemaMarkup.length > 0) {
+    if (page.schemaMarkup.length >= 5) {
       rank += 15 // Comprehensive schema implementation
-    } else if (page.schemaMarkup >= 3) {
+    } else if (page.schemaMarkup.length >= 3) {
       rank += 10 // Good schema coverage
     } else {
       rank += 5 // Basic schema present
