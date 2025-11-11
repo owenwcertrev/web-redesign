@@ -129,7 +129,7 @@ export class BatchAnalyzer {
     }
 
     // Return unique topics, limit to 10
-    return [...new Set(topics)].slice(0, 10)
+    return Array.from(new Set(topics)).slice(0, 10)
   }
 
   /**
