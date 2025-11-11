@@ -297,7 +297,7 @@ export function detectCitationQuality(pageAnalysis: PageAnalysis): EEATVariable 
   const citationQuality = pageAnalysis.citationQuality
 
   if (citationQuality && citationQuality.totalCitations > 0) {
-    const qualityScore = citationQuality.qualityScore
+    const qualityScore = citationQuality.qualityScore || 0
 
     // Score based on citation quality
     if (qualityScore >= 80 && citationQuality.totalCitations >= 5) {
@@ -316,8 +316,8 @@ export function detectCitationQuality(pageAnalysis: PageAnalysis): EEATVariable 
       confidence: score / config.maxScore
     })
 
-    // Add tier breakdown if available
-    if (citationQuality.breakdown.tier1 > 0) {
+    // Add tier breakdown if available (with null check)
+    if (citationQuality.breakdown?.tier1 && citationQuality.breakdown.tier1 > 0) {
       evidence.push({
         type: 'metric',
         value: `${citationQuality.breakdown.tier1} tier-1 sources (gov/edu/peer-reviewed)`,

@@ -69,26 +69,78 @@ export function detectEditorialMentions(
     estimationNote = `Couldn't fetch domain metrics${apiError ? ` (${apiError})` : ''}. Estimating based on on-page quality signals.`
 
     // Estimate based on on-page signals
-    let estimatedScore = 1.5 // Baseline
+    let estimatedScore = 0.5 // Lower baseline for transparency
+    const schema = pageAnalysis.schemaMarkup || []
 
-    // SSL indicates professional site
-    if (pageAnalysis.hasSSL) estimatedScore += 0.5
+    // 1. Professional infrastructure (max 1.0)
+    if (pageAnalysis.hasSSL) {
+      estimatedScore += 0.3
+      evidence.push({ type: 'note', value: 'SSL certificate (estimated +0.3)' })
+    }
 
-    // Schema indicates technical sophistication
-    if (pageAnalysis.schemaMarkup && pageAnalysis.schemaMarkup.length >= 3) estimatedScore += 0.5
-    else if (pageAnalysis.schemaMarkup && pageAnalysis.schemaMarkup.length > 0) estimatedScore += 0.3
+    // Organization schema suggests established brand
+    const hasOrgSchema = schema.some(s => s.type === 'Organization')
+    if (hasOrgSchema) {
+      estimatedScore += 0.4
+      evidence.push({ type: 'note', value: 'Organization schema (estimated +0.4)' })
+    }
 
-    // Author presence indicates editorial standards
-    if (pageAnalysis.authors && pageAnalysis.authors.length > 0) estimatedScore += 0.5
+    // Strong schema implementation (3+ types)
+    if (schema.length >= 3) {
+      estimatedScore += 0.3
+      evidence.push({ type: 'note', value: `${schema.length} schema types (estimated +0.3)` })
+    }
 
-    // Content quality signals
-    if (pageAnalysis.wordCount && pageAnalysis.wordCount >= 1000) estimatedScore += 0.5
+    // 2. Editorial standards (max 1.0)
+    const hasAuthors = pageAnalysis.authors && pageAnalysis.authors.length > 0
+    if (hasAuthors) {
+      estimatedScore += 0.5
+      evidence.push({ type: 'note', value: 'Named authors present (estimated +0.5)' })
 
-    score = Math.min(estimatedScore, config.maxScore)
+      // Author with credentials
+      const hasCredentials = pageAnalysis.authors?.some(author =>
+        /\b(MD|PhD|MBA|DDS|JD|RN|MS|MA|BS|BA|DVM)\b/i.test(author.name || '')
+      )
+      if (hasCredentials) {
+        estimatedScore += 0.3
+        evidence.push({ type: 'note', value: 'Author credentials found (estimated +0.3)' })
+      }
+    }
+
+    // Date stamps indicate content maintenance
+    const hasDateStamps = schema.some(s => s.data?.dateModified || s.data?.datePublished)
+    if (hasDateStamps) {
+      estimatedScore += 0.2
+      evidence.push({ type: 'note', value: 'Date stamps in schema (estimated +0.2)' })
+    }
+
+    // 3. Content quality (max 1.0)
+    const wordCount = pageAnalysis.wordCount || 0
+    if (wordCount >= 2000) {
+      estimatedScore += 0.5
+      evidence.push({ type: 'note', value: `${wordCount} words - comprehensive (estimated +0.5)` })
+    } else if (wordCount >= 1000) {
+      estimatedScore += 0.3
+      evidence.push({ type: 'note', value: `${wordCount} words (estimated +0.3)` })
+    }
+
+    // Well-researched content with citations
+    if (pageAnalysis.citationQuality?.totalCitations && pageAnalysis.citationQuality.totalCitations >= 5) {
+      estimatedScore += 0.3
+      evidence.push({ type: 'note', value: `${pageAnalysis.citationQuality.totalCitations} citations (estimated +0.3)` })
+    }
+
+    // High-quality citations (.gov/.edu)
+    if (pageAnalysis.citationQuality?.qualityScore && pageAnalysis.citationQuality.qualityScore >= 70) {
+      estimatedScore += 0.2
+      evidence.push({ type: 'note', value: 'High-quality citations (estimated +0.2)' })
+    }
+
+    score = Math.min(estimatedScore, config.maxScore * 0.6) // Cap estimated scores at 60% of max (3/5)
 
     evidence.push({
       type: 'estimation',
-      value: estimationNote,
+      value: `${estimationNote} Estimated score capped at 60% of maximum. Run comprehensive analysis for full score.`,
       isEstimate: true
     })
   } else if (!domainMetrics) {
@@ -126,34 +178,83 @@ export function detectAuthorsCitedElsewhere(
     hasPublications?: boolean
     hasMediaMentions?: boolean
     hasUniversityProfile?: boolean
-  }
+  },
+  pageAnalysis?: PageAnalysis
 ): EEATVariable {
   const config = EEAT_VARIABLES.authoritativeness.find(v => v.id === 'A2')!
   const evidence: EEATEvidence[] = []
   let score = 0
+  let isEstimated = false
 
-  if (!authorReputation) {
+  if (authorReputation) {
+    // Use API data when available
+    if (authorReputation.hasLinkedIn) {
+      score += 1
+      evidence.push({ type: 'note', value: 'LinkedIn profile found' })
+    }
+
+    if (authorReputation.hasPublications) {
+      score += 1.5
+      evidence.push({ type: 'note', value: 'Professional publications found' })
+    }
+
+    if (authorReputation.hasMediaMentions) {
+      score += 1
+      evidence.push({ type: 'note', value: 'Media mentions found' })
+    }
+
+    if (authorReputation.hasUniversityProfile) {
+      score += 1.5
+      evidence.push({ type: 'note', value: 'University/faculty profile found' })
+    }
+  } else if (pageAnalysis) {
+    // Fallback: Estimate from on-page author signals
+    isEstimated = true
+    const schema = pageAnalysis.schemaMarkup || []
+    const authors = pageAnalysis.authors || []
+
+    // Check for author schema with sameAs links (indicates external profiles)
+    const authorSchema = schema.find(s => s.type === 'Person')
+    if (authorSchema?.data?.sameAs) {
+      const sameAsLinks = Array.isArray(authorSchema.data.sameAs) ? authorSchema.data.sameAs : [authorSchema.data.sameAs]
+
+      // Check for LinkedIn
+      if (sameAsLinks.some((link: string) => link.includes('linkedin.com'))) {
+        score += 0.8
+        evidence.push({ type: 'note', value: 'LinkedIn link in author schema (estimated)' })
+      }
+
+      // Check for university/edu domains
+      if (sameAsLinks.some((link: string) => link.includes('.edu'))) {
+        score += 1.2
+        evidence.push({ type: 'note', value: 'University profile link detected (estimated)' })
+      }
+
+      // Check for other professional profiles
+      if (sameAsLinks.length >= 2) {
+        score += 0.5
+        evidence.push({ type: 'note', value: `${sameAsLinks.length} professional links (estimated)` })
+      }
+    }
+
+    // Check for author presence with credentials
+    if (authors.length > 0) {
+      const hasCredentials = authors.some(author =>
+        /\b(MD|PhD|MBA|DDS|JD|RN|MS|MA|BS|BA|DVM)\b/i.test(author.name || '')
+      )
+      if (hasCredentials) {
+        score += 0.5
+        evidence.push({ type: 'note', value: 'Author with credentials found (estimated)' })
+      }
+    }
+
+    evidence.push({
+      type: 'estimation',
+      value: 'Estimated from on-page signals. Run comprehensive analysis for full score.',
+      isEstimate: true
+    })
+  } else {
     return createEmptyVariable(config, 'Author reputation data not available')
-  }
-
-  if (authorReputation.hasLinkedIn) {
-    score += 1
-    evidence.push({ type: 'note', value: 'LinkedIn profile found' })
-  }
-
-  if (authorReputation.hasPublications) {
-    score += 1.5
-    evidence.push({ type: 'note', value: 'Professional publications found' })
-  }
-
-  if (authorReputation.hasMediaMentions) {
-    score += 1
-    evidence.push({ type: 'note', value: 'Media mentions found' })
-  }
-
-  if (authorReputation.hasUniversityProfile) {
-    score += 1.5
-    evidence.push({ type: 'note', value: 'University/faculty profile found' })
   }
 
   score = Math.min(score, config.maxScore)
@@ -170,7 +271,9 @@ export function detectAuthorsCitedElsewhere(
     recommendation: score < config.thresholds.good
       ? 'Ensure authors have external professional profiles (LinkedIn, faculty pages, publications)'
       : undefined,
-    detectionMethod: config.detectionMethod
+    detectionMethod: config.detectionMethod,
+    isEstimated,
+    estimationNote: isEstimated ? 'Estimated from on-page signals' : undefined
   }
 }
 
@@ -254,39 +357,91 @@ export function detectEntityClarity(pageAnalysis: PageAnalysis): EEATVariable {
  * A4: Independent references
  * Other sites citing your content (backlinks from DataForSEO)
  */
-export function detectIndependentReferences(domainMetrics?: DataForSEOMetrics): EEATVariable {
+export function detectIndependentReferences(
+  domainMetrics?: DataForSEOMetrics,
+  pageAnalysis?: PageAnalysis
+): EEATVariable {
   const config = EEAT_VARIABLES.authoritativeness.find(v => v.id === 'A4')!
   const evidence: EEATEvidence[] = []
   let score = 0
+  let isEstimated = false
 
-  if (!domainMetrics) {
-    return createEmptyVariable(config, 'Backlink data not available')
-  }
+  if (domainMetrics) {
+    // Use referring domains as proxy for independent references
+    const referringDomains = domainMetrics.referringDomains || 0
 
-  // Use referring domains as proxy for independent references
-  const referringDomains = domainMetrics.referringDomains || 0
+    if (referringDomains >= 1000) score = config.maxScore
+    else if (referringDomains >= 500) score = 3.5
+    else if (referringDomains >= 100) score = 3
+    else if (referringDomains >= 50) score = 2
+    else if (referringDomains >= 10) score = 1
+    else score = 0.5
 
-  if (referringDomains >= 1000) score = config.maxScore
-  else if (referringDomains >= 500) score = 3.5
-  else if (referringDomains >= 100) score = 3
-  else if (referringDomains >= 50) score = 2
-  else if (referringDomains >= 10) score = 1
-  else score = 0.5
-
-  evidence.push({
-    type: 'metric',
-    value: `${referringDomains.toLocaleString()} referring domains`,
-    confidence: score / config.maxScore
-  })
-
-  // Use organic traffic as quality signal
-  if (domainMetrics.organicTrafficValue) {
-    const trafficValue = domainMetrics.organicTrafficValue
     evidence.push({
       type: 'metric',
-      value: `$${trafficValue.toLocaleString()} estimated traffic value`,
-      label: 'Quality indicator'
+      value: `${referringDomains.toLocaleString()} referring domains`,
+      confidence: score / config.maxScore
     })
+
+    // Use organic traffic as quality signal
+    if (domainMetrics.organicTrafficValue) {
+      const trafficValue = domainMetrics.organicTrafficValue
+      evidence.push({
+        type: 'metric',
+        value: `$${trafficValue.toLocaleString()} estimated traffic value`,
+        label: 'Quality indicator'
+      })
+    }
+  } else if (pageAnalysis) {
+    // Fallback: Estimate authority from on-page quality signals
+    isEstimated = true
+    let estimatedScore = 0.5 // Baseline
+
+    // Strong schema implementation suggests established site (likely has backlinks)
+    const schema = pageAnalysis.schemaMarkup || []
+    if (schema.length >= 5) {
+      estimatedScore += 0.8
+      evidence.push({ type: 'note', value: 'Comprehensive schema markup (estimated authority indicator)' })
+    } else if (schema.length >= 3) {
+      estimatedScore += 0.5
+    }
+
+    // Organization schema suggests established brand (likely cited)
+    const hasOrgSchema = schema.some(s => s.type === 'Organization')
+    if (hasOrgSchema) {
+      estimatedScore += 0.5
+      evidence.push({ type: 'note', value: 'Organization schema present (estimated)' })
+    }
+
+    // SSL and professional setup
+    if (pageAnalysis.hasSSL) {
+      estimatedScore += 0.3
+    }
+
+    // Comprehensive content suggests authority
+    const wordCount = pageAnalysis.wordCount || 0
+    if (wordCount >= 2000) {
+      estimatedScore += 0.5
+      evidence.push({ type: 'note', value: 'Comprehensive content (estimated authority)' })
+    } else if (wordCount >= 1000) {
+      estimatedScore += 0.3
+    }
+
+    // Quality citations suggest the site is well-researched (likely cited by others)
+    if (pageAnalysis.citationQuality?.totalCitations && pageAnalysis.citationQuality.totalCitations >= 5) {
+      estimatedScore += 0.4
+      evidence.push({ type: 'note', value: 'Well-researched content with citations (estimated)' })
+    }
+
+    score = Math.min(estimatedScore, config.maxScore)
+
+    evidence.push({
+      type: 'estimation',
+      value: 'Estimated from on-page quality signals. Run comprehensive analysis for accurate backlink data.',
+      isEstimate: true
+    })
+  } else {
+    return createEmptyVariable(config, 'Backlink data not available')
   }
 
   const status = getVariableStatus(score, config)
@@ -302,7 +457,9 @@ export function detectIndependentReferences(domainMetrics?: DataForSEOMetrics): 
     recommendation: score < config.thresholds.good
       ? 'Build backlinks through quality content that other sites reference and cite'
       : undefined,
-    detectionMethod: config.detectionMethod
+    detectionMethod: config.detectionMethod,
+    isEstimated,
+    estimationNote: isEstimated ? 'Estimated from on-page quality signals' : undefined
   }
 }
 

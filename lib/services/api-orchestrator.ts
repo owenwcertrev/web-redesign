@@ -32,9 +32,52 @@ async function withTimeout<T>(
 }
 
 /**
+ * Execute a function with exponential backoff retry
+ * @param fn Function to execute
+ * @param maxRetries Maximum number of retries (default: 2)
+ * @param initialDelayMs Initial delay in milliseconds (default: 1000)
+ * @param maxDelayMs Maximum delay in milliseconds (default: 8000)
+ */
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 2,
+  initialDelayMs: number = 1000,
+  maxDelayMs: number = 8000
+): Promise<T> {
+  let lastError: Error | undefined
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn()
+    } catch (error: any) {
+      lastError = error
+
+      // Don't retry on timeout errors (already waited long enough)
+      if (error.message?.includes('timed out')) {
+        throw error
+      }
+
+      // Don't retry on the last attempt
+      if (attempt === maxRetries) {
+        throw error
+      }
+
+      // Calculate exponential backoff delay: initialDelay * 2^attempt
+      const delay = Math.min(initialDelayMs * Math.pow(2, attempt), maxDelayMs)
+
+      console.warn(`API call failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${delay}ms...`, error.message)
+
+      await new Promise(resolve => setTimeout(resolve, delay))
+    }
+  }
+
+  throw lastError || new Error('Max retries exceeded')
+}
+
+/**
  * Fetch instant API data in parallel with timeouts
- * - DataForSEO domain metrics (10s timeout)
- * - Basic author reputation check (10s timeout)
+ * - DataForSEO domain metrics (20s timeout)
+ * - Basic author reputation check (20s timeout)
  * Returns partial results even if some APIs fail
  */
 export async function fetchInstantAPIs(
@@ -43,18 +86,22 @@ export async function fetchInstantAPIs(
 ): Promise<InstantAPIResults> {
   const results: InstantAPIResults = {}
 
-  // Fetch DataForSEO domain metrics with timeout
-  const domainMetricsPromise = withTimeout(
-    getDataForSEOMetrics(`https://${domain}`),
-    10000,
-    'DataForSEO domain metrics timed out after 10 seconds'
+  // Fetch DataForSEO domain metrics with timeout and retry
+  const domainMetricsPromise = withRetry(
+    () => withTimeout(
+      getDataForSEOMetrics(`https://${domain}`),
+      20000,
+      'DataForSEO domain metrics timed out after 20 seconds'
+    ),
+    2, // 2 retries = 3 total attempts
+    1000 // Start with 1s delay
   )
     .then(metrics => {
       results.domainMetrics = metrics
     })
     .catch(error => {
       results.domainMetricsError = error.message || 'Failed to fetch domain metrics'
-      console.warn('DataForSEO domain metrics failed:', error)
+      console.warn('DataForSEO domain metrics failed after retries:', error)
     })
 
   // Fetch author reputation with timeout (only if author name provided)
@@ -67,10 +114,14 @@ export async function fetchInstantAPIs(
       source: 'meta' as const
     }
 
-    authorReputationPromise = withTimeout(
-      checkAuthorReputation(authorObject),
-      10000,
-      'Author reputation check timed out after 10 seconds'
+    authorReputationPromise = withRetry(
+      () => withTimeout(
+        checkAuthorReputation(authorObject),
+        20000,
+        'Author reputation check timed out after 20 seconds'
+      ),
+      2, // 2 retries = 3 total attempts
+      1000 // Start with 1s delay
     )
       .then(reputation => {
         // Convert null to undefined for interface compatibility
@@ -78,7 +129,7 @@ export async function fetchInstantAPIs(
       })
       .catch(error => {
         results.authorReputationError = error.message || 'Failed to check author reputation'
-        console.warn('Author reputation check failed:', error)
+        console.warn('Author reputation check failed after retries:', error)
       })
   }
 

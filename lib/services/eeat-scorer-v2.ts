@@ -39,12 +39,13 @@ export async function calculateInstantEEATScores(
   // Fetch instant APIs in parallel with timeouts
   const apiResults = await fetchInstantAPIs(domain, authorName)
 
-  const experience = calculateExperienceCategory(pageAnalysis)
+  const experience = calculateExperienceCategory(pageAnalysis, undefined, undefined, true)
   const expertise = calculateExpertiseCategory(
     pageAnalysis,
     undefined,
     undefined,
-    apiResults.authorReputation
+    apiResults.authorReputation,
+    true
   )
   const authoritativeness = calculateAuthoritativenessCategory(
     pageAnalysis,
@@ -52,12 +53,20 @@ export async function calculateInstantEEATScores(
     apiResults.domainMetrics,
     apiResults.authorReputation,
     undefined,
-    apiResults.domainMetricsError
+    apiResults.domainMetricsError,
+    true
   )
-  const trustworthiness = calculateTrustworthinessCategory(pageAnalysis)
+  const trustworthiness = calculateTrustworthinessCategory(pageAnalysis, undefined, true)
 
   const overall = experience.totalScore + expertise.totalScore +
                   authoritativeness.totalScore + trustworthiness.totalScore
+
+  // Calculate total missed points from single-page limitations
+  const totalMissedPoints =
+    (experience.singlePageLimitation?.missedPoints || 0) +
+    (expertise.singlePageLimitation?.missedPoints || 0) +
+    (authoritativeness.singlePageLimitation?.missedPoints || 0) +
+    (trustworthiness.singlePageLimitation?.missedPoints || 0)
 
   return {
     overall,
@@ -72,7 +81,11 @@ export async function calculateInstantEEATScores(
       fortune500: `${BENCHMARKS.fortune500.min}-${BENCHMARKS.fortune500.max}`,
       midMarket: `${BENCHMARKS.midMarket.min}-${BENCHMARKS.midMarket.max}`,
       startup: `${BENCHMARKS.startup.min}-${BENCHMARKS.startup.max}`
-    }
+    },
+    isSinglePageAnalysis: true,
+    singlePageNote: totalMissedPoints > 0
+      ? `Single-page analysis: ${totalMissedPoints} points unavailable from blog-level metrics. Analyze multiple posts for complete scoring.`
+      : undefined
   }
 }
 
@@ -177,9 +190,11 @@ function calculateExperienceCategory(
   pageAnalysis?: PageAnalysis,
   blogInsights?: BlogInsights,
   nlpAnalysis?: NLPAnalysisResult,
-  posts?: any[]
+  isSinglePageAnalysis: boolean = false
 ): EEATCategoryScore {
   const variables: EEATVariable[] = []
+  const unavailableVariables: string[] = []
+  let missedPoints = 0
 
   if (pageAnalysis) {
     // E1: First-person narratives
@@ -201,14 +216,32 @@ function calculateExperienceCategory(
   // E6: Publishing consistency (blog-level)
   if (blogInsights) {
     variables.push(ExperienceDetectors.detectPublishingConsistency(blogInsights))
+  } else if (isSinglePageAnalysis) {
+    const e6Config = EEAT_VARIABLES.experience.find(v => v.id === 'E6')!
+    unavailableVariables.push('E6')
+    missedPoints += e6Config.maxScore
   }
 
   // E7: Content freshness rate (blog-level)
-  if (posts) {
-    variables.push(ExperienceDetectors.detectContentFreshnessRate(blogInsights, posts))
+  if (blogInsights) {
+    variables.push(ExperienceDetectors.detectContentFreshnessRate(blogInsights, undefined))
+  } else if (isSinglePageAnalysis) {
+    const e7Config = EEAT_VARIABLES.experience.find(v => v.id === 'E7')!
+    unavailableVariables.push('E7')
+    missedPoints += e7Config.maxScore
   }
 
-  return createCategoryScore('experience', 'Experience', variables)
+  const categoryScore = createCategoryScore('experience', 'Experience', variables)
+
+  // Add single-page limitation info
+  if (isSinglePageAnalysis && unavailableVariables.length > 0) {
+    categoryScore.singlePageLimitation = {
+      unavailableVariables,
+      missedPoints
+    }
+  }
+
+  return categoryScore
 }
 
 /**
@@ -218,9 +251,12 @@ function calculateExpertiseCategory(
   pageAnalysis?: PageAnalysis,
   blogInsights?: BlogInsights,
   nlpAnalysis?: NLPAnalysisResult,
-  authorReputation?: ReputationResult
+  authorReputation?: ReputationResult,
+  isSinglePageAnalysis: boolean = false
 ): EEATCategoryScore {
   const variables: EEATVariable[] = []
+  const unavailableVariables: string[] = []
+  let missedPoints = 0
 
   if (pageAnalysis) {
     // X1: Named authors with credentials
@@ -252,9 +288,23 @@ function calculateExpertiseCategory(
   // X6: Author consistency (blog-level)
   if (blogInsights) {
     variables.push(ExpertiseDetectors.detectAuthorConsistency(blogInsights))
+  } else if (isSinglePageAnalysis) {
+    const x6Config = EEAT_VARIABLES.expertise.find(v => v.id === 'X6')!
+    unavailableVariables.push('X6')
+    missedPoints += x6Config.maxScore
   }
 
-  return createCategoryScore('expertise', 'Expertise', variables)
+  const categoryScore = createCategoryScore('expertise', 'Expertise', variables)
+
+  // Add single-page limitation info
+  if (isSinglePageAnalysis && unavailableVariables.length > 0) {
+    categoryScore.singlePageLimitation = {
+      unavailableVariables,
+      missedPoints
+    }
+  }
+
+  return categoryScore
 }
 
 /**
@@ -266,9 +316,12 @@ function calculateAuthoritativenessCategory(
   domainMetrics?: DataForSEOMetrics,
   authorReputation?: ReputationResult,
   posts?: any[],
-  apiError?: string
+  apiError?: string,
+  isSinglePageAnalysis: boolean = false
 ): EEATCategoryScore {
   const variables: EEATVariable[] = []
+  const unavailableVariables: string[] = []
+  let missedPoints = 0
 
   // Transform ReputationResult to expected formats
   const reputationFlags = authorReputation ? {
@@ -289,8 +342,8 @@ function calculateAuthoritativenessCategory(
     apiError
   ))
 
-  // A2: Authors cited elsewhere (external API)
-  variables.push(AuthoritativenessDetectors.detectAuthorsCitedElsewhere(reputationFlags))
+  // A2: Authors cited elsewhere (external API with fallback)
+  variables.push(AuthoritativenessDetectors.detectAuthorsCitedElsewhere(reputationFlags, pageAnalysis))
 
   if (pageAnalysis) {
     // A3: Entity clarity
@@ -300,20 +353,38 @@ function calculateAuthoritativenessCategory(
     variables.push(AuthoritativenessDetectors.detectQualityPatterns(pageAnalysis, posts))
   }
 
-  // A4: Independent references (external API)
-  variables.push(AuthoritativenessDetectors.detectIndependentReferences(domainMetrics))
+  // A4: Independent references (external API with fallback)
+  variables.push(AuthoritativenessDetectors.detectIndependentReferences(domainMetrics, pageAnalysis))
 
   // A6: Internal linking network (blog-level)
   if (blogInsights) {
     variables.push(AuthoritativenessDetectors.detectInternalLinkingNetwork(blogInsights))
+  } else if (isSinglePageAnalysis) {
+    const a6Config = EEAT_VARIABLES.authoritativeness.find(v => v.id === 'A6')!
+    unavailableVariables.push('A6')
+    missedPoints += a6Config.maxScore
   }
 
   // A7: Topic focus (blog-level)
   if (blogInsights) {
     variables.push(AuthoritativenessDetectors.detectTopicFocus(blogInsights))
+  } else if (isSinglePageAnalysis) {
+    const a7Config = EEAT_VARIABLES.authoritativeness.find(v => v.id === 'A7')!
+    unavailableVariables.push('A7')
+    missedPoints += a7Config.maxScore
   }
 
-  return createCategoryScore('authoritativeness', 'Authoritativeness', variables)
+  const categoryScore = createCategoryScore('authoritativeness', 'Authoritativeness', variables)
+
+  // Add single-page limitation info
+  if (isSinglePageAnalysis && unavailableVariables.length > 0) {
+    categoryScore.singlePageLimitation = {
+      unavailableVariables,
+      missedPoints
+    }
+  }
+
+  return categoryScore
 }
 
 /**
@@ -322,9 +393,11 @@ function calculateAuthoritativenessCategory(
 function calculateTrustworthinessCategory(
   pageAnalysis?: PageAnalysis,
   blogInsights?: BlogInsights,
-  posts?: any[]
+  isSinglePageAnalysis: boolean = false
 ): EEATCategoryScore {
   const variables: EEATVariable[] = []
+  const unavailableVariables: string[] = []
+  let missedPoints = 0
 
   if (pageAnalysis) {
     // T1: Editorial principles
@@ -346,14 +419,32 @@ function calculateTrustworthinessCategory(
   // T6: Schema adoption rate (blog-level)
   if (blogInsights) {
     variables.push(TrustworthinessDetectors.detectSchemaAdoptionRate(blogInsights))
+  } else if (isSinglePageAnalysis) {
+    const t6Config = EEAT_VARIABLES.trustworthiness.find(v => v.id === 'T6')!
+    unavailableVariables.push('T6')
+    missedPoints += t6Config.maxScore
   }
 
   // T7: Quality consistency (blog-level)
-  if (posts) {
-    variables.push(TrustworthinessDetectors.detectQualityConsistency(posts))
+  if (blogInsights) {
+    variables.push(TrustworthinessDetectors.detectQualityConsistency(undefined))
+  } else if (isSinglePageAnalysis) {
+    const t7Config = EEAT_VARIABLES.trustworthiness.find(v => v.id === 'T7')!
+    unavailableVariables.push('T7')
+    missedPoints += t7Config.maxScore
   }
 
-  return createCategoryScore('trustworthiness', 'Trustworthiness', variables)
+  const categoryScore = createCategoryScore('trustworthiness', 'Trustworthiness', variables)
+
+  // Add single-page limitation info
+  if (isSinglePageAnalysis && unavailableVariables.length > 0) {
+    categoryScore.singlePageLimitation = {
+      unavailableVariables,
+      missedPoints
+    }
+  }
+
+  return categoryScore
 }
 
 /**

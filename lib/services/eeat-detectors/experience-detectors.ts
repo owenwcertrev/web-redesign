@@ -32,31 +32,58 @@ export function detectFirstPersonNarratives(
   } else {
     // Fallback: regex patterns for first-person experience
     const text = pageAnalysis.contentText?.toLowerCase() || ''
-    const experiencePatterns = [
-      /\b(in my|in our|my experience|our experience|we observed|i found|we found)\b/gi,
+
+    // High-confidence experience patterns (specific contexts)
+    const strongExperiencePatterns = [
+      /\b(in my experience|from my experience|in our experience|from our experience)\b/gi,
       /\b(my practice|our practice|my clinic|our clinic|my patients|our patients)\b/gi,
-      /\b(i recommend|we recommend|i suggest|we suggest|from my perspective)\b/gi,
-      /\b(in my work|in our work|my research|our research|my study|our study)\b/gi
+      /\b(in my work|in our work|my research|our research|my study|our study)\b/gi,
+      /\b(my observation|our observation|i observed|we observed|i noticed|we noticed)\b/gi,
+      /\b(i've seen|we've seen|i've found|we've found|i've worked with|we've worked with)\b/gi,
+      /\b(based on my|based on our|through my|through our)\s+(experience|work|practice|research|testing)\b/gi
     ]
 
-    let matchCount = 0
-    experiencePatterns.forEach(pattern => {
+    // Medium-confidence patterns (recommendation/opinion based on experience)
+    const mediumExperiencePatterns = [
+      /\b(i recommend|we recommend|i suggest|we suggest)\b(?!\s+(checking|considering|avoiding|researching)\s+(competitors|alternatives|other options))/gi,
+      /\b(from my perspective|in my opinion|in our opinion)\b/gi,
+      /\b(i (believe|think).*based on)\b/gi
+    ]
+
+    let strongMatchCount = 0
+    let mediumMatchCount = 0
+
+    // Count strong matches (weighted more)
+    strongExperiencePatterns.forEach(pattern => {
       const matches = text.match(pattern)
       if (matches) {
-        matchCount += matches.length
-        evidence.push({
-          type: 'snippet',
-          value: matches.slice(0, 3).join(', '),
-          label: 'First-person experience phrases'
-        })
+        strongMatchCount += matches.length
+        if (strongMatchCount <= 3) { // Only show first 3 to avoid spam
+          evidence.push({
+            type: 'snippet',
+            value: matches.slice(0, 3).join(', '),
+            label: 'First-person experience phrases'
+          })
+        }
       }
     })
 
-    // Score based on match frequency (0-4 points)
-    if (matchCount >= 10) score = config.maxScore
-    else if (matchCount >= 5) score = 3
-    else if (matchCount >= 2) score = 2
-    else if (matchCount >= 1) score = 1
+    // Count medium matches
+    mediumExperiencePatterns.forEach(pattern => {
+      const matches = text.match(pattern)
+      if (matches) {
+        mediumMatchCount += matches.length
+      }
+    })
+
+    // Calculate weighted match count (strong matches count as 1.5x)
+    const weightedMatchCount = (strongMatchCount * 1.5) + mediumMatchCount
+
+    // Score based on weighted match frequency (0-4 points)
+    if (weightedMatchCount >= 12) score = config.maxScore
+    else if (weightedMatchCount >= 7) score = 3
+    else if (weightedMatchCount >= 3) score = 2
+    else if (weightedMatchCount >= 1) score = 1
   }
 
   const status = getVariableStatus(score, config)
@@ -376,12 +403,12 @@ export function detectPublishingConsistency(blogInsights?: BlogInsights): EEATVa
   const evidence: EEATEvidence[] = []
   let score = 0
 
-  if (!blogInsights) {
+  if (!blogInsights || !blogInsights.publishingFrequency) {
     return createEmptyVariable(config, 'Blog analysis not available')
   }
 
   const freq = blogInsights.publishingFrequency
-  const postsPerMonth = freq.postsPerMonth
+  const postsPerMonth = freq.postsPerMonth ?? 0
 
   // Score based on publishing frequency
   if (postsPerMonth >= 4 && postsPerMonth <= 8) {

@@ -47,6 +47,10 @@ export interface EEATCategoryScore {
   percentage: number // (totalScore / maxScore) * 100
   variables: EEATVariable[]
   overallStatus: 'excellent' | 'good' | 'fair' | 'poor'
+  singlePageLimitation?: {
+    unavailableVariables: string[] // IDs of variables that can't be scored (e.g., ['E6', 'E7'])
+    missedPoints: number // Total max points from unavailable variables
+  }
 }
 
 /**
@@ -67,6 +71,8 @@ export interface EEATScore {
     startup: string
   }
   postsAnalyzed?: number // For blog-level analysis
+  isSinglePageAnalysis?: boolean // True if only analyzing a single page (limits blog-level metrics)
+  singlePageNote?: string // Explanation of single-page limitations
 }
 
 /**

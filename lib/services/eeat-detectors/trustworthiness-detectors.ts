@@ -17,32 +17,100 @@ export function detectEditorialPrinciples(pageAnalysis: PageAnalysis): EEATVaria
   let score = 0
 
   const text = pageAnalysis.contentText?.toLowerCase() || ''
+  const headings = pageAnalysis.headings || { h1: [], h2: [], h3: [] }
+  const allHeadings = [...headings.h1, ...headings.h2, ...headings.h3].map(h => h.toLowerCase())
 
-  // Note: Link-specific checks not available with current PageAnalysis structure
-  // Would need individual link data to check for policy pages
+  // 1. Check for editorial policy/standards pages (strongest signal - 2 points)
+  const policyPagePatterns = [
+    /\b(our editorial (policy|standards|guidelines|process))\b/gi,
+    /\b(editorial (principles|integrity|independence))\b/gi,
+    /\b(how we (write|review|verify|fact-check|create content))\b/gi,
+    /\b(content (standards|guidelines|review process))\b/gi
+  ]
 
-  // Check for policy mentions in text
-  if (text.includes('editorial') && (text.includes('policy') || text.includes('standards'))) {
-    score += 1.5
+  let foundPolicyPage = false
+  policyPagePatterns.forEach(pattern => {
+    // Check both headings (stronger signal) and text
+    const matchesHeading = allHeadings.some(h => pattern.test(h))
+    const matchesText = pattern.test(text)
+
+    if (matchesHeading) {
+      score += 2
+      foundPolicyPage = true
+      evidence.push({
+        type: 'note',
+        value: 'Editorial policy page or section found (heading)'
+      })
+    } else if (matchesText) {
+      score += 1.5
+      foundPolicyPage = true
+      evidence.push({
+        type: 'note',
+        value: 'Editorial policy mentioned in content'
+      })
+    }
+  })
+
+  // 2. Check for corrections/transparency policy (1.5 points)
+  const correctionsPatterns = [
+    /\b(corrections? (policy|procedure|process))\b/gi,
+    /\b(how we (handle|correct|address) (errors|mistakes))\b/gi,
+    /\b(if you (find|spot|notice) (an error|a mistake|inaccuracy))\b/gi,
+    /\b(update (policy|log|history))\b/gi
+  ]
+
+  let foundCorrections = false
+  correctionsPatterns.forEach(pattern => {
+    if (pattern.test(text) && !foundCorrections) {
+      score += 1.5
+      foundCorrections = true
+      evidence.push({
+        type: 'note',
+        value: 'Corrections policy found'
+      })
+    }
+  })
+
+  // 3. Check for fact-checking or review process mentions (0.5 points)
+  const reviewProcessPatterns = [
+    /\b(medically reviewed by|reviewed by|fact-checked by|verified by)\b/gi,
+    /\b((medical|expert|editorial) review (process|board|team))\b/gi,
+    /\b(peer.reviewed|peer review)\b/gi
+  ]
+
+  let foundReviewProcess = false
+  reviewProcessPatterns.forEach(pattern => {
+    if (pattern.test(text) && !foundReviewProcess) {
+      score += 0.5
+      foundReviewProcess = true
+      evidence.push({
+        type: 'note',
+        value: 'Review or fact-checking process mentioned'
+      })
+    }
+  })
+
+  // 4. Deductions for false positives
+  // Check if "editorial" is only used in competitor context
+  const competitorContextPatterns = [
+    /\b(competitor|other|alternative).{0,20}editorial/gi,
+    /\beditorial.{0,20}(competitor|alternative|other sites)/gi
+  ]
+
+  const hasCompetitorContext = competitorContextPatterns.some(p => p.test(text))
+  if (hasCompetitorContext && score <= 1.5) {
+    // Likely just mentioning competitors' policies, not their own
+    score = Math.max(0, score - 0.5)
     evidence.push({
       type: 'note',
-      value: 'Editorial policy mentioned in content'
-    })
-  }
-
-  // Check for corrections/retractions mentions
-  if (text.includes('correction') || text.includes('retraction')) {
-    score += 1
-    evidence.push({
-      type: 'note',
-      value: 'Correction policy mentioned'
+      value: 'Possible false positive: competitor context detected'
     })
   }
 
   if (score === 0) {
     evidence.push({
       type: 'note',
-      value: 'No editorial policy found'
+      value: 'No editorial policy or standards found'
     })
   }
 
@@ -494,6 +562,12 @@ export function detectQualityConsistency(posts?: any[]): EEATVariable {
   }
 
   const mean = wordCounts.reduce((sum, wc) => sum + wc, 0) / wordCounts.length
+
+  // Additional safety check for division by zero
+  if (mean === 0 || !isFinite(mean)) {
+    return createEmptyVariable(config, 'Invalid word count data')
+  }
+
   const variance = wordCounts.reduce((sum, wc) => sum + Math.pow(wc - mean, 2), 0) / wordCounts.length
   const stdDev = Math.sqrt(variance)
   const coefficientOfVariation = stdDev / mean
