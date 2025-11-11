@@ -287,9 +287,29 @@ export default function EEATMeterTool() {
         <h2 className="text-2xl font-semibold mb-3 text-black text-center">
           Is your blog content unshakably credible, authoritative, & discoverable?
         </h2>
-        <p className="text-black/70 text-center mb-8">
+        <p className="text-black/70 text-center mb-6">
           Analyze your entire blog strategy & E-E-A-T score for free
         </p>
+
+        {/* How to Use Guide */}
+        <div className="bg-navy/5 rounded-12 p-5 mb-6 border border-navy/10">
+          <h3 className="text-sm font-semibold text-navy mb-3 flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            How to Use
+          </h3>
+          <div className="space-y-2 text-sm text-black/80">
+            <div className="flex items-start gap-2">
+              <span className="text-lime-dark font-semibold min-w-[120px]">Blog Analysis:</span>
+              <span>Enter domain only (e.g., <code className="bg-white px-1.5 py-0.5 rounded text-navy font-mono text-xs">healthline.com</code>) to analyze your entire blog strategy</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-coral font-semibold min-w-[120px]">Single Page:</span>
+              <span>Enter full URL (e.g., <code className="bg-white px-1.5 py-0.5 rounded text-navy font-mono text-xs">healthline.com/nutrition/vitamin-d-101</code>) for one article</span>
+            </div>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* URL Input */}
@@ -299,7 +319,7 @@ export default function EEATMeterTool() {
               type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="example.com (analyzes entire blog) or specific post URL"
+              placeholder="healthline.com (blog) or healthline.com/article (single page)"
               required
               aria-label="Website URL to analyze"
               aria-describedby="url-help"
