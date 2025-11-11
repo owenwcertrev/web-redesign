@@ -52,11 +52,63 @@ export default function EEATMeterTool() {
   const [results, setResults] = useState<AnalysisResult | null>(null)
   const [comprehensiveStatus, setComprehensiveStatus] = useState<ComprehensiveStatus | null>(null)
   const [error, setError] = useState('')
+  const [emailSubmitted, setEmailSubmitted] = useState(false)
+  const [submittedEmail, setSubmittedEmail] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const [lastAnalyzedUrl, setLastAnalyzedUrl] = useState<string | null>(null)
+  const [lastAnalysisTime, setLastAnalysisTime] = useState<number | null>(null)
+  const [rateLimitError, setRateLimitError] = useState('')
+
+  const validateEmail = (emailValue: string): boolean => {
+    if (!emailValue) return true // Email is optional
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(emailValue)
+  }
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setEmail(value)
+    if (emailError && validateEmail(value)) {
+      setEmailError('')
+    }
+  }
+
+  const handleEmailBlur = () => {
+    if (email && !validateEmail(email)) {
+      setEmailError('Please enter a valid email address')
+    }
+  }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+
+    // Validate email if provided
+    if (email && !validateEmail(email)) {
+      setEmailError('Please enter a valid email address')
+      return
+    }
+
+    // Rate limiting: Prevent duplicate submissions within 10 seconds
+    const now = Date.now()
+    const normalizedUrl = url.toLowerCase().trim()
+    const RATE_LIMIT_MS = 10000 // 10 seconds
+
+    if (
+      lastAnalyzedUrl === normalizedUrl &&
+      lastAnalysisTime &&
+      now - lastAnalysisTime < RATE_LIMIT_MS
+    ) {
+      const secondsRemaining = Math.ceil((RATE_LIMIT_MS - (now - lastAnalysisTime)) / 1000)
+      setRateLimitError(
+        `Please wait ${secondsRemaining} second${secondsRemaining !== 1 ? 's' : ''} before analyzing this URL again.`
+      )
+      return
+    }
+
     setLoading(true)
     setError('')
+    setEmailError('')
+    setRateLimitError('')
 
     // Track analysis start
     analytics.eeAtMeter.started(url)
@@ -83,10 +135,36 @@ export default function EEATMeterTool() {
 
         // Track successful analysis
         analytics.eeAtMeter.completed(url, data.instant.score)
+
+        // Set rate limiting trackers
+        setLastAnalyzedUrl(normalizedUrl)
+        setLastAnalysisTime(now)
+
+        // If email was provided, show success confirmation
+        if (email) {
+          setEmailSubmitted(true)
+          setSubmittedEmail(email)
+          // Clear form
+          setUrl('')
+          setEmail('')
+        }
       } else if (data.analysis) {
         // Backwards compatibility with old API response
         setResults(data.analysis)
         analytics.eeAtMeter.completed(url, data.analysis.score)
+
+        // Set rate limiting trackers
+        setLastAnalyzedUrl(normalizedUrl)
+        setLastAnalysisTime(now)
+
+        // If email was provided, show success confirmation
+        if (email) {
+          setEmailSubmitted(true)
+          setSubmittedEmail(email)
+          // Clear form
+          setUrl('')
+          setEmail('')
+        }
       }
     } catch (err) {
       console.error('Analysis error:', err)
@@ -98,6 +176,24 @@ export default function EEATMeterTool() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleRetry = () => {
+    setError('')
+    setRateLimitError('')
+    setEmailError('')
+  }
+
+  const handleNewAnalysis = () => {
+    setResults(null)
+    setComprehensiveStatus(null)
+    setError('')
+    setRateLimitError('')
+    setEmailError('')
+    setEmailSubmitted(false)
+    setSubmittedEmail('')
+    setUrl('')
+    setEmail('')
   }
 
   const getIssueIcon = (type: string) => {
@@ -134,15 +230,18 @@ export default function EEATMeterTool() {
               onChange={(e) => setUrl(e.target.value)}
               placeholder="example.com or https://example.com"
               required
+              aria-label="Website URL to analyze"
+              aria-describedby="url-help"
               className="w-full pl-12 pr-4 py-4 text-lg rounded-16 border-2 border-black/10 focus:border-navy focus:outline-none transition-colors"
             />
+            <span id="url-help" className="sr-only">Enter the URL of the website you want to analyze for E-E-A-T score</span>
           </div>
 
           {/* Email Field with Value Prop */}
           <div className="bg-lime-light/30 rounded-16 p-4 border-2 border-lime/20">
             <div className="flex items-start gap-2 mb-3">
               <Sparkles className="w-4 h-4 text-lime-dark flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-black/70">
+              <p className="text-sm text-black/70" id="email-help">
                 <strong className="text-navy">Get AI-powered comprehensive analysis</strong> with domain authority metrics, content quality assessment, and author reputation verification (optional)
               </p>
             </div>
@@ -151,26 +250,88 @@ export default function EEATMeterTool() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
+                onBlur={handleEmailBlur}
                 placeholder="your@email.com (optional - for comprehensive report)"
-                className="w-full pl-12 pr-4 py-3 rounded-16 border-2 border-lime/30 focus:border-lime focus:outline-none transition-colors bg-white"
+                aria-label="Email address for comprehensive analysis report"
+                aria-describedby="email-help email-privacy"
+                aria-invalid={!!emailError}
+                className={`w-full pl-12 pr-4 py-3 rounded-16 border-2 focus:outline-none transition-colors bg-white ${
+                  emailError
+                    ? 'border-red-500 focus:border-red-600'
+                    : 'border-lime/30 focus:border-lime'
+                }`}
               />
             </div>
+            {emailError && (
+              <p className="text-sm text-red-600 mt-2 flex items-center gap-1" role="alert">
+                <AlertCircle className="w-4 h-4" />
+                {emailError}
+              </p>
+            )}
+            <p className="text-xs text-black/50 mt-3" id="email-privacy">
+              Your data is secure. We never share your information. Read our{' '}
+              <a href="/privacy" className="text-navy hover:underline">privacy policy</a>.
+            </p>
           </div>
 
-          <Button type="submit" size="lg" loading={loading} className="w-full">
+          <Button
+            type="submit"
+            size="lg"
+            loading={loading}
+            className="w-full"
+            disabled={loading || !!emailError || !!rateLimitError}
+            aria-busy={loading}
+          >
             {loading ? 'Analyzing...' : 'Analyze Content'}
             {!loading && <ArrowRight className="w-5 h-5" />}
           </Button>
         </form>
 
+        {/* Rate Limit Warning */}
+        {rateLimitError && (
+          <div className="mt-4 p-4 bg-coral/10 border-2 border-coral/30 rounded-16" role="alert">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-coral flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h4 className="font-semibold text-coral mb-1">Please Wait</h4>
+                <p className="text-sm text-black/80">{rateLimitError}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Email Confirmation Success Message */}
+        {emailSubmitted && submittedEmail && (
+          <div className="mt-4 p-4 bg-lime-light border-2 border-lime rounded-16" role="status" aria-live="polite">
+            <div className="flex items-start gap-3">
+              <CheckCircle className="w-5 h-5 text-lime-dark flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h4 className="font-semibold text-lime-dark mb-1">Email Sent Successfully!</h4>
+                <p className="text-sm text-lime-dark/90 mb-2">
+                  We've sent your comprehensive E-E-A-T analysis to <strong>{submittedEmail}</strong>
+                </p>
+                <p className="text-xs text-lime-dark/80">
+                  Your detailed report will arrive in 2-4 minutes. Don't forget to check your spam/promotions folder!
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {error && (
-          <div className="mt-4 p-4 bg-red-50 border-2 border-red-200 rounded-16">
+          <div className="mt-4 p-4 bg-red-50 border-2 border-red-200 rounded-16" role="alert">
             <div className="flex items-start gap-3 mb-3">
               <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
                 <h4 className="font-semibold text-red-900 mb-1">Analysis Error</h4>
-                <p className="text-red-700 text-sm">{error}</p>
+                <p className="text-red-700 text-sm mb-3">{error}</p>
+                <button
+                  onClick={handleRetry}
+                  className="text-sm font-semibold text-red-700 hover:text-red-900 underline focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded"
+                >
+                  Try Again
+                </button>
               </div>
             </div>
             <div className="bg-white rounded-lg p-3 border border-red-100">
@@ -180,26 +341,108 @@ export default function EEATMeterTool() {
                 <li>• Try adding or removing "www" from the domain</li>
                 <li>• Verify the website is online and responding</li>
                 <li>• Check if you entered the correct domain spelling</li>
+                <li>• If the issue persists, <a href="/contact" className="text-navy hover:underline">contact support</a></li>
               </ul>
             </div>
           </div>
         )}
-
-        <p className="text-xs text-black/50 text-center mt-4">
-          Your data is secure. We never share your information.
-        </p>
       </div>
+
+      {/* Loading Skeleton */}
+      {loading && !results && (
+        <div className="space-y-8 animate-in fade-in duration-300">
+          <div className="bg-white rounded-16 p-8 shadow-base">
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 border-4 border-navy/20 border-t-navy rounded-full animate-spin mb-6" />
+              <div className="h-8 w-64 bg-beige rounded-lg mb-4 animate-pulse" />
+              <div className="h-4 w-48 bg-beige/70 rounded-lg mb-8 animate-pulse" />
+
+              {/* Skeleton Score Gauge */}
+              <div className="w-48 h-48 bg-beige rounded-full mb-8 animate-pulse relative">
+                <div className="absolute inset-8 bg-white rounded-full" />
+              </div>
+
+              {/* Skeleton Breakdown */}
+              <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="bg-beige rounded-12 p-4 animate-pulse">
+                    <div className="h-10 w-16 bg-beige/70 rounded mx-auto mb-2" />
+                    <div className="h-4 w-24 bg-beige/70 rounded mx-auto" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-8 space-y-2">
+              <div className="h-4 w-full bg-beige rounded animate-pulse" />
+              <div className="h-4 w-5/6 bg-beige rounded animate-pulse" />
+              <div className="h-4 w-4/6 bg-beige rounded animate-pulse" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-16 p-8 shadow-base">
+            <div className="h-6 w-48 bg-beige rounded-lg mb-4 animate-pulse" />
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="flex items-start gap-3 p-3">
+                  <div className="w-5 h-5 bg-beige rounded-full flex-shrink-0 animate-pulse" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 w-full bg-beige rounded animate-pulse" />
+                    <div className="h-4 w-3/4 bg-beige rounded animate-pulse" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Results Display */}
       {results && (
         <div className="space-y-8 animate-in fade-in duration-500">
+          {/* Comprehensive Analysis Status - Prominent Banner */}
+          {comprehensiveStatus && comprehensiveStatus.status === 'processing' && (
+            <div className="bg-gradient-to-r from-lime-light to-lime-light/70 border-2 border-lime rounded-16 p-6 shadow-lg" role="status" aria-live="polite">
+              <div className="flex flex-col items-center text-center gap-4">
+                <div className="flex items-center gap-3">
+                  <Mail className="w-6 h-6 text-lime-dark" />
+                  <div className="w-6 h-6 border-2 border-lime-dark border-t-transparent rounded-full animate-spin" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-lime-dark mb-2">
+                    Comprehensive Analysis in Progress
+                  </h3>
+                  <p className="text-base text-lime-dark/90 mb-3 max-w-2xl">
+                    {comprehensiveStatus.message}
+                  </p>
+                  <p className="text-sm font-semibold text-lime-dark/80 mb-4">
+                    Estimated time: {comprehensiveStatus.estimatedTime}
+                  </p>
+                  <div className="inline-block bg-white/80 rounded-lg p-4 text-left">
+                    <p className="text-sm font-semibold text-lime-dark mb-2">
+                      Your comprehensive report will include:
+                    </p>
+                    <ul className="text-sm text-lime-dark/90 space-y-2">
+                      {comprehensiveStatus.features.map((feature, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-lime" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* E-E-A-T Score Visualization */}
           <div className="bg-white rounded-16 p-8 shadow-base">
             <div className="flex items-center justify-center gap-2 mb-2">
               <h3 className="text-2xl font-semibold text-center text-black">
                 Your E-E-A-T Score
               </h3>
-              {!email && (
+              {(!comprehensiveStatus || comprehensiveStatus.status === 'not_requested') && (
                 <span className="text-xs font-semibold text-coral bg-coral/10 px-2 py-1 rounded-md">
                   INSTANT
                 </span>
@@ -217,48 +460,48 @@ export default function EEATMeterTool() {
             </div>
 
             {/* Breakdown */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="text-center p-4 bg-beige rounded-12">
-                <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.experience}</div>
-                <div className="text-sm text-black/70">Experience</div>
-                <div className="text-xs text-black/50">out of 25</div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
+              <div className="text-center p-3 sm:p-4 bg-beige rounded-12 min-w-0">
+                <div className="text-2xl sm:text-3xl font-bold text-navy mb-1">{results.breakdown.experience}</div>
+                <div className="text-xs sm:text-sm text-black/70 break-words hyphens-auto">Experience</div>
+                <div className="text-xs text-black/50 whitespace-nowrap">out of 25</div>
               </div>
-              <div className="text-center p-4 bg-beige rounded-12">
-                <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.expertise}</div>
-                <div className="text-sm text-black/70">Expertise</div>
-                <div className="text-xs text-black/50">out of 25</div>
+              <div className="text-center p-3 sm:p-4 bg-beige rounded-12 min-w-0">
+                <div className="text-2xl sm:text-3xl font-bold text-navy mb-1">{results.breakdown.expertise}</div>
+                <div className="text-xs sm:text-sm text-black/70 break-words hyphens-auto">Expertise</div>
+                <div className="text-xs text-black/50 whitespace-nowrap">out of 25</div>
               </div>
-              <div className="text-center p-4 bg-beige rounded-12">
-                <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.authoritativeness}</div>
-                <div className="text-sm text-black/70">Authoritativeness</div>
-                <div className="text-xs text-black/50">out of 25</div>
+              <div className="text-center p-3 sm:p-4 bg-beige rounded-12 min-w-0">
+                <div className="text-2xl sm:text-3xl font-bold text-navy mb-1">{results.breakdown.authoritativeness}</div>
+                <div className="text-xs sm:text-sm text-black/70 break-words hyphens-auto" lang="en">Authoritativeness</div>
+                <div className="text-xs text-black/50 whitespace-nowrap">out of 25</div>
               </div>
-              <div className="text-center p-4 bg-beige rounded-12">
-                <div className="text-3xl font-bold text-navy mb-1">{results.breakdown.trustworthiness}</div>
-                <div className="text-sm text-black/70">Trustworthiness</div>
-                <div className="text-xs text-black/50">out of 25</div>
+              <div className="text-center p-3 sm:p-4 bg-beige rounded-12 min-w-0">
+                <div className="text-2xl sm:text-3xl font-bold text-navy mb-1">{results.breakdown.trustworthiness}</div>
+                <div className="text-xs sm:text-sm text-black/70 break-words hyphens-auto">Trustworthiness</div>
+                <div className="text-xs text-black/50 whitespace-nowrap">out of 25</div>
               </div>
             </div>
 
             {/* Benchmark Comparison */}
-            <div className="bg-beige rounded-12 p-6 border-2 border-navy/10">
-              <h4 className="font-semibold text-navy mb-4 text-center">How Does Your Score Compare?</h4>
+            <div className="bg-beige rounded-12 p-4 sm:p-6 border-2 border-navy/10">
+              <h4 className="font-semibold text-navy mb-4 text-center break-words">How Does Your Score Compare?</h4>
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-black/70">Fortune 500 Health/Wellness Brands</span>
-                  <span className="font-semibold text-navy">75-85</span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs sm:text-sm text-black/70 break-words min-w-0 flex-1">Fortune 500 Health/Wellness Brands</span>
+                  <span className="font-semibold text-navy whitespace-nowrap">75-85</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-black/70">Mid-Market DTC Brands</span>
-                  <span className="font-semibold text-navy">55-70</span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs sm:text-sm text-black/70 break-words min-w-0 flex-1">Mid-Market DTC Brands</span>
+                  <span className="font-semibold text-navy whitespace-nowrap">55-70</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-black/70">Startup/New Brands</span>
-                  <span className="font-semibold text-navy">30-50</span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs sm:text-sm text-black/70 break-words min-w-0 flex-1">Startup/New Brands</span>
+                  <span className="font-semibold text-navy whitespace-nowrap">30-50</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-black/70">AI-Generated (No Expert Review)</span>
-                  <span className="font-semibold text-navy">15-25</span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs sm:text-sm text-black/70 break-words min-w-0 flex-1">AI-Generated (No Expert Review)</span>
+                  <span className="font-semibold text-navy whitespace-nowrap">15-25</span>
                 </div>
                 <div className="h-px bg-navy/20 my-3"></div>
                 <div className="flex items-center justify-between bg-white rounded-lg p-3 border-2 border-coral/30">
@@ -344,70 +587,6 @@ export default function EEATMeterTool() {
             </div>
           </div>
 
-          {/* Comprehensive Analysis Status */}
-          {comprehensiveStatus && (
-            <div className={`rounded-16 p-6 border-2 ${
-              comprehensiveStatus.status === 'processing'
-                ? 'bg-lime-light border-lime'
-                : 'bg-navy/5 border-navy/20'
-            }`}>
-              <div className="flex items-start gap-3">
-                {comprehensiveStatus.status === 'processing' ? (
-                  <>
-                    <div className="w-6 h-6 flex-shrink-0 mt-1">
-                      <div className="w-6 h-6 border-2 border-lime-dark border-t-transparent rounded-full animate-spin" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-lime-dark mb-2">
-                        Comprehensive Analysis in Progress
-                      </h4>
-                      <p className="text-sm text-lime-dark/80 mb-3">
-                        {comprehensiveStatus.message}
-                      </p>
-                      <p className="text-xs font-semibold text-lime-dark/70 mb-2">
-                        Estimated time: {comprehensiveStatus.estimatedTime}
-                      </p>
-                      <p className="text-xs font-semibold text-lime-dark/70 mb-2">
-                        Your comprehensive report will include:
-                      </p>
-                      <ul className="text-xs text-lime-dark/80 space-y-1">
-                        {comprehensiveStatus.features.map((feature, index) => (
-                          <li key={index} className="flex items-start gap-2">
-                            <CheckCircle className="w-3 h-3 flex-shrink-0 mt-0.5" />
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-6 h-6 text-coral flex-shrink-0 mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-navy mb-2">
-                        Upgrade to Comprehensive Analysis
-                      </h4>
-                      <p className="text-sm text-black/70 mb-3">
-                        {comprehensiveStatus.message}
-                      </p>
-                      <p className="text-xs font-semibold text-black/60 mb-2">
-                        Additional insights available with email:
-                      </p>
-                      <ul className="text-xs text-black/60 space-y-1">
-                        {comprehensiveStatus.features.map((feature, index) => (
-                          <li key={index} className="flex items-start gap-2">
-                            <Sparkles className="w-3 h-3 flex-shrink-0 mt-0.5 text-coral" />
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-
           {/* Score-Based CTA */}
           <div className={`rounded-16 p-8 ${
             results.score < 50 ? 'bg-coral/10 border-2 border-coral/30' :
@@ -468,6 +647,17 @@ export default function EEATMeterTool() {
                 <Button size="lg" variant="secondary">Book Free Consultation</Button>
               </Link>
             </div>
+          </div>
+
+          {/* Analyze Another URL Button */}
+          <div className="text-center">
+            <button
+              onClick={handleNewAnalysis}
+              className="inline-flex items-center gap-2 px-6 py-3 text-navy hover:text-navy/80 font-semibold text-lg transition-colors focus:outline-none focus:ring-2 focus:ring-navy focus:ring-offset-2 rounded-lg"
+            >
+              <ArrowRight className="w-5 h-5 rotate-180" />
+              Analyze Another URL
+            </button>
           </div>
         </div>
       )}
