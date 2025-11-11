@@ -20,7 +20,7 @@ export default function Navigation() {
           </Link>
 
           {/* Desktop Navigation - Right aligned */}
-          <div className="hidden lg:flex items-center gap-6 lg:gap-12 ml-auto mr-4 lg:mr-12 flex-shrink-0">
+          <div className="hidden xl:flex items-center gap-6 lg:gap-12 ml-auto mr-4 lg:mr-12 flex-shrink-0">
             <Link href="/book-demo" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
               Book Demo
             </Link>
@@ -70,7 +70,7 @@ export default function Navigation() {
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-black hover:text-coral transition-colors"
+            className="xl:hidden p-2 text-black hover:text-coral transition-colors"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -80,7 +80,7 @@ export default function Navigation() {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-black/5 bg-beige">
+        <div className="xl:hidden border-t border-black/5 bg-beige">
           <div className="px-4 py-4 space-y-3">
             <Link
               href="/book-demo"
