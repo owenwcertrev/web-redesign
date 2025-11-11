@@ -161,9 +161,8 @@ function detectEditorialPrinciplesDomainLevel(posts: any[], config: any): EEATVa
   const evidence: EEATEvidence[] = []
   let score = 0
 
-  // Strategy: Check footer links across posts to find domain-level resources
-  const editorialPolicyUrls = new Set<string>()
-  const correctionsPolicyUrls = new Set<string>()
+  // Strategy: Check content text across posts for mentions of editorial/corrections policies
+  // Note: pageAnalysis.links only contains counts, not actual URLs
   let postsWithEditorialLinks = 0
   let postsWithCorrectionsLinks = 0
 
@@ -183,95 +182,84 @@ function detectEditorialPrinciplesDomainLevel(posts: any[], config: any): EEATVa
     /fact[-_]check/i
   ]
 
-  // Analyze links across posts
+  // Analyze content text across posts for mentions of editorial/corrections policies
   posts.forEach(post => {
-    const links = post.pageAnalysis?.links || []
+    const text = post.pageAnalysis?.contentText?.toLowerCase() || ''
+    let foundEditorial = false
+    let foundCorrections = false
 
-    links.forEach((link: string) => {
-      const lowerLink = link.toLowerCase()
+    // Check for editorial policy mentions in content
+    if (!foundEditorial && editorialUrlPatterns.some(pattern => pattern.test(text))) {
+      postsWithEditorialLinks++
+      foundEditorial = true
+    }
 
-      // Check for editorial policy links
-      if (editorialUrlPatterns.some(pattern => pattern.test(lowerLink))) {
-        editorialPolicyUrls.add(link)
-        postsWithEditorialLinks++
-      }
-
-      // Check for corrections policy links
-      if (correctionsUrlPatterns.some(pattern => pattern.test(lowerLink))) {
-        correctionsPolicyUrls.add(link)
-        postsWithCorrectionsLinks++
-      }
-    })
+    // Check for corrections policy mentions in content
+    if (!foundCorrections && correctionsUrlPatterns.some(pattern => pattern.test(text))) {
+      postsWithCorrectionsLinks++
+      foundCorrections = true
+    }
   })
 
   // Score based on presence and consistency
-  if (editorialPolicyUrls.size > 0) {
+  if (postsWithEditorialLinks > 0) {
     const consistencyRate = postsWithEditorialLinks / posts.length
 
     if (consistencyRate >= 0.8) {
-      // Editorial policy linked in 80%+ of posts (excellent site-wide implementation)
+      // Editorial policy mentioned in 80%+ of posts (excellent site-wide implementation)
       score += 2.5
       evidence.push({
         type: 'metric',
-        value: `Editorial policy found (${Math.round(consistencyRate * 100)}% of posts link to it)`,
+        value: `Editorial policy found (${Math.round(consistencyRate * 100)}% of posts mention it)`,
         label: 'Site-wide policy',
         confidence: consistencyRate
       })
     } else if (consistencyRate >= 0.5) {
-      // Editorial policy linked in 50%+ of posts
+      // Editorial policy mentioned in 50%+ of posts
       score += 2
       evidence.push({
         type: 'metric',
-        value: `Editorial policy found (${Math.round(consistencyRate * 100)}% of posts link to it)`,
+        value: `Editorial policy found (${Math.round(consistencyRate * 100)}% of posts mention it)`,
         label: 'Partial consistency'
       })
     } else {
-      // Editorial policy exists but inconsistently linked
+      // Editorial policy exists but inconsistently mentioned
       score += 1.5
       evidence.push({
         type: 'note',
-        value: `Editorial policy exists but only ${Math.round(consistencyRate * 100)}% of posts link to it`
-      })
-    }
-
-    // List the policy URLs found
-    if (editorialPolicyUrls.size <= 3) {
-      evidence.push({
-        type: 'snippet',
-        value: Array.from(editorialPolicyUrls).slice(0, 3).join(', '),
-        label: 'Policy URLs'
+        value: `Editorial policy exists but only ${Math.round(consistencyRate * 100)}% of posts mention it`
       })
     }
   }
 
-  if (correctionsPolicyUrls.size > 0) {
+  if (postsWithCorrectionsLinks > 0) {
     const consistencyRate = postsWithCorrectionsLinks / posts.length
 
     if (consistencyRate >= 0.5) {
       score += 1.5
       evidence.push({
         type: 'metric',
-        value: `Corrections policy found (${Math.round(consistencyRate * 100)}% of posts)`,
+        value: `Corrections policy found (${Math.round(consistencyRate * 100)}% of posts mention it)`,
         label: 'Transparency commitment'
       })
     } else {
       score += 1
       evidence.push({
         type: 'note',
-        value: 'Corrections policy exists but not consistently linked'
+        value: `Corrections policy exists but only mentioned in ${Math.round(consistencyRate * 100)}% of posts`
       })
     }
   }
 
   // If no policies found, provide helpful feedback
-  if (editorialPolicyUrls.size === 0 && correctionsPolicyUrls.size === 0) {
+  if (postsWithEditorialLinks === 0 && postsWithCorrectionsLinks === 0) {
     evidence.push({
       type: 'note',
-      value: 'No editorial policy or corrections policy found across blog posts'
+      value: 'No editorial policy or corrections policy mentions found across blog posts'
     })
     evidence.push({
       type: 'note',
-      value: `Analyzed ${posts.length} posts - expected footer links to /editorial-policy or similar`
+      value: `Analyzed ${posts.length} posts - expected mentions of editorial policy or corrections policy in content`
     })
   }
 
@@ -571,12 +559,8 @@ function detectContactTransparencyDomainLevel(posts: any[], config: any): EEATVa
   const evidence: EEATEvidence[] = []
   let score = 0
 
-  // Strategy: Check footer links across posts to find domain-level pages
-  const aboutUrls = new Set<string>()
-  const contactUrls = new Set<string>()
-  const privacyUrls = new Set<string>()
-  const termsUrls = new Set<string>()
-
+  // Strategy: Check content text across posts for mentions of transparency pages
+  // Note: pageAnalysis.links only contains counts, not actual URLs
   let postsWithAbout = 0
   let postsWithContact = 0
   let postsWithPrivacy = 0
@@ -584,80 +568,72 @@ function detectContactTransparencyDomainLevel(posts: any[], config: any): EEATVa
 
   // Common URL patterns for transparency pages
   const aboutUrlPatterns = [
-    /\/about[-_]us\b/i,
-    /\/about\b/i,
-    /\/team\b/i,
-    /\/who[-_]we[-_]are/i,
-    /\/company/i
+    /\babout[-_]us\b/i,
+    /\babout\b/i,
+    /\bteam\b/i,
+    /\bwho[-_]we[-_]are\b/i,
+    /\bcompany\b/i
   ]
 
   const contactUrlPatterns = [
-    /\/contact[-_]us\b/i,
-    /\/contact\b/i,
-    /\/get[-_]in[-_]touch/i
+    /\bcontact[-_]us\b/i,
+    /\bcontact\b/i,
+    /\bget[-_]in[-_]touch\b/i
   ]
 
   const privacyUrlPatterns = [
-    /\/privacy[-_]policy/i,
-    /\/privacy/i
+    /\bprivacy[-_]policy\b/i,
+    /\bprivacy\b/i
   ]
 
   const termsUrlPatterns = [
-    /\/terms[-_]of[-_]service/i,
-    /\/terms[-_]and[-_]conditions/i,
-    /\/terms/i
+    /\bterms[-_]of[-_]service\b/i,
+    /\bterms[-_]and[-_]conditions\b/i,
+    /\bterms\b/i
   ]
 
-  // Analyze links across posts
+  // Analyze content text across posts for transparency page mentions
   posts.forEach(post => {
-    const links = post.pageAnalysis?.links || []
+    const text = post.pageAnalysis?.contentText?.toLowerCase() || ''
     let foundAbout = false
     let foundContact = false
     let foundPrivacy = false
     let foundTerms = false
 
-    links.forEach((link: string) => {
-      const lowerLink = link.toLowerCase()
+    // Check for About page mentions
+    if (!foundAbout && aboutUrlPatterns.some(pattern => pattern.test(text))) {
+      postsWithAbout++
+      foundAbout = true
+    }
 
-      // Check for About page
-      if (!foundAbout && aboutUrlPatterns.some(pattern => pattern.test(lowerLink))) {
-        aboutUrls.add(link)
-        postsWithAbout++
-        foundAbout = true
-      }
+    // Check for Contact page mentions
+    if (!foundContact && contactUrlPatterns.some(pattern => pattern.test(text))) {
+      postsWithContact++
+      foundContact = true
+    }
 
-      // Check for Contact page
-      if (!foundContact && contactUrlPatterns.some(pattern => pattern.test(lowerLink))) {
-        contactUrls.add(link)
-        postsWithContact++
-        foundContact = true
-      }
+    // Check for Privacy policy mentions
+    if (!foundPrivacy && privacyUrlPatterns.some(pattern => pattern.test(text))) {
+      postsWithPrivacy++
+      foundPrivacy = true
+    }
 
-      // Check for Privacy policy
-      if (!foundPrivacy && privacyUrlPatterns.some(pattern => pattern.test(lowerLink))) {
-        privacyUrls.add(link)
-        postsWithPrivacy++
-        foundPrivacy = true
-      }
-
-      // Check for Terms of service
-      if (!foundTerms && termsUrlPatterns.some(pattern => pattern.test(lowerLink))) {
-        termsUrls.add(link)
-        postsWithTerms++
-        foundTerms = true
-      }
-    })
+    // Check for Terms of service mentions
+    if (!foundTerms && termsUrlPatterns.some(pattern => pattern.test(text))) {
+      postsWithTerms++
+      foundTerms = true
+    }
   })
 
   // Score based on presence and consistency
   // About page (1.5 pts)
-  if (aboutUrls.size > 0) {
+  if (postsWithAbout > 0) {
     const consistencyRate = postsWithAbout / posts.length
     if (consistencyRate >= 0.8) {
       score += 1.5
       evidence.push({
         type: 'metric',
-        value: `About page found (${Math.round(consistencyRate * 100)}% of posts link to it)`,
+        value: `About page found (${Math.round(consistencyRate * 100)}% of posts mention it)`,
         label: 'Site identity',
         confidence: consistencyRate
       })
@@ -665,74 +641,74 @@ function detectContactTransparencyDomainLevel(posts: any[], config: any): EEATVa
       score += 1
       evidence.push({
         type: 'note',
-        value: `About page found but only ${Math.round(consistencyRate * 100)}% of posts link to it`
+        value: `About page found but only ${Math.round(consistencyRate * 100)}% of posts mention it`
       })
     }
   }
 
   // Contact page (1 pt)
-  if (contactUrls.size > 0) {
+  if (postsWithContact > 0) {
     const consistencyRate = postsWithContact / posts.length
     if (consistencyRate >= 0.8) {
       score += 1
       evidence.push({
         type: 'metric',
-        value: `Contact page found (${Math.round(consistencyRate * 100)}% of posts)`,
+        value: `Contact page found (${Math.round(consistencyRate * 100)}% of posts mention it)`,
         label: 'Accessibility'
       })
     } else {
       score += 0.7
       evidence.push({
         type: 'note',
-        value: `Contact page found but only ${Math.round(consistencyRate * 100)}% link to it`
+        value: `Contact page found but only ${Math.round(consistencyRate * 100)}% mention it`
       })
     }
   }
 
   // Privacy policy (1 pt)
-  if (privacyUrls.size > 0) {
+  if (postsWithPrivacy > 0) {
     const consistencyRate = postsWithPrivacy / posts.length
     if (consistencyRate >= 0.8) {
       score += 1
       evidence.push({
         type: 'metric',
-        value: `Privacy policy found (${Math.round(consistencyRate * 100)}% of posts)`,
+        value: `Privacy policy found (${Math.round(consistencyRate * 100)}% of posts mention it)`,
         label: 'Data transparency'
       })
     } else {
       score += 0.7
       evidence.push({
         type: 'note',
-        value: `Privacy policy found but only ${Math.round(consistencyRate * 100)}% link to it`
+        value: `Privacy policy found but only ${Math.round(consistencyRate * 100)}% mention it`
       })
     }
   }
 
   // Terms of service (0.5 pts)
-  if (termsUrls.size > 0) {
+  if (postsWithTerms > 0) {
     const consistencyRate = postsWithTerms / posts.length
     if (consistencyRate >= 0.8) {
       score += 0.5
       evidence.push({
         type: 'metric',
-        value: `Terms of service found (${Math.round(consistencyRate * 100)}% of posts)`,
+        value: `Terms of service found (${Math.round(consistencyRate * 100)}% of posts mention it)`,
         label: 'Legal clarity'
       })
     } else {
       score += 0.3
       evidence.push({
         type: 'note',
-        value: `Terms found but only ${Math.round(consistencyRate * 100)}% link to it`
+        value: `Terms found but only ${Math.round(consistencyRate * 100)}% mention it`
       })
     }
   }
 
   // Summary evidence
   const foundPages = [
-    aboutUrls.size > 0 ? 'About' : null,
-    contactUrls.size > 0 ? 'Contact' : null,
-    privacyUrls.size > 0 ? 'Privacy' : null,
-    termsUrls.size > 0 ? 'Terms' : null
+    postsWithAbout > 0 ? 'About' : null,
+    postsWithContact > 0 ? 'Contact' : null,
+    postsWithPrivacy > 0 ? 'Privacy' : null,
+    postsWithTerms > 0 ? 'Terms' : null
   ].filter(Boolean)
 
   if (foundPages.length > 0) {
@@ -744,7 +720,7 @@ function detectContactTransparencyDomainLevel(posts: any[], config: any): EEATVa
   } else {
     evidence.push({
       type: 'note',
-      value: 'No transparency pages found across blog posts'
+      value: 'No transparency pages mentioned across blog posts'
     })
     evidence.push({
       type: 'note',
