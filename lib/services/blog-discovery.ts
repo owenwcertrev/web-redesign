@@ -67,7 +67,7 @@ export class BlogDiscoveryService {
   ];
 
   private static readonly BLOG_URL_PATTERNS = [
-    /\/blog\//i,
+    /\/blogs?\//i,  // Matches both /blog/ and /blogs/ (Shopify uses plural)
     /\/article\//i,
     /\/articles\//i,
     /\/post\//i,
