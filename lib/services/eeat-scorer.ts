@@ -126,11 +126,13 @@ export function estimateDomainRank(page: PageAnalysis): number {
   }
 
   // Images with proper alt text indicate attention to detail (+0 to +5)
-  const imagesWithAlt = page.images.filter(img => img.hasAlt).length
-  if (imagesWithAlt >= 5) {
-    rank += 5 // Good image optimization
-  } else if (imagesWithAlt >= 2) {
-    rank += 2 // Some optimization
+  if (page.images.total > 0) {
+    const altRatio = page.images.withAlt / page.images.total
+    if (altRatio >= 0.8 && page.images.withAlt >= 5) {
+      rank += 5 // Excellent image optimization
+    } else if (altRatio >= 0.5 && page.images.withAlt >= 2) {
+      rank += 2 // Some optimization
+    }
   }
 
   // Clamp to 0-100 range
