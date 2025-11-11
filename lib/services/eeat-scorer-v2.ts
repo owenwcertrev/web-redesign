@@ -670,6 +670,37 @@ function aggregateVariableAcrossPosts(
     }
   }
 
+  // Special handling for X1 (Authors): Add author strategy breakdown
+  if (variableId === 'X1' && posts.length >= 5) {
+    const authorStrategy = getAuthorStrategyBreakdown(posts)
+    if (authorStrategy) {
+      evidence.push({
+        type: 'metric',
+        value: authorStrategy.summary,
+        label: 'Author strategy'
+      })
+      if (authorStrategy.topAuthors) {
+        evidence.push({
+          type: 'snippet',
+          value: authorStrategy.topAuthors,
+          label: 'Top authors'
+        })
+      }
+    }
+  }
+
+  // Special handling for A2 (Authors cited elsewhere): Add author coverage breakdown
+  if (variableId === 'A2' && posts.length >= 5) {
+    const authorCoverage = getAuthorCoverageBreakdown(posts)
+    if (authorCoverage) {
+      evidence.push({
+        type: 'metric',
+        value: authorCoverage,
+        label: 'Author coverage'
+      })
+    }
+  }
+
   // Determine status based on average score
   const status = getVariableStatusFromScore(roundedScore, config)
 
@@ -825,6 +856,106 @@ function getVariableStatusFromScore(
   if (score >= config.thresholds.good) return 'good'
   if (score >= config.thresholds.needsImprovement) return 'needs-improvement'
   return 'poor'
+}
+
+/**
+ * Get author coverage breakdown (for A2 specifically)
+ * Shows which authors appear across the blog and their authority patterns
+ */
+function getAuthorCoverageBreakdown(posts: any[]): string | null {
+  const authorMap = new Map<string, number>()
+
+  posts.forEach(post => {
+    const authors = post.pageAnalysis?.authors || []
+    authors.forEach((author: any) => {
+      const name = author.name || author.text || 'Unknown'
+      authorMap.set(name, (authorMap.get(name) || 0) + 1)
+    })
+  })
+
+  if (authorMap.size === 0) {
+    return null
+  }
+
+  const postsWithAuthors = posts.filter(p => p.pageAnalysis?.authors?.length > 0).length
+  const authorCoverage = Math.round((postsWithAuthors / posts.length) * 100)
+  const uniqueAuthors = authorMap.size
+
+  // Determine if blog has consistent authorship (few authors) or diverse (many authors)
+  let pattern = ''
+  if (uniqueAuthors === 1) {
+    pattern = 'single author blog'
+  } else if (uniqueAuthors <= 3) {
+    pattern = 'consistent core team'
+  } else if (uniqueAuthors <= 10) {
+    pattern = 'moderate author diversity'
+  } else {
+    pattern = 'high author diversity'
+  }
+
+  return `${uniqueAuthors} unique authors, ${authorCoverage}% author coverage (${pattern})`
+}
+
+/**
+ * Get author strategy breakdown (for X1 specifically)
+ * Shows top authors by post count with credential quality
+ */
+function getAuthorStrategyBreakdown(posts: any[]): {
+  summary: string
+  topAuthors: string | null
+} | null {
+  // Extract all authors from posts
+  const authorMap = new Map<string, { count: number; hasCredentials: boolean; posts: any[] }>()
+
+  posts.forEach(post => {
+    const authors = post.pageAnalysis?.authors || []
+    authors.forEach((author: any) => {
+      const name = author.name || author.text || 'Unknown'
+      if (!authorMap.has(name)) {
+        authorMap.set(name, { count: 0, hasCredentials: false, posts: [] })
+      }
+      const entry = authorMap.get(name)!
+      entry.count++
+      entry.posts.push(post)
+
+      // Check for credentials in author object
+      if (author.credentials || author.role || author.title) {
+        entry.hasCredentials = true
+      }
+    })
+  })
+
+  if (authorMap.size === 0) {
+    return null
+  }
+
+  // Sort authors by post count
+  const sortedAuthors = Array.from(authorMap.entries())
+    .sort((a, b) => b[1].count - a[1].count)
+    .slice(0, 5)
+
+  // Calculate stats
+  const totalAuthors = authorMap.size
+  const postsWithAuthors = posts.filter(p => p.pageAnalysis?.authors?.length > 0).length
+  const attributionRate = Math.round((postsWithAuthors / posts.length) * 100)
+  const authorsWithCredentials = Array.from(authorMap.values()).filter(a => a.hasCredentials).length
+  const credentialRate = Math.round((authorsWithCredentials / totalAuthors) * 100)
+
+  // Build summary
+  const summary = `${totalAuthors} authors, ${attributionRate}% attribution rate, ${credentialRate}% have credentials`
+
+  // Build top authors list
+  let topAuthors: string | null = null
+  if (sortedAuthors.length > 0) {
+    topAuthors = sortedAuthors
+      .map(([name, data]) => {
+        const cred = data.hasCredentials ? '✓' : '✗'
+        return `${name} (${data.count} posts) ${cred}`
+      })
+      .join(', ')
+  }
+
+  return { summary, topAuthors }
 }
 
 /**

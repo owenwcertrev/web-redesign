@@ -521,6 +521,35 @@ export function detectQualityPatterns(pageAnalysis?: PageAnalysis, posts?: any[]
       value: `Average: ${Math.round(avgWordCount)} words per post`,
       label: 'Content depth across blog'
     })
+
+    // Check for duplicate content (title similarity)
+    const duplicateRate = detectDuplicateContent(posts)
+    if (duplicateRate > 20) {
+      score -= 0.5
+      evidence.push({
+        type: 'note',
+        value: `${duplicateRate.toFixed(0)}% title similarity detected (possible duplicate content)`
+      })
+    }
+
+    // Check for keyword cannibalization (similar titles targeting same keywords)
+    const cannibalizationRate = detectKeywordCannibalization(posts)
+    if (cannibalizationRate > 15) {
+      score -= 0.5
+      evidence.push({
+        type: 'note',
+        value: `${cannibalizationRate.toFixed(0)}% keyword overlap (possible cannibalization)`
+      })
+    }
+
+    // Report quality checks
+    if (duplicateRate <= 10 && cannibalizationRate <= 10) {
+      evidence.push({
+        type: 'metric',
+        value: 'No significant duplicate content or keyword cannibalization detected',
+        label: 'Advanced quality checks'
+      })
+    }
   } else if (pageAnalysis) {
     // Single page analysis
     const wordCount = pageAnalysis.wordCount || 0
@@ -732,4 +761,112 @@ function createEmptyVariable(
     recommendation: 'Insufficient data for analysis',
     detectionMethod: config.detectionMethod
   }
+}
+
+/**
+ * Detect duplicate content via title similarity
+ * Returns percentage of posts with very similar titles
+ */
+function detectDuplicateContent(posts: any[]): number {
+  if (posts.length < 2) return 0
+
+  let similarPairs = 0
+  let totalComparisons = 0
+
+  // Compare each post title with every other post
+  for (let i = 0; i < posts.length; i++) {
+    for (let j = i + 1; j < posts.length; j++) {
+      const title1 = posts[i].title || posts[i].pageAnalysis?.title || ''
+      const title2 = posts[j].title || posts[j].pageAnalysis?.title || ''
+
+      if (title1 && title2) {
+        totalComparisons++
+        const similarity = calculateTitleSimilarity(title1, title2)
+        // Consider >70% similarity as potential duplicate
+        if (similarity > 0.7) {
+          similarPairs++
+        }
+      }
+    }
+  }
+
+  return totalComparisons > 0 ? (similarPairs / totalComparisons) * 100 : 0
+}
+
+/**
+ * Detect keyword cannibalization via keyword overlap
+ * Returns percentage of posts targeting similar keywords
+ */
+function detectKeywordCannibalization(posts: any[]): number {
+  if (posts.length < 2) return 0
+
+  let overlapPairs = 0
+  let totalComparisons = 0
+
+  // Extract main keywords from titles (first 3 important words)
+  const postKeywords = posts.map(post => {
+    const title = post.title || post.pageAnalysis?.title || ''
+    return extractKeywords(title)
+  })
+
+  // Compare keyword sets
+  for (let i = 0; i < postKeywords.length; i++) {
+    for (let j = i + 1; j < postKeywords.length; j++) {
+      if (postKeywords[i].length > 0 && postKeywords[j].length > 0) {
+        totalComparisons++
+        const overlap = calculateKeywordOverlap(postKeywords[i], postKeywords[j])
+        // Consider >50% keyword overlap as potential cannibalization
+        if (overlap > 0.5) {
+          overlapPairs++
+        }
+      }
+    }
+  }
+
+  return totalComparisons > 0 ? (overlapPairs / totalComparisons) * 100 : 0
+}
+
+/**
+ * Calculate title similarity using Jaccard index
+ */
+function calculateTitleSimilarity(title1: string, title2: string): number {
+  const words1 = new Set(title1.toLowerCase().split(/\s+/).filter(w => w.length > 3))
+  const words2 = new Set(title2.toLowerCase().split(/\s+/).filter(w => w.length > 3))
+
+  if (words1.size === 0 || words2.size === 0) return 0
+
+  const words1Array = Array.from(words1)
+  const words2Array = Array.from(words2)
+
+  const intersection = new Set(words1Array.filter(x => words2.has(x)))
+  const union = new Set([...words1Array, ...words2Array])
+
+  return intersection.size / union.size
+}
+
+/**
+ * Extract keywords from title (remove stop words, keep important words)
+ */
+function extractKeywords(title: string): string[] {
+  const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'up', 'about', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'between', 'under', 'again', 'further', 'then', 'once', 'how', 'what', 'when', 'where', 'why', 'which', 'who', 'whom'])
+
+  return title
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(word => word.length > 3 && !stopWords.has(word))
+    .slice(0, 5) // Keep top 5 keywords
+}
+
+/**
+ * Calculate keyword overlap between two keyword sets
+ */
+function calculateKeywordOverlap(keywords1: string[], keywords2: string[]): number {
+  if (keywords1.length === 0 || keywords2.length === 0) return 0
+
+  const set1 = new Set(keywords1)
+  const set2 = new Set(keywords2)
+  const set1Array = Array.from(set1)
+  const intersection = new Set(set1Array.filter(x => set2.has(x)))
+
+  return intersection.size / Math.min(set1.size, set2.size)
 }
