@@ -42,7 +42,7 @@ export interface PageAnalysis {
 export interface Author {
   name: string
   credentials?: string
-  source: 'schema' | 'meta' | 'content'
+  source: 'schema' | 'meta' | 'content' | 'rel-author' | 'html-class'
 }
 
 export interface SchemaMarkup {
