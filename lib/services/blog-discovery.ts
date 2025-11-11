@@ -386,7 +386,20 @@ export class BlogDiscoveryService {
     const posts: BlogPost[] = [];
 
     try {
-      // Parse using sitemap library - convert string to Readable stream
+      // Check if this is a sitemap index (contains references to other sitemaps)
+      // The parseSitemap library doesn't support sitemap index files!
+      if (xmlContent.includes('<sitemapindex')) {
+        console.log('[DEBUG] Detected sitemap index file - manually extracting nested sitemap URLs');
+        // Manually extract sitemap URLs from the index
+        const sitemapMatches = Array.from(xmlContent.matchAll(/<loc>([^<]+)<\/loc>/g));
+        for (const match of sitemapMatches) {
+          posts.push({ url: match[1] });
+          console.log('[DEBUG] Found nested sitemap:', match[1]);
+        }
+        return posts;
+      }
+
+      // Parse regular sitemap using sitemap library - convert string to Readable stream
       const stream = Readable.from([xmlContent]);
       const parsed = await parseSitemap(stream);
 
