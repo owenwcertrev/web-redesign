@@ -7,18 +7,21 @@
 
 import { inngest } from './client'
 import type { PageAnalysis } from '../services/url-analyzer'
+import { identifyIssues, generateSuggestions, type Issue, type Suggestion } from '../services/eeat-scorer'
+import { calculateComprehensiveEEATScores } from '../services/eeat-scorer-v2'
+import { fetchComprehensiveAPIs } from '../services/api-orchestrator'
+import type { ReputationSignal } from '../services/reputation-checker'
 import { getDataForSEOMetrics } from '../services/dataforseo-api'
 import { analyzeContentWithNLP } from '../services/nlp-analyzer'
-import { checkAuthorReputation, type ReputationResult, type ReputationSignal } from '../services/reputation-checker'
-import { calculateEEATScores, identifyIssues, generateSuggestions, type Issue, type Suggestion, type EEATScore } from '../services/eeat-scorer'
 import { Resend } from 'resend'
-import type { BlogPostAnalysis, BlogInsights } from '../types/blog-analysis'
+import type { BlogPostAnalysis, BlogInsights, EEATScore } from '../types/blog-analysis'
 
 interface ComprehensiveAnalysisEvent {
   data: {
     url: string
     email: string
     pageAnalysis: PageAnalysis
+    instantEEATScore?: EEATScore // Instant score for reference
   }
 }
 
@@ -28,7 +31,7 @@ interface BlogComprehensiveAnalysisEvent {
     email: string
     blogPosts: BlogPostAnalysis[]
     blogInsights: BlogInsights
-    aggregateScores: EEATScore
+    eeatScore: EEATScore // New variable-based structure
   }
 }
 
@@ -41,75 +44,61 @@ export const comprehensiveEEATAnalysis = inngest.createFunction(
   async ({ event, step }: { event: ComprehensiveAnalysisEvent; step: any }) => {
     const { url, email, pageAnalysis } = event.data
 
-    // Step 1: Get DataForSEO metrics (with retry)
-    const dataforSEOMetrics = await step.run('fetch-dataforseo-metrics', async () => {
+    // Step 1: Fetch all comprehensive APIs (DataForSEO, NLP, Author Reputation)
+    const apiResults = await step.run('fetch-comprehensive-apis', async () => {
       try {
         // Extract domain from pageAnalysis
         const domain = new URL(pageAnalysis.finalUrl || pageAnalysis.url).hostname.replace('www.', '')
-        return await getDataForSEOMetrics(`https://${domain}`)
+        const authorName = pageAnalysis.authors?.[0]?.name
+        const contentText = pageAnalysis.contentText
+
+        return await fetchComprehensiveAPIs(domain, authorName, contentText)
       } catch (error) {
-        console.error('[Inngest] DataForSEO failed:', error)
-        // Return estimated metrics as fallback
+        console.error('[Inngest] API fetching failed:', error)
         return {
-          domainRank: 50,
-          organicKeywords: 0,
-          organicTraffic: 0,
-          organicTrafficValue: 0,
+          errors: [error instanceof Error ? error.message : 'Unknown error']
         }
       }
     })
 
-    // Step 2: Run NLP content analysis (with retry)
-    const nlpAnalysis = await step.run('nlp-content-analysis', async () => {
-      try {
-        return await analyzeContentWithNLP(
-          pageAnalysis.contentText,
-          pageAnalysis.title,
-          pageAnalysis.wordCount
-        )
-      } catch (error) {
-        console.error('[Inngest] NLP analysis failed:', error)
-        return null
-      }
+    // Step 2: Calculate comprehensive E-E-A-T scores with all API data
+    const eeatScore = await step.run('calculate-comprehensive-scores', async () => {
+      const domain = new URL(pageAnalysis.finalUrl || pageAnalysis.url).hostname.replace('www.', '')
+
+      return calculateComprehensiveEEATScores(
+        pageAnalysis,
+        apiResults.domainMetrics,
+        apiResults.nlpAnalysis,
+        apiResults.authorReputation
+      )
     })
 
-    // Step 3: Check author reputation (with retry)
-    const authorReputations: ReputationResult[] = await step.run(
-      'check-author-reputation',
-      async () => {
-        const reputations: ReputationResult[] = []
+    // Create backward-compatible scores object for legacy functions
+    const legacyScores = {
+      overall: eeatScore.overall,
+      experience: eeatScore.categories.experience.totalScore,
+      expertise: eeatScore.categories.expertise.totalScore,
+      authoritativeness: eeatScore.categories.authoritativeness.totalScore,
+      trustworthiness: eeatScore.categories.trustworthiness.totalScore,
+    }
 
-        // Check reputation for first author only (to avoid excessive API usage)
-        if (pageAnalysis.authors.length > 0) {
-          try {
-            const firstAuthor = pageAnalysis.authors[0]
-            const reputation = await checkAuthorReputation(firstAuthor)
-            if (reputation) {
-              reputations.push(reputation)
-            }
-          } catch (error) {
-            console.error('[Inngest] Reputation check failed:', error)
-          }
-        }
-
-        return reputations
-      }
-    )
-
-    // Step 4: Calculate comprehensive E-E-A-T scores
-    const scores = await step.run('calculate-comprehensive-scores', async () => {
-      return calculateEEATScores(pageAnalysis, dataforSEOMetrics, nlpAnalysis, authorReputations)
-    })
-
-    // Step 5: Identify issues and generate suggestions
+    // Step 3: Identify issues and generate suggestions
     const { issues, suggestions } = await step.run('generate-insights', async () => {
+      const authorReputations = apiResults.authorReputation ? [apiResults.authorReputation] : []
+
       return {
-        issues: identifyIssues(pageAnalysis, dataforSEOMetrics, scores, nlpAnalysis, authorReputations),
+        issues: identifyIssues(
+          pageAnalysis,
+          apiResults.domainMetrics || {},
+          legacyScores,
+          apiResults.nlpAnalysis,
+          authorReputations
+        ),
         suggestions: generateSuggestions(
           pageAnalysis,
-          dataforSEOMetrics,
-          scores,
-          nlpAnalysis,
+          apiResults.domainMetrics || {},
+          legacyScores,
+          apiResults.nlpAnalysis,
           authorReputations
         ),
       }
@@ -154,46 +143,46 @@ export const comprehensiveEEATAnalysis = inngest.createFunction(
         .join('')
 
       // NLP Analysis Section
-      const nlpHtml = nlpAnalysis
+      const nlpHtml = apiResults.nlpAnalysis
         ? `
           <h3 style="color: #0A1B3F; margin-top: 32px; margin-bottom: 16px; font-size: 20px;">AI Content Analysis</h3>
           <div style="background: #E8E4DB; padding: 20px; border-radius: 12px; margin: 12px 0;">
             <div style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 2px solid #0A1B3F;">
               <p style="margin: 0; font-size: 14px; color: #0A1B3F; opacity: 0.7;">Overall Content Quality</p>
-              <p style="margin: 4px 0 0 0; font-size: 28px; font-weight: bold; color: #0A1B3F;">${nlpAnalysis.overallScore}<span style="font-size: 18px; opacity: 0.6;">/100</span></p>
+              <p style="margin: 4px 0 0 0; font-size: 28px; font-weight: bold; color: #0A1B3F;">${apiResults.nlpAnalysis.overallScore}<span style="font-size: 18px; opacity: 0.6;">/100</span></p>
             </div>
             <table style="width: 100%; border-collapse: collapse;">
               <tr>
                 <td style="padding: 8px 0; color: #0A1B3F; opacity: 0.9;"><strong>Tone Quality</strong></td>
-                <td style="padding: 8px 0; text-align: right; color: #0A1B3F;">${nlpAnalysis.toneScore}/10</td>
-                <td style="padding: 8px 0 8px 12px; color: #0A1B3F; opacity: 0.7; font-size: 14px;">${nlpAnalysis.toneScore >= 8 ? 'Factual & Educational' : nlpAnalysis.toneScore >= 6 ? 'Mostly Factual' : 'Promotional'}</td>
+                <td style="padding: 8px 0; text-align: right; color: #0A1B3F;">${apiResults.nlpAnalysis.toneScore}/10</td>
+                <td style="padding: 8px 0 8px 12px; color: #0A1B3F; opacity: 0.7; font-size: 14px;">${apiResults.nlpAnalysis.toneScore >= 8 ? 'Factual & Educational' : apiResults.nlpAnalysis.toneScore >= 6 ? 'Mostly Factual' : 'Promotional'}</td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; color: #0A1B3F; opacity: 0.9;"><strong>Experience Signals</strong></td>
-                <td style="padding: 8px 0; text-align: right; color: #0A1B3F;">${nlpAnalysis.experienceScore}/10</td>
-                <td style="padding: 8px 0 8px 12px; color: #0A1B3F; opacity: 0.7; font-size: 14px;">${nlpAnalysis.experienceScore >= 8 ? 'Strong Personal Experience' : nlpAnalysis.experienceScore >= 6 ? 'Some Experience' : 'Generic Content'}</td>
+                <td style="padding: 8px 0; text-align: right; color: #0A1B3F;">${apiResults.nlpAnalysis.experienceScore}/10</td>
+                <td style="padding: 8px 0 8px 12px; color: #0A1B3F; opacity: 0.7; font-size: 14px;">${apiResults.nlpAnalysis.experienceScore >= 8 ? 'Strong Personal Experience' : apiResults.nlpAnalysis.experienceScore >= 6 ? 'Some Experience' : 'Generic Content'}</td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; color: #0A1B3F; opacity: 0.9;"><strong>Expertise Depth</strong></td>
-                <td style="padding: 8px 0; text-align: right; color: #0A1B3F;">${nlpAnalysis.expertiseDepthScore}/10</td>
-                <td style="padding: 8px 0 8px 12px; color: #0A1B3F; opacity: 0.7; font-size: 14px;">${nlpAnalysis.expertiseDepthScore >= 8 ? 'Deep Technical Knowledge' : nlpAnalysis.expertiseDepthScore >= 6 ? 'Good Technical Content' : 'Surface-Level'}</td>
+                <td style="padding: 8px 0; text-align: right; color: #0A1B3F;">${apiResults.nlpAnalysis.expertiseDepthScore}/10</td>
+                <td style="padding: 8px 0 8px 12px; color: #0A1B3F; opacity: 0.7; font-size: 14px;">${apiResults.nlpAnalysis.expertiseDepthScore >= 8 ? 'Deep Technical Knowledge' : apiResults.nlpAnalysis.expertiseDepthScore >= 6 ? 'Good Technical Content' : 'Surface-Level'}</td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; color: #0A1B3F; opacity: 0.9;"><strong>Human vs AI</strong></td>
-                <td style="padding: 8px 0; text-align: right; color: #0A1B3F;">${nlpAnalysis.aiContentScore}/10</td>
-                <td style="padding: 8px 0 8px 12px; color: #0A1B3F; opacity: 0.7; font-size: 14px;">${nlpAnalysis.aiContentScore >= 8 ? 'Human-Written' : nlpAnalysis.aiContentScore >= 6 ? 'Mostly Human' : nlpAnalysis.aiContentScore >= 4 ? 'Some AI Patterns' : 'Likely AI-Generated'}</td>
+                <td style="padding: 8px 0; text-align: right; color: #0A1B3F;">${apiResults.nlpAnalysis.aiContentScore}/10</td>
+                <td style="padding: 8px 0 8px 12px; color: #0A1B3F; opacity: 0.7; font-size: 14px;">${apiResults.nlpAnalysis.aiContentScore >= 8 ? 'Human-Written' : apiResults.nlpAnalysis.aiContentScore >= 6 ? 'Mostly Human' : apiResults.nlpAnalysis.aiContentScore >= 4 ? 'Some AI Patterns' : 'Likely AI-Generated'}</td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; color: #0A1B3F; opacity: 0.9;"><strong>Grammar Quality</strong></td>
-                <td style="padding: 8px 0; text-align: right; color: #0A1B3F;">${nlpAnalysis.grammarQualityScore}/10</td>
-                <td style="padding: 8px 0 8px 12px; color: #0A1B3F; opacity: 0.7; font-size: 14px;">${nlpAnalysis.grammarQualityScore >= 8 ? 'Excellent' : nlpAnalysis.grammarQualityScore >= 6 ? 'Good' : 'Needs Improvement'}</td>
+                <td style="padding: 8px 0; text-align: right; color: #0A1B3F;">${apiResults.nlpAnalysis.grammarQualityScore}/10</td>
+                <td style="padding: 8px 0 8px 12px; color: #0A1B3F; opacity: 0.7; font-size: 14px;">${apiResults.nlpAnalysis.grammarQualityScore >= 8 ? 'Excellent' : apiResults.nlpAnalysis.grammarQualityScore >= 6 ? 'Good' : 'Needs Improvement'}</td>
               </tr>
             </table>
-            ${nlpAnalysis.flags.length > 0 ? `
+            ${apiResults.nlpAnalysis.flags && apiResults.nlpAnalysis.flags.length > 0 ? `
               <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #0A1B3F; opacity: 0.3;">
                 <p style="margin: 0 0 8px 0; font-weight: bold; color: #E8603C; font-size: 14px;">Content Flags</p>
                 <ul style="margin: 0; padding-left: 20px;">
-                  ${nlpAnalysis.flags.map((f: string) => `<li style="color: #E8603C; margin: 4px 0; font-size: 14px;">${formatFlagText(f)}</li>`).join('')}
+                  ${apiResults.nlpAnalysis.flags.map((f: string) => `<li style="color: #E8603C; margin: 4px 0; font-size: 14px;">${formatFlagText(f)}</li>`).join('')}
                 </ul>
               </div>
             ` : ''}
@@ -202,11 +191,10 @@ export const comprehensiveEEATAnalysis = inngest.createFunction(
         : '<p style="color: #0A1B3F; opacity: 0.6;">NLP analysis unavailable (OpenAI API not configured)</p>'
 
       // Author Reputation Section
+      const rep = apiResults.authorReputation
       const reputationHtml =
-        authorReputations.length > 0
-          ? authorReputations
-              .map(
-                (rep: ReputationResult) => `
+        rep
+          ? `
               <h3 style="color: #0A1B3F; margin-top: 32px; margin-bottom: 16px; font-size: 20px;">Author Reputation: ${rep.authorName}</h3>
               <div style="background: #E8E4DB; padding: 20px; border-radius: 12px; margin: 12px 0;">
                 <div style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 2px solid #0A1B3F;">
@@ -236,8 +224,6 @@ export const comprehensiveEEATAnalysis = inngest.createFunction(
                 </table>
               </div>
             `
-              )
-              .join('')
           : pageAnalysis.authors.length === 0
           ? '<p style="color: #0A1B3F; opacity: 0.6;">No authors detected on the page</p>'
           : '<p style="color: #0A1B3F; opacity: 0.6;">Author reputation check unavailable (Brave Search API not configured)</p>'
@@ -261,29 +247,29 @@ export const comprehensiveEEATAnalysis = inngest.createFunction(
             <!-- Overall Score -->
             <div style="background: linear-gradient(135deg, #E8E4DB 0%, #F5F3EF 100%); padding: 24px; border-radius: 12px; margin: 0 0 32px 0; border: 2px solid #0A1B3F;">
               <p style="margin: 0 0 4px 0; font-size: 14px; color: #0A1B3F; opacity: 0.7; text-align: center;">Overall E-E-A-T Score</p>
-              <p style="margin: 0 0 20px 0; font-size: 48px; font-weight: bold; color: #0A1B3F; text-align: center; line-height: 1;">${scores.overall}<span style="font-size: 24px; opacity: 0.6;">/100</span></p>
+              <p style="margin: 0 0 20px 0; font-size: 48px; font-weight: bold; color: #0A1B3F; text-align: center; line-height: 1;">${Math.round(eeatScore.overall)}<span style="font-size: 24px; opacity: 0.6;">/100</span></p>
               <table style="width: 100%; border-collapse: collapse;">
                 <tr>
                   <td style="padding: 10px 12px; background: #ffffff; border-radius: 8px; margin: 4px;">
                     <p style="margin: 0; font-size: 12px; color: #0A1B3F; opacity: 0.7;">Experience</p>
-                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${scores.experience}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
+                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${Math.round(eeatScore.categories.experience.totalScore)}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
                   </td>
                   <td style="width: 12px;"></td>
                   <td style="padding: 10px 12px; background: #ffffff; border-radius: 8px;">
                     <p style="margin: 0; font-size: 12px; color: #0A1B3F; opacity: 0.7;">Expertise</p>
-                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${scores.expertise}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
+                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${Math.round(eeatScore.categories.expertise.totalScore)}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
                   </td>
                 </tr>
                 <tr style="height: 12px;"></tr>
                 <tr>
                   <td style="padding: 10px 12px; background: #ffffff; border-radius: 8px;">
                     <p style="margin: 0; font-size: 12px; color: #0A1B3F; opacity: 0.7;">Authoritativeness</p>
-                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${scores.authoritativeness}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
+                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${Math.round(eeatScore.categories.authoritativeness.totalScore)}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
                   </td>
                   <td style="width: 12px;"></td>
                   <td style="padding: 10px 12px; background: #ffffff; border-radius: 8px;">
                     <p style="margin: 0; font-size: 12px; color: #0A1B3F; opacity: 0.7;">Trustworthiness</p>
-                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${scores.trustworthiness}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
+                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${Math.round(eeatScore.categories.trustworthiness.totalScore)}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
                   </td>
                 </tr>
               </table>
@@ -294,24 +280,25 @@ export const comprehensiveEEATAnalysis = inngest.createFunction(
             ${reputationHtml}
 
             <!-- Domain Metrics -->
+            ${apiResults.domainMetrics ? `
             <h3 style="color: #0A1B3F; margin: 32px 0 16px 0; font-size: 20px;">Domain Performance Metrics</h3>
             <div style="background: #E8E4DB; padding: 20px; border-radius: 12px; margin: 0 0 32px 0;">
               <table style="width: 100%; border-collapse: collapse;">
                 <tr>
                   <td style="padding: 8px 0; color: #0A1B3F; opacity: 0.9;"><strong>Domain Rank</strong></td>
-                  <td style="padding: 8px 0; text-align: right; color: #0A1B3F; font-weight: bold;">${dataforSEOMetrics.domainRank}/100</td>
+                  <td style="padding: 8px 0; text-align: right; color: #0A1B3F; font-weight: bold;">${apiResults.domainMetrics.domainRank}/100</td>
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; color: #0A1B3F; opacity: 0.9;"><strong>Organic Keywords</strong></td>
-                  <td style="padding: 8px 0; text-align: right; color: #0A1B3F; font-weight: bold;">${dataforSEOMetrics.organicKeywords.toLocaleString()}</td>
+                  <td style="padding: 8px 0; text-align: right; color: #0A1B3F; font-weight: bold;">${apiResults.domainMetrics.organicKeywords.toLocaleString()}</td>
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; color: #0A1B3F; opacity: 0.9;"><strong>Organic Traffic</strong></td>
-                  <td style="padding: 8px 0; text-align: right; color: #0A1B3F; font-weight: bold;">${dataforSEOMetrics.organicTraffic.toLocaleString()} visits/mo</td>
+                  <td style="padding: 8px 0; text-align: right; color: #0A1B3F; font-weight: bold;">${apiResults.domainMetrics.organicTraffic.toLocaleString()} visits/mo</td>
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; color: #0A1B3F; opacity: 0.9;"><strong>Traffic Value</strong></td>
-                  <td style="padding: 8px 0; text-align: right; color: #0A1B3F; font-weight: bold;">$${dataforSEOMetrics.organicTrafficValue.toLocaleString()}/mo</td>
+                  <td style="padding: 8px 0; text-align: right; color: #0A1B3F; font-weight: bold;">$${apiResults.domainMetrics.organicTrafficValue.toLocaleString()}/mo</td>
                 </tr>
                 <tr style="border-top: 1px solid #0A1B3F; opacity: 0.2;"><td style="padding: 4px 0;"></td></tr>
                 <tr>
@@ -324,6 +311,7 @@ export const comprehensiveEEATAnalysis = inngest.createFunction(
                 </tr>
               </table>
             </div>
+            ` : ''}
 
             <!-- Issues -->
             <h3 style="color: #0A1B3F; margin: 32px 0 16px 0; font-size: 20px;">Areas for Improvement</h3>
@@ -360,7 +348,7 @@ export const comprehensiveEEATAnalysis = inngest.createFunction(
 
     return {
       success: true,
-      score: scores.overall,
+      score: eeatScore.overall,
       email,
       url,
     }
@@ -378,7 +366,7 @@ export const comprehensiveBlogAnalysis = inngest.createFunction(
   },
   { event: 'eeat/analysis.blog-comprehensive' },
   async ({ event, step }: { event: BlogComprehensiveAnalysisEvent; step: any }) => {
-    const { domain, email, blogPosts, blogInsights, aggregateScores } = event.data
+    const { domain, email, blogPosts, blogInsights, eeatScore } = event.data
 
     // Step 1: Get DataForSEO metrics for domain
     const dataforSEOMetrics = await step.run('fetch-dataforseo-metrics', async () => {
@@ -538,7 +526,7 @@ export const comprehensiveBlogAnalysis = inngest.createFunction(
             <!-- Overall Scores -->
             <div style="background: linear-gradient(135deg, #E8E4DB 0%, #F5F3EF 100%); padding: 24px; border-radius: 12px; margin: 0 0 24px 0; border: 2px solid #0A1B3F;">
               <p style="margin: 0 0 4px 0; font-size: 14px; color: #0A1B3F; opacity: 0.7; text-align: center;">Overall E-E-A-T Score</p>
-              <p style="margin: 0 0 12px 0; font-size: 48px; font-weight: bold; color: #0A1B3F; text-align: center; line-height: 1;">${aggregateScores.overall}<span style="font-size: 24px; opacity: 0.6;">/100</span></p>
+              <p style="margin: 0 0 12px 0; font-size: 48px; font-weight: bold; color: #0A1B3F; text-align: center; line-height: 1;">${Math.round(eeatScore.overall)}<span style="font-size: 24px; opacity: 0.6;">/100</span></p>
               <div style="background: linear-gradient(135deg, #A4CF3A 0%, #B5D94C 100%); padding: 16px; border-radius: 8px; margin: 12px 0;">
                 <p style="margin: 0 0 4px 0; font-size: 14px; color: #0A1B3F; opacity: 0.9; text-align: center;">Blog Strategy Score</p>
                 <p style="margin: 0; font-size: 36px; font-weight: bold; color: #0A1B3F; text-align: center; line-height: 1;">${blogInsights.overallBlogScore}<span style="font-size: 20px; opacity: 0.6;">/100</span></p>
@@ -547,24 +535,24 @@ export const comprehensiveBlogAnalysis = inngest.createFunction(
                 <tr>
                   <td style="padding: 10px 12px; background: #ffffff; border-radius: 8px;">
                     <p style="margin: 0; font-size: 12px; color: #0A1B3F; opacity: 0.7;">Experience</p>
-                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${aggregateScores.experience}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
+                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${Math.round(eeatScore.categories.experience.totalScore)}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
                   </td>
                   <td style="width: 12px;"></td>
                   <td style="padding: 10px 12px; background: #ffffff; border-radius: 8px;">
                     <p style="margin: 0; font-size: 12px; color: #0A1B3F; opacity: 0.7;">Expertise</p>
-                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${aggregateScores.expertise}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
+                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${Math.round(eeatScore.categories.expertise.totalScore)}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
                   </td>
                 </tr>
                 <tr style="height: 12px;"></tr>
                 <tr>
                   <td style="padding: 10px 12px; background: #ffffff; border-radius: 8px;">
                     <p style="margin: 0; font-size: 12px; color: #0A1B3F; opacity: 0.7;">Authoritativeness</p>
-                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${aggregateScores.authoritativeness}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
+                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${Math.round(eeatScore.categories.authoritativeness.totalScore)}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
                   </td>
                   <td style="width: 12px;"></td>
                   <td style="padding: 10px 12px; background: #ffffff; border-radius: 8px;">
                     <p style="margin: 0; font-size: 12px; color: #0A1B3F; opacity: 0.7;">Trustworthiness</p>
-                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${aggregateScores.trustworthiness}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
+                    <p style="margin: 4px 0 0 0; font-size: 24px; font-weight: bold; color: #0A1B3F;">${Math.round(eeatScore.categories.trustworthiness.totalScore)}<span style="font-size: 14px; opacity: 0.6;">/25</span></p>
                   </td>
                 </tr>
               </table>
@@ -690,7 +678,7 @@ export const comprehensiveBlogAnalysis = inngest.createFunction(
     return {
       success: true,
       blogScore: blogInsights.overallBlogScore,
-      aggregateScore: aggregateScores.overall,
+      aggregateScore: eeatScore.overall,
       email,
       domain,
       postsAnalyzed: blogPosts.length,

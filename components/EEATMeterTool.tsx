@@ -4,12 +4,16 @@ import { useState, FormEvent } from 'react'
 import Link from 'next/link'
 import Button from './Button'
 import ScoreGauge from './ScoreGauge'
+import EEATScoreDisplay from './EEATScoreDisplay'
 import { Globe, Mail, CheckCircle, XCircle, AlertCircle, ArrowRight, Sparkles } from 'lucide-react'
 import VerificationBadge from './VerificationBadge'
 import { analytics } from '@/lib/analytics'
 
+import type { EEATScore } from '@/lib/types/blog-analysis'
+
 interface AnalysisResult {
   type?: 'blog' | 'single-page'
+  eeatScore?: EEATScore // New variable-based structure
   score: number
   blogScore?: number
   breakdown: {
@@ -527,8 +531,16 @@ export default function EEATMeterTool() {
             </div>
           )}
 
-          {/* E-E-A-T Score Visualization */}
-          <div className="bg-white rounded-16 p-8 shadow-base">
+          {/* E-E-A-T Score - New Variable-Based Display */}
+          {results.eeatScore ? (
+            <EEATScoreDisplay
+              score={results.eeatScore}
+              showComprehensiveUpsell={!comprehensiveStatus || comprehensiveStatus.status === 'not_requested'}
+              postsAnalyzed={results.domainInfo?.postsAnalyzed}
+            />
+          ) : (
+            /* E-E-A-T Score Visualization - Legacy */
+            <div className="bg-white rounded-16 p-8 shadow-base">
             <div className="flex items-center justify-center gap-2 mb-2">
               <h3 className="text-2xl font-semibold text-center text-black">
                 Your E-E-A-T Score
@@ -617,6 +629,7 @@ export default function EEATMeterTool() {
               </div>
             </div>
           </div>
+          )}
 
           {/* Blog Strategy Insights (only for blog analysis) */}
           {results.type === 'blog' && results.blogInsights && (

@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { analyzeURL, getAuthoritativeDomain } from '@/lib/services/url-analyzer'
 import { getDataForSEOMetrics } from '@/lib/services/dataforseo-api'
-import { calculateEEATScores, calculateInstantEEATScores, estimateDomainRank, identifyIssues, generateSuggestions } from '@/lib/services/eeat-scorer'
+import { estimateDomainRank, identifyIssues, generateSuggestions } from '@/lib/services/eeat-scorer'
+import { calculateInstantEEATScores as calculateInstantEEATScoresV2, calculateBlogEEATScores } from '@/lib/services/eeat-scorer-v2'
 import { analyzeContentWithNLP } from '@/lib/services/nlp-analyzer'
 import { checkAuthorReputation, type ReputationResult } from '@/lib/services/reputation-checker'
 import { inngest } from '@/lib/inngest/client'
@@ -10,7 +11,6 @@ import { BlogDiscoveryService } from '@/lib/services/blog-discovery'
 import { analyzeBlogPosts } from '@/lib/services/batch-analyzer'
 import {
   calculateBlogInsights,
-  calculateAggregateBlogScores,
   generateBlogIssues,
   generateBlogSuggestions
 } from '@/lib/services/blog-strategy-scorer'
@@ -124,22 +124,26 @@ async function handleBlogAnalysis(domain: string, email?: string) {
       `Batch analysis complete: ${batchResult.successful.length} successful, ${batchResult.failed.length} failed`
     )
 
-    // Step 4: Calculate blog insights
+    // Step 4: Calculate blog insights and E-E-A-T scores
     const blogInsights = calculateBlogInsights(batchResult.successful)
-    const aggregateScores = calculateAggregateBlogScores(batchResult.successful)
+    const eeatScore = await calculateBlogEEATScores(
+      batchResult.successful,
+      blogInsights
+    )
     const issues = generateBlogIssues(blogInsights, batchResult.successful)
     const suggestions = generateBlogSuggestions(blogInsights)
 
     // Step 5: Format response
     const instantAnalysis = {
       type: 'blog' as const,
-      score: aggregateScores.overall,
+      eeatScore, // New variable-based structure
+      score: eeatScore.overall, // Backward compatibility
       blogScore: blogInsights.overallBlogScore,
-      breakdown: {
-        experience: aggregateScores.experience,
-        expertise: aggregateScores.expertise,
-        authoritativeness: aggregateScores.authoritativeness,
-        trustworthiness: aggregateScores.trustworthiness,
+      breakdown: { // Backward compatibility
+        experience: eeatScore.categories.experience.totalScore,
+        expertise: eeatScore.categories.expertise.totalScore,
+        authoritativeness: eeatScore.categories.authoritativeness.totalScore,
+        trustworthiness: eeatScore.categories.trustworthiness.totalScore,
       },
       blogInsights: {
         publishingFrequency: {
@@ -218,7 +222,7 @@ async function handleBlogAnalysis(domain: string, email?: string) {
 
     console.log('Blog analysis complete:', {
       domain,
-      score: aggregateScores.overall,
+      score: eeatScore.overall,
       blogScore: blogInsights.overallBlogScore,
       postsAnalyzed: batchResult.successful.length,
     })
@@ -233,7 +237,7 @@ async function handleBlogAnalysis(domain: string, email?: string) {
             email,
             blogPosts: batchResult.successful,
             blogInsights,
-            aggregateScores,
+            eeatScore, // New variable-based structure
           },
         })
 
@@ -359,8 +363,8 @@ export async function POST(request: NextRequest) {
       authoritative: authoritativeDomain,
     })
 
-    // Calculate instant E-E-A-T scores (no external APIs - fast)
-    const instantScores = calculateInstantEEATScores(pageAnalysis)
+    // Calculate instant E-E-A-T scores with fast external APIs (DataForSEO + Brave Search)
+    const eeatScore = await calculateInstantEEATScoresV2(pageAnalysis, authoritativeDomain)
 
     // Generate instant issues and suggestions (without LLM enhancements)
     const estimatedMetrics = {
@@ -378,17 +382,26 @@ export async function POST(request: NextRequest) {
       organicTraffic: 0,
       organicTrafficValue: 0,
     }
-    const instantIssues = identifyIssues(pageAnalysis, estimatedMetrics, instantScores, null, [])
-    const instantSuggestions = generateSuggestions(pageAnalysis, estimatedMetrics, instantScores, null, [])
+    // Create backward-compatible scores object for old functions
+    const legacyScores = {
+      overall: eeatScore.overall,
+      experience: eeatScore.categories.experience.totalScore,
+      expertise: eeatScore.categories.expertise.totalScore,
+      authoritativeness: eeatScore.categories.authoritativeness.totalScore,
+      trustworthiness: eeatScore.categories.trustworthiness.totalScore,
+    }
+    const instantIssues = identifyIssues(pageAnalysis, estimatedMetrics, legacyScores, null, [])
+    const instantSuggestions = generateSuggestions(pageAnalysis, estimatedMetrics, legacyScores, null, [])
 
     // Format instant analysis results
     const instantAnalysis = {
-      score: instantScores.overall,
-      breakdown: {
-        experience: instantScores.experience,
-        expertise: instantScores.expertise,
-        authoritativeness: instantScores.authoritativeness,
-        trustworthiness: instantScores.trustworthiness,
+      eeatScore, // New variable-based structure
+      score: eeatScore.overall, // Backward compatibility
+      breakdown: { // Backward compatibility
+        experience: eeatScore.categories.experience.totalScore,
+        expertise: eeatScore.categories.expertise.totalScore,
+        authoritativeness: eeatScore.categories.authoritativeness.totalScore,
+        trustworthiness: eeatScore.categories.trustworthiness.totalScore,
       },
       domainInfo: {
         entered: normalizedUrl,
@@ -413,7 +426,7 @@ export async function POST(request: NextRequest) {
       },
     }
 
-    console.log('Instant E-E-A-T analysis complete:', { url, score: instantScores.overall })
+    console.log('Instant E-E-A-T analysis complete:', { url, score: eeatScore.overall })
 
     // If email provided, trigger comprehensive analysis via Inngest
     if (email) {
@@ -424,6 +437,7 @@ export async function POST(request: NextRequest) {
             url: normalizedUrl,
             email,
             pageAnalysis,
+            instantEEATScore: eeatScore, // Include instant score for reference
           },
         })
 

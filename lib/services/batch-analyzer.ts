@@ -4,8 +4,8 @@
  */
 
 import { analyzeURL, type PageAnalysis } from './url-analyzer'
-import { calculateInstantEEATScores, type EEATScore } from './eeat-scorer'
-import type { BlogPostAnalysis, BlogAnalysisProgress } from '../types/blog-analysis'
+import { calculateInstantEEATScores } from './eeat-scorer-v2'
+import type { BlogPostAnalysis, BlogAnalysisProgress, EEATScore } from '../types/blog-analysis'
 
 export interface BatchAnalysisOptions {
   urls: string[]
@@ -58,8 +58,11 @@ export class BatchAnalyzer {
       // Analyze the page
       const pageAnalysis = await analyzeURL(url)
 
-      // Calculate instant EEAT scores
-      const scores = calculateInstantEEATScores(pageAnalysis)
+      // Extract domain for scoring
+      const domain = new URL(pageAnalysis.finalUrl || pageAnalysis.url).hostname.replace('www.', '')
+
+      // Calculate instant EEAT scores (async with API calls)
+      const scores = await calculateInstantEEATScores(pageAnalysis, domain)
 
       // Extract topics from headings and title
       const topics = this.extractTopics(pageAnalysis)

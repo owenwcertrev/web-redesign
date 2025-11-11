@@ -624,16 +624,16 @@ export function calculateAggregateBlogScores(posts: BlogPostAnalysis[]): EEATSco
   }
 
   const avgExperience =
-    posts.reduce((sum, p) => sum + p.scores.experience, 0) / posts.length
+    posts.reduce((sum, p) => sum + p.scores.categories.experience.totalScore, 0) / posts.length
   const avgExpertise =
-    posts.reduce((sum, p) => sum + p.scores.expertise, 0) / posts.length
+    posts.reduce((sum, p) => sum + p.scores.categories.expertise.totalScore, 0) / posts.length
   const avgAuthoritativeness =
-    posts.reduce((sum, p) => sum + p.scores.authoritativeness, 0) / posts.length
+    posts.reduce((sum, p) => sum + p.scores.categories.authoritativeness.totalScore, 0) / posts.length
   const avgTrustworthiness =
-    posts.reduce((sum, p) => sum + p.scores.trustworthiness, 0) / posts.length
+    posts.reduce((sum, p) => sum + p.scores.categories.trustworthiness.totalScore, 0) / posts.length
 
   const overall = Math.round(
-    (avgExperience + avgExpertise + avgAuthoritativeness + avgTrustworthiness) / 4
+    avgExperience + avgExpertise + avgAuthoritativeness + avgTrustworthiness
   )
 
   return {
