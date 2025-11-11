@@ -135,7 +135,7 @@ export class BlogDiscoveryService {
       console.error('Failed to parse sitemap XML:', error);
 
       // Fallback: Manual XML parsing using regex
-      const urlMatches = xmlContent.matchAll(/<loc>([^<]+)<\/loc>/g);
+      const urlMatches = Array.from(xmlContent.matchAll(/<loc>([^<]+)<\/loc>/g));
       for (const match of urlMatches) {
         posts.push({ url: match[1] });
       }
