@@ -281,10 +281,24 @@ export function detectAuthorsCitedElsewhere(
  * A3: Entity clarity
  * Organization/Person schema with sameAs; About page
  */
-export function detectEntityClarity(pageAnalysis: PageAnalysis): EEATVariable {
+export function detectEntityClarity(pageAnalysis?: PageAnalysis): EEATVariable {
   const config = EEAT_VARIABLES.authoritativeness.find(v => v.id === 'A3')!
   const evidence: EEATEvidence[] = []
   let score = 0
+
+  if (!pageAnalysis) {
+    return {
+      id: config.id,
+      name: config.name,
+      description: config.description,
+      maxScore: config.maxScore,
+      actualScore: 0,
+      status: 'poor',
+      evidence: [{ type: 'note', value: 'No page data available' }],
+      recommendation: 'Add Organization/Person schema and clear About page',
+      detectionMethod: config.detectionMethod
+    }
+  }
 
   const schema = pageAnalysis.schemaMarkup || []
 
@@ -467,26 +481,64 @@ export function detectIndependentReferences(
  * A5: Quality patterns
  * Absence of thin/affiliate/spam content
  */
-export function detectQualityPatterns(pageAnalysis: PageAnalysis, posts?: any[]): EEATVariable {
+export function detectQualityPatterns(pageAnalysis?: PageAnalysis, posts?: any[]): EEATVariable {
   const config = EEAT_VARIABLES.authoritativeness.find(v => v.id === 'A5')!
   const evidence: EEATEvidence[] = []
   let score = config.maxScore // Start at max, deduct for issues
 
-  const wordCount = pageAnalysis.wordCount || 0
+  // For blog analysis with multiple posts, analyze across all posts
+  if (posts && posts.length > 1) {
+    // Aggregate quality signals across all posts
+    let thinContentCount = 0
+    let totalWordCount = 0
 
-  // Check for thin content
-  if (wordCount < 300) {
-    score -= 1.5
-    evidence.push({
-      type: 'note',
-      value: `Thin content: ${wordCount} words`
+    posts.forEach(post => {
+      const wc = post.pageAnalysis?.wordCount || 0
+      totalWordCount += wc
+      if (wc < 300) thinContentCount++
     })
+
+    const avgWordCount = totalWordCount / posts.length
+    const thinContentRate = (thinContentCount / posts.length) * 100
+
+    // Penalize high rate of thin content
+    if (thinContentRate > 50) {
+      score -= 2
+      evidence.push({
+        type: 'note',
+        value: `${thinContentRate.toFixed(0)}% posts are thin (<300 words)`
+      })
+    } else if (thinContentRate > 25) {
+      score -= 1
+      evidence.push({
+        type: 'note',
+        value: `${thinContentRate.toFixed(0)}% posts are thin (<300 words)`
+      })
+    }
+
+    evidence.push({
+      type: 'metric',
+      value: `Average: ${Math.round(avgWordCount)} words per post`,
+      label: 'Content depth across blog'
+    })
+  } else if (pageAnalysis) {
+    // Single page analysis
+    const wordCount = pageAnalysis.wordCount || 0
+
+    // Check for thin content
+    if (wordCount < 300) {
+      score -= 1.5
+      evidence.push({
+        type: 'note',
+        value: `Thin content: ${wordCount} words`
+      })
+    }
   }
 
   // Note: Affiliate link detection would require individual link analysis
   // Currently not available in PageAnalysis structure
 
-  // Check blog posts for quality consistency
+  // Check blog posts for quality consistency (legacy logic)
   if (posts && posts.length > 0) {
     const thinPosts = posts.filter(p => (p.wordCount || 0) < 300).length
     const thinRatio = thinPosts / posts.length

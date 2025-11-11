@@ -11,6 +11,7 @@ import type {
   EEATScore,
   EEATCategoryScore,
   EEATVariable,
+  EEATEvidence,
   BlogInsights
 } from '../types/blog-analysis'
 import { EEAT_VARIABLES, getOverallStatus, getCategoryMaxScore, BENCHMARKS } from '../eeat-config'
@@ -135,24 +136,31 @@ export function calculateBlogEEATScores(
   nlpAnalysis?: NLPAnalysisResult,
   authorReputation?: ReputationResult
 ): EEATScore {
-  // Calculate aggregate category scores across all posts
+  // For blog analysis, ALL metrics should be based on:
+  // 1. Aggregated data across posts (E1-E5, X1-X5, A2-A3, T1-T5)
+  // 2. Domain-level data (A1, A4)
+  // 3. Blog-level insights (E6-E7, X6, A6-A7, T6-T7)
+  // We should NOT use posts[0] - that's just one article, not representative of SEO strategy
+
   const experience = calculateExperienceCategory(
-    posts[0]?.pageAnalysis,
+    undefined, // No single pageAnalysis for blog mode
     blogInsights,
     nlpAnalysis,
-    false // Blog analysis, not single-page
+    false, // Blog analysis, not single-page
+    posts // All scoring based on posts array
   )
 
   const expertise = calculateExpertiseCategory(
-    posts[0]?.pageAnalysis,
+    undefined, // No single pageAnalysis for blog mode
     blogInsights,
     nlpAnalysis,
     authorReputation,
-    false // Blog analysis, not single-page
+    false, // Blog analysis, not single-page
+    posts // All scoring based on posts array
   )
 
   const authoritativeness = calculateAuthoritativenessCategory(
-    posts[0]?.pageAnalysis,
+    undefined, // No single pageAnalysis for blog mode
     blogInsights,
     domainMetrics,
     authorReputation,
@@ -162,9 +170,10 @@ export function calculateBlogEEATScores(
   )
 
   const trustworthiness = calculateTrustworthinessCategory(
-    posts[0]?.pageAnalysis,
+    undefined, // No single pageAnalysis for blog mode
     blogInsights,
-    false // Blog analysis, not single-page
+    false, // Blog analysis, not single-page
+    posts // All scoring based on posts array
   )
 
   // Round overall score to 2 decimal places to avoid floating point precision issues
@@ -196,13 +205,41 @@ function calculateExperienceCategory(
   pageAnalysis?: PageAnalysis,
   blogInsights?: BlogInsights,
   nlpAnalysis?: NLPAnalysisResult,
-  isSinglePageAnalysis: boolean = false
+  isSinglePageAnalysis: boolean = false,
+  posts?: any[]
 ): EEATCategoryScore {
   const variables: EEATVariable[] = []
   const unavailableVariables: string[] = []
   let missedPoints = 0
 
-  if (pageAnalysis) {
+  // If we have multiple posts (blog analysis), aggregate E1-E5 across all posts
+  if (posts && posts.length > 1) {
+    // E1: First-person narratives (aggregate across posts)
+    variables.push(aggregateVariableAcrossPosts(posts, 'E1', (post) =>
+      ExperienceDetectors.detectFirstPersonNarratives(post.pageAnalysis, nlpAnalysis)
+    ))
+
+    // E2: Author perspective blocks (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'E2', (post) =>
+      ExperienceDetectors.detectAuthorPerspectiveBlocks(post.pageAnalysis)
+    ))
+
+    // E3: Original assets (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'E3', (post) =>
+      ExperienceDetectors.detectOriginalAssets(post.pageAnalysis)
+    ))
+
+    // E4: Freshness (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'E4', (post) =>
+      ExperienceDetectors.detectFreshness(post.pageAnalysis)
+    ))
+
+    // E5: Experience markup (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'E5', (post) =>
+      ExperienceDetectors.detectExperienceMarkup(post.pageAnalysis)
+    ))
+  } else if (pageAnalysis) {
+    // Single page analysis - use original logic
     // E1: First-person narratives
     variables.push(ExperienceDetectors.detectFirstPersonNarratives(pageAnalysis, nlpAnalysis))
 
@@ -258,21 +295,49 @@ function calculateExpertiseCategory(
   blogInsights?: BlogInsights,
   nlpAnalysis?: NLPAnalysisResult,
   authorReputation?: ReputationResult,
-  isSinglePageAnalysis: boolean = false
+  isSinglePageAnalysis: boolean = false,
+  posts?: any[]
 ): EEATCategoryScore {
   const variables: EEATVariable[] = []
   const unavailableVariables: string[] = []
   let missedPoints = 0
 
-  if (pageAnalysis) {
-    // X1: Named authors with credentials
-    // Transform ReputationResult to expected format
-    const reputationFlags = authorReputation ? {
-      hasLinkedIn: authorReputation.signals.some(s => s.type === 'professional_profile' && s.source.toLowerCase().includes('linkedin')),
-      hasPublications: authorReputation.signals.some(s => s.type === 'publication'),
-      hasMediaMentions: authorReputation.signals.some(s => s.type === 'media_mention')
-    } : undefined
+  // Transform ReputationResult to expected format (if available)
+  const reputationFlags = authorReputation ? {
+    hasLinkedIn: authorReputation.signals.some(s => s.type === 'professional_profile' && s.source.toLowerCase().includes('linkedin')),
+    hasPublications: authorReputation.signals.some(s => s.type === 'publication'),
+    hasMediaMentions: authorReputation.signals.some(s => s.type === 'media_mention')
+  } : undefined
 
+  // If we have multiple posts (blog analysis), aggregate X1-X5 across all posts
+  if (posts && posts.length > 1) {
+    // X1: Named authors with credentials (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'X1', (post) =>
+      ExpertiseDetectors.detectNamedAuthorsWithCredentials(post.pageAnalysis, reputationFlags)
+    ))
+
+    // X2: YMYL reviewer presence (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'X2', (post) =>
+      ExpertiseDetectors.detectYMYLReviewerPresence(post.pageAnalysis)
+    ))
+
+    // X3: Credential verification links (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'X3', (post) =>
+      ExpertiseDetectors.detectCredentialVerificationLinks(post.pageAnalysis)
+    ))
+
+    // X4: Citation quality (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'X4', (post) =>
+      ExpertiseDetectors.detectCitationQuality(post.pageAnalysis)
+    ))
+
+    // X5: Content depth & clarity (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'X5', (post) =>
+      ExpertiseDetectors.detectContentDepthClarity(post.pageAnalysis, nlpAnalysis)
+    ))
+  } else if (pageAnalysis) {
+    // Single page analysis - use original logic
+    // X1: Named authors with credentials
     variables.push(ExpertiseDetectors.detectNamedAuthorsWithCredentials(
       pageAnalysis,
       reputationFlags
@@ -340,27 +405,70 @@ function calculateAuthoritativenessCategory(
     mediaCount: authorReputation.signals.filter(s => s.type === 'media_mention').length
   } : undefined
 
-  // A1: Editorial mentions (external API with graceful degradation)
-  variables.push(AuthoritativenessDetectors.detectEditorialMentions(
-    domainMetrics,
-    mediaCount,
-    pageAnalysis,
-    apiError
-  ))
+  // A1: Editorial mentions (domain-level - always add first, no post aggregation needed)
+  // For blog mode, we don't need pageAnalysis fallback since we have domainMetrics
+  if (posts && posts.length > 1) {
+    // Blog mode: use domain metrics only, no pageAnalysis fallback
+    variables.push(AuthoritativenessDetectors.detectEditorialMentions(
+      domainMetrics,
+      mediaCount,
+      undefined, // Don't use single page as fallback in blog mode
+      apiError
+    ))
+  } else {
+    // Single page mode: can use pageAnalysis as fallback if domain metrics fail
+    variables.push(AuthoritativenessDetectors.detectEditorialMentions(
+      domainMetrics,
+      mediaCount,
+      pageAnalysis,
+      apiError
+    ))
+  }
 
-  // A2: Authors cited elsewhere (external API with fallback)
-  variables.push(AuthoritativenessDetectors.detectAuthorsCitedElsewhere(reputationFlags, pageAnalysis))
+  // If we have multiple posts (blog analysis), aggregate A2-A3-A4-A5 across all posts
+  if (posts && posts.length > 1) {
+    // A2: Authors cited elsewhere (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'A2', (post) =>
+      AuthoritativenessDetectors.detectAuthorsCitedElsewhere(reputationFlags, post.pageAnalysis)
+    ))
 
-  if (pageAnalysis) {
+    // A3: Entity clarity (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'A3', (post) =>
+      AuthoritativenessDetectors.detectEntityClarity(post.pageAnalysis)
+    ))
+
+    // A4: Independent references (domain-level - no pageAnalysis needed for blog mode)
+    variables.push(AuthoritativenessDetectors.detectIndependentReferences(domainMetrics, undefined))
+
+    // A5: Quality patterns (aggregate across all posts)
+    variables.push(AuthoritativenessDetectors.detectQualityPatterns(undefined, posts))
+  } else if (pageAnalysis) {
+    // Single page analysis - use original logic
+    // A2: Authors cited elsewhere
+    variables.push(AuthoritativenessDetectors.detectAuthorsCitedElsewhere(reputationFlags, pageAnalysis))
+
     // A3: Entity clarity
     variables.push(AuthoritativenessDetectors.detectEntityClarity(pageAnalysis))
 
+    // A4: Independent references (use domain + single page fallback)
+    variables.push(AuthoritativenessDetectors.detectIndependentReferences(domainMetrics, pageAnalysis))
+
     // A5: Quality patterns
     variables.push(AuthoritativenessDetectors.detectQualityPatterns(pageAnalysis, posts))
-  }
+  } else {
+    // No data available - use fallbacks with undefined pageAnalysis
+    // A2: Authors cited elsewhere
+    variables.push(AuthoritativenessDetectors.detectAuthorsCitedElsewhere(reputationFlags, undefined))
 
-  // A4: Independent references (external API with fallback)
-  variables.push(AuthoritativenessDetectors.detectIndependentReferences(domainMetrics, pageAnalysis))
+    // A3: Entity clarity - requires pageAnalysis, so will return low score
+    variables.push(AuthoritativenessDetectors.detectEntityClarity(undefined))
+
+    // A4: Independent references (domain-level only)
+    variables.push(AuthoritativenessDetectors.detectIndependentReferences(domainMetrics, undefined))
+
+    // A5: Quality patterns
+    variables.push(AuthoritativenessDetectors.detectQualityPatterns(undefined, posts))
+  }
 
   // A6: Internal linking network (blog-level)
   if (blogInsights) {
@@ -399,13 +507,37 @@ function calculateAuthoritativenessCategory(
 function calculateTrustworthinessCategory(
   pageAnalysis?: PageAnalysis,
   blogInsights?: BlogInsights,
-  isSinglePageAnalysis: boolean = false
+  isSinglePageAnalysis: boolean = false,
+  posts?: any[]
 ): EEATCategoryScore {
   const variables: EEATVariable[] = []
   const unavailableVariables: string[] = []
   let missedPoints = 0
 
-  if (pageAnalysis) {
+  // If we have multiple posts (blog analysis), use domain-level detection for T1, T4
+  if (posts && posts.length > 1) {
+    // T1: Editorial principles (domain-level - check footer links across posts)
+    variables.push(TrustworthinessDetectors.detectEditorialPrinciples(undefined, posts))
+
+    // T2: YMYL disclaimers (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'T2', (post) =>
+      TrustworthinessDetectors.detectYMYLDisclaimers(post.pageAnalysis)
+    ))
+
+    // T3: Provenance signals (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'T3', (post) =>
+      TrustworthinessDetectors.detectProvenanceSignals(post.pageAnalysis)
+    ))
+
+    // T4: Contact transparency (domain-level - check footer links across posts)
+    variables.push(TrustworthinessDetectors.detectContactTransparency(undefined, posts))
+
+    // T5: Schema hygiene (aggregate)
+    variables.push(aggregateVariableAcrossPosts(posts, 'T5', (post) =>
+      TrustworthinessDetectors.detectSchemaHygiene(post.pageAnalysis)
+    ))
+  } else if (pageAnalysis) {
+    // Single page analysis - use original logic
     // T1: Editorial principles
     variables.push(TrustworthinessDetectors.detectEditorialPrinciples(pageAnalysis))
 
@@ -451,6 +583,287 @@ function calculateTrustworthinessCategory(
   }
 
   return categoryScore
+}
+
+/**
+ * Helper: Aggregate a variable across multiple blog posts with trend detection
+ */
+function aggregateVariableAcrossPosts(
+  posts: any[],
+  variableId: string,
+  detectorFn: (post: any) => EEATVariable
+): EEATVariable {
+  // Calculate variable for each post
+  const results = posts.map(post => {
+    const result = detectorFn(post)
+    return {
+      score: result.actualScore,
+      date: extractPostDate(post),
+      evidence: result.evidence
+    }
+  }).filter(r => r.score !== undefined)
+
+  if (results.length === 0) {
+    // Fallback if no posts could be analyzed
+    const firstResult = detectorFn(posts[0])
+    return firstResult
+  }
+
+  // Calculate average score
+  const avgScore = results.reduce((sum, r) => sum + r.score, 0) / results.length
+
+  // Round to 2 decimal places
+  const roundedScore = Math.round(avgScore * 100) / 100
+
+  // Get config for this variable
+  const config = getVariableConfig(variableId)
+  if (!config) {
+    return detectorFn(posts[0]) // Fallback
+  }
+
+  // Get dated results for trend detection and freshness distribution
+  const datedResults = results
+    .filter(r => r.date !== null)
+    .sort((a, b) => a.date!.getTime() - b.date!.getTime())
+
+  // Detect trend if dates are available
+  const trend = detectScoreTrend(results)
+
+  // Build aggregated evidence
+  const evidence: EEATEvidence[] = [
+    {
+      type: 'metric',
+      value: `Average across ${results.length} posts: ${roundedScore}/${config.maxScore}`,
+      label: 'Aggregated score'
+    }
+  ]
+
+  // Add trend commentary if detected
+  if (trend.direction !== 'stable') {
+    evidence.push({
+      type: 'metric',
+      value: `${trend.direction} (${trend.description})`,
+      label: 'Trend',
+      confidence: trend.confidence
+    })
+  }
+
+  // Add score distribution info
+  const distribution = getScoreDistribution(results, config)
+  if (distribution) {
+    evidence.push({
+      type: 'metric',
+      value: distribution,
+      label: 'Distribution'
+    })
+  }
+
+  // Special handling for E4 (Freshness): Add time-based distribution
+  if (variableId === 'E4' && datedResults.length >= 5) {
+    const freshnessDistribution = getFreshnessDistribution(datedResults)
+    if (freshnessDistribution) {
+      evidence.push({
+        type: 'metric',
+        value: freshnessDistribution,
+        label: 'Freshness breakdown'
+      })
+    }
+  }
+
+  // Determine status based on average score
+  const status = getVariableStatusFromScore(roundedScore, config)
+
+  // Build recommendation with trend awareness
+  let recommendation: string | undefined
+  if (roundedScore < config.thresholds.good) {
+    recommendation = `${config.name} is below optimal. `
+    if (trend.direction === 'increasing') {
+      recommendation += `Good news: trending upward. Continue this momentum.`
+    } else if (trend.direction === 'decreasing') {
+      recommendation += `Concerning: trending downward. Prioritize improvements in recent content.`
+    } else {
+      recommendation += `Focus on adding more ${config.name.toLowerCase()} to your content.`
+    }
+  } else if (trend.direction === 'decreasing' && roundedScore < config.thresholds.excellent) {
+    recommendation = `Strong score, but trending downward. Maintain consistency in recent posts.`
+  }
+
+  return {
+    id: config.id,
+    name: config.name,
+    description: config.description,
+    maxScore: config.maxScore,
+    actualScore: roundedScore,
+    status,
+    evidence,
+    recommendation,
+    detectionMethod: config.detectionMethod
+  }
+}
+
+/**
+ * Extract post date from various possible locations
+ */
+function extractPostDate(post: any): Date | null {
+  // Try schema markup first
+  if (post.pageAnalysis?.schemaMarkup) {
+    for (const schema of post.pageAnalysis.schemaMarkup) {
+      const dateModified = schema.data?.dateModified || schema.data?.dateUpdated
+      const datePublished = schema.data?.datePublished
+
+      const dateStr = dateModified || datePublished
+      if (dateStr) {
+        const date = new Date(dateStr)
+        if (!isNaN(date.getTime())) {
+          return date
+        }
+      }
+    }
+  }
+
+  // Try top-level date fields
+  if (post.date) {
+    const date = new Date(post.date)
+    if (!isNaN(date.getTime())) {
+      return date
+    }
+  }
+
+  return null
+}
+
+/**
+ * Detect score trend over time
+ */
+function detectScoreTrend(results: Array<{ score: number; date: Date | null }>): {
+  direction: 'increasing' | 'decreasing' | 'stable'
+  description: string
+  confidence: number
+} {
+  // Filter results with valid dates and sort by date
+  const datedResults = results
+    .filter(r => r.date !== null)
+    .sort((a, b) => a.date!.getTime() - b.date!.getTime())
+
+  if (datedResults.length < 3) {
+    // Not enough dated posts to detect trend
+    return { direction: 'stable', description: 'insufficient data', confidence: 0 }
+  }
+
+  // Split into older half and newer half
+  const midpoint = Math.floor(datedResults.length / 2)
+  const olderHalf = datedResults.slice(0, midpoint)
+  const newerHalf = datedResults.slice(midpoint)
+
+  const olderAvg = olderHalf.reduce((sum, r) => sum + r.score, 0) / olderHalf.length
+  const newerAvg = newerHalf.reduce((sum, r) => sum + r.score, 0) / newerHalf.length
+
+  const difference = newerAvg - olderAvg
+  const percentChange = (difference / olderAvg) * 100
+
+  // Confidence based on number of samples
+  const confidence = Math.min(datedResults.length / 10, 1)
+
+  // Determine trend direction
+  if (Math.abs(percentChange) < 10) {
+    return {
+      direction: 'stable',
+      description: `${percentChange >= 0 ? '+' : ''}${percentChange.toFixed(1)}% change`,
+      confidence
+    }
+  } else if (percentChange > 0) {
+    return {
+      direction: 'increasing',
+      description: `+${percentChange.toFixed(1)}% from older to newer posts`,
+      confidence
+    }
+  } else {
+    return {
+      direction: 'decreasing',
+      description: `${percentChange.toFixed(1)}% from older to newer posts`,
+      confidence
+    }
+  }
+}
+
+/**
+ * Get score distribution description
+ */
+function getScoreDistribution(
+  results: Array<{ score: number }>,
+  config: any
+): string | null {
+  if (results.length < 5) return null
+
+  const excellent = results.filter(r => r.score >= config.thresholds.excellent).length
+  const good = results.filter(r => r.score >= config.thresholds.good && r.score < config.thresholds.excellent).length
+  const needsImprovement = results.filter(r => r.score >= config.thresholds.needsImprovement && r.score < config.thresholds.good).length
+  const poor = results.filter(r => r.score < config.thresholds.needsImprovement).length
+
+  return `${excellent} excellent, ${good} good, ${needsImprovement} fair, ${poor} poor`
+}
+
+/**
+ * Get variable configuration by ID
+ */
+function getVariableConfig(id: string): any {
+  for (const category of Object.values(EEAT_VARIABLES)) {
+    const variable = category.find((v: any) => v.id === id)
+    if (variable) return variable
+  }
+  return null
+}
+
+/**
+ * Get variable status from score and config
+ */
+function getVariableStatusFromScore(
+  score: number,
+  config: any
+): 'excellent' | 'good' | 'needs-improvement' | 'poor' {
+  if (score >= config.thresholds.excellent) return 'excellent'
+  if (score >= config.thresholds.good) return 'good'
+  if (score >= config.thresholds.needsImprovement) return 'needs-improvement'
+  return 'poor'
+}
+
+/**
+ * Get freshness distribution (for E4 specifically)
+ * Shows % of posts updated within different time windows
+ */
+function getFreshnessDistribution(
+  datedResults: Array<{ score: number; date: Date | null }>
+): string | null {
+  const now = new Date()
+  const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate())
+  const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 12, now.getDate())
+  const twentyFourMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 24, now.getDate())
+
+  let within6Months = 0
+  let within12Months = 0
+  let within24Months = 0
+  let older = 0
+
+  datedResults.forEach(result => {
+    if (!result.date) return
+
+    if (result.date >= sixMonthsAgo) {
+      within6Months++
+    } else if (result.date >= twelveMonthsAgo) {
+      within12Months++
+    } else if (result.date >= twentyFourMonthsAgo) {
+      within24Months++
+    } else {
+      older++
+    }
+  })
+
+  const total = datedResults.length
+  const pct6 = Math.round((within6Months / total) * 100)
+  const pct12 = Math.round(((within6Months + within12Months) / total) * 100)
+  const pct24 = Math.round(((within6Months + within12Months + within24Months) / total) * 100)
+
+  return `${pct6}% <6mo, ${pct12}% <12mo, ${pct24}% <24mo`
 }
 
 /**
