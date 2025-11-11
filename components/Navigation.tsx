@@ -70,7 +70,7 @@ export default function Navigation() {
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-black hover:text-coral transition-colors"
+            className="lg:hidden p-2 text-black hover:text-coral transition-colors"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -80,7 +80,7 @@ export default function Navigation() {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-black/5 bg-beige">
+        <div className="lg:hidden border-t border-black/5 bg-beige">
           <div className="px-4 py-4 space-y-3">
             <Link
               href="/book-demo"
