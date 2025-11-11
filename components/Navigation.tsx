@@ -19,24 +19,26 @@ export default function Navigation() {
             <span className="text-2xl font-bold text-navy">CertREV</span>
           </Link>
 
-          {/* Desktop Navigation - Right aligned */}
-          <div className="hidden xl:flex items-center gap-6 lg:gap-12 ml-auto mr-4 lg:mr-12 flex-shrink-0">
-            <Link href="/book-demo" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
-              Book Demo
-            </Link>
-            <Link href="/eeat-meter" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
-              E-E-A-T Meter
-            </Link>
-            <Link href="/how-it-works" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
-              How It Works
-            </Link>
-            <Link href="/pricing" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
-              Pricing
-            </Link>
-          </div>
+          {/* Right side: Navigation + Buttons */}
+          <div className="flex items-center gap-6 ml-auto">
+            {/* Desktop Navigation Links */}
+            <div className="hidden xl:flex items-center gap-6 lg:gap-8">
+              <Link href="/book-demo" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
+                Book Demo
+              </Link>
+              <Link href="/eeat-meter" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
+                E-E-A-T Meter
+              </Link>
+              <Link href="/how-it-works" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
+                How It Works
+              </Link>
+              <Link href="/pricing" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
+                Pricing
+              </Link>
+            </div>
 
-          {/* Dashboard CTAs - Desktop and Tablet */}
-          <div className="hidden md:flex items-center gap-2 flex-shrink-0">
+            {/* Dashboard CTAs - Desktop and Tablet */}
+            <div className="hidden md:flex items-center gap-2">
             {/* Brand Dashboard Preview */}
             <Button
               variant="primary"
@@ -65,6 +67,7 @@ export default function Navigation() {
             >
               <User className="w-5 h-5 text-navy" />
             </Link>
+          </div>
           </div>
 
           {/* Mobile menu button */}
