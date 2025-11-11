@@ -56,6 +56,11 @@ export class BlogDiscoveryService {
     '/blog/feed',
     '/blog/rss',
     '/index.xml',
+    // Shopify-specific feed paths (plural /blogs/)
+    '/blogs/journal.atom',
+    '/blogs/news.atom',
+    '/blogs/journal',
+    '/blogs/news',
   ];
 
   // HTML sitemap paths (P2)
@@ -303,15 +308,16 @@ export class BlogDiscoveryService {
       }
 
       // Check if content is gzipped
-      const contentEncoding = response.headers.get('Content-Encoding');
-      const isGzipped = contentEncoding === 'gzip' || url.endsWith('.gz');
+      // Note: Fetch API auto-decompresses Content-Encoding: gzip
+      // Only manually decompress if URL explicitly ends with .gz
+      const isGzipped = url.endsWith('.gz');
 
       let xmlText: string;
       if (isGzipped) {
-        // P0: Decompress gzipped content
+        // P0: Decompress gzipped content (.gz files only)
         const buffer = Buffer.from(await response.arrayBuffer());
         xmlText = await this.decompressGzip(buffer);
-        console.log(`Decompressed gzipped sitemap: ${url}`);
+        console.log(`Decompressed .gz sitemap: ${url}`);
       } else {
         xmlText = await response.text();
       }
