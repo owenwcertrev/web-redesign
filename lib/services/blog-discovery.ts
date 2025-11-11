@@ -101,6 +101,8 @@ export class BlogDiscoveryService {
     /\/directory\//i,
     // Single-segment paths (category hubs like /health, /nutrition, /topics)
     /^https?:\/\/[^\/]+\/[a-z-]+\/?$/i,
+    // Blog category/tag pages (Shopify: /blogs/news, WordPress: /blog/category)
+    /^https?:\/\/[^\/]+\/blogs?\/[a-z0-9-]+\/?$/i,
   ];
 
   /**
