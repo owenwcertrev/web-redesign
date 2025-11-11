@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { analyzeURL, getAuthoritativeDomain } from '@/lib/services/url-analyzer'
 import { getDataForSEOMetrics } from '@/lib/services/dataforseo-api'
-import { calculateEEATScores, calculateInstantEEATScores, identifyIssues, generateSuggestions } from '@/lib/services/eeat-scorer'
+import { calculateEEATScores, calculateInstantEEATScores, estimateDomainRank, identifyIssues, generateSuggestions } from '@/lib/services/eeat-scorer'
 import { analyzeContentWithNLP } from '@/lib/services/nlp-analyzer'
 import { checkAuthorReputation, type ReputationResult } from '@/lib/services/reputation-checker'
 import { inngest } from '@/lib/inngest/client'
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
 
     // Generate instant issues and suggestions (without LLM enhancements)
     const estimatedMetrics = {
-      domainRank: 50, // Neutral default
+      domainRank: estimateDomainRank(pageAnalysis), // Smart estimation based on page quality
       pageRank: 0,
       backlinks: 0,
       referringDomains: 0,

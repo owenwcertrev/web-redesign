@@ -279,10 +279,54 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
     })
   }
 
+  // Check rel="author" links
+  $('a[rel="author"], a[rel="author nofollow"]').each((_, el) => {
+    const authorName = $(el).text().trim()
+    if (authorName && !authors.some(a => a.name === authorName)) {
+      authors.push({
+        name: authorName,
+        source: 'rel-author'
+      })
+    }
+  })
+
+  // Check common author class/id selectors
+  const authorSelectors = [
+    '.author-name',
+    '.byline',
+    '.by-author',
+    '.post-author',
+    '.article-author',
+    '[itemprop="author"]',
+    '[itemprop="author"] [itemprop="name"]',
+    '.author .name',
+    '.author-bio .name'
+  ]
+
+  for (const selector of authorSelectors) {
+    const authorName = $(selector).first().text().trim()
+    if (authorName && !authors.some(a => a.name === authorName)) {
+      // Validate it looks like a name (not too long, has proper case)
+      if (authorName.length < 60 && /^[A-Z]/.test(authorName)) {
+        authors.push({
+          name: authorName,
+          source: 'html-class'
+        })
+        break // Only take first match to avoid duplicates
+      }
+    }
+  }
+
   // Check common author patterns in content
-  // More strict patterns to avoid false positives
+  // Enhanced patterns for various byline formats
   const bylinePatterns = [
-    /(?:^|\n|\.\s+)(?:By|Written by|Author:)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)(?:\s|,|\.|$)/,
+    /(?:^|\n)By\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})(?:\s|,|\.|\n|$)/,
+    /(?:^|\n)Written by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})(?:\s|,|\.|\n|$)/,
+    /(?:^|\n)Author:\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})(?:\s|,|\.|\n|$)/,
+    /(?:^|\n)Authored by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})(?:\s|,|\.|\n|$)/,
+    /(?:^|\n)Medically reviewed by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})(?:,\s*(?:MD|RN|PhD|PharmD|RD|MPH))?/i,
+    /(?:^|\n)Reviewed by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})(?:,\s*(?:MD|RN|PhD|PharmD|RD|MPH))?/i,
+    /(?:^|\n)Updated by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})(?:\s|,|\.|\n|$)/,
   ]
 
   const bodyText = $('body').text()
@@ -292,7 +336,7 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
       const authorName = match[1].trim()
       // Validate it's a reasonable author name (2-4 words, not common false positives)
       const words = authorName.split(/\s+/)
-      const invalidNames = ['talking to', 'according to', 'listen to', 'subscribe to', 'related to']
+      const invalidNames = ['talking to', 'according to', 'listen to', 'subscribe to', 'related to', 'refer to', 'up to date']
 
       if (words.length >= 2 && words.length <= 4 &&
           !invalidNames.some(invalid => authorName.toLowerCase().includes(invalid)) &&
@@ -412,25 +456,88 @@ function analyzeLinks($: cheerio.CheerioAPI, baseUrl: string): PageAnalysis['lin
  */
 function extractCitations($: cheerio.CheerioAPI): string[] {
   const citations: string[] = []
-
-  // Superscript references with links
-  $('sup a[href]').each((_, el) => {
-    const href = $(el).attr('href') || ''
-    if (href && href.startsWith('http')) {
+  const addUnique = (href: string) => {
+    if (href && href.startsWith('http') && !citations.includes(href)) {
       citations.push(href)
     }
+  }
+
+  // 1. Superscript references with links (highest priority - definite citations)
+  $('sup a[href], sup[id*="ref"] a[href]').each((_, el) => {
+    addUnique($(el).attr('href') || '')
   })
 
-  // All external links (potential citations)
-  $('a[href]').each((_, el) => {
+  // 2. Links with citation-related IDs or classes
+  $('a[id*="cite"], a[class*="citation"], a[class*="reference"], a[href*="#cite"], a[href*="#ref"]').each((_, el) => {
     const href = $(el).attr('href') || ''
-    if (href && href.startsWith('http')) {
-      // Avoid duplicates and internal links
-      if (!citations.includes(href)) {
-        citations.push(href)
-      }
+    if (!href.startsWith('#')) { // Skip internal anchor links
+      addUnique(href)
     }
   })
+
+  // 3. Find reference sections by heading text
+  const referenceHeadings = $('h2, h3, h4').filter((_, el) => {
+    const text = $(el).text().toLowerCase()
+    return /^(references?|citations?|sources?|bibliography|further reading|notes|footnotes)$/i.test(text.trim())
+  })
+
+  // Extract links from reference sections
+  referenceHeadings.each((_, heading) => {
+    let currentEl = $(heading).next()
+    // Traverse siblings until next heading or end
+    while (currentEl.length && !currentEl.is('h1, h2, h3, h4')) {
+      currentEl.find('a[href]').each((_, link) => {
+        addUnique($(link).attr('href') || '')
+      })
+      currentEl = currentEl.next()
+    }
+  })
+
+  // 4. Look for common reference list patterns
+  $('ol.references li a[href], ul.references li a[href], .reference-list a[href], .citations a[href]').each((_, el) => {
+    addUnique($(el).attr('href') || '')
+  })
+
+  // 5. Numbered citation patterns in content linked to references
+  $('a[href^="#ref"], a[href^="#cite"], a[href^="#note"]').each((_, el) => {
+    const href = $(el).attr('href') || ''
+    const targetId = href.substring(1) // Remove #
+    // Find the target element and extract links from it
+    $(`#${targetId}`).find('a[href]').each((_, targetLink) => {
+      addUnique($(targetLink).attr('href') || '')
+    })
+  })
+
+  // 6. Links in footer/endnotes (often contain citations)
+  $('footer a[href], .footnotes a[href], .endnotes a[href]').each((_, el) => {
+    const href = $(el).attr('href') || ''
+    if (!href.startsWith('#')) { // Skip internal anchors
+      addUnique(href)
+    }
+  })
+
+  // 7. All other external links (lower priority - may include citations)
+  // Only add if we haven't found many citations yet
+  if (citations.length < 5) {
+    $('article a[href], main a[href], .content a[href]').each((_, el) => {
+      const href = $(el).attr('href') || ''
+      // Filter out navigation, social media, and obvious non-citation links
+      const text = $(el).text().toLowerCase()
+      const isLikelyCitation =
+        !href.includes('facebook.com') &&
+        !href.includes('twitter.com') &&
+        !href.includes('instagram.com') &&
+        !href.includes('linkedin.com') &&
+        !text.includes('share') &&
+        !text.includes('subscribe') &&
+        !text.includes('sign up') &&
+        !text.includes('login')
+
+      if (isLikelyCitation) {
+        addUnique(href)
+      }
+    })
+  }
 
   return citations
 }

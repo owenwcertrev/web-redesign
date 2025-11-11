@@ -72,15 +72,84 @@ export function calculateEEATScores(
 }
 
 /**
+ * Estimates domain rank based on on-page quality signals
+ * Used for instant analysis when external domain metrics aren't available
+ * Returns a score from 0-100 representing estimated domain authority
+ */
+export function estimateDomainRank(page: PageAnalysis): number {
+  let rank = 50 // Start with neutral baseline
+
+  // SSL is table stakes for credible sites (+10)
+  if (page.hasSSL) {
+    rank += 10
+  } else {
+    rank -= 15 // Major penalty for no HTTPS
+  }
+
+  // Schema markup indicates technical sophistication (+0 to +15)
+  if (page.schemaMarkup > 0) {
+    if (page.schemaMarkup >= 5) {
+      rank += 15 // Comprehensive schema implementation
+    } else if (page.schemaMarkup >= 3) {
+      rank += 10 // Good schema coverage
+    } else {
+      rank += 5 // Basic schema present
+    }
+  }
+
+  // Author attribution indicates editorial standards (+0 to +10)
+  if (page.authors.length > 0) {
+    rank += 10 // Has clear authorship
+  }
+
+  // Citations indicate research-backed content (+0 to +10)
+  if (page.citations >= 10) {
+    rank += 10 // Well-cited content
+  } else if (page.citations >= 5) {
+    rank += 5 // Some citations
+  }
+
+  // Content depth indicates investment in quality (+0 to +10)
+  if (page.wordCount >= 2000) {
+    rank += 10 // Comprehensive content
+  } else if (page.wordCount >= 1000) {
+    rank += 5 // Substantial content
+  } else if (page.wordCount < 300) {
+    rank -= 5 // Thin content
+  }
+
+  // Readability indicates professional writing (+0 to +5)
+  if (page.readabilityScore >= 60) {
+    rank += 5 // Clear, readable content
+  } else if (page.readabilityScore < 30) {
+    rank -= 5 // Poor readability
+  }
+
+  // Images with proper alt text indicate attention to detail (+0 to +5)
+  const imagesWithAlt = page.images.filter(img => img.hasAlt).length
+  if (imagesWithAlt >= 5) {
+    rank += 5 // Good image optimization
+  } else if (imagesWithAlt >= 2) {
+    rank += 2 // Some optimization
+  }
+
+  // Clamp to 0-100 range
+  return Math.max(0, Math.min(100, rank))
+}
+
+/**
  * Calculates instant E-E-A-T scores WITHOUT external APIs
  * Uses only page analysis data - no DataForSEO, NLP, or reputation checking
  * Fast, synchronous, suitable for immediate display
  */
 export function calculateInstantEEATScores(page: PageAnalysis): EEATScore {
+  // Estimate domain rank from on-page quality signals
+  const estimatedDomainRank = estimateDomainRank(page)
+
   // Create estimated metrics for authoritativeness
   // Based on basic page quality signals
   const estimatedMetrics: DataForSEOMetrics = {
-    domainRank: 50, // Neutral default
+    domainRank: estimatedDomainRank, // Smart estimation instead of hardcoded 50
     pageRank: 0,
     backlinks: 0,
     referringDomains: 0,
@@ -230,6 +299,15 @@ function calculateExperienceScore(
     // Below 40: no bonus (limited or no professional presence)
   }
 
+  // Quality bonus: Reward comprehensive content with proper structure (0-2 points)
+  let qualityBonus = 0
+  if (page.wordCount >= 2000 && page.citations >= 5 && page.headings.h2.length >= 3) {
+    qualityBonus += 2 // Comprehensive, well-structured, cited content
+  } else if ((page.wordCount >= 1000 && page.citations >= 3) || (page.wordCount >= 1500 && page.headings.h2.length >= 2)) {
+    qualityBonus += 1 // Good content depth
+  }
+  score += qualityBonus
+
   return Math.min(25, score)
 }
 
@@ -377,6 +455,15 @@ function calculateExpertiseScore(
     }
   }
 
+  // Quality bonus: Reward well-researched expert content (0-2 points)
+  let qualityBonus = 0
+  if (page.wordCount >= 1500 && page.citations >= 8 && page.schemaMarkup.length >= 2) {
+    qualityBonus += 2 // Deep, well-researched expert content
+  } else if (page.wordCount >= 1000 && page.citations >= 4) {
+    qualityBonus += 1 // Good research depth
+  }
+  score += qualityBonus
+
   return Math.min(25, score)
 }
 
@@ -511,6 +598,18 @@ function calculateTrustworthinessScore(
   if (page.links.external > 0) {
     score += 1 // Links to external sources
   }
+
+  // Quality bonus: Reward comprehensive trustworthy content (0-3 points)
+  let qualityBonus = 0
+  if (page.hasSSL && page.schemaMarkup.length >= 3 && page.images.total > 0) {
+    qualityBonus += 2 // Professional, well-structured site
+    if ((page.images.withAlt / page.images.total) >= 0.8) {
+      qualityBonus += 1 // Attention to accessibility details
+    }
+  } else if (page.hasSSL && page.schemaMarkup.length >= 1) {
+    qualityBonus += 1 // Basic professional standards
+  }
+  score += qualityBonus
 
   return Math.min(25, score)
 }
