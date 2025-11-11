@@ -539,7 +539,7 @@ export default function EEATMeterTool() {
                 </span>
               )}
             </div>
-            {results.domainInfo && results.domainInfo.redirected && (
+            {results.domainInfo && results.domainInfo.redirected && results.domainInfo.entered && (
               <p className="text-sm text-black/60 text-center mb-6">
                 Analyzing <span className="font-semibold text-navy">{results.domainInfo.analyzed}</span>
                 {results.domainInfo.entered !== `https://${results.domainInfo.analyzed}` &&
