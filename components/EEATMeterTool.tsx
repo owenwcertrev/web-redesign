@@ -9,7 +9,9 @@ import VerificationBadge from './VerificationBadge'
 import { analytics } from '@/lib/analytics'
 
 interface AnalysisResult {
+  type?: 'blog' | 'single-page'
   score: number
+  blogScore?: number
   breakdown: {
     experience: number
     expertise: number
@@ -17,15 +19,84 @@ interface AnalysisResult {
     trustworthiness: number
   }
   domainInfo?: {
-    entered: string
-    analyzed: string
-    redirected: boolean
-    canonical: string | null
+    entered?: string
+    analyzed?: string
+    redirected?: boolean
+    canonical?: string | null
+    domain?: string
+    postsAnalyzed?: number
+    totalPostsFound?: number
+    failedAnalyses?: number
   }
+  blogInsights?: {
+    publishingFrequency: {
+      score: number
+      postsPerMonth: number
+      trend: string
+      recommendation: string
+    }
+    contentDepth: {
+      score: number
+      avgWordCount: number
+      avgCitations: number
+      distribution: {
+        short: number
+        medium: number
+        long: number
+        comprehensive: number
+      }
+      recommendation: string
+    }
+    topicDiversity: {
+      score: number
+      uniqueTopics: number
+      topKeywords: Array<{ keyword: string; frequency: number; relatedPosts: number }>
+      coverage: string
+      recommendation: string
+    }
+    authorConsistency: {
+      score: number
+      totalAuthors: number
+      attributionRate: number
+      primaryAuthors: Array<{
+        name: string
+        postCount: number
+        percentage: number
+        hasCredentials: boolean
+      }>
+      consistency: string
+      recommendation: string
+    }
+    schemaAdoption: {
+      score: number
+      adoptionRate: number
+      commonTypes: Array<{ type: string; count: number; percentage: number }>
+      recommendation: string
+    }
+    internalLinking: {
+      score: number
+      avgLinksPerPost: number
+      networkStrength: string
+      recommendation: string
+    }
+  }
+  topPosts?: Array<{
+    url: string
+    title: string
+    score: number
+    wordCount: number
+  }>
+  bottomPosts?: Array<{
+    url: string
+    title: string
+    score: number
+    wordCount: number
+  }>
   issues: Array<{
     type: 'missing' | 'warning' | 'good'
     severity: 'high' | 'medium' | 'low'
     message: string
+    description?: string
   }>
   suggestions: string[]
   metrics?: {
@@ -214,10 +285,10 @@ export default function EEATMeterTool() {
       {/* Tool Interface */}
       <div className="bg-white rounded-16 p-8 shadow-base mb-8">
         <h2 className="text-2xl font-semibold mb-3 text-black text-center">
-          Is your brand content unshakably credible, authoritative, & discoverable?
+          Is your blog content unshakably credible, authoritative, & discoverable?
         </h2>
         <p className="text-black/70 text-center mb-8">
-          Analyze any website's E-E-A-T score for free
+          Analyze your entire blog strategy & E-E-A-T score for free
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -228,13 +299,13 @@ export default function EEATMeterTool() {
               type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="example.com or https://example.com"
+              placeholder="example.com (analyzes entire blog) or specific post URL"
               required
               aria-label="Website URL to analyze"
               aria-describedby="url-help"
               className="w-full pl-12 pr-4 py-4 text-lg rounded-16 border-2 border-black/10 focus:border-navy focus:outline-none transition-colors"
             />
-            <span id="url-help" className="sr-only">Enter the URL of the website you want to analyze for E-E-A-T score</span>
+            <span id="url-help" className="sr-only">Enter your domain to analyze your entire blog strategy, or a specific post URL for single-page analysis</span>
           </div>
 
           {/* Email Field with Value Prop */}
@@ -526,6 +597,272 @@ export default function EEATMeterTool() {
               </div>
             </div>
           </div>
+
+          {/* Blog Strategy Insights (only for blog analysis) */}
+          {results.type === 'blog' && results.blogInsights && (
+            <div className="bg-white rounded-16 p-8 shadow-base">
+              <div className="mb-6">
+                <h3 className="text-2xl font-semibold mb-2 text-black">Blog Strategy Insights</h3>
+                <p className="text-black/70">
+                  Analyzed {results.domainInfo?.postsAnalyzed} posts from your blog
+                  {results.domainInfo?.totalPostsFound && results.domainInfo.totalPostsFound > (results.domainInfo?.postsAnalyzed || 0) &&
+                    ` (${results.domainInfo.totalPostsFound} total found)`}
+                </p>
+              </div>
+
+              {/* Blog Strategy Score */}
+              {results.blogScore !== undefined && (
+                <div className="bg-gradient-to-r from-navy/5 to-lime/5 rounded-12 p-6 mb-6 border-2 border-navy/10">
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <h4 className="text-lg font-semibold text-navy mb-1">Overall Blog Strategy Score</h4>
+                      <p className="text-sm text-black/70">Aggregate score across all blog metrics</p>
+                    </div>
+                    <div className="text-4xl font-bold text-navy">{results.blogScore}/100</div>
+                  </div>
+                </div>
+              )}
+
+              {/* 6 Metric Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                {/* Publishing Frequency */}
+                <div className="bg-beige rounded-12 p-5 border-2 border-navy/10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-navy">Publishing Frequency</h4>
+                    <span className="text-2xl font-bold text-navy">{results.blogInsights.publishingFrequency.score}</span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-black/70">Posts/Month:</span>
+                      <span className="font-semibold text-black">{results.blogInsights.publishingFrequency.postsPerMonth}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-black/70">Trend:</span>
+                      <span className={`font-semibold capitalize ${
+                        results.blogInsights.publishingFrequency.trend === 'increasing' ? 'text-lime-dark' :
+                        results.blogInsights.publishingFrequency.trend === 'decreasing' ? 'text-coral' :
+                        'text-navy'
+                      }`}>{results.blogInsights.publishingFrequency.trend}</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-black/60 mt-3">{results.blogInsights.publishingFrequency.recommendation}</p>
+                </div>
+
+                {/* Content Depth */}
+                <div className="bg-beige rounded-12 p-5 border-2 border-navy/10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-navy">Content Depth</h4>
+                    <span className="text-2xl font-bold text-navy">{results.blogInsights.contentDepth.score}</span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-black/70">Avg Words:</span>
+                      <span className="font-semibold text-black">{results.blogInsights.contentDepth.avgWordCount}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-black/70">Avg Citations:</span>
+                      <span className="font-semibold text-black">{results.blogInsights.contentDepth.avgCitations}</span>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <div className="flex justify-between text-xs text-black/60 mb-1">
+                      <span>Distribution:</span>
+                    </div>
+                    <div className="flex gap-1 h-2 rounded-full overflow-hidden bg-black/5">
+                      {results.blogInsights.contentDepth.distribution.short > 0 && (
+                        <div
+                          style={{ width: `${(results.blogInsights.contentDepth.distribution.short / (results.domainInfo?.postsAnalyzed || 1)) * 100}%` }}
+                          className="bg-coral"
+                          title={`${results.blogInsights.contentDepth.distribution.short} short posts (<500 words)`}
+                        />
+                      )}
+                      {results.blogInsights.contentDepth.distribution.medium > 0 && (
+                        <div
+                          style={{ width: `${(results.blogInsights.contentDepth.distribution.medium / (results.domainInfo?.postsAnalyzed || 1)) * 100}%` }}
+                          className="bg-navy/50"
+                          title={`${results.blogInsights.contentDepth.distribution.medium} medium posts (500-1500 words)`}
+                        />
+                      )}
+                      {results.blogInsights.contentDepth.distribution.long > 0 && (
+                        <div
+                          style={{ width: `${(results.blogInsights.contentDepth.distribution.long / (results.domainInfo?.postsAnalyzed || 1)) * 100}%` }}
+                          className="bg-lime-dark"
+                          title={`${results.blogInsights.contentDepth.distribution.long} long posts (1500-3000 words)`}
+                        />
+                      )}
+                      {results.blogInsights.contentDepth.distribution.comprehensive > 0 && (
+                        <div
+                          style={{ width: `${(results.blogInsights.contentDepth.distribution.comprehensive / (results.domainInfo?.postsAnalyzed || 1)) * 100}%` }}
+                          className="bg-lime"
+                          title={`${results.blogInsights.contentDepth.distribution.comprehensive} comprehensive posts (>3000 words)`}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Topic Diversity */}
+                <div className="bg-beige rounded-12 p-5 border-2 border-navy/10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-navy">Topic Diversity</h4>
+                    <span className="text-2xl font-bold text-navy">{results.blogInsights.topicDiversity.score}</span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-black/70">Unique Topics:</span>
+                      <span className="font-semibold text-black">{results.blogInsights.topicDiversity.uniqueTopics}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-black/70">Coverage:</span>
+                      <span className="font-semibold text-black capitalize">{results.blogInsights.topicDiversity.coverage}</span>
+                    </div>
+                  </div>
+                  {results.blogInsights.topicDiversity.topKeywords.length > 0 && (
+                    <div className="mt-3">
+                      <p className="text-xs text-black/60 mb-2">Top Keywords:</p>
+                      <div className="flex flex-wrap gap-1">
+                        {results.blogInsights.topicDiversity.topKeywords.slice(0, 5).map((kw, idx) => (
+                          <span key={idx} className="text-xs bg-navy/10 text-navy px-2 py-1 rounded-full">
+                            {kw.keyword}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Author Consistency */}
+                <div className="bg-beige rounded-12 p-5 border-2 border-navy/10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-navy">Author Consistency</h4>
+                    <span className="text-2xl font-bold text-navy">{results.blogInsights.authorConsistency.score}</span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-black/70">Total Authors:</span>
+                      <span className="font-semibold text-black">{results.blogInsights.authorConsistency.totalAuthors}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-black/70">Attribution:</span>
+                      <span className="font-semibold text-black">{results.blogInsights.authorConsistency.attributionRate}%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-black/70">Consistency:</span>
+                      <span className="font-semibold text-black capitalize">{results.blogInsights.authorConsistency.consistency.replace('-', ' ')}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Schema Adoption */}
+                <div className="bg-beige rounded-12 p-5 border-2 border-navy/10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-navy">Schema Markup</h4>
+                    <span className="text-2xl font-bold text-navy">{results.blogInsights.schemaAdoption.score}</span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-black/70">Adoption Rate:</span>
+                      <span className="font-semibold text-black">{results.blogInsights.schemaAdoption.adoptionRate}%</span>
+                    </div>
+                  </div>
+                  {results.blogInsights.schemaAdoption.commonTypes.length > 0 && (
+                    <div className="mt-3">
+                      <p className="text-xs text-black/60 mb-2">Common Types:</p>
+                      <div className="space-y-1">
+                        {results.blogInsights.schemaAdoption.commonTypes.slice(0, 3).map((type, idx) => (
+                          <div key={idx} className="text-xs flex justify-between">
+                            <span className="text-black/70">{type.type}</span>
+                            <span className="font-semibold text-navy">{type.percentage}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Internal Linking */}
+                <div className="bg-beige rounded-12 p-5 border-2 border-navy/10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-navy">Internal Linking</h4>
+                    <span className="text-2xl font-bold text-navy">{results.blogInsights.internalLinking.score}</span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-black/70">Avg Links/Post:</span>
+                      <span className="font-semibold text-black">{results.blogInsights.internalLinking.avgLinksPerPost}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-black/70">Strength:</span>
+                      <span className={`font-semibold capitalize ${
+                        results.blogInsights.internalLinking.networkStrength === 'strong' ? 'text-lime-dark' :
+                        results.blogInsights.internalLinking.networkStrength === 'weak' ? 'text-coral' :
+                        'text-navy'
+                      }`}>{results.blogInsights.internalLinking.networkStrength}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Top and Bottom Posts */}
+              {(results.topPosts && results.topPosts.length > 0) && (
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* Top Performing Posts */}
+                  <div className="bg-lime-light/30 rounded-12 p-5 border-2 border-lime/30">
+                    <h4 className="font-semibold text-lime-dark mb-3 flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5" />
+                      Top Performing Posts
+                    </h4>
+                    <div className="space-y-2">
+                      {results.topPosts.slice(0, 3).map((post, idx) => (
+                        <div key={idx} className="text-sm">
+                          <a
+                            href={post.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-navy hover:underline font-medium line-clamp-1"
+                          >
+                            {post.title}
+                          </a>
+                          <div className="flex justify-between text-xs text-black/60 mt-1">
+                            <span>Score: {post.score}/100</span>
+                            <span>{post.wordCount} words</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Bottom Performing Posts */}
+                  {results.bottomPosts && results.bottomPosts.length > 0 && (
+                    <div className="bg-coral/10 rounded-12 p-5 border-2 border-coral/30">
+                      <h4 className="font-semibold text-coral mb-3 flex items-center gap-2">
+                        <AlertCircle className="w-5 h-5" />
+                        Needs Improvement
+                      </h4>
+                      <div className="space-y-2">
+                        {results.bottomPosts.slice(0, 3).map((post, idx) => (
+                          <div key={idx} className="text-sm">
+                            <a
+                              href={post.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-navy hover:underline font-medium line-clamp-1"
+                            >
+                              {post.title}
+                            </a>
+                            <div className="flex justify-between text-xs text-black/60 mt-1">
+                              <span>Score: {post.score}/100</span>
+                              <span>{post.wordCount} words</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* What's Missing Section */}
           <div className="bg-white rounded-16 p-8 shadow-base">
