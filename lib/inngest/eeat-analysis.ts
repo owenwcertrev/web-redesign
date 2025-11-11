@@ -420,10 +420,10 @@ export const comprehensiveBlogAnalysis = inngest.createFunction(
     const aggregateNLP = await step.run('calculate-aggregate-nlp', async () => {
       if (nlpAnalyses.length === 0) return null
 
-      const avgTone = nlpAnalyses.reduce((sum, a) => sum + a.nlp.toneScore, 0) / nlpAnalyses.length
-      const avgExperience = nlpAnalyses.reduce((sum, a) => sum + a.nlp.experienceScore, 0) / nlpAnalyses.length
-      const avgExpertise = nlpAnalyses.reduce((sum, a) => sum + a.nlp.expertiseDepthScore, 0) / nlpAnalyses.length
-      const avgAI = nlpAnalyses.reduce((sum, a) => sum + a.nlp.aiContentScore, 0) / nlpAnalyses.length
+      const avgTone = nlpAnalyses.reduce((sum: number, a) => sum + a.nlp.toneScore, 0) / nlpAnalyses.length
+      const avgExperience = nlpAnalyses.reduce((sum: number, a) => sum + a.nlp.experienceScore, 0) / nlpAnalyses.length
+      const avgExpertise = nlpAnalyses.reduce((sum: number, a) => sum + a.nlp.expertiseDepthScore, 0) / nlpAnalyses.length
+      const avgAI = nlpAnalyses.reduce((sum: number, a) => sum + a.nlp.aiContentScore, 0) / nlpAnalyses.length
 
       return {
         avgToneScore: Math.round(avgTone * 10) / 10,
