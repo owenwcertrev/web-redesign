@@ -136,7 +136,7 @@ export class BatchAnalyzer {
    * Try to extract published date from URL patterns or schema
    */
   private extractPublishedDate(url: string, page: PageAnalysis): Date | undefined {
-    // Try to extract from URL (e.g., /2024/01/15/post-title)
+    // Try 1: Extract from URL (e.g., /2024/01/15/post-title)
     const datePattern = /\/(\d{4})\/(\d{1,2})\/(\d{1,2})\//
     const match = url.match(datePattern)
 
@@ -145,13 +145,37 @@ export class BatchAnalyzer {
       return new Date(`${year}-${month}-${day}`)
     }
 
-    // Try to extract from schema markup
+    // Try 2: Extract from standard schema markup
     const articleSchema = page.schemaMarkup.find(
       schema => schema.type === 'Article' || schema.type === 'BlogPosting'
     )
 
     if (articleSchema?.data?.datePublished) {
       return new Date(articleSchema.data.datePublished)
+    }
+
+    // Try 3: Check for custom schema formats (e.g., Healthline's published.date)
+    if (articleSchema?.data?.published) {
+      // Unix timestamp (in seconds)
+      if (typeof articleSchema.data.published.date === 'number') {
+        return new Date(articleSchema.data.published.date * 1000)
+      }
+      // Date string (e.g., "October 16, 2020")
+      if (typeof articleSchema.data.published.display === 'string') {
+        const date = new Date(articleSchema.data.published.display)
+        if (!isNaN(date.getTime())) {
+          return date
+        }
+      }
+    }
+
+    // Try 4: Check for other common schema date fields
+    if (articleSchema?.data?.dateCreated) {
+      return new Date(articleSchema.data.dateCreated)
+    }
+
+    if (articleSchema?.data?.dateModified) {
+      return new Date(articleSchema.data.dateModified)
     }
 
     return undefined

@@ -80,14 +80,27 @@ export class BlogDiscoveryService {
     /\/opinion\//i,
     // Date patterns: /2024/01/post-title
     /\/\d{4}\/\d{1,2}\//,
-    // Slug patterns (but not homepage, about, contact, etc.)
-    /\/[a-z0-9-]+\/?$/i,
+    // Multi-segment paths (more likely to be articles): /health/diabetes/article-title
+    /\/[a-z0-9-]+\/[a-z0-9-]+\/[a-z0-9-]+\/?$/i,
+    // Long slugs (15+ chars likely articles): /nutrition/how-many-calories-per-day
+    /\/[a-z0-9-]+\/[a-z0-9-]{15,}\/?$/i,
+    // Two-segment paths (articles with category): /nutrition/article-title
+    /\/[a-z0-9-]+\/[a-z0-9-]+\/?$/i,
   ];
 
   private static readonly EXCLUDE_PATTERNS = [
+    // Specific pages
     /\/(about|contact|privacy|terms|cookie|legal|faq|help|support|pricing|features|services|team|careers)\/?$/i,
+    // WordPress/admin paths
     /\/(wp-content|wp-includes|wp-admin)/i,
+    // File extensions
     /\.(jpg|jpeg|png|gif|svg|pdf|zip|css|js|woff|woff2|ttf|eot|ico)$/i,
+    // Homepage (just domain with optional trailing slash)
+    /^https?:\/\/[^\/]+\/?$/i,
+    // Directory pages
+    /\/directory\//i,
+    // Single-segment paths (category hubs like /health, /nutrition, /topics)
+    /^https?:\/\/[^\/]+\/[a-z-]+\/?$/i,
   ];
 
   /**
