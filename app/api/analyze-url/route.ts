@@ -326,7 +326,28 @@ export async function POST(request: NextRequest) {
 
     if (isBlogAnalysis) {
       // BLOG ANALYSIS MODE
-      return await handleBlogAnalysis(normalizedUrl, email)
+      // Add timeout wrapper as backup (2 minutes for discovery + analysis)
+      const BLOG_ANALYSIS_TIMEOUT = 120000 // 2 minutes
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => {
+          reject(new Error('Blog analysis timed out. This may indicate circular sitemap references or very large sitemaps.'))
+        }, BLOG_ANALYSIS_TIMEOUT)
+      })
+
+      try {
+        return await Promise.race([
+          handleBlogAnalysis(normalizedUrl, email),
+          timeoutPromise
+        ])
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('timed out')) {
+          return NextResponse.json(
+            { error: error.message },
+            { status: 504 } // Gateway Timeout
+          )
+        }
+        throw error
+      }
     }
 
     // SINGLE-PAGE ANALYSIS MODE (existing behavior)

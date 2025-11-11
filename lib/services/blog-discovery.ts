@@ -279,13 +279,23 @@ export class BlogDiscoveryService {
    */
   private static async fetchSitemap(
     url: string,
-    depth: number = 0
+    depth: number = 0,
+    visitedSitemaps: Set<string> = new Set()
   ): Promise<BlogPost[]> {
+    // Prevent circular references - check if we've already visited this sitemap
+    if (visitedSitemaps.has(url)) {
+      console.warn(`Circular reference detected: ${url} already visited, skipping`);
+      return [];
+    }
+
     // Prevent infinite recursion
     if (depth > this.MAX_SITEMAP_DEPTH) {
       console.warn(`Max sitemap depth (${this.MAX_SITEMAP_DEPTH}) reached for ${url}`);
       return [];
     }
+
+    // Mark this sitemap as visited before fetching
+    visitedSitemaps.add(url);
 
     try {
       // P2: Optional HEAD check for existence
@@ -337,7 +347,8 @@ export class BlogDiscoveryService {
         // P2: Fetch nested sitemaps in parallel with concurrency control
         const nestedPosts = await this.fetchSitemapsInParallel(
           nestedSitemaps.map(s => s.url),
-          depth + 1
+          depth + 1,
+          visitedSitemaps
         );
 
         // Filter out the nested sitemap URLs themselves, keep only the posts
@@ -360,7 +371,8 @@ export class BlogDiscoveryService {
    */
   private static async fetchSitemapsInParallel(
     urls: string[],
-    depth: number
+    depth: number,
+    visitedSitemaps: Set<string> = new Set()
   ): Promise<BlogPost[]> {
     const allPosts: BlogPost[] = [];
 
@@ -368,7 +380,7 @@ export class BlogDiscoveryService {
     for (let i = 0; i < urls.length; i += this.MAX_CONCURRENT_FETCHES) {
       const chunk = urls.slice(i, i + this.MAX_CONCURRENT_FETCHES);
       const chunkResults = await Promise.all(
-        chunk.map(url => this.fetchSitemap(url, depth))
+        chunk.map(url => this.fetchSitemap(url, depth, visitedSitemaps))
       );
 
       for (const posts of chunkResults) {
@@ -429,7 +441,10 @@ export class BlogDiscoveryService {
   /**
    * Try to find sitemaps using multiple strategies
    */
-  private static async fetchSitemapIndex(baseUrl: string): Promise<BlogPost[]> {
+  private static async fetchSitemapIndex(
+    baseUrl: string,
+    visitedSitemaps: Set<string> = new Set()
+  ): Promise<BlogPost[]> {
     const allPosts: BlogPost[] = [];
     const urlsSeen = new Set<string>(); // P1: URL deduplication
 
@@ -445,7 +460,7 @@ export class BlogDiscoveryService {
     console.log(`Trying ${sitemapsToTry.length} sitemap locations...`);
 
     // Fetch all sitemaps (P2: parallel with concurrency control)
-    const sitemapResults = await this.fetchSitemapsInParallel(sitemapsToTry, 0);
+    const sitemapResults = await this.fetchSitemapsInParallel(sitemapsToTry, 0, visitedSitemaps);
 
     // P1: Deduplicate URLs
     for (const post of sitemapResults) {
@@ -564,90 +579,107 @@ export class BlogDiscoveryService {
       console.log(`Discovering blog posts for: ${baseUrl}`);
       console.log(`========================================\n`);
 
-      // Strategy 1: Try sitemaps (including robots.txt)
-      console.log('Strategy 1: XML Sitemaps (including robots.txt)');
-      const allPosts = await this.fetchSitemapIndex(baseUrl);
+      // Initialize visited sitemaps Set to prevent circular references
+      const visitedSitemaps = new Set<string>();
 
-      console.log(`[DEBUG] Total URLs fetched from sitemaps: ${allPosts.length}`);
-      if (allPosts.length > 0) {
-        console.log(`[DEBUG] Sample URLs (first 10):`, allPosts.slice(0, 10).map(p => p.url));
-      }
+      // Create a timeout promise (45 seconds)
+      const DISCOVERY_TIMEOUT = 45000; // 45 seconds
+      const timeoutPromise = new Promise<BlogDiscoveryResult>((_, reject) => {
+        setTimeout(() => {
+          reject(new Error(`Blog discovery timed out after ${DISCOVERY_TIMEOUT / 1000} seconds. The site may have circular sitemap references or very large sitemaps.`));
+        }, DISCOVERY_TIMEOUT);
+      });
 
-      if (allPosts.length > 0) {
-        // Filter for blog posts
-        const blogPosts = allPosts.filter(post => this.isBlogPost(post.url));
+      // Wrap the discovery process with timeout
+      const discoveryPromise = (async () => {
+        // Strategy 1: Try sitemaps (including robots.txt)
+        console.log('Strategy 1: XML Sitemaps (including robots.txt)');
+        const allPosts = await this.fetchSitemapIndex(baseUrl, visitedSitemaps);
 
-        console.log(`[DEBUG] After isBlogPost filtering: ${blogPosts.length} blog posts`);
-        console.log(`[DEBUG] Sample blog posts (first 10):`, blogPosts.slice(0, 10).map(p => p.url));
-        console.log(`[DEBUG] Sample filtered OUT (first 10):`, allPosts.filter(p => !this.isBlogPost(p.url)).slice(0, 10).map(p => p.url));
-        console.log(`\nFound ${blogPosts.length} blog posts out of ${allPosts.length} total URLs`);
+        console.log(`[DEBUG] Total URLs fetched from sitemaps: ${allPosts.length}`);
+        if (allPosts.length > 0) {
+          console.log(`[DEBUG] Sample URLs (first 10):`, allPosts.slice(0, 10).map(p => p.url));
+        }
 
-        if (blogPosts.length > 0) {
-          // Sort by date (most recent first) and priority
-          const sortedPosts = blogPosts.sort((a, b) => {
-            // Primary sort: by lastmod date
-            if (a.lastmod && b.lastmod) {
-              return b.lastmod.getTime() - a.lastmod.getTime();
-            }
-            if (a.lastmod) return -1;
-            if (b.lastmod) return 1;
+        if (allPosts.length > 0) {
+          // Filter for blog posts
+          const blogPosts = allPosts.filter(post => this.isBlogPost(post.url));
 
-            // Secondary sort: by priority
-            if (a.priority && b.priority) {
-              return b.priority - a.priority;
-            }
+          console.log(`[DEBUG] After isBlogPost filtering: ${blogPosts.length} blog posts`);
+          console.log(`[DEBUG] Sample blog posts (first 10):`, blogPosts.slice(0, 10).map(p => p.url));
+          console.log(`[DEBUG] Sample filtered OUT (first 10):`, allPosts.filter(p => !this.isBlogPost(p.url)).slice(0, 10).map(p => p.url));
+          console.log(`\nFound ${blogPosts.length} blog posts out of ${allPosts.length} total URLs`);
 
-            return 0;
-          });
+          if (blogPosts.length > 0) {
+            // Sort by date (most recent first) and priority
+            const sortedPosts = blogPosts.sort((a, b) => {
+              // Primary sort: by lastmod date
+              if (a.lastmod && b.lastmod) {
+                return b.lastmod.getTime() - a.lastmod.getTime();
+              }
+              if (a.lastmod) return -1;
+              if (b.lastmod) return 1;
 
-          // Limit results
-          const limitedPosts = sortedPosts.slice(0, limit);
+              // Secondary sort: by priority
+              if (a.priority && b.priority) {
+                return b.priority - a.priority;
+              }
 
+              return 0;
+            });
+
+            // Limit results
+            const limitedPosts = sortedPosts.slice(0, limit);
+
+            return {
+              posts: limitedPosts,
+              totalFound: blogPosts.length,
+              source: 'sitemap',
+            };
+          }
+        }
+
+        // Strategy 2: Try RSS/Atom feeds
+        console.log('\nStrategy 2: RSS/Atom Feeds');
+        const rssPosts = await this.fetchRSSFeeds(baseUrl);
+
+        if (rssPosts.length > 0) {
+          const blogPosts = rssPosts.filter(post => this.isBlogPost(post.url));
+
+          if (blogPosts.length > 0) {
+            console.log(`Found ${blogPosts.length} posts via RSS feeds`);
+            return {
+              posts: blogPosts.slice(0, limit),
+              totalFound: blogPosts.length,
+              source: 'rss',
+            };
+          }
+        }
+
+        // Strategy 3: Try HTML sitemaps
+        console.log('\nStrategy 3: HTML Sitemaps');
+        const htmlPosts = await this.parseHTMLSitemap(baseUrl);
+
+        if (htmlPosts.length > 0) {
+          console.log(`Found ${htmlPosts.length} posts via HTML sitemap`);
           return {
-            posts: limitedPosts,
-            totalFound: blogPosts.length,
-            source: 'sitemap',
+            posts: htmlPosts.slice(0, limit),
+            totalFound: htmlPosts.length,
+            source: 'html',
           };
         }
-      }
 
-      // Strategy 2: Try RSS/Atom feeds
-      console.log('\nStrategy 2: RSS/Atom Feeds');
-      const rssPosts = await this.fetchRSSFeeds(baseUrl);
-
-      if (rssPosts.length > 0) {
-        const blogPosts = rssPosts.filter(post => this.isBlogPost(post.url));
-
-        if (blogPosts.length > 0) {
-          console.log(`Found ${blogPosts.length} posts via RSS feeds`);
-          return {
-            posts: blogPosts.slice(0, limit),
-            totalFound: blogPosts.length,
-            source: 'rss',
-          };
-        }
-      }
-
-      // Strategy 3: Try HTML sitemaps
-      console.log('\nStrategy 3: HTML Sitemaps');
-      const htmlPosts = await this.parseHTMLSitemap(baseUrl);
-
-      if (htmlPosts.length > 0) {
-        console.log(`Found ${htmlPosts.length} posts via HTML sitemap`);
+        // All strategies failed
         return {
-          posts: htmlPosts.slice(0, limit),
-          totalFound: htmlPosts.length,
-          source: 'html',
+          posts: [],
+          totalFound: 0,
+          source: 'sitemap',
+          error: 'No blog posts found. We tried sitemaps (including robots.txt), RSS feeds, and HTML sitemaps. Please try entering specific blog post URLs manually.',
         };
-      }
+      })();
 
-      // All strategies failed
-      return {
-        posts: [],
-        totalFound: 0,
-        source: 'sitemap',
-        error: 'No blog posts found. We tried sitemaps (including robots.txt), RSS feeds, and HTML sitemaps. Please try entering specific blog post URLs manually.',
-      };
+      // Race between discovery and timeout
+      return await Promise.race([discoveryPromise, timeoutPromise]);
     } catch (error) {
       console.error('Blog discovery error:', error);
       return {
