@@ -138,14 +138,15 @@ export function calculateBlogEEATScores(
     posts[0]?.pageAnalysis,
     blogInsights,
     nlpAnalysis,
-    posts
+    false // Blog analysis, not single-page
   )
 
   const expertise = calculateExpertiseCategory(
     posts[0]?.pageAnalysis,
     blogInsights,
     nlpAnalysis,
-    authorReputation
+    authorReputation,
+    false // Blog analysis, not single-page
   )
 
   const authoritativeness = calculateAuthoritativenessCategory(
@@ -153,13 +154,15 @@ export function calculateBlogEEATScores(
     blogInsights,
     domainMetrics,
     authorReputation,
-    posts
+    posts,
+    undefined,
+    false // Blog analysis, not single-page
   )
 
   const trustworthiness = calculateTrustworthinessCategory(
     posts[0]?.pageAnalysis,
     blogInsights,
-    posts
+    false // Blog analysis, not single-page
   )
 
   const overall = experience.totalScore + expertise.totalScore +
