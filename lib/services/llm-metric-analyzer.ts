@@ -47,9 +47,9 @@ export async function analyzeE1WithGPT4(
     // Build E1-specific analysis prompt
     const prompt = buildE1AnalysisPrompt(pageAnalysis, contentSample)
 
-    // Call GPT-4 with structured output
+    // Call GPT-4o with structured output (supports JSON mode, faster & cheaper than GPT-4)
     const response = await openai.chat.completions.create({
-      model: 'gpt-4',
+      model: 'gpt-4o',
       temperature: 0.3, // Low temperature for consistent scoring
       response_format: { type: 'json_object' },
       messages: [
