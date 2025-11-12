@@ -405,7 +405,7 @@ export class BlogDiscoveryService {
     // For each group, select only the preferred language version
     const selectedUrls: string[] = [...nonLanguageUrls];
 
-    for (const [basePath, groupUrls] of urlGroups) {
+    urlGroups.forEach((groupUrls, basePath) => {
       // Try to find a preferred language version
       let selected: string | undefined;
 
@@ -422,7 +422,7 @@ export class BlogDiscoveryService {
       if (selected) {
         selectedUrls.push(selected);
       }
-    }
+    });
 
     console.log(`[OPTIMIZATION] Filtered ${urls.length} sitemaps → ${selectedUrls.length} (removed ${urls.length - selectedUrls.length} redundant language variations)`);
 
