@@ -463,70 +463,71 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
   // === PATHWAY 3: Expert Reviewer Present (Schema) ===
   // SCOPE FIX (2025-01): Detect PRESENCE of reviewer structure, NOT credential quality
   // Credential validation is X1/X2's responsibility, E2 only detects attribution structure
+  //
+  // BUG FIX (2025-01): Skip if review attribution already found in text (Pathway 2)
+  // Prevents double-counting when reviewer exists in BOTH schema AND visible text
 
   // Check schema for reviewedBy or medicalReviewer
   let schemaReviewerFound = false
-  schema.forEach(s => {
-    if (schemaReviewerFound) return; // Only count once
 
-    const reviewerField = s.data?.reviewedBy || s.data?.medicalReviewer
-    if (!reviewerField) return;
+  // Only check schema if we haven't already found review attribution in text
+  if (!hasReviewAttribution) {
+    schema.forEach(s => {
+      if (schemaReviewerFound) return; // Only count once
 
-    // Normalize to array for consistent handling
-    const reviewers = Array.isArray(reviewerField) ? reviewerField : [reviewerField]
+      const reviewerField = s.data?.reviewedBy || s.data?.medicalReviewer
+      if (!reviewerField) return;
 
-    for (const reviewer of reviewers) {
-      if (!reviewer) continue;
+      // Normalize to array for consistent handling
+      const reviewers = Array.isArray(reviewerField) ? reviewerField : [reviewerField]
 
-      const reviewerName = typeof reviewer === 'string' ? reviewer : reviewer?.name
-      if (reviewerName && !schemaReviewerFound) {
-        score += 1.5
-        schemaReviewerFound = true
-        evidence.push({
-          type: 'snippet',
-          value: reviewerName,
-          label: 'Expert reviewer in schema'
-        })
-        break // Only count first reviewer
+      for (const reviewer of reviewers) {
+        if (!reviewer) continue;
+
+        const reviewerName = typeof reviewer === 'string' ? reviewer : reviewer?.name
+        if (reviewerName && !schemaReviewerFound) {
+          // BUG FIX (2025-01): Validate reviewer name is not generic placeholder
+          // Generic names like "Staff", "Editor", "Team" should not count as reviewers
+          const GENERIC_REVIEWER_NAMES = /\b(staff|editor|team|admin|content team|editorial team|content|editorial)\b/i
+
+          if (GENERIC_REVIEWER_NAMES.test(reviewerName)) {
+            // Skip generic placeholder names
+            continue
+          }
+
+          score += 1.5
+          schemaReviewerFound = true
+          evidence.push({
+            type: 'snippet',
+            value: reviewerName,
+            label: 'Expert reviewer in schema'
+          })
+          break // Only count first reviewer
+        }
       }
-    }
-  })
+    })
+  }
 
-  // === PATHWAY 4: Collaborative Authorship & Medical Reviewer Detection ===
-  // SCOPE FIX (2025-01): Detect collaborative STRUCTURE and reviewer PRESENCE
-  // E2 detects that review/collaboration exists, X1/X2 validates credential QUALITY
+  // === PATHWAY 4: Collaborative Authorship ===
+  // SCOPE FIX (2025-01): Detect collaborative STRUCTURE only
+  // E2 detects that multiple perspectives exist, X1/X2 validate credential QUALITY
   //
-  // IMPROVEMENT (2025-01): Detect medical reviewers in authors array
-  // Sites like Healthline store reviewer info in dataLayer (extracted as authors)
-  // Check if any author has reviewer credentials to award appropriate points
+  // SCOPE VIOLATION REMOVED (2025-01): Removed credential checking
+  // - E2 should NOT check author credentials (MD, RD, etc.) - this is X1's domain
+  // - E2 should NOT validate reviewer quality - this is X2's domain
+  // - E2 should ONLY detect that collaboration/multiple perspectives exist
+  //
+  // Award points for collaborative authorship (2+ authors = diverse perspectives)
+  // Credential quality and reviewer appropriateness are scored separately by X1/X2
 
   if (!schemaReviewerFound && !hasReviewAttribution && authors.length >= 2) {
-    // Check if any author appears to be a medical/professional reviewer
-    // Look for medical credentials that suggest review role
-    const reviewerCredentialPatterns = /\b(MD|DO|RN|RD|PA-C|NP|PharmD|DDS|MPH|MSN|MCMSc|PhD|PsyD)\b/i
-
-    const possibleReviewer = authors.find(author => {
-      if (!author.credentials) return false
-      return reviewerCredentialPatterns.test(author.credentials)
+    // Multiple authors = collaborative perspective structure detected
+    score += 1.0
+    evidence.push({
+      type: 'metric',
+      value: `${authors.length} authors (collaborative perspective)`,
+      label: 'Multiple author collaboration'
     })
-
-    if (possibleReviewer) {
-      // Detected likely reviewer among authors (reviewer + writer collaboration)
-      score += 1.5 // Higher points for detected reviewer
-      evidence.push({
-        type: 'snippet',
-        value: `${possibleReviewer.name}${possibleReviewer.credentials ? ` (${possibleReviewer.credentials})` : ''}`,
-        label: 'Medical/professional reviewer detected in authors'
-      })
-    } else {
-      // Generic collaborative authorship (no clear reviewer)
-      score += 1.0
-      evidence.push({
-        type: 'metric',
-        value: `${authors.length} authors (collaborative perspective)`,
-        label: 'Multiple author collaboration'
-      })
-    }
   }
 
   // Cap at maxScore
