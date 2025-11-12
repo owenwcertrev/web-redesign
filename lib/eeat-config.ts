@@ -36,7 +36,7 @@ export const EEAT_VARIABLES = {
       description: 'Reviewer or author insight sections providing personal professional perspective',
       maxScore: 3,
       detectionMethod: 'automated' as const,
-      thresholds: { excellent: 2.5, good: 2, needsImprovement: 1 }
+      thresholds: { excellent: 2.5, good: 1.8, needsImprovement: 1.2 }
     },
     {
       id: 'E3',

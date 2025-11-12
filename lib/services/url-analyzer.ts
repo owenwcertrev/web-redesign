@@ -26,6 +26,11 @@ export interface PageAnalysis {
   hasSSL: boolean
   authors: Author[]
   schemaMarkup: SchemaMarkup[]
+  dates: {
+    published: Date | null
+    modified: Date | null
+    source: 'schema' | 'meta' | 'visible' | 'time-element' | 'none'
+  }
   images: {
     total: number
     withAlt: number
@@ -78,6 +83,7 @@ export async function analyzeURL(url: string): Promise<PageAnalysis> {
 
   // Re-parse HTML for author extraction (workaround for script tag disappearing issue)
   const $fresh = cheerio.load(html)
+  const schemaMarkup = extractSchemaMarkup($fresh) // BUG FIX (2025-01): Use fresh parse to preserve script tags
 
   const analysis: PageAnalysis = {
     url: normalizedUrl,
@@ -90,7 +96,8 @@ export async function analyzeURL(url: string): Promise<PageAnalysis> {
     headings: extractHeadings($),
     hasSSL: finalUrl.startsWith('https://'), // Use final URL for SSL check
     authors: extractAuthors($fresh), // Use fresh parse to preserve scripts
-    schemaMarkup: extractSchemaMarkup($fresh), // BUG FIX (2025-01): Use fresh parse to preserve script tags
+    schemaMarkup: schemaMarkup,
+    dates: extractDates($fresh, schemaMarkup), // E4 FIX (2025-11): Extract dates from multiple sources
     images: analyzeImages($),
     links: analyzeLinks($, finalUrl), // Use final URL for link analysis
     citations: citationUrls.length, // Total count
@@ -637,6 +644,130 @@ function analyzeLinks($: cheerio.CheerioAPI, baseUrl: string): PageAnalysis['lin
   })
 
   return { internal, external }
+}
+
+/**
+ * Extracts published and modified dates from multiple sources
+ * Priority: schema > meta tags > visible text > time elements
+ */
+function extractDates($: cheerio.CheerioAPI, schemaMarkup: SchemaMarkup[]): {
+  published: Date | null
+  modified: Date | null
+  source: 'schema' | 'meta' | 'visible' | 'time-element' | 'none'
+} {
+  let published: Date | null = null
+  let modified: Date | null = null
+  let source: 'schema' | 'meta' | 'visible' | 'time-element' | 'none' = 'none'
+
+  // 1. Check schema markup (highest priority)
+  for (const schema of schemaMarkup) {
+    const dateModified = schema.data?.dateModified || schema.data?.dateUpdated
+    const datePublished = schema.data?.datePublished
+
+    if (dateModified) {
+      const date = new Date(dateModified)
+      if (!isNaN(date.getTime())) {
+        if (!modified || date > modified) {
+          modified = date
+          source = 'schema'
+        }
+      }
+    }
+
+    if (datePublished) {
+      const date = new Date(datePublished)
+      if (!isNaN(date.getTime())) {
+        if (!published || date > published) {
+          published = date
+        }
+      }
+    }
+  }
+
+  // If schema found dates, return early
+  if (modified || published) {
+    return { published, modified, source: 'schema' }
+  }
+
+  // 2. Check meta tags (fallback)
+  const articleModified = $('meta[property="article:modified_time"]').attr('content')
+  const articlePublished = $('meta[property="article:published_time"]').attr('content')
+  const dcDate = $('meta[name="DC.date"]').attr('content')
+  const lastModified = $('meta[name="last-modified"]').attr('content')
+
+  if (articleModified) {
+    const date = new Date(articleModified)
+    if (!isNaN(date.getTime())) {
+      modified = date
+      source = 'meta'
+    }
+  }
+
+  if (articlePublished) {
+    const date = new Date(articlePublished)
+    if (!isNaN(date.getTime())) {
+      published = date
+      source = 'meta'
+    }
+  }
+
+  if (!modified && (dcDate || lastModified)) {
+    const date = new Date(dcDate || lastModified!)
+    if (!isNaN(date.getTime())) {
+      modified = date
+      source = 'meta'
+    }
+  }
+
+  // If meta found dates, return
+  if (modified || published) {
+    return { published, modified, source: 'meta' }
+  }
+
+  // 3. Check <time> elements (fallback)
+  const timeElements = $('time[datetime]')
+  if (timeElements.length > 0) {
+    const dates: Date[] = []
+    timeElements.each((_, el) => {
+      const datetime = $(el).attr('datetime')
+      if (datetime) {
+        const date = new Date(datetime)
+        if (!isNaN(date.getTime())) {
+          dates.push(date)
+        }
+      }
+    })
+
+    if (dates.length > 0) {
+      // Use most recent as modified date
+      dates.sort((a, b) => b.getTime() - a.getTime())
+      modified = dates[0]
+      source = 'time-element'
+      return { published, modified, source }
+    }
+  }
+
+  // 4. Check visible text patterns (last resort)
+  const bodyText = $('body').text()
+  const datePatterns = [
+    /updated[:\s]+([a-z]+\s+\d{1,2},?\s+\d{4})/i,
+    /modified[:\s]+([a-z]+\s+\d{1,2},?\s+\d{4})/i,
+    /last\s+updated[:\s]+([a-z]+\s+\d{1,2},?\s+\d{4})/i
+  ]
+
+  for (const pattern of datePatterns) {
+    const match = bodyText.match(pattern)
+    if (match) {
+      const date = new Date(match[1])
+      if (!isNaN(date.getTime())) {
+        modified = date
+        source = 'visible'
+        return { published, modified, source }
+      }
+    }
+  }
+
+  return { published, modified, source: 'none' }
 }
 
 /**

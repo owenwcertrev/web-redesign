@@ -141,10 +141,21 @@ function detectE1WithRegex(
     ]
 
     // Medium-confidence patterns (recommendations/opinions based on experience)
-    // TIGHTENED (2025-01): Require experience context to prevent false positives
+    // EXPANDED (2025-11): More permissive to catch common usage patterns
     const mediumExperiencePatterns = [
-      /\b(i recommend|we recommend|i suggest|we suggest)\s+(based on|from my|from our|in my)\b/gi, // Requires experience context
+      // Direct experience statements
+      /\b(i tried|we tried|i tested|we tested)\b/gi,
+      /\b(i found|we found|i discovered|we discovered)\b/gi,
+      /\b(i learned|we learned|i realized|we realized)\b/gi,
+      /\b(i use|we use|i prefer|we prefer)\b/gi,
+
+      // Recommendations (with or without explicit context)
+      /\b(i recommend|we recommend|i suggest|we suggest)\b/gi,
+      /\b(i would recommend|we would recommend|i'd recommend|we'd recommend)\b/gi,
+
+      // Opinions with experience context
       /\b(from my perspective|in my opinion|in our opinion)\b/gi,
+      /\b(in my view|in our view)\b/gi,
       /\b(i (believe|think).*based on)\b/gi
     ]
 
@@ -197,31 +208,42 @@ function detectE1WithRegex(
 
     // === PATHWAY 2: Professional/Institutional Experience ===
     // Professional experience patterns (collective/institutional voice) - UNIVERSAL
-    // TIGHTENED (2025-01): More specific patterns to prevent false positives
+    // EXPANDED (2025-11): Better coverage for tech/business/non-medical verticals
     const professionalExperiencePatterns = [
       // Institutional research/work (any field)
       /\b(our research|our study|our analysis|our findings|our data|our team|our investigation)\b/gi,
-      /\b(our (editorial|legal|engineering|financial|culinary|design) team)\b/gi,
-      /\b(our (experts|specialists|analysts|consultants|advisors))\b/gi,
+      /\b(our (editorial|legal|engineering|financial|culinary|design|development|product) team)\b/gi,
+      /\b(our (experts|specialists|analysts|consultants|advisors|engineers|developers))\b/gi,
 
       // Experience statements (any profession)
-      /\b(\d+\+?\s*years?.*(experience|practicing|working in|specializing in))\b/gi, // "10+ years experience"
+      /\b(\d+\+?\s*years?.*(experience|practicing|working in|specializing in|as a|in))\b/gi, // "10+ years experience"
       /\b(decades of experience|years of expertise)\b/gi,
 
       // Professional practice (multi-vertical)
       /\b((clinical|legal|financial|engineering|culinary) practice)\b/gi,
-      /\b(practicing (physician|attorney|engineer|accountant|architect))\b/gi,
+      /\b(practicing (physician|attorney|engineer|accountant|architect|developer))\b/gi,
       /\b(professional practice|treating (patients|clients)|serving clients)\b/gi,
+
+      // Tech/Engineering specific (EXPANDED 2025-11)
+      /\b(built|developed|engineered|deployed|shipped)\s+(production|systems?|applications?|platforms?|products?)\b/gi,
+      /\b(our (codebase|infrastructure|architecture|stack))\b/gi,
+      /\b((we've|we have) (built|deployed|shipped|tested|released|maintained))\b/gi,
+      /\b(in production|at scale|serving (millions|thousands) of users)\b/gi,
+
+      // Business/Consulting specific (EXPANDED 2025-11)
+      /\b(our (company|business|firm|agency|organization) has)\b/gi,
+      /\b((we've|we have) (served|helped|worked with|advised))\s+\d+\+?\s+(clients|companies|businesses)\b/gi,
+      /\b(our portfolio|our clients|our customer base)\b/gi,
 
       // Licensing/Certification (any field)
       /\b((board[- ])?certified|licensed|registered)\s+(professional|practitioner|specialist)\b/gi,
 
-      // Professional activities (TIGHTENED: requires specific context)
-      /\b(worked (with|as a|at))\s+\w+\s+(patients|clients|companies|teams)\b/gi, // Requires object
-      /\b(specializes? in|expert in)\s+\w+/gi, // Requires specialization area
-      /\b(built|founded|developed|created)\s+(a|an|the)\s+\w+\s+(company|product|system|platform|practice)\b/gi, // Requires object
+      // Professional activities (RELAXED: more permissive for common usage)
+      /\b(worked (with|as a?|at))\b/gi,
+      /\b(specializes? in|expert in)\b/gi,
+      /\b(built|founded|developed|created)\s+(a|an|the|our)?\s*\w*\s*(company|product|system|platform|practice|business|startup)\b/gi,
 
-      // Passive voice experience (ADDED: catches institutional voice)
+      // Passive voice experience (catches institutional voice)
       /\b(observations from|findings from|conclusions based on|experience treating|experience working with)\b/gi
     ]
 
@@ -346,24 +368,31 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
   // Strong signal for blog/editorial content across ALL verticals
   const perspectiveSectionPatterns = [
     // Generic perspective sections
-    /\b(reviewer'?s? note|editor'?s? note|expert'?s? note)\b/gi,
+    /\b(reviewer'?s? notes?|editor'?s? notes?|expert'?s? notes?)\b/gi,
     /\b(author'?s? perspective|expert perspective|professional perspective)\b/gi,
     /\b(my take|our take|expert opinion|professional opinion)\b/gi,
 
     // Medical/health
     /\b(clinical perspective|practitioner'?s? view|professional view)\b/gi,
+    /\b(medical perspective|doctor'?s? notes?|physician'?s? notes?)\b/gi,
 
     // Tech/engineering
-    /\b(engineer'?s? perspective|technical analysis|developer'?s? note|engineering lead'?s? take)\b/gi,
+    /\b(engineer'?s? perspective|technical analysis|developer'?s? notes?|engineering lead'?s? take)\b/gi,
+    /\b(developer notes?|engineer'?s? notes?|tech notes?|code review)\b/gi,
+    /\b(technical perspective|developer'?s? tips?)\b/gi,
 
     // Food/culinary
-    /\b(chef'?s? note|culinary perspective|tasting notes|chef'?s? take)\b/gi,
+    /\b(chef'?s? notes?|culinary perspective|tasting notes|chef'?s? take)\b/gi,
+    /\b(chef'?s? tips?|cook'?s? notes?|recipe notes?|culinary tips?)\b/gi,
 
     // Legal
     /\b(attorney'?s? analysis|legal perspective|counsel'?s? opinion|lawyer'?s? view)\b/gi,
+    /\b(attorney'?s? perspective|legal analysis|lawyer'?s? notes?)\b/gi,
 
     // Finance/business
     /\b(analyst'?s? view|financial perspective|economist'?s? take|cfo'?s? perspective)\b/gi,
+    /\b(consultant'?s? analysis|business perspective|analyst'?s? notes?)\b/gi,
+    /\b(consultant'?s? perspective|expert insights?|professional insights?)\b/gi,
 
     // International (German, French, Spanish, Italian)
     /\b(expertenmeinung|fachmeinung)\b/gi, // DE: expert opinion
@@ -439,14 +468,31 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
     /\b(revisionato da|verificato da|esaminato da)\b/gi
   ]
 
+  // Generic reviewer name filter (used for both text and schema)
+  const GENERIC_REVIEWER_NAMES = /\b(staff|editor|team|admin|content team|editorial team|content|editorial)\b/i
+
   // BUG FIX (2025-01): Stop after first match to prevent over-counting
   // (e.g., "medically reviewed by" matches both pattern 1 AND pattern 2)
+  // BUG FIX (2025-11): Filter generic placeholder names in text attribution
   let hasReviewAttribution = false
   for (const pattern of reviewAttributionPatterns) {
     if (hasReviewAttribution) break; // Already found, stop checking
 
     const matches = textSample.match(pattern)
     if (matches) {
+      // Extract the full context around the match to check for generic names
+      const matchText = matches[0]
+      const matchIndex = textSample.indexOf(matchText)
+      const contextLength = 100 // Check 100 chars after "reviewed by"
+      const context = textSample.slice(matchIndex, matchIndex + contextLength)
+
+      // Check if the reviewer name following the attribution is generic
+      if (GENERIC_REVIEWER_NAMES.test(context)) {
+        // Skip generic placeholder names like "Reviewed by Staff"
+        pattern.lastIndex = 0
+        continue
+      }
+
       score += 1.0
       hasReviewAttribution = true
       evidence.push({
@@ -488,7 +534,7 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
         if (reviewerName && !schemaReviewerFound) {
           // BUG FIX (2025-01): Validate reviewer name is not generic placeholder
           // Generic names like "Staff", "Editor", "Team" should not count as reviewers
-          const GENERIC_REVIEWER_NAMES = /\b(staff|editor|team|admin|content team|editorial team|content|editorial)\b/i
+          // (using shared GENERIC_REVIEWER_NAMES constant defined above)
 
           if (GENERIC_REVIEWER_NAMES.test(reviewerName)) {
             // Skip generic placeholder names
@@ -893,33 +939,11 @@ export function detectFreshness(pageAnalysis: PageAnalysis): EEATVariable {
   const evidence: EEATEvidence[] = []
   let score = 0
 
-  const schema = pageAnalysis.schemaMarkup || []
   const now = new Date()
   const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 12, now.getDate())
 
-  // Check schema dateModified or datePublished
-  let mostRecentDate: Date | null = null
-
-  schema.forEach(s => {
-    const dateModified = s.data?.dateModified || s.data?.dateUpdated
-    const datePublished = s.data?.datePublished
-
-    if (dateModified) {
-      const date = new Date(dateModified)
-      if (!isNaN(date.getTime())) {
-        if (!mostRecentDate || date > mostRecentDate) {
-          mostRecentDate = date
-        }
-      }
-    } else if (datePublished) {
-      const date = new Date(datePublished)
-      if (!isNaN(date.getTime())) {
-        if (!mostRecentDate || date > mostRecentDate) {
-          mostRecentDate = date
-        }
-      }
-    }
-  })
+  // Use dates extracted from multiple sources (schema > meta > visible > time elements)
+  const mostRecentDate = pageAnalysis.dates.modified || pageAnalysis.dates.published
 
   if (mostRecentDate !== null) {
     const recentDate = mostRecentDate as Date
@@ -941,11 +965,17 @@ export function detectFreshness(pageAnalysis: PageAnalysis): EEATVariable {
       value: `Last updated ${monthsOld} months ago`,
       label: recentDate.toLocaleDateString()
     })
+
+    // Add source information
+    evidence.push({
+      type: 'note',
+      value: `Date extracted from: ${pageAnalysis.dates.source}`
+    })
   } else {
     // No date found
     evidence.push({
       type: 'note',
-      value: 'No dateModified or datePublished found in schema'
+      value: 'No date found in schema, meta tags, time elements, or visible text'
     })
     score = 0
   }
