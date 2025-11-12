@@ -11,7 +11,8 @@ import { EEAT_VARIABLES } from '../../eeat-config'
 
 /**
  * E1: First-person narratives
- * Detect "I/we/my/our" in context of experience/practice/observation
+ * Detect experience signals: first-person narratives, professional backgrounds, clinical practice
+ * Recognizes both blog-style personal stories AND professional/institutional experience
  */
 export function detectFirstPersonNarratives(
   pageAnalysis: PageAnalysis,
@@ -30,20 +31,22 @@ export function detectFirstPersonNarratives(
       confidence: nlpAnalysis.experienceScore / 10
     })
   } else {
-    // Fallback: regex patterns for first-person experience
     const text = pageAnalysis.contentText?.toLowerCase() || ''
+    const authors = pageAnalysis.authors || []
 
+    // === PATHWAY 1: Personal First-Person Narratives (blog-style) ===
     // High-confidence experience patterns (specific contexts)
     const strongExperiencePatterns = [
       /\b(in my experience|from my experience|in our experience|from our experience)\b/gi,
       /\b(my practice|our practice|my clinic|our clinic|my patients|our patients)\b/gi,
-      /\b(in my work|in our work|my research|our research|my study|our study)\b/gi,
+      /\b(in my work|in our work|through my|through our)\s+(experience|work|practice|research|testing)\b/gi,
       /\b(my observation|our observation|i observed|we observed|i noticed|we noticed)\b/gi,
       /\b(i've seen|we've seen|i've found|we've found|i've worked with|we've worked with)\b/gi,
-      /\b(based on my|based on our|through my|through our)\s+(experience|work|practice|research|testing)\b/gi
+      /\b(based on my|based on our)\s+(experience|work|practice|research|testing)\b/gi,
+      /\b(i've treated|we've treated|i've helped|we've helped)\b/gi
     ]
 
-    // Medium-confidence patterns (recommendation/opinion based on experience)
+    // Medium-confidence patterns (recommendations/opinions based on experience)
     const mediumExperiencePatterns = [
       /\b(i recommend|we recommend|i suggest|we suggest)\b(?!\s+(checking|considering|avoiding|researching)\s+(competitors|alternatives|other options))/gi,
       /\b(from my perspective|in my opinion|in our opinion)\b/gi,
@@ -52,41 +55,160 @@ export function detectFirstPersonNarratives(
 
     let strongMatchCount = 0
     let mediumMatchCount = 0
+    let evidenceAdded = false
 
-    // Count strong matches (weighted more)
     strongExperiencePatterns.forEach(pattern => {
       const matches = text.match(pattern)
       if (matches) {
         strongMatchCount += matches.length
-        if (strongMatchCount <= 3) { // Only show first 3 to avoid spam
+        if (!evidenceAdded) {
           evidence.push({
             type: 'snippet',
             value: matches.slice(0, 3).join(', '),
             label: 'First-person experience phrases'
           })
+          evidenceAdded = true
         }
       }
     })
 
-    // Count medium matches
     mediumExperiencePatterns.forEach(pattern => {
       const matches = text.match(pattern)
+      if (matches) mediumMatchCount += matches.length
+    })
+
+    // === PATHWAY 2: Professional/Institutional Experience ===
+    // Professional experience patterns (collective/institutional voice)
+    const professionalExperiencePatterns = [
+      /\b(our research|our study|our analysis|our findings|our data|our team|our investigation)\b/gi,
+      /\b(our editorial team|our medical team|our expert team)\b/gi,
+      /\b(years? of (clinical |professional )?experience|decades of experience)\b/gi,
+      /\b((board[- ])?certified|licensed|practicing)\s+(physician|doctor|nurse|therapist|dietitian|pharmacist)\b/gi,
+      /\b(clinical practice|medical practice|professional practice|treating patients)\b/gi,
+      /\b(worked (with|as a)|specializes? in|focuses on)\b/gi
+    ]
+
+    let professionalMatchCount = 0
+    professionalExperiencePatterns.forEach(pattern => {
+      const matches = text.match(pattern)
       if (matches) {
-        mediumMatchCount += matches.length
+        professionalMatchCount += matches.length
+        if (professionalMatchCount <= 3) {
+          evidence.push({
+            type: 'snippet',
+            value: matches.slice(0, 2).join(', '),
+            label: 'Professional experience indicators'
+          })
+        }
       }
     })
 
-    // Calculate weighted match count (strong matches count as 1.5x)
-    const weightedMatchCount = (strongMatchCount * 1.5) + mediumMatchCount
+    // === PATHWAY 3: Author Professional Background ===
+    // Check if authors have experience-related credentials or roles
+    let authorExperienceScore = 0
+    authors.forEach(author => {
+      const authorInfo = `${author.name || ''} ${author.credentials || ''} ${author.role || ''} ${author.title || ''}`.toLowerCase()
 
-    // Score based on weighted match frequency (0-4 points)
-    if (weightedMatchCount >= 12) score = config.maxScore
-    else if (weightedMatchCount >= 7) score = 3
-    else if (weightedMatchCount >= 3) score = 2
-    else if (weightedMatchCount >= 1) score = 1
+      // Professional credentials that indicate direct experience
+      const experienceCredentials = [
+        // Medical/Health professional licenses (strongest signal)
+        /\b(md|do|phd|pharmd|dds|dvm|dnp|psyd)\b/i,
+        /\b(rn|np|pa-c|lpn|cna)\b/i, // Nursing
+        /\b(rd|rdn|ldn|cns)\b/i, // Dietitian/Nutritionist
+        /\b(mph|msn|msw|mft|lcsw|lmft|lpc)\b/i, // Mental health / Public health
+        /\b(pt|ot|slp|ccc-slp|dpt)\b/i, // Physical/Occupational therapy
+        // Relevant academic credentials in health/nutrition context (moderate signal)
+        // For health/nutrition content, MS/BSc indicate relevant educational background
+        /\b(ms|mph|mha|mhs|msc|mcmsc)\b/i, // Master's in sciences/health/clinical
+        /\b(bs|bsc|bsn|ba)\b/i, // Bachelor's degrees (in health content context, likely relevant)
+        /\b(mba)\b/i, // MBA (in health publishing context, indicates business/editorial experience)
+        // Professional roles that indicate direct experience
+        /\b(physician|doctor|nurse|therapist|dietitian|nutritionist|pharmacist|practitioner)\b/i,
+        /\b(clinical|medical|health)\s+(specialist|expert|professional|consultant)\b/i,
+        /\b(years? of (clinical |professional )?experience|practicing|board[- ]certified|licensed|registered)\b/i
+      ]
+
+      const hasExperienceCredential = experienceCredentials.some(pattern => pattern.test(authorInfo))
+
+      if (hasExperienceCredential) {
+        authorExperienceScore += 1
+        evidence.push({
+          type: 'snippet',
+          value: `${author.name || 'Author'} - professional background`,
+          label: 'Author with professional experience'
+        })
+      }
+    })
+
+    // === PATHWAY 4: Medical Reviewer (Experienced Practitioner Review) ===
+    // Check schema for reviewedBy or medicalReviewer
+    const schema = pageAnalysis.schemaMarkup || []
+    let reviewerExperienceScore = 0
+
+    schema.forEach(s => {
+      const reviewer = s.data?.reviewedBy || s.data?.medicalReviewer
+      if (reviewer) {
+        const reviewerName = typeof reviewer === 'string' ? reviewer : reviewer?.name
+        if (reviewerName) {
+          reviewerExperienceScore += 1.5
+          evidence.push({
+            type: 'snippet',
+            value: reviewerName,
+            label: 'Medical/expert reviewer (implies clinical experience)'
+          })
+        }
+      }
+    })
+
+    // === CALCULATE FINAL SCORE ===
+    // Weight different pathways appropriately:
+    // - Personal narratives: highest weight (1.5x for strong, 1x for medium) - Blog-style content
+    // - Professional patterns: medium weight (0.75x) - Editorial/institutional voice
+    // - Author backgrounds: strong boost (1.5pt per credentialed author, cap at 3pts) - Professional publishers
+    // - Reviewer presence: strong boost (2pts for medical reviewer) - YMYL content quality signal
+
+    const narrativeScore = (strongMatchCount * 1.5) + mediumMatchCount
+    const professionalScore = professionalMatchCount * 0.75
+    const authorScore = Math.min(authorExperienceScore * 1.5, 3) // Cap at 3 pts (2 credentialed authors = 3pts)
+    const reviewerScore = Math.min(reviewerExperienceScore, 2) // Cap at 2 pts
+
+    const totalWeighted = narrativeScore + professionalScore + authorScore + reviewerScore
+
+    // Calibrated scoring thresholds for professional publishers
+    // Professional medical sites (like Healthline) score high via credentialed authors + reviewers
+    // Blog-style sites score high via first-person narratives
+    if (totalWeighted >= 5) score = config.maxScore // Excellent: Strong experience signals
+    else if (totalWeighted >= 3) score = 3 // Good: Multiple experience indicators
+    else if (totalWeighted >= 1.5) score = 2 // Fair: Some experience signals
+    else if (totalWeighted >= 0.5) score = 1 // Minimal: Limited experience shown
+    else score = 0
+
+    // Add summary metric
+    if (totalWeighted > 0) {
+      evidence.push({
+        type: 'metric',
+        value: `Experience score: ${totalWeighted.toFixed(1)} (narratives: ${narrativeScore.toFixed(1)}, professional: ${professionalScore.toFixed(1)}, authors: ${authorScore.toFixed(1)}, reviewers: ${reviewerScore.toFixed(1)})`,
+        label: 'Combined experience signals'
+      })
+    }
   }
 
   const status = getVariableStatus(score, config)
+
+  // Dynamic recommendations based on what's missing
+  let recommendation: string | undefined
+  if (score < config.thresholds.good) {
+    const hasAuthors = (pageAnalysis.authors?.length || 0) > 0
+    const hasReviewers = (pageAnalysis.schemaMarkup || []).some(s => s.data?.reviewedBy || s.data?.medicalReviewer)
+
+    if (!hasAuthors && !hasReviewers) {
+      recommendation = 'Add named authors with professional backgrounds (e.g., "15 years clinical experience") and/or medical reviewers to demonstrate practical experience'
+    } else if (score < 1) {
+      recommendation = 'Include first-person narratives ("In my practice..."), case examples, or professional context ("Our research team...") to demonstrate hands-on experience'
+    } else {
+      recommendation = 'Strengthen experience signals: add personal insights, clinical observations, or institutional research findings to show direct expertise application'
+    }
+  }
 
   return {
     id: config.id,
@@ -96,9 +218,7 @@ export function detectFirstPersonNarratives(
     actualScore: score,
     status,
     evidence,
-    recommendation: score < config.thresholds.good
-      ? 'Add more first-person narratives and case examples to demonstrate practical experience'
-      : undefined,
+    recommendation,
     detectionMethod: config.detectionMethod
   }
 }
