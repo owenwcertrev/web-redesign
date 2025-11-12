@@ -432,24 +432,38 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
 
   const allHeadings = [...headings.h1, ...headings.h2, ...headings.h3]
   let explicitSectionFound = false
+  let headingMatchCount = 0
+  const MAX_HEADING_MATCHES = 2 // BUG FIX (2025-01): Cap heading matches to prevent score overflow
 
-  allHeadings.forEach(headingText => {
-    perspectiveSectionPatterns.forEach(pattern => {
-      if (pattern.test(headingText)) {
+  // BUG FIX (2025-01): Use for loop instead of forEach to enable break, and reset regex state
+  for (const headingText of allHeadings) {
+    if (headingMatchCount >= MAX_HEADING_MATCHES) break;
+
+    for (const pattern of perspectiveSectionPatterns) {
+      // BUG FIX (2025-01): Use exec() instead of test() and reset lastIndex to prevent regex state corruption
+      const match = pattern.exec(headingText)
+      pattern.lastIndex = 0 // Reset global regex state
+
+      if (match) {
         score += 1.5
         explicitSectionFound = true
+        headingMatchCount++
         evidence.push({
           type: 'snippet',
           value: headingText,
           label: 'Perspective section heading'
         })
+        break // Only match once per heading
       }
-    })
-  })
+    }
+  }
 
   // Check for perspective indicators in body text
+  // BUG FIX (2025-01): Limit search to first 2000 words for performance
+  const textSample = text.slice(0, 12000) // ~2000 words (avg 6 chars/word)
+
   perspectiveSectionPatterns.forEach(pattern => {
-    const matches = text.match(pattern)
+    const matches = textSample.match(pattern)
     if (matches && !explicitSectionFound) {
       score += 0.5 * Math.min(matches.length, 2) // Cap contribution from text mentions
       evidence.push({
@@ -458,6 +472,8 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
         label: 'Perspective indicators in text'
       })
     }
+    // Reset global regex state after match
+    pattern.lastIndex = 0
   })
 
   // === PATHWAY 2: Medical/Expert Reviewer Attribution (YMYL Standard) ===
@@ -481,9 +497,13 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
     /\b(revisionato da|verificato da|esaminato da)\b/gi
   ]
 
+  // BUG FIX (2025-01): Stop after first match to prevent over-counting
+  // (e.g., "medically reviewed by" matches both pattern 1 AND pattern 2)
   let hasReviewAttribution = false
-  reviewAttributionPatterns.forEach(pattern => {
-    const matches = text.match(pattern)
+  for (const pattern of reviewAttributionPatterns) {
+    if (hasReviewAttribution) break; // Already found, stop checking
+
+    const matches = textSample.match(pattern)
     if (matches) {
       score += 1.0
       hasReviewAttribution = true
@@ -492,19 +512,32 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
         value: matches[0],
         label: 'Review attribution found'
       })
+      // Reset regex state
+      pattern.lastIndex = 0
+      break // BUG FIX: Only count first matching pattern
     }
-  })
+  }
 
   // === PATHWAY 3: Credentialed Expert Reviewer (Schema/Authors) ===
   // Healthline-style: Multiple authors where reviewer has professional credentials
 
   // Check schema for reviewedBy or medicalReviewer
+  // BUG FIX (2025-01): Handle both single reviewer and array of reviewers
   let schemaReviewerFound = false
   schema.forEach(s => {
-    const reviewer = s.data?.reviewedBy || s.data?.medicalReviewer
-    if (reviewer) {
+    if (schemaReviewerFound) return; // Only count once
+
+    const reviewerField = s.data?.reviewedBy || s.data?.medicalReviewer
+    if (!reviewerField) return;
+
+    // Normalize to array for consistent handling
+    const reviewers = Array.isArray(reviewerField) ? reviewerField : [reviewerField]
+
+    for (const reviewer of reviewers) {
+      if (!reviewer) continue;
+
       const reviewerName = typeof reviewer === 'string' ? reviewer : reviewer?.name
-      if (reviewerName) {
+      if (reviewerName && !schemaReviewerFound) {
         score += 1.5
         schemaReviewerFound = true
         evidence.push({
@@ -512,6 +545,7 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
           value: reviewerName,
           label: 'Expert reviewer in schema'
         })
+        break // Only count first reviewer
       }
     }
   })
@@ -542,8 +576,9 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
       // Real estate
       /\b(realtor|real estate (broker|agent)|licensed (broker|agent)|gri|crs|abr)\b/i,
 
-      // Business/management
-      /\b(mba|ceo|cto|cfo|coo|founder|co[- ]founder|director|vice president|vp|president)\b/i,
+      // Business/management (C-suite only, removed generic director/vp/president)
+      // BUG FIX (2025-01): Removed "director", "vp", "president" - too broad without context
+      /\b(mba|ceo|cto|cfo|coo|founder|co[- ]founder)\b/i,
 
       // Academia
       /\b(professor|associate professor|assistant professor|lecturer|phd|doctorate|doctoral)\b/i,
@@ -565,7 +600,8 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
       /\b(dr\.|prof\.|eng\.)\b/i,
 
       // Generic post-nominals (2-5 uppercase letters after comma)
-      /,\s*[A-Z]{2,5}(\b|,|\s)/i,
+      // BUG FIX (2025-01): Exclude common non-credential abbreviations
+      /,\s*(?!Jr|Sr|II|III|IV|UK|US|CA|NY|TX|FL|IL)\b[A-Z]{2,5}(\b|,|\s)/i,
     ]
 
     let credentialedAuthorsCount = 0
@@ -603,15 +639,37 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
 
   // === PATHWAY 4: Single Credentialed Author with Bio/Background ===
   // Solo expert providing their perspective
+  // BUG FIX (2025-01): Validate credentials against professional patterns (not just any credentials)
   if (authors.length === 1 && !schemaReviewerFound && !hasReviewAttribution) {
     const author = authors[0]
-    const hasCredentials = author.credentials && author.credentials.length > 0
-
-    // Check if author info suggests expert perspective (universal titles across verticals)
     const authorInfo = `${author.name || ''} ${author.credentials || ''}`.toLowerCase()
-    const hasExpertLanguage = /\b(expert|specialist|consultant|professor|lecturer|researcher|director|senior|principal|staff|lead|chef|attorney|engineer|analyst|manager)\b/i.test(authorInfo)
 
-    if (hasCredentials || hasExpertLanguage) {
+    // Use same professional credential patterns from Pathway 3
+    const professionalCredentialPatterns = [
+      /\b(md|do|phd|pharmd|dds|dvm|dnp|psyd|rn|np|pa-c|rd|rdn|ldn|mph|msn|msw|mft|lcsw|lmft|lpc)\b/i,
+      /\b(cfa|cfp|cpa|cma|cia|series\s*(7|6|63|65|66)|chartered financial|enrolled agent)\b/i,
+      /\b(jd|esq|esquire|llm|llb|attorney|lawyer|counsel|bar certified)\b/i,
+      /\b(senior engineer|staff engineer|principal engineer|engineering lead|engineering manager|tech lead)\b/i,
+      /\b(software engineer|full[- ]stack|backend|frontend|devops)\s+(engineer|developer)\b/i,
+      /\b(chef|executive chef|head chef|sous chef|pastry chef|culinary institute|cordon bleu|james beard|michelin)\b/i,
+      /\b(realtor|real estate (broker|agent)|licensed (broker|agent)|gri|crs|abr)\b/i,
+      /\b(mba|ceo|cto|cfo|coo|founder|co[- ]founder)\b/i,
+      /\b(professor|associate professor|assistant professor|lecturer)\b/i,
+      /\b(certified (personal trainer|fitness|yoga|pilates)|cscs|nsca|nasm|ace|issa)\b/i,
+      /\b(dipl[.-]?ing|dr[.-]?ing|facharzt|diplomingenieur|rechtsanwalt|steuerberater)\b/i,
+      /\b(docteur|maître|ingénieur|diplômé|diplôme)\b/i,
+      /\b(licenciado|ingeniero|abogado|doctor)\b/i,
+      /\b(dottore|ingegnere|avvocato)\b/i,
+      /\b(dr\.|prof\.|eng\.)\b/i,
+      /,\s*(?!Jr|Sr|II|III|IV|UK|US|CA|NY|TX|FL|IL)\b[A-Z]{2,5}(\b|,|\s)/i,
+    ]
+
+    const hasValidCredentials = professionalCredentialPatterns.some(pattern => pattern.test(authorInfo))
+
+    // Check if author info suggests expert perspective (specific professional titles only)
+    const hasExpertLanguage = /\b(expert|specialist|consultant|professor|lecturer|researcher|chef|attorney|engineer|scientist)\b/i.test(authorInfo)
+
+    if (hasValidCredentials || hasExpertLanguage) {
       score += 1.0
       evidence.push({
         type: 'snippet',
