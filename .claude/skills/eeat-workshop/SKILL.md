@@ -382,9 +382,26 @@ recommendations: [
 ]
 ```
 
-### Step 5: Validate Changes
+### Step 5: Deploy Changes to Production
 
-Re-run the analysis:
+After implementing improvements, deploy to production so the user can test on the live site:
+
+```bash
+git add .
+git commit -m "E-E-A-T: Improve [Metric ID] detection - [brief description]"
+git push
+```
+
+This triggers automatic deployment to Vercel. Wait ~30-60 seconds for deployment to complete.
+
+**Why this matters:**
+- User needs to test changes on the live production site (web-redesign-certrev.vercel.app)
+- Local testing validates logic, but production testing validates real-world behavior
+- Vercel deployment is automatic via git push
+
+### Step 6: Validate Changes in Production
+
+Re-run the analysis on LOCAL to verify improvements:
 ```bash
 npx tsx scripts/debug-single-url.ts [same URL]
 ```
@@ -395,12 +412,17 @@ Compare before vs. after:
 - Are the recommendations more helpful?
 - Does Healthline now score appropriately for an industry leader?
 
+**User can now test on production:**
+- Visit https://web-redesign-certrev.vercel.app
+- Test the improved metric with their own URLs
+- Verify changes work in the live production environment
+
 If validation fails or results are unexpected:
 - Investigate what went wrong
 - Make additional adjustments
-- Re-test until satisfied
+- Re-deploy and re-test until satisfied
 
-### Step 6: Summary
+### Step 7: Summary
 
 Provide a concise summary:
 

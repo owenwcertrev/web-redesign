@@ -385,7 +385,10 @@ function detectE1WithRegex(
 
 /**
  * E2: Author perspective blocks
- * Detect sections like "Reviewer's Note", "Expert's Opinion", "Author's Perspective"
+ * Detect professional perspective signals:
+ * - Explicit perspective sections ("Reviewer's Note", "Expert Opinion")
+ * - Medical/expert reviewer attribution (industry standard for YMYL)
+ * - Multiple credentialed authors (collaborative expert perspective)
  */
 export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATVariable {
   const config = EEAT_VARIABLES.experience.find(v => v.id === 'E2')!
@@ -394,21 +397,26 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
 
   const text = pageAnalysis.contentText || ''
   const headings = pageAnalysis.headings || { h1: [], h2: [], h3: [] }
+  const authors = pageAnalysis.authors || []
+  const schema = pageAnalysis.schemaMarkup || []
 
-  // Check for perspective block indicators in headings or bold text
-  const perspectivePatterns = [
+  // === PATHWAY 1: Explicit Perspective Section Headings (Editorial Style) ===
+  // Strong signal for blog/editorial content
+  const perspectiveSectionPatterns = [
     /\b(reviewer'?s? note|editor'?s? note|expert'?s? note)\b/gi,
     /\b(author'?s? perspective|expert perspective|professional perspective)\b/gi,
     /\b(my take|our take|expert opinion|professional opinion)\b/gi,
-    /\b(clinical perspective|practitioner'?s? view)\b/gi
+    /\b(clinical perspective|practitioner'?s? view|professional view)\b/gi
   ]
 
-  // Check headings first (stronger signal) - combine all heading levels
   const allHeadings = [...headings.h1, ...headings.h2, ...headings.h3]
+  let explicitSectionFound = false
+
   allHeadings.forEach(headingText => {
-    perspectivePatterns.forEach(pattern => {
+    perspectiveSectionPatterns.forEach(pattern => {
       if (pattern.test(headingText)) {
         score += 1.5
+        explicitSectionFound = true
         evidence.push({
           type: 'snippet',
           value: headingText,
@@ -418,11 +426,11 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
     })
   })
 
-  // Check for perspective blocks in text
-  perspectivePatterns.forEach(pattern => {
+  // Check for perspective indicators in body text
+  perspectiveSectionPatterns.forEach(pattern => {
     const matches = text.match(pattern)
-    if (matches) {
-      score += 0.5 * matches.length
+    if (matches && !explicitSectionFound) {
+      score += 0.5 * Math.min(matches.length, 2) // Cap contribution from text mentions
       evidence.push({
         type: 'snippet',
         value: matches.slice(0, 2).join(', '),
@@ -431,10 +439,137 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
     }
   })
 
+  // === PATHWAY 2: Medical/Expert Reviewer Attribution (YMYL Standard) ===
+  // Industry-standard approach for health/financial content
+  const reviewAttributionPatterns = [
+    /\b(medically reviewed by|medical review by)\b/gi,
+    /\b(reviewed by|fact[- ]checked by|verified by)\b/gi,
+    /\b(expert review|professional review)\b/gi
+  ]
+
+  let hasReviewAttribution = false
+  reviewAttributionPatterns.forEach(pattern => {
+    const matches = text.match(pattern)
+    if (matches) {
+      score += 1.0
+      hasReviewAttribution = true
+      evidence.push({
+        type: 'snippet',
+        value: matches[0],
+        label: 'Review attribution found'
+      })
+    }
+  })
+
+  // === PATHWAY 3: Credentialed Expert Reviewer (Schema/Authors) ===
+  // Healthline-style: Multiple authors where reviewer has professional credentials
+
+  // Check schema for reviewedBy or medicalReviewer
+  let schemaReviewerFound = false
+  schema.forEach(s => {
+    const reviewer = s.data?.reviewedBy || s.data?.medicalReviewer
+    if (reviewer) {
+      const reviewerName = typeof reviewer === 'string' ? reviewer : reviewer?.name
+      if (reviewerName) {
+        score += 1.5
+        schemaReviewerFound = true
+        evidence.push({
+          type: 'snippet',
+          value: reviewerName,
+          label: 'Expert reviewer in schema'
+        })
+      }
+    }
+  })
+
+  // Check for multiple authors with at least one having professional credentials
+  // This is Healthline's pattern: Author + Credentialed Reviewer
+  if (!schemaReviewerFound && authors.length >= 2) {
+    // Professional credentials that indicate expert review
+    const professionalCredentials = [
+      // Medical
+      /\b(md|do|phd|pharmd|dds|dvm|dnp|psyd|rn|np|pa-c|rd|rdn|ldn|mph|msn|msw|mft|lcsw|lmft|lpc)\b/i,
+      // Finance
+      /\b(cfa|cfp|cpa|cma|cia)\b/i,
+      // Law
+      /\b(jd|esq|llm|llb)\b/i,
+      // Other professional
+      /\b(mba|pe|aia|leed ap)\b/i,
+      // Generic post-nominals (2-5 uppercase letters)
+      /,\s*[A-Z]{2,5}(\b|,|\s)/i,
+    ]
+
+    let credentialedAuthorsCount = 0
+    const credentialedAuthors: string[] = []
+
+    authors.forEach(author => {
+      const authorInfo = `${author.name || ''} ${author.credentials || ''}`.toLowerCase()
+      const hasCredentials = professionalCredentials.some(pattern => pattern.test(authorInfo))
+
+      if (hasCredentials) {
+        credentialedAuthorsCount++
+        credentialedAuthors.push(author.name || 'Credentialed author')
+      }
+    })
+
+    // Award points for collaborative expert authorship
+    if (credentialedAuthorsCount >= 2) {
+      // Multiple credentialed experts = strong collaborative perspective (excellent)
+      score += 2.5
+      evidence.push({
+        type: 'metric',
+        value: `${credentialedAuthorsCount} credentialed experts collaborated`,
+        label: credentialedAuthors.join(', ')
+      })
+    } else if (credentialedAuthorsCount === 1 && authors.length >= 2) {
+      // Writer + Credentialed Reviewer pattern (Healthline standard - industry best practice for YMYL)
+      score += 2.0
+      evidence.push({
+        type: 'snippet',
+        value: `Multiple authors including ${credentialedAuthors[0]}`,
+        label: 'Expert review collaboration'
+      })
+    }
+  }
+
+  // === PATHWAY 4: Single Credentialed Author with Bio/Background ===
+  // Solo expert providing their perspective
+  if (authors.length === 1 && !schemaReviewerFound && !hasReviewAttribution) {
+    const author = authors[0]
+    const hasCredentials = author.credentials && author.credentials.length > 0
+
+    // Check if author info suggests expert perspective
+    const authorInfo = `${author.name || ''} ${author.credentials || ''}`.toLowerCase()
+    const hasExpertLanguage = /\b(expert|specialist|consultant|professor|director|senior)\b/i.test(authorInfo)
+
+    if (hasCredentials || hasExpertLanguage) {
+      score += 1.0
+      evidence.push({
+        type: 'snippet',
+        value: `${author.name}${author.credentials ? ' ' + author.credentials : ''}`,
+        label: 'Credentialed author provides expert perspective'
+      })
+    }
+  }
+
   // Cap at maxScore
   score = Math.min(score, config.maxScore)
 
   const status = getVariableStatus(score, config)
+
+  // Dynamic recommendation based on what's missing
+  let recommendation: string | undefined
+  if (score < config.thresholds.good) {
+    if (authors.length === 0) {
+      recommendation = 'Add named author and expert reviewer to provide professional perspective validation'
+    } else if (authors.length === 1 && !authors[0].credentials) {
+      recommendation = 'Add medical/expert reviewer with credentials to validate content (e.g., "Medically reviewed by [Name, MD]")'
+    } else if (authors.length >= 2 && evidence.length === 0) {
+      recommendation = 'Highlight reviewer credentials and review process to demonstrate expert perspective validation'
+    } else {
+      recommendation = 'Add explicit perspective sections (e.g., "Expert Opinion", "Reviewer\'s Note") or medical review attribution'
+    }
+  }
 
   return {
     id: config.id,
@@ -444,9 +579,7 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
     actualScore: score,
     status,
     evidence,
-    recommendation: score < config.thresholds.good
-      ? 'Add reviewer or author perspective sections to provide expert insights'
-      : undefined,
+    recommendation,
     detectionMethod: config.detectionMethod
   }
 }
