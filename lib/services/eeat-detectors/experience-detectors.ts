@@ -713,7 +713,18 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
 
 /**
  * E3: Original assets
- * Detect brand-owned images, charts, custom data (vs stock photos)
+ * Detect brand-owned images, charts, custom data, case studies (vs stock photos)
+ *
+ * UNIVERSAL COVERAGE (2025-01):
+ * - Visual asset references (figures, diagrams, infographics, charts)
+ * - Original research & data (proprietary studies, surveys, custom analysis)
+ * - Case studies & examples (patient/client stories, real-world examples)
+ * - Before/after comparisons (progress photos, demonstrations)
+ * - Tutorial assets (screenshots, step-by-step images)
+ * - Team/facility photography (original photos, not stock)
+ * - Cross-vertical patterns (medical, tech, food, legal, business, etc.)
+ * - International support (German, French, Spanish, Italian)
+ * - Schema ImageObject with creator/copyrightHolder fields
  */
 export function detectOriginalAssets(pageAnalysis: PageAnalysis): EEATVariable {
   const config = EEAT_VARIABLES.experience.find(v => v.id === 'E3')!
@@ -722,53 +733,282 @@ export function detectOriginalAssets(pageAnalysis: PageAnalysis): EEATVariable {
 
   const images = pageAnalysis.images || { total: 0, withAlt: 0 }
   const text = pageAnalysis.contentText?.toLowerCase() || ''
+  const schema = pageAnalysis.schemaMarkup || []
 
-  // Check for original data indicators in text
-  const originalityPatterns = [
-    /\b(our data|our research|our study|our analysis|our findings)\b/gi,
-    /\b(custom chart|custom graph|original research|proprietary data)\b/gi,
-    /\b(clinic photos|practice photos|our team|our facility)\b/gi
+  // === PATHWAY 1: Visual Asset References (0.8 pts) ===
+  // Detect references to custom figures, diagrams, infographics, charts
+  const visualAssetPatterns = [
+    // Figure/diagram references
+    /\b(figure\s+\d+|fig\.\s*\d+|diagram\s+\d+|chart\s+\d+|graph\s+\d+)\b/gi,
+    /\b(see (the )?(image|figure|diagram|chart|graph|infographic) (below|above))\b/gi,
+    /\b(illustrated in|shown in (the )?(image|figure|diagram|chart))\b/gi,
+    /\b(infographic|data visualization|custom chart|custom graph|custom diagram)\b/gi,
+    // International (DE, FR, ES, IT)
+    /\b(abbildung\s+\d+|diagramm\s+\d+|siehe abbildung)\b/gi, // DE
+    /\b(figure\s+\d+|diagramme\s+\d+|voir figure)\b/gi, // FR
+    /\b(figura\s+\d+|diagrama\s+\d+|ver figura)\b/gi, // ES
+    /\b(figura\s+\d+|diagramma\s+\d+|vedi figura)\b/gi  // IT
   ]
 
-  originalityPatterns.forEach(pattern => {
+  let visualAssetFound = false
+  for (const pattern of visualAssetPatterns) {
     const matches = text.match(pattern)
-    if (matches) {
-      score += 0.5
+    pattern.lastIndex = 0 // Reset regex state
+
+    if (matches && !visualAssetFound) {
+      score += 0.8
+      visualAssetFound = true
+      evidence.push({
+        type: 'snippet',
+        value: matches.slice(0, 3).join(', '),
+        label: 'Visual asset references (figures/diagrams/charts)'
+      })
+      break
+    }
+  }
+
+  // === PATHWAY 2: Original Research & Data (0.8 pts) ===
+  // Detect proprietary research, custom data, original studies
+  const originalDataPatterns = [
+    // Strong signals (first-party research)
+    /\b(our (data|research|study|survey|analysis|findings|experiment))\b/gi,
+    /\b((proprietary|original|exclusive) (data|research|study))\b/gi,
+    /\b(we (analyzed|surveyed|tested|studied|examined|researched))\b/gi,
+    /\b(based on our (data|research|analysis|study))\b/gi,
+    // Softer signals (curated examples/data)
+    /\b(sample (menu|meal plan|recipe|workout|routine))\b/gi,
+    /\b(example (recipe|plan|routine|schedule))\b/gi,
+    /\b(shopping list|grocery list|food list)\b/gi,
+    /\b(here'?s? (a|an|the) (sample|example))\b/gi,
+    // International (DE, FR, ES, IT)
+    /\b(unsere (daten|forschung|studie|umfrage|analyse))\b/gi, // DE
+    /\b(nos (données|recherches|étude|analyse))\b/gi, // FR
+    /\b(nuestros (datos|investigación|estudio|análisis))\b/gi, // ES
+    /\b(nostri (dati|ricerca|studio|analisi))\b/gi  // IT
+  ]
+
+  let originalDataFound = false
+  for (const pattern of originalDataPatterns) {
+    const matches = text.match(pattern)
+    pattern.lastIndex = 0
+
+    if (matches && !originalDataFound) {
+      score += 0.8
+      originalDataFound = true
+      evidence.push({
+        type: 'snippet',
+        value: matches.slice(0, 3).join(', '),
+        label: 'Original research/data indicators'
+      })
+      break
+    }
+  }
+
+  // === PATHWAY 3: Case Studies & Examples (0.7 pts) ===
+  // Detect real examples, patient/client stories, case studies
+  const caseStudyPatterns = [
+    // English
+    /\b(case study|case example|real[- ]world example)\b/gi,
+    /\b((patient|client|customer) (story|case|example))\b/gi,
+    /\b(success story|real example|example case)\b/gi,
+    /\b(testimonial with|story from our)\b/gi,
+    // International (DE, FR, ES, IT)
+    /\b(fallstudie|patientengeschichte|beispiel aus der praxis)\b/gi, // DE
+    /\b(étude de cas|histoire de patient|exemple réel)\b/gi, // FR
+    /\b(estudio de caso|historia de paciente|ejemplo real)\b/gi, // ES
+    /\b(caso di studio|storia del paziente|esempio reale)\b/gi  // IT
+  ]
+
+  let caseStudyFound = false
+  for (const pattern of caseStudyPatterns) {
+    const matches = text.match(pattern)
+    pattern.lastIndex = 0
+
+    if (matches && !caseStudyFound) {
+      score += 0.7
+      caseStudyFound = true
       evidence.push({
         type: 'snippet',
         value: matches.slice(0, 2).join(', '),
-        label: 'Original asset indicators'
+        label: 'Case studies/examples found'
       })
+      break
+    }
+  }
+
+  // === PATHWAY 4: Before/After & Comparisons (0.5 pts) ===
+  // Detect progress photos, before/after comparisons, demonstrations
+  const comparisonPatterns = [
+    /\b(before and after|before\/after|before & after)\b/gi,
+    /\b(progress (photo|image|picture)s?)\b/gi,
+    /\b((results|changes) shown in)\b/gi,
+    /\b(comparison (photo|image|chart))\b/gi,
+    // International
+    /\b(vorher und nachher|vorher\/nachher)\b/gi, // DE
+    /\b(avant et après|avant\/après)\b/gi, // FR
+    /\b(antes y después|antes\/después)\b/gi, // ES
+    /\b(prima e dopo|prima\/dopo)\b/gi  // IT
+  ]
+
+  let comparisonFound = false
+  for (const pattern of comparisonPatterns) {
+    const match = pattern.exec(text)
+    pattern.lastIndex = 0
+
+    if (match && !comparisonFound) {
+      score += 0.5
+      comparisonFound = true
+      evidence.push({
+        type: 'snippet',
+        value: match[0],
+        label: 'Before/after or comparison content'
+      })
+      break
+    }
+  }
+
+  // === PATHWAY 5: Tutorial & Demo Assets (0.4 pts) ===
+  // Detect screenshots, step-by-step images, how-to demonstrations, structured guides
+  const tutorialPatterns = [
+    /\b(screenshot|screen shot|step[- ]by[- ]step (image|photo))\b/gi,
+    /\b(as shown (in|below)|follow these steps)\b/gi,
+    /\b(demo(nstration)?|how[- ]to (image|photo|illustration))\b/gi,
+    /\b(tutorial (image|photo|screenshot))\b/gi,
+    // Structured how-to content (indicates original guidance)
+    /\b(step \d+|first,|second,|third,|finally,)\b/gi,
+    /\b((follow|try) (these|this)|here's how)\b/gi
+  ]
+
+  let tutorialFound = false
+  for (const pattern of tutorialPatterns) {
+    const match = pattern.exec(text)
+    pattern.lastIndex = 0
+
+    if (match && !tutorialFound) {
+      score += 0.4
+      tutorialFound = true
+      evidence.push({
+        type: 'snippet',
+        value: match[0],
+        label: 'Tutorial/demonstration assets'
+      })
+      break
+    }
+  }
+
+  // === PATHWAY 6: Team/Facility Photography (0.3 pts) ===
+  // Detect original team photos, facility images, not stock
+  const teamPhotoPatterns = [
+    // Medical/health
+    /\b((our|the) (team|staff|clinic|practice|facility|office))\b/gi,
+    /\b(meet our|about our (team|practice|clinic))\b/gi,
+    // Tech
+    /\b((our|the) (engineering team|development team|office))\b/gi,
+    // Food/restaurant
+    /\b((our|the) (kitchen|restaurant|chef team))\b/gi,
+    // Legal
+    /\b((our|the) (law firm|legal team|attorneys))\b/gi,
+    // Business
+    /\b((our|the) (company|organization|headquarters))\b/gi,
+    // International
+    /\b(unser team|unsere praxis)\b/gi, // DE
+    /\b(notre équipe|notre clinique)\b/gi, // FR
+    /\b(nuestro equipo|nuestra clínica)\b/gi, // ES
+    /\b(il nostro team|la nostra clinica)\b/gi  // IT
+  ]
+
+  let teamPhotoFound = false
+  for (const pattern of teamPhotoPatterns) {
+    const match = pattern.exec(text)
+    pattern.lastIndex = 0
+
+    if (match && !teamPhotoFound) {
+      score += 0.3
+      teamPhotoFound = true
+      evidence.push({
+        type: 'snippet',
+        value: match[0],
+        label: 'Team/facility photography indicators'
+      })
+      break
+    }
+  }
+
+  // === PATHWAY 7: Schema ImageObject with Creator (0.5 pts) ===
+  // Check for ImageObject schema with creator/copyrightHolder fields
+  let schemaImageFound = false
+  schema.forEach(s => {
+    if (schemaImageFound) return
+
+    if (s.type === 'ImageObject' && s.data) {
+      const hasCreator = s.data.creator || s.data.copyrightHolder || s.data.author
+      if (hasCreator) {
+        score += 0.5
+        schemaImageFound = true
+        evidence.push({
+          type: 'metric',
+          value: `Creator: ${hasCreator.name || hasCreator}`,
+          label: 'ImageObject with creator in schema'
+        })
+      }
     }
   })
 
-  // Check image metrics (alt text indicates custom/original content)
-  if (images.total > 0) {
-    const altTextRatio = images.withAlt / images.total
-
-    // High alt text ratio suggests custom images with proper descriptions
-    if (altTextRatio >= 0.8 && images.total >= 3) {
-      score += 1.5
-      evidence.push({
-        type: 'metric',
-        value: `${images.total} images with ${Math.round(altTextRatio * 100)}% alt text coverage`,
-        label: 'Strong image optimization',
-        confidence: altTextRatio
-      })
-    } else if (altTextRatio >= 0.5 || images.total >= 2) {
-      score += 0.8
-      evidence.push({
-        type: 'metric',
-        value: `${images.total} images (${Math.round(altTextRatio * 100)}% with alt text)`,
-        label: 'Basic image presence'
-      })
-    }
+  // === PATHWAY 8: Visual Content Richness (1.0 pts max) ===
+  // Multiple images suggest substantial content investment and visual enhancement
+  // RECALIBRATED (2025-01): Increased weight - visual richness is a strong E-E-A-T signal
+  if (images.total >= 15) {
+    score += 1.0
+    evidence.push({
+      type: 'metric',
+      value: `${images.total} images`,
+      label: 'Extensive visual content (15+ images)'
+    })
+  } else if (images.total >= 10) {
+    score += 0.7
+    evidence.push({
+      type: 'metric',
+      value: `${images.total} images`,
+      label: 'Rich visual content (10+ images)'
+    })
+  } else if (images.total >= 5) {
+    score += 0.4
+    evidence.push({
+      type: 'metric',
+      value: `${images.total} images`,
+      label: 'Multiple images present (5+ images)'
+    })
+  } else if (images.total >= 2) {
+    score += 0.2
+    evidence.push({
+      type: 'metric',
+      value: `${images.total} images`,
+      label: 'Some visual content'
+    })
   }
 
   // Cap at maxScore
   score = Math.min(score, config.maxScore)
 
   const status = getVariableStatus(score, config)
+
+  // Dynamic recommendations based on what's missing
+  let recommendation: string | undefined
+  if (score < config.thresholds.good) {
+    const missing: string[] = []
+
+    if (!visualAssetFound) missing.push('custom diagrams/charts/infographics')
+    if (!originalDataFound) missing.push('original research/data')
+    if (!caseStudyFound) missing.push('case studies/real examples')
+    if (!comparisonFound) missing.push('before/after comparisons')
+    if (!tutorialFound) missing.push('step-by-step demonstrations')
+
+    if (missing.length > 0) {
+      recommendation = `Add original assets to demonstrate experience: ${missing.slice(0, 3).join(', ')}. Use custom visuals, real data, and authentic examples from your work.`
+    } else {
+      recommendation = 'Increase original visual content with custom diagrams, infographics, case studies, and data from your own research or practice'
+    }
+  }
 
   return {
     id: config.id,
@@ -778,9 +1018,7 @@ export function detectOriginalAssets(pageAnalysis: PageAnalysis): EEATVariable {
     actualScore: score,
     status,
     evidence,
-    recommendation: score < config.thresholds.good
-      ? 'Use more original images, charts, and data from your own research or practice'
-      : undefined,
+    recommendation,
     detectionMethod: config.detectionMethod
   }
 }

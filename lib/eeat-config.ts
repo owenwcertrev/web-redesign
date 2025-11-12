@@ -44,7 +44,7 @@ export const EEAT_VARIABLES = {
       description: 'Brand-owned images, charts, or datasets (not generic stock photos)',
       maxScore: 3,
       detectionMethod: 'automated' as const,
-      thresholds: { excellent: 2.5, good: 2, needsImprovement: 1 }
+      thresholds: { excellent: 2.3, good: 1.5, needsImprovement: 0.7 }
     },
     {
       id: 'E4',
