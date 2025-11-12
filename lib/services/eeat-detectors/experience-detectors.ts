@@ -262,6 +262,21 @@ function detectE1WithRegex(
         /\b(certified (personal trainer|fitness|yoga|pilates))\b/i,
         /\b(cscs|nsca|nasm|ace|issa)\b/i, // Strength & conditioning certifications
 
+        // === INTERNATIONAL CREDENTIALS ===
+        // German
+        /\b(dipl[.-]?ing|dr[.-]?ing|facharzt|diplomingenieur)\b/i, // Engineer, Doctor-Engineer, Specialist Doctor
+        /\b(rechtsanwalt|steuerberater)\b/i, // Attorney, Tax Advisor
+        // French
+        /\b(docteur|maître|ingénieur)\b/i, // Doctor, Master (lawyer), Engineer
+        /\b(diplômé|diplôme)\b/i, // Graduate, Diploma
+        // Spanish
+        /\b(licenciado|ingeniero|abogado)\b/i, // Graduate, Engineer, Lawyer
+        // Italian
+        /\b(dottore|ingegnere|avvocato)\b/i, // Doctor, Engineer, Lawyer
+        // Generic international
+        /\b(dr\.|prof\.|eng\.)\b/i, // Doctor, Professor, Engineer (abbreviated)
+        /\b(professor|professeur)\b/i, // Professor (international)
+
         // === GENERIC PROFESSIONAL PATTERNS ===
         /\b(physician|doctor|nurse|therapist|dietitian|nutritionist|pharmacist|practitioner)\b/i,
         /\b(\d+\+?\s*years?.*(professional |clinical )?(experience|practicing))\b/i, // "10+ years experience"

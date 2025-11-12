@@ -6,6 +6,7 @@
  */
 
 import OpenAI from 'openai'
+import * as cheerio from 'cheerio'
 import type { PageAnalysis } from './url-analyzer'
 
 export interface LLMMetricResult {
@@ -14,6 +15,53 @@ export interface LLMMetricResult {
   reasoning: string // Explanation of the score
   detectedSignals: string[] // Specific signals found
   detectedBy: 'llm'
+}
+
+/**
+ * Fetches author bio content from URL with timeout
+ * Returns bio text or null if fetch fails
+ */
+async function fetchAuthorBio(url: string, timeout: number = 3000): Promise<string | null> {
+  try {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), timeout)
+
+    const response = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; EEATBot/1.0; +https://certrev.com)'
+      }
+    })
+
+    clearTimeout(timeoutId)
+
+    if (!response.ok) {
+      return null
+    }
+
+    const html = await response.text()
+    const $ = cheerio.load(html)
+
+    // Remove script, style, nav, footer
+    $('script, style, nav, footer, header').remove()
+
+    // Get text from main content areas
+    const bioText = $('main, article, .bio, .author-bio, .about, [class*="bio"], [class*="about"]')
+      .first()
+      .text()
+      .trim()
+
+    // If no specific bio section, get body text
+    const text = bioText || $('body').text().trim()
+
+    // Clean and truncate to ~500 words
+    return text
+      .replace(/\s+/g, ' ')
+      .substring(0, 2500)
+  } catch (error) {
+    // Timeout or fetch error - return null gracefully
+    return null
+  }
 }
 
 /**
@@ -44,8 +92,30 @@ export async function analyzeE1WithGPT4(
       apiKey: process.env.OPENAI_API_KEY,
     })
 
+    // Fetch author bios in parallel (with timeout)
+    const authors = pageAnalysis.authors || []
+    const authorBios = await Promise.allSettled(
+      authors
+        .filter(a => a.url) // Only fetch if URL exists
+        .map(async (author) => ({
+          name: author.name,
+          bio: await fetchAuthorBio(author.url!)
+        }))
+    )
+
+    // Extract successful bio fetches
+    const bios: Array<{name: string, bio: string}> = []
+    for (const result of authorBios) {
+      if (result.status === 'fulfilled' && result.value.bio !== null) {
+        bios.push({
+          name: result.value.name,
+          bio: result.value.bio
+        })
+      }
+    }
+
     // Build E1-specific analysis prompt
-    const prompt = buildE1AnalysisPrompt(pageAnalysis, contentSample)
+    const prompt = buildE1AnalysisPrompt(pageAnalysis, contentSample, bios)
 
     // Call GPT-4o with structured output (supports JSON mode, faster & cheaper than GPT-4)
     const response = await openai.chat.completions.create({
@@ -89,7 +159,11 @@ export async function analyzeE1WithGPT4(
 /**
  * Builds the analysis prompt for E1 (Experience signals)
  */
-function buildE1AnalysisPrompt(pageAnalysis: PageAnalysis, contentSample: string): string {
+function buildE1AnalysisPrompt(
+  pageAnalysis: PageAnalysis,
+  contentSample: string,
+  authorBios: Array<{name: string, bio: string}> = []
+): string {
   const authors = pageAnalysis.authors || []
   const title = pageAnalysis.title || 'Untitled'
 
@@ -97,6 +171,11 @@ function buildE1AnalysisPrompt(pageAnalysis: PageAnalysis, contentSample: string
   const authorsText = authors.length > 0
     ? authors.map(a => `- ${a.name}${a.credentials ? ` (${a.credentials})` : ''}`).join('\n')
     : 'No authors listed'
+
+  // Format author bio information
+  const biosText = authorBios.length > 0
+    ? authorBios.map(bio => `**${bio.name}:**\n${bio.bio}\n`).join('\n')
+    : 'No author bios available'
 
   return `Analyze this content for **E1: First-person narratives / Experience signals** (max 4 points).
 
@@ -116,8 +195,11 @@ E1 measures demonstrated first-hand experience through:
 **Authors:**
 ${authorsText}
 
-**Content Sample (first ~500 words):**
-${contentSample.substring(0, 2500)}
+**Author Bios (for cross-validation):**
+${biosText}
+
+**Content Sample (first ~1000 words):**
+${contentSample.substring(0, 5000)}
 
 ---
 
@@ -150,20 +232,22 @@ ${contentSample.substring(0, 2500)}
 
 **IMPORTANT CONSIDERATIONS:**
 
-1. **Cross-vertical credentials:** Recognize credentials from ALL fields:
-   - Medical: MD, RD, RN, PA-C, BSc, MS
-   - Finance: CFA, CFP, CPA, Series 7/65
-   - Tech: Software Engineer, "10 years at Google", PhD CS
-   - Law: JD, Esq, Attorney, Bar Certified
+1. **Cross-vertical credentials:** Recognize credentials from ALL fields and languages:
+   - Medical: MD, RD, RN, PA-C, BSc, MS, Facharzt (DE), Docteur (FR)
+   - Finance: CFA, CFP, CPA, Series 7/65, Chartered Accountant
+   - Tech: Software Engineer, "10 years at Google", PhD CS, Dipl.-Ing. (DE), Ingénieur (FR)
+   - Law: JD, Esq, Attorney, Maître (FR), Rechtsanwalt (DE)
    - Food: Chef, Culinary Institute, James Beard
-   - Business: CEO, Founder, VP, Director
-   - Any professional license or certification
+   - Business: CEO, Founder, VP, Director, Licenciado (ES), Dottore (IT)
+   - International: Dr., Prof., Eng., any professional post-nominal
 
 2. **Context matters:** "10+ years building ML systems at Google" = strong experience even without formal credential
 
 3. **Institutional voice:** "Our research team" or "Our editorial board" indicates organizational experience
 
 4. **Implied expertise:** "Board-certified cardiologist treating patients for 20 years" = clear professional experience
+
+5. **Author bio cross-validation:** If author bios are provided, use them to validate credentials and expertise relevant to the content topic
 
 ---
 

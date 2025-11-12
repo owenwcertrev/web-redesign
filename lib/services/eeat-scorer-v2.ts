@@ -248,10 +248,10 @@ async function calculateExperienceCategory(
 
   // If we have multiple posts (blog analysis), aggregate E1-E5 across all posts
   if (posts && posts.length > 1) {
-    // E1: First-person narratives (aggregate across posts) - NOTE: LLM disabled for blog aggregation (too expensive)
-    // For blog analysis, each post uses regex fallback (skipLLM: true)
-    variables.push(aggregateVariableAcrossPosts(posts, 'E1', (post) =>
-      ExperienceDetectors.detectFirstPersonNarratives(post.pageAnalysis, nlpAnalysis, true) as EEATVariable
+    // E1: First-person narratives (LLM-enabled, parallel per post)
+    // Each post gets individual LLM analysis in parallel for best quality
+    variables.push(await aggregateVariableAcrossPostsAsync(posts, 'E1', (post) =>
+      ExperienceDetectors.detectFirstPersonNarratives(post.pageAnalysis, nlpAnalysis, false)
     ))
 
     // E2: Author perspective blocks (aggregate)
@@ -815,6 +815,135 @@ function aggregateVariableAcrossPosts(
     }
   } else if (trend.direction === 'decreasing' && roundedScore < config.thresholds.excellent) {
     recommendation = `Strong score, but trending downward. Maintain consistency in recent posts.`
+  }
+
+  return {
+    id: config.id,
+    name: config.name,
+    description: config.description,
+    maxScore: config.maxScore,
+    actualScore: roundedScore,
+    status,
+    evidence,
+    recommendation,
+    detectionMethod: config.detectionMethod
+  }
+}
+
+/**
+ * Async version of aggregateVariableAcrossPosts - supports LLM detection
+ * Runs all post analyses in parallel for maximum speed
+ */
+async function aggregateVariableAcrossPostsAsync(
+  posts: any[],
+  variableId: string,
+  detectorFn: (post: any) => EEATVariable | Promise<EEATVariable>
+): Promise<EEATVariable> {
+  // Run all post detections in parallel
+  const resultPromises = posts.map(async (post, index) => {
+    try {
+      if (!post) {
+        console.warn(`[${variableId}] Post at index ${index} is null/undefined`)
+        return {
+          score: 0,
+          date: null,
+          evidence: [{ type: 'note' as const, value: 'Post data missing' }]
+        }
+      }
+
+      if (!post.pageAnalysis) {
+        console.warn(`[${variableId}] Post missing pageAnalysis: ${post.url || 'unknown URL'}`)
+        return {
+          score: 0,
+          date: extractPostDate(post),
+          evidence: [{ type: 'note' as const, value: 'Page analysis data missing' }]
+        }
+      }
+
+      // Call detector (may be sync or async)
+      const result = await Promise.resolve(detectorFn(post))
+
+      return {
+        score: result.actualScore,
+        date: extractPostDate(post),
+        evidence: result.evidence
+      }
+    } catch (error) {
+      console.error(`[aggregateVariableAcrossPostsAsync] Error detecting ${variableId} for post ${post?.url || 'unknown'}:`, error)
+      return {
+        score: 0,
+        date: extractPostDate(post),
+        evidence: []
+      }
+    }
+  })
+
+  // Wait for all results in parallel
+  const results = (await Promise.all(resultPromises))
+    .filter(r => r.score !== undefined && !isNaN(r.score))
+
+  if (results.length === 0) {
+    // Fallback if no posts could be analyzed
+    const firstResult = await Promise.resolve(detectorFn(posts[0]))
+    return firstResult
+  }
+
+  // Rest of aggregation logic (same as sync version)
+  const avgScore = results.reduce((sum, r) => sum + r.score, 0) / results.length
+  const roundedScore = Math.round(avgScore * 100) / 100
+
+  const config = getVariableConfig(variableId)
+  if (!config) {
+    return await Promise.resolve(detectorFn(posts[0]))
+  }
+
+  const datedResults = results
+    .filter(r => r.date !== null)
+    .sort((a, b) => a.date!.getTime() - b.date!.getTime())
+
+  const trend = detectScoreTrend(results)
+
+  const evidence: EEATEvidence[] = [
+    {
+      type: 'metric',
+      value: `Average across ${results.length} posts: ${roundedScore}/${config.maxScore}`,
+      label: 'Aggregated score'
+    }
+  ]
+
+  if (trend.direction !== 'stable') {
+    evidence.push({
+      type: 'metric',
+      value: `${trend.direction} (${trend.description})`,
+      label: 'Trend',
+      confidence: trend.confidence
+    })
+  }
+
+  const status = getVariableStatusFromScore(roundedScore, config)
+
+  let recommendation: string | undefined
+  if (roundedScore < config.thresholds.good) {
+    if (variableId === 'E1') {
+      const avgAuthors = results.reduce((sum, r) => sum + r.score, 0) / results.length
+      if (avgAuthors >= 1.5 && avgAuthors < 3) {
+        recommendation = `Many posts have single authors. Add second credentialed authors or medical reviewers to strengthen experience signals. Target: 2+ credentialed contributors per post.`
+      } else if (avgAuthors < 1) {
+        recommendation = `Most posts lack clear author attribution or credentials. Add named authors with relevant professional backgrounds to improve experience signals.`
+      } else {
+        recommendation = `Inconsistent experience signals across posts. Ensure all posts have credentialed authors or clear first-person narratives.`
+      }
+    } else {
+      // Default recommendation for other metrics
+      recommendation = `${config.name} is below optimal. `
+      if (trend.direction === 'increasing') {
+        recommendation += `Good news: trending upward. Continue this momentum.`
+      } else if (trend.direction === 'decreasing') {
+        recommendation += `Concerning: trending downward. Prioritize improvements in recent content.`
+      } else {
+        recommendation += `Focus on adding more ${config.name.toLowerCase()} to your content.`
+      }
+    }
   }
 
   return {
