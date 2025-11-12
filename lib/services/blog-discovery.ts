@@ -734,7 +734,7 @@ export class BlogDiscoveryService {
             return {
               posts: limitedPosts,
               totalFound: blogPosts.length,
-              source: 'sitemap',
+              source: 'sitemap' as const,
             };
           }
         }
@@ -751,7 +751,7 @@ export class BlogDiscoveryService {
             return {
               posts: blogPosts.slice(0, limit),
               totalFound: blogPosts.length,
-              source: 'rss',
+              source: 'rss' as const,
             };
           }
         }
@@ -765,7 +765,7 @@ export class BlogDiscoveryService {
           return {
             posts: htmlPosts.slice(0, limit),
             totalFound: htmlPosts.length,
-            source: 'html',
+            source: 'html' as const,
           };
         }
 
@@ -773,7 +773,7 @@ export class BlogDiscoveryService {
         return {
           posts: [],
           totalFound: 0,
-          source: 'sitemap',
+          source: 'sitemap' as const,
           error: 'No blog posts found. We tried sitemaps (including robots.txt), RSS feeds, and HTML sitemaps. Please try entering specific blog post URLs manually.',
         };
       })();
@@ -785,7 +785,7 @@ export class BlogDiscoveryService {
       return {
         posts: [],
         totalFound: 0,
-        source: 'sitemap',
+        source: 'sitemap' as const,
         error: error instanceof Error ? error.message : 'Unknown error during blog discovery',
       };
     }
@@ -804,7 +804,7 @@ export class BlogDiscoveryService {
     return {
       posts,
       totalFound: posts.length,
-      source: 'manual',
+      source: 'manual' as const,
     };
   }
 }
