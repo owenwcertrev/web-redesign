@@ -107,7 +107,7 @@ export function detectFirstPersonNarratives(
     // Check if authors have experience-related credentials or roles
     let authorExperienceScore = 0
     authors.forEach(author => {
-      const authorInfo = `${author.name || ''} ${author.credentials || ''} ${author.role || ''} ${author.title || ''}`.toLowerCase()
+      const authorInfo = `${author.name || ''} ${author.credentials || ''}`.toLowerCase()
 
       // Professional credentials that indicate direct experience
       const experienceCredentials = [
