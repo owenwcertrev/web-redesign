@@ -568,14 +568,22 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
  *
  * SCOPE (2025-01): E3 detects ORIGINAL content creation signals ONLY
  * - Stock photos, generic illustrations → NO POINTS
- * - Must have explicit signals: figures, data, case studies, tutorials, team photos
+ * - Must have EXPLICIT TEXTUAL SIGNALS: figures, data, case studies, tutorials, team photos
+ * - Sites with embedded diagrams but NO text references → 0 points (strict approach)
+ *
+ * STRICT MODE (2025-01): Requires contextual phrases to avoid false positives
+ * ✅ CORRECT: "Figure 1 shows our data" → +0.8pts (explicit reference)
+ * ❌ WRONG: "see fig. 1" in discussion → 0pts (casual reference, not original asset)
+ * ❌ WRONG: Embedded diagrams without text labels → 0pts (no explicit signal)
  *
  * 7 DETECTION PATHWAYS:
  * 1. Visual asset references (figures, diagrams, infographics, charts) - 0.8pts
+ *    - Requires contextual verbs: "Figure 1 shows", "See diagram below"
  * 2. Original research & data (proprietary studies, surveys, custom analysis) - 0.8pts
  * 3. Case studies & examples (patient/client stories, real-world examples) - 0.7pts
  * 4. Before/after comparisons (progress photos, demonstrations) - 0.5pts
- * 5. Tutorial assets (screenshots, step-by-step images) - 0.4pts
+ * 5. Tutorial assets (screenshots, step-by-step guides) - 0.4pts
+ *    - Requires structured signals: "Step 1:", "screenshot", "how-to guide"
  * 6. Team/facility photography (original photos, not stock) - 0.3pts
  * 7. Schema ImageObject with creator/copyrightHolder fields - 0.5pts
  *
@@ -597,17 +605,25 @@ export function detectOriginalAssets(pageAnalysis: PageAnalysis): EEATVariable {
 
   // === PATHWAY 1: Visual Asset References (0.8 pts) ===
   // Detect references to custom figures, diagrams, infographics, charts
+  // STRICT MODE (2025-01): Requires contextual phrases to avoid false positives
+  // on casual references in discussions (e.g., "see fig. 1" in Stack Overflow)
   const visualAssetPatterns = [
-    // Figure/diagram references
-    /\b(figure\s+\d+|fig\.\s*\d+|diagram\s+\d+|chart\s+\d+|graph\s+\d+)\b/gi,
-    /\b(see (the )?(image|figure|diagram|chart|graph|infographic) (below|above))\b/gi,
-    /\b(illustrated in|shown in (the )?(image|figure|diagram|chart))\b/gi,
-    /\b(infographic|data visualization|custom chart|custom graph|custom diagram)\b/gi,
-    // International (DE, FR, ES, IT)
-    /\b(abbildung\s+\d+|diagramm\s+\d+|siehe abbildung)\b/gi, // DE
-    /\b(figure\s+\d+|diagramme\s+\d+|voir figure)\b/gi, // FR
-    /\b(figura\s+\d+|diagrama\s+\d+|ver figura)\b/gi, // ES
-    /\b(figura\s+\d+|diagramma\s+\d+|vedi figura)\b/gi  // IT
+    // STRICT: Require contextual verbs indicating original asset presentation
+    /\b(figure|fig\.|diagram|chart|graph)\s+\d+\s+(shows|illustrates|demonstrates|depicts|displays)\b/gi,
+    /\b(in|as\s+shown\s+in|as\s+seen\s+in)\s+(figure|fig\.|diagram|chart|graph)\s+\d+\b/gi,
+    /\b(see|view|refer\s+to)\s+(the\s+)?(figure|diagram|chart|graph|infographic)\s+(below|above)\b/gi,
+    /\b(illustrated in|shown in|depicted in)\s+(the\s+)?(image|figure|diagram|chart)\b/gi,
+    // Explicit original asset terms (no ambiguity)
+    /\b(infographic|data visualization|custom (chart|graph|diagram))\b/gi,
+    // International (DE, FR, ES, IT) - strict with context
+    /\b(abbildung|diagramm)\s+\d+\s+(zeigt|dargestellt)\b/gi, // DE: "Figure 1 shows"
+    /\b(siehe|vergleiche)\s+(abbildung|diagramm)\b/gi, // DE: "See figure"
+    /\b(figure|diagramme)\s+\d+\s+(montre|illustre)\b/gi, // FR: "Figure 1 shows"
+    /\b(voir|consultez)\s+(la\s+)?(figure|diagramme)\b/gi, // FR: "See figure"
+    /\b(figura|diagrama)\s+\d+\s+(muestra|ilustra)\b/gi, // ES: "Figure 1 shows"
+    /\b(ver|consultar)\s+(la\s+)?(figura|diagrama)\b/gi, // ES: "See figure"
+    /\b(figura|diagramma)\s+\d+\s+(mostra|illustra)\b/gi, // IT: "Figure 1 shows"
+    /\b(vedi|consulta)\s+(la\s+)?(figura|diagramma)\b/gi  // IT: "See figure"
   ]
 
   let visualAssetFound = false
@@ -729,14 +745,15 @@ export function detectOriginalAssets(pageAnalysis: PageAnalysis): EEATVariable {
 
   // === PATHWAY 5: Tutorial & Demo Assets (0.4 pts) ===
   // Detect screenshots, step-by-step images, how-to demonstrations, structured guides
+  // STRICT MODE (2025-01): Avoid casual "demonstration" references in discussions
   const tutorialPatterns = [
-    /\b(screenshot|screen shot|step[- ]by[- ]step (image|photo))\b/gi,
+    /\b(screenshot|screen shot|step[- ]by[- ]step (image|photo|guide))\b/gi,
     /\b(as shown (in|below)|follow these steps)\b/gi,
-    /\b(demo(nstration)?|how[- ]to (image|photo|illustration))\b/gi,
-    /\b(tutorial (image|photo|screenshot))\b/gi,
+    /\b(interactive (demo|demonstration)|video (demo|demonstration))\b/gi,
+    /\b(how[- ]to (guide|tutorial)|tutorial (image|photo|screenshot))\b/gi,
     // Structured how-to content (indicates original guidance)
-    /\b(step \d+|first,|second,|third,|finally,)\b/gi,
-    /\b((follow|try) (these|this)|here's how)\b/gi
+    /\b(step \d+:|step \d+\.|step \d+ -)\b/gi, // Require punctuation after "Step 1"
+    /\b((follow|try) (these|this) steps|here's how to)\b/gi
   ]
 
   let tutorialFound = false
