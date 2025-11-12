@@ -20,6 +20,21 @@ export function detectNamedAuthorsWithCredentials(
   const evidence: EEATEvidence[] = []
   let score = 0
 
+  // Null safety checks
+  if (!pageAnalysis) {
+    return {
+      id: config.id,
+      name: config.name,
+      description: config.description,
+      maxScore: config.maxScore,
+      actualScore: 0,
+      status: 'poor',
+      evidence: [{ type: 'note', value: 'No page analysis data available' }],
+      recommendation: 'Unable to analyze - page data missing',
+      detectionMethod: config.detectionMethod
+    }
+  }
+
   const schema = pageAnalysis.schemaMarkup || []
   const authors = pageAnalysis.authors || []
 
@@ -61,6 +76,83 @@ export function detectNamedAuthorsWithCredentials(
           label: 'Author bio/profile link'
         })
       }
+    }
+
+    // Check for reviewedBy (medical/health content)
+    if (s.data?.reviewedBy) {
+      const reviewers = Array.isArray(s.data.reviewedBy) ? s.data.reviewedBy : [s.data.reviewedBy]
+
+      reviewers.forEach((reviewer: any) => {
+        const reviewerName = typeof reviewer === 'string' ? reviewer : reviewer?.name
+
+        if (reviewerName) {
+          score += 1.5
+          evidence.push({
+            type: 'snippet',
+            value: reviewerName,
+            label: 'Medical reviewer in schema'
+          })
+
+          // Check for reviewer credentials
+          const reviewerCreds = reviewer?.jobTitle || reviewer?.description
+          if (reviewerCreds || /MD|PhD|RN|MPH|DDS|PharmD|RD|CNE|COI/i.test(reviewerName)) {
+            score += 1
+            evidence.push({
+              type: 'snippet',
+              value: reviewerCreds || 'Credentials in name',
+              label: 'Reviewer credentials'
+            })
+          }
+
+          // Check for reviewer photo
+          if (reviewer?.image) {
+            score += 0.5
+            evidence.push({
+              type: 'note',
+              value: 'Reviewer photo found'
+            })
+          }
+
+          // Check for reviewer profile URL
+          if (reviewer?.url) {
+            score += 0.5
+            evidence.push({
+              type: 'url',
+              value: reviewer.url,
+              label: 'Reviewer profile link'
+            })
+          }
+        }
+      })
+    }
+
+    // Check for medicalReviewer (alternate naming)
+    if (s.data?.medicalReviewer) {
+      const reviewers = Array.isArray(s.data.medicalReviewer) ? s.data.medicalReviewer : [s.data.medicalReviewer]
+
+      reviewers.forEach((reviewer: any) => {
+        const reviewerName = typeof reviewer === 'string' ? reviewer : reviewer?.name
+
+        if (reviewerName) {
+          score += 1.5
+          evidence.push({
+            type: 'snippet',
+            value: reviewerName,
+            label: 'Medical reviewer in schema'
+          })
+
+          // Check for credentials
+          const reviewerCreds = reviewer?.jobTitle || reviewer?.description
+          if (reviewerCreds) {
+            score += 1
+            evidence.push({
+              type: 'snippet',
+              value: reviewerCreds,
+              label: 'Reviewer credentials'
+            })
+          }
+        }
+      })
     }
   })
 

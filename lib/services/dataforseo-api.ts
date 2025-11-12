@@ -183,18 +183,18 @@ function estimateDomainRank(domainData: any): number {
   // Calculate keyword volume score (0-100)
   let keywordScore = 0
   if (keywords < 100) keywordScore = 10
-  else if (keywords < 1000) keywordScore = 20 + (keywords / 1000) * 20
-  else if (keywords < 10000) keywordScore = 40 + (keywords / 10000) * 20
-  else if (keywords < 100000) keywordScore = 60 + (keywords / 100000) * 20
-  else keywordScore = 80 + Math.min(20, (keywords / 1000000) * 20)
+  else if (keywords < 1000) keywordScore = 20 + ((keywords - 100) / 900) * 20
+  else if (keywords < 10000) keywordScore = 40 + ((keywords - 1000) / 9000) * 20
+  else if (keywords < 100000) keywordScore = 60 + ((keywords - 10000) / 90000) * 20
+  else keywordScore = 80 + Math.min(20, ((keywords - 100000) / 900000) * 20)
 
   // Calculate traffic score (0-100)
   let trafficScore = 0
   if (traffic < 1000) trafficScore = 10
-  else if (traffic < 10000) trafficScore = 20 + (traffic / 10000) * 20
-  else if (traffic < 100000) trafficScore = 40 + (traffic / 100000) * 20
-  else if (traffic < 1000000) trafficScore = 60 + (traffic / 1000000) * 20
-  else trafficScore = 80 + Math.min(20, (traffic / 10000000) * 20)
+  else if (traffic < 10000) trafficScore = 20 + ((traffic - 1000) / 9000) * 20
+  else if (traffic < 100000) trafficScore = 40 + ((traffic - 10000) / 90000) * 20
+  else if (traffic < 1000000) trafficScore = 60 + ((traffic - 100000) / 900000) * 20
+  else trafficScore = 80 + Math.min(20, ((traffic - 1000000) / 9000000) * 20)
 
   // Weighted average: 40% keywords, 30% traffic, 30% positions
   const estimatedRank = Math.round(

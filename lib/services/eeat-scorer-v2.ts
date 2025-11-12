@@ -628,16 +628,46 @@ function aggregateVariableAcrossPosts(
   detectorFn: (post: any) => EEATVariable
 ): EEATVariable {
   // Calculate variable for each post with error handling
-  const results = posts.map(post => {
+  const results = posts.map((post, index) => {
     try {
+      // Add null safety check for post data
+      if (!post) {
+        console.warn(`[${variableId}] Post at index ${index} is null/undefined`)
+        return {
+          score: 0,
+          date: null,
+          evidence: [{ type: 'note' as const, value: 'Post data missing' }]
+        }
+      }
+
+      if (!post.pageAnalysis) {
+        console.warn(`[${variableId}] Post missing pageAnalysis: ${post.url || 'unknown URL'}`)
+        return {
+          score: 0,
+          date: extractPostDate(post),
+          evidence: [{ type: 'note' as const, value: 'Page analysis data missing' }]
+        }
+      }
+
       const result = detectorFn(post)
+
+      // Debug logging for E1 specifically
+      if (variableId === 'X1') {
+        console.log(`[${variableId}] Post: ${post.url || 'unknown'} | Score: ${result.actualScore}/${result.maxScore} | Authors: ${post.pageAnalysis.authors?.length || 0}`)
+        if (post.pageAnalysis.authors && post.pageAnalysis.authors.length > 0) {
+          post.pageAnalysis.authors.forEach((author: any) => {
+            console.log(`  - ${author.name} (${author.credentials || 'no creds'}) [${author.source}]`)
+          })
+        }
+      }
+
       return {
         score: result.actualScore,
         date: extractPostDate(post),
         evidence: result.evidence
       }
     } catch (error) {
-      console.error(`[aggregateVariableAcrossPosts] Error detecting ${variableId} for post:`, error)
+      console.error(`[aggregateVariableAcrossPosts] Error detecting ${variableId} for post ${post?.url || 'unknown'}:`, error)
       return {
         score: 0,
         date: extractPostDate(post),

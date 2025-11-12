@@ -263,15 +263,20 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
   $('script[type="application/ld+json"]').each((_, el) => {
     try {
       const schema = JSON.parse($(el).html() || '{}')
-      const author = extractAuthorFromSchema(schema)
-      if (author) authors.push(author)
+      const schemaAuthors = extractAuthorsFromSchema(schema)
+      // Add all found authors, avoiding duplicates
+      schemaAuthors.forEach(author => {
+        if (!authors.some(a => a.name === author.name)) {
+          authors.push(author)
+        }
+      })
     } catch (e) {
       // Invalid JSON, skip
     }
   })
 
-  // Check meta tags
-  const metaAuthor = $('meta[name="author"]').attr('content')
+  // Check meta tags (support both name="author" and name="article:author")
+  const metaAuthor = $('meta[name="author"]').attr('content') || $('meta[name="article:author"]').attr('content')
   if (metaAuthor && !authors.some(a => a.name === metaAuthor)) {
     authors.push({
       name: metaAuthor,
@@ -354,36 +359,87 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
 }
 
 /**
- * Extracts author from schema markup
+ * Extracts all authors from schema markup (including reviewers)
  */
-function extractAuthorFromSchema(schema: any): Author | null {
-  if (!schema) return null
+function extractAuthorsFromSchema(schema: any): Author[] {
+  const authors: Author[] = []
 
-  // Handle arrays
+  if (!schema) return authors
+
+  // Handle arrays - recursively collect all authors
   if (Array.isArray(schema)) {
     for (const item of schema) {
-      const author = extractAuthorFromSchema(item)
-      if (author) return author
+      authors.push(...extractAuthorsFromSchema(item))
     }
-    return null
+    return authors
   }
 
   // Check for author property
   if (schema.author) {
-    const author = schema.author
-    if (typeof author === 'string') {
-      return { name: author, source: 'schema' }
-    }
-    if (author.name) {
-      return {
-        name: author.name,
-        credentials: author.jobTitle || author.description,
-        source: 'schema'
+    const authorData = Array.isArray(schema.author) ? schema.author : [schema.author]
+
+    for (const author of authorData) {
+      if (typeof author === 'string') {
+        authors.push({
+          name: author,
+          source: 'schema'
+        })
+      } else if (author.name) {
+        authors.push({
+          name: author.name,
+          credentials: author.jobTitle || author.description,
+          url: author.url,
+          source: 'schema'
+        })
       }
     }
   }
 
-  return null
+  // Check for reviewedBy property (medical/health content)
+  if (schema.reviewedBy) {
+    const reviewerData = Array.isArray(schema.reviewedBy) ? schema.reviewedBy : [schema.reviewedBy]
+
+    for (const reviewer of reviewerData) {
+      if (typeof reviewer === 'string') {
+        authors.push({
+          name: reviewer,
+          credentials: 'Reviewer',
+          source: 'schema'
+        })
+      } else if (reviewer.name) {
+        authors.push({
+          name: reviewer.name,
+          credentials: reviewer.jobTitle || reviewer.description || 'Medical Reviewer',
+          url: reviewer.url,
+          source: 'schema'
+        })
+      }
+    }
+  }
+
+  // Check for medicalReviewer property (alternate naming)
+  if (schema.medicalReviewer) {
+    const reviewerData = Array.isArray(schema.medicalReviewer) ? schema.medicalReviewer : [schema.medicalReviewer]
+
+    for (const reviewer of reviewerData) {
+      if (typeof reviewer === 'string') {
+        authors.push({
+          name: reviewer,
+          credentials: 'Medical Reviewer',
+          source: 'schema'
+        })
+      } else if (reviewer.name) {
+        authors.push({
+          name: reviewer.name,
+          credentials: reviewer.jobTitle || reviewer.description || 'Medical Reviewer',
+          url: reviewer.url,
+          source: 'schema'
+        })
+      }
+    }
+  }
+
+  return authors
 }
 
 /**
