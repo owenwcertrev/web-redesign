@@ -42,7 +42,8 @@ export interface PageAnalysis {
 export interface Author {
   name: string
   credentials?: string
-  source: 'schema' | 'meta' | 'content' | 'rel-author' | 'html-class'
+  url?: string
+  source: 'schema' | 'meta' | 'content' | 'rel-author' | 'html-class' | 'javascript'
 }
 
 export interface SchemaMarkup {
@@ -74,6 +75,9 @@ export async function analyzeURL(url: string): Promise<PageAnalysis> {
   // Extract content text for NLP analysis
   const contentText = extractContentText($)
 
+  // Re-parse HTML for author extraction (workaround for script tag disappearing issue)
+  const $fresh = cheerio.load(html)
+
   const analysis: PageAnalysis = {
     url: normalizedUrl,
     finalUrl: finalUrl,
@@ -84,7 +88,7 @@ export async function analyzeURL(url: string): Promise<PageAnalysis> {
     contentText: contentText, // Full text for NLP analysis
     headings: extractHeadings($),
     hasSSL: finalUrl.startsWith('https://'), // Use final URL for SSL check
-    authors: extractAuthors($),
+    authors: extractAuthors($fresh), // Use fresh parse to preserve scripts
     schemaMarkup: extractSchemaMarkup($),
     images: analyzeImages($),
     links: analyzeLinks($, finalUrl), // Use final URL for link analysis
@@ -354,6 +358,59 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
       }
     }
   }
+
+  // Check JavaScript data (e.g., window.dataLayer for Healthline)
+  $('script').each((_, el) => {
+    const scriptContent = $(el).html() || ''
+
+    // Look for dataLayer with byline/medicalReviewers
+    if (scriptContent.includes('window.dataLayer.push')) {
+      try {
+        // Look for medicalReviewers in byline structure
+        // Pattern: "medicalReviewers":[{..."name":{"display":"Helen Chen MCMSc, PA-C"
+        const reviewerPattern = /"medicalReviewers"\s*:\s*\[\s*\{[^}]*?"name"\s*:\s*\{\s*"display"\s*:\s*"([^"]+)"/
+        const reviewerMatch = scriptContent.match(reviewerPattern)
+
+        if (reviewerMatch && !authors.some(a => a.name === reviewerMatch[1])) {
+          // Extract credentials from name (e.g., "Helen Chen MCMSc, PA-C")
+          const fullName = reviewerMatch[1]
+
+          // Try to split name and credentials
+          // Common pattern: "FirstName LastName CREDENTIAL1, CREDENTIAL2"
+          const credMatch = fullName.match(/^(.+?)\s+((?:MD|PhD|RN|MPH|DDS|PharmD|RD|CNE|COI|PA-C|MCMSc|BSc|MSc|MSN|MPH|MBA|JD|DO|NP|APRN)[,\s]*.*)$/i)
+
+          if (credMatch) {
+            const baseName = credMatch[1].trim()
+            const credentials = credMatch[2].trim()
+            authors.push({
+              name: fullName, // Keep full name for matching
+              credentials: credentials,
+              source: 'javascript'
+            })
+          } else {
+            // No credentials in name, just mark as medical reviewer
+            authors.push({
+              name: fullName,
+              credentials: 'Medical Reviewer',
+              source: 'javascript'
+            })
+          }
+        }
+
+        // Also look for additional author info if not already found from meta tags
+        const authorPattern = /"author"\s*:\s*"([^"]+)"/
+        const authorMatch = scriptContent.match(authorPattern)
+        if (authorMatch && !authors.some(a => a.name === authorMatch[1])) {
+          authors.push({
+            name: authorMatch[1],
+            source: 'javascript'
+          })
+        }
+      } catch (e) {
+        // Invalid format, skip
+      }
+    }
+  })
 
   return authors
 }
