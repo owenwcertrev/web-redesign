@@ -272,8 +272,8 @@ const COMBINED_TESTS: TestCase[] = [
     contentText: 'Medically reviewed by Dr. Smith.',
     headings: { h1: [], h2: ['Reviewer\'s Note'], h3: [] },
     expectedScore: 2.5,
-    expectedStatus: 'good',
-    notes: 'Pathway 1 (1.5) + Pathway 2 (1.0) = 2.5'
+    expectedStatus: 'excellent',
+    notes: 'Pathway 1 (1.5) + Pathway 2 (1.0) = 2.5 (83% = excellent)'
   },
   {
     name: 'Heading + Schema reviewer',
@@ -298,9 +298,9 @@ const COMBINED_TESTS: TestCase[] = [
         reviewedBy: { '@type': 'Person', name: 'Dr. Jane Smith' }
       }
     }],
-    expectedScore: 2.5,
-    expectedStatus: 'good',
-    notes: 'Pathway 2 (1.0) + Pathway 3 (1.5) = 2.5'
+    expectedScore: 1,
+    expectedStatus: 'poor',
+    notes: 'Pathway 2 (1.0) only - Pathway 3 skipped to prevent double-counting same reviewer'
   },
   {
     name: 'All pathways combined',
@@ -316,9 +316,9 @@ const COMBINED_TESTS: TestCase[] = [
       { name: 'Author One' },
       { name: 'Author Two' }
     ],
-    expectedScore: 3,
+    expectedScore: 2.5,
     expectedStatus: 'excellent',
-    notes: 'All 4 pathways = capped at max 3.0'
+    notes: 'Pathway 1 (1.5) + Pathway 2 (1.0) = 2.5 (Schema and collaboration skipped due to anti-double-count)'
   },
   {
     name: 'Schema + Collaborative authorship',
@@ -333,9 +333,9 @@ const COMBINED_TESTS: TestCase[] = [
       { name: 'Author One' },
       { name: 'Author Two' }
     ],
-    expectedScore: 2.5,
-    expectedStatus: 'good',
-    notes: 'Pathway 3 (1.5) + Pathway 4 (1.0) = 2.5'
+    expectedScore: 1.5,
+    expectedStatus: 'needs-improvement',
+    notes: 'Pathway 3 (1.5) only - Collaboration not counted when expert reviewer exists'
   }
 ]
 

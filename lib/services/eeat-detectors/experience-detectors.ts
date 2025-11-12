@@ -136,6 +136,7 @@ function detectE1WithRegex(
       /\b(in my work|in our work|through my|through our)\s+(experience|work|practice|research|testing)\b/gi,
       /\b(my observation|our observation|i observed|we observed|i noticed|we noticed)\b/gi,
       /\b(i've seen|we've seen|i've found|we've found|i've worked with|we've worked with)\b/gi,
+      /\b(i've built|we've built|i've developed|we've developed|i've created|we've created)\b/gi, // Tech/engineering experience
       /\b(based on my|based on our)\s+(experience|work|practice|research|testing)\b/gi,
       /\b(i've treated|we've treated|i've helped|we've helped)\b/gi
     ]
@@ -225,10 +226,11 @@ function detectE1WithRegex(
       /\b(professional practice|treating (patients|clients)|serving clients)\b/gi,
 
       // Tech/Engineering specific (EXPANDED 2025-11)
-      /\b(built|developed|engineered|deployed|shipped)\s+(production|systems?|applications?|platforms?|products?)\b/gi,
-      /\b(our (codebase|infrastructure|architecture|stack))\b/gi,
-      /\b((we've|we have) (built|deployed|shipped|tested|released|maintained))\b/gi,
-      /\b(in production|at scale|serving (millions|thousands) of users)\b/gi,
+      /\b(built|developed|engineered|deployed|shipped)\s+\w+\s+(production|systems?|applications?|platforms?|products?)\b/gi, // Allow words between verb and object
+      /\b(our (codebase|infrastructure|architecture|stack|team))\b/gi,
+      /\b((we've|we have|our team has) (built|deployed|shipped|tested|released|maintained))\b/gi, // Added "our team has"
+      /\b((serving|serve|serves) (millions|thousands) of (users|customers|clients))\b/gi, // More flexible verb forms
+      /\b(in production|at scale)\b/gi,
 
       // Business/Consulting specific (EXPANDED 2025-11)
       /\b(our (company|business|firm|agency|organization) has)\b/gi,
@@ -287,14 +289,15 @@ function detectE1WithRegex(
 
     const totalWeighted = narrativeScore + professionalScore
 
-    // Recalibrated thresholds (without author/reviewer boost)
-    // Personal blogs score high via narratives
-    // Professional sites score high via institutional voice
-    if (totalWeighted >= 6) score = config.maxScore // Excellent: Strong narrative + professional
-    else if (totalWeighted >= 4) score = 3 // Good: Multiple experience indicators
-    else if (totalWeighted >= 2) score = 2 // Fair: Some experience signals
-    else if (totalWeighted >= 0.75) score = 1 // Minimal: Limited experience shown
-    else score = 0
+    // Recalibrated thresholds (2025-11): Adjusted for realistic content patterns
+    // Personal blogs score high via narratives (strong patterns)
+    // Professional sites score high via institutional voice (professional patterns)
+    // Combined content (both narrative + professional) scores excellent
+    if (totalWeighted >= 5) score = config.maxScore // Excellent: Strong narrative + professional (4/4)
+    else if (totalWeighted >= 3) score = 3 // Good: Multiple experience indicators (3/4)
+    else if (totalWeighted >= 1.5) score = 2 // Fair: Some experience signals (2/4)
+    else if (totalWeighted >= 0.5) score = 1 // Minimal: Limited experience shown (1/4)
+    else score = 0 // None: No experience signals
 
     // Add summary metric
     if (totalWeighted > 0) {
@@ -456,10 +459,13 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
     /\b(expert review|professional review|technically reviewed by)\b/gi,
 
     // German
-    /\b(geprüft von|überprüft von|fachlich geprüft von)\b/gi,
+    // BUG FIX (2025-11-12): \b doesn't work with Unicode chars (ü, ä, ö)
+    // Add full phrase "medizinisch überprüft von" which works without leading \b
+    /\b(geprüft von|fachlich geprüft von)\b/gi,
+    /(medizinisch überprüft von|überprüft von)/gi,
 
     // French
-    /\b(revu par|vérifié par|examiné par)\b/gi,
+    /\b(revu par|révisé par|vérifié par|examiné par)\b/gi,
 
     // Spanish
     /\b(revisado por|verificado por|examinado por)\b/gi,
@@ -469,26 +475,40 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
   ]
 
   // Generic reviewer name filter (used for both text and schema)
-  const GENERIC_REVIEWER_NAMES = /\b(staff|editor|team|admin|content team|editorial team|content|editorial)\b/i
+  // BUG FIX (2025-11-12): Only filter BARE generic terms, not qualified phrases
+  // - "Reviewed by Staff" → filter (bare generic)
+  // - "Reviewed by our editorial team" → count (qualified)
+  const GENERIC_REVIEWER_NAMES = /^(staff|editor|team|admin)$/i
 
   // BUG FIX (2025-01): Stop after first match to prevent over-counting
   // (e.g., "medically reviewed by" matches both pattern 1 AND pattern 2)
   // BUG FIX (2025-11): Filter generic placeholder names in text attribution
+  // BUG FIX (2025-11-12): Extract ACTUAL reviewer name, not entire context
   let hasReviewAttribution = false
   for (const pattern of reviewAttributionPatterns) {
     if (hasReviewAttribution) break; // Already found, stop checking
 
     const matches = textSample.match(pattern)
     if (matches) {
-      // Extract the full context around the match to check for generic names
+      // Extract the reviewer name (text immediately after the attribution pattern)
       const matchText = matches[0]
       const matchIndex = textSample.indexOf(matchText)
-      const contextLength = 100 // Check 100 chars after "reviewed by"
-      const context = textSample.slice(matchIndex, matchIndex + contextLength)
+      const afterMatch = textSample.slice(matchIndex + matchText.length)
 
-      // Check if the reviewer name following the attribution is generic
-      if (GENERIC_REVIEWER_NAMES.test(context)) {
-        // Skip generic placeholder names like "Reviewed by Staff"
+      // Get the first word after the pattern (trim whitespace first)
+      const firstWord = afterMatch.trim().split(/[\s,\.;]/)[0]
+
+      // BUG FIX (2025-11-12): Validate that reviewer name is not empty
+      // "Reviewed by ." should not count (empty name)
+      if (!firstWord || firstWord.length === 0) {
+        pattern.lastIndex = 0
+        continue
+      }
+
+      // Check if the FIRST WORD is a bare generic term
+      if (GENERIC_REVIEWER_NAMES.test(firstWord)) {
+        // Skip bare generic names: "Reviewed by Staff", "Reviewed by Team"
+        // But allow qualified names: "reviewed by our team", "reviewed by senior engineers"
         pattern.lastIndex = 0
         continue
       }

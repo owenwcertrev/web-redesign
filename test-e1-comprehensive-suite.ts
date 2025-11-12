@@ -27,9 +27,9 @@ const PERSONAL_NARRATIVE_TESTS: TestCase[] = [
   {
     name: 'Strong first-person (multiple)',
     contentText: 'In my experience, this approach works well. Through my research over the past decade, I\'ve found that patients respond positively. Based on my clinical practice, these methods are effective.',
-    expectedScoreRange: [2, 3],
-    expectedStatus: 'good',
-    notes: 'Multiple strong patterns (3 matches * 1.5 = 4.5 points → score 2-3)'
+    expectedScoreRange: [3, 4],
+    expectedStatus: 'excellent',
+    notes: 'Multiple strong patterns (3 matches * 1.5 = 4.5 points → score 4)'
   },
   {
     name: 'Medium first-person (single)',
@@ -41,9 +41,9 @@ const PERSONAL_NARRATIVE_TESTS: TestCase[] = [
   {
     name: 'Medium first-person (multiple)',
     contentText: 'I tried this method last year. I found it very effective. I recommend starting slowly to see what works for you.',
-    expectedScoreRange: [1, 2],
-    expectedStatus: 'needs-improvement',
-    notes: 'Multiple medium patterns (3 matches * 1.0 = 3.0 points → score 1-2)'
+    expectedScoreRange: [2, 3],
+    expectedStatus: 'good',
+    notes: 'Multiple medium patterns (3 matches * 1.0 = 3.0 points → score 3)'
   },
   {
     name: 'Mixed strong + medium',
@@ -74,16 +74,16 @@ const PROFESSIONAL_VOICE_TESTS: TestCase[] = [
   {
     name: 'Institutional voice',
     contentText: 'Our research team has conducted extensive studies. We\'ve treated over 10,000 patients with this condition. Our data shows consistent improvement rates.',
-    expectedScoreRange: [1, 2],
-    expectedStatus: 'needs-improvement',
-    notes: 'Institutional voice patterns'
+    expectedScoreRange: [2, 3],
+    expectedStatus: 'good',
+    notes: 'Institutional voice patterns (professional voice scoring well)'
   },
   {
     name: 'Engineering/tech voice',
     contentText: 'Our engineering team has built production systems serving millions of users. We\'ve tested this architecture extensively in real-world scenarios.',
-    expectedScoreRange: [1, 2],
-    expectedStatus: 'needs-improvement',
-    notes: 'Tech/engineering institutional voice'
+    expectedScoreRange: [2, 3],
+    expectedStatus: 'good',
+    notes: 'Tech/engineering institutional voice (improved pattern matching)'
   },
   {
     name: 'Legal/attorney voice',
@@ -128,23 +128,23 @@ const EDGE_CASES: TestCase[] = [
   {
     name: 'Very long content (performance)',
     contentText: 'In my experience treating patients, ' + 'this is additional content. '.repeat(1000) + ' I\'ve found great success with this approach.',
-    expectedScoreRange: [1, 2],
-    expectedStatus: 'needs-improvement',
+    expectedScoreRange: [2, 3],
+    expectedStatus: 'good',
     notes: 'Long content - tests performance optimization (12K char sampling)'
   },
   {
     name: 'Minimal content',
     contentText: 'In my experience, this works.',
-    expectedScoreRange: [0, 1],
-    expectedStatus: 'poor',
-    notes: 'Minimal content with single pattern'
+    expectedScoreRange: [1, 2],
+    expectedStatus: 'needs-improvement',
+    notes: 'Minimal content with single strong pattern (scores higher with new thresholds)'
   },
   {
     name: 'Mixed case variations',
     contentText: 'In My Experience with treating patients, I\'VE OBSERVED significant results. BASED ON MY RESEARCH, outcomes are positive.',
-    expectedScoreRange: [1, 2],
-    expectedStatus: 'needs-improvement',
-    notes: 'Case-insensitive matching works'
+    expectedScoreRange: [2, 3],
+    expectedStatus: 'good',
+    notes: 'Case-insensitive matching works (multiple strong patterns detected)'
   },
   {
     name: 'International patterns (medical)',
@@ -203,9 +203,9 @@ const VERTICAL_TESTS: TestCase[] = [
   {
     name: 'Business/marketing voice',
     contentText: 'Our company has served over 10,000 clients. We\'ve developed proprietary methodologies. Our team consists of industry experts with decades of combined experience.',
-    expectedScoreRange: [1, 2],
-    expectedStatus: 'needs-improvement',
-    notes: 'Business voice: institutional but less personal narrative'
+    expectedScoreRange: [2, 3],
+    expectedStatus: 'good',
+    notes: 'Business voice: institutional patterns now score appropriately'
   }
 ]
 
