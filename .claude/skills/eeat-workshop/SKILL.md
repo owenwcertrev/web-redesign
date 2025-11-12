@@ -71,16 +71,69 @@ Each metric should have **redundant detection pathways** to ensure no false nega
 
 When invoked with a metric ID (e.g., "E1" or "X3"), you will:
 
-1. **Load the current implementation**
-2. **Run live analysis against Healthline** (industry benchmark)
-3. **Analyze detection accuracy, threshold calibration, and recommendations**
-4. **Automatically implement improvements**
-5. **Validate changes with re-testing**
-6. **Summarize all changes made**
+1. **Review metric scope definition** (ensure adherence to defined role)
+2. **Load the current implementation**
+3. **Run live analysis against Healthline** (industry benchmark)
+4. **Analyze detection accuracy, threshold calibration, and recommendations**
+5. **Automatically implement improvements** (within scope boundaries)
+6. **Validate changes with re-testing**
+7. **Summarize all changes made**
 
 ## Workflow
 
-### Step 1: Load Current Implementation & Analyze Multi-Layered Architecture
+### Step 0: Review Metric Scope Definition (CRITICAL - DO THIS FIRST)
+
+Before analyzing or improving any metric, **ALWAYS** read the E-E-A-T Metric Scope Guide to understand what the metric should and should NOT detect.
+
+**Read:** `.claude/EEAT_METRIC_SCOPE_GUIDE.md`
+
+**Look up the specific metric being workshopped** (e.g., E1, X1, T3) and note:
+
+1. **DETECTS (In Scope):**
+   - What signals should this metric detect?
+   - What patterns are legitimate for this metric?
+   - What content features belong to this metric?
+
+2. **DOES NOT DETECT (Out of Scope):**
+   - What signals belong to OTHER metrics?
+   - What would cause double-counting?
+   - What cross-metric violations to avoid?
+
+3. **Scope Boundary:**
+   - What is the precise boundary between this metric and related metrics?
+   - Example: E1 detects content language, X1 detects author credentials
+
+**Critical Rules:**
+- ✅ **ONLY detect signals explicitly listed in "DETECTS"**
+- ❌ **NEVER detect signals listed in "DOES NOT DETECT"**
+- ⚠️ **If current implementation violates scope, FIX IT immediately**
+
+**Example Scope Violations to Watch For:**
+- E1 detecting author credentials → Belongs to X1
+- E2 scoring credential quality → Belongs to X1/X2 (E2 should only detect structure)
+- E3 scoring external citations → Belongs to X4 (E3 is original content only)
+- T3 scoring freshness → Belongs to E4 (T3 is attribution visibility only)
+
+**Output:** Before proceeding to Step 1, state:
+```markdown
+## Metric Scope Review: [Metric ID]
+
+**In Scope (DETECTS):**
+- [List what this metric should detect]
+
+**Out of Scope (DOES NOT DETECT):**
+- [List what belongs to other metrics]
+
+**Scope Boundary:**
+- [Define the precise boundary]
+
+**Current Implementation Check:**
+- [ ] Verify implementation adheres to scope (check in Step 1)
+```
+
+This ensures you understand the metric's role BEFORE analyzing its implementation.
+
+### Step 1: Load Current Implementation & Check Scope Adherence
 
 #### A. Load Configuration
 
@@ -98,7 +151,38 @@ Show the user:
 - Detection patterns used
 - Recommendation text
 
-#### B. Analyze Detection Pathways
+#### B. Check Scope Adherence (CRITICAL)
+
+**Before analyzing pathways, verify the current implementation adheres to scope:**
+
+1. Read the detector function code
+2. Identify ALL signals being detected
+3. Cross-reference against scope guide (`.claude/EEAT_METRIC_SCOPE_GUIDE.md`)
+4. **Flag any out-of-scope detections:**
+
+**Common Violations:**
+- **E1 detecting credentials** → Should ONLY detect content language (narratives, professional voice)
+- **E2 scoring credential quality** → Should ONLY detect attribution structure (not validate credentials)
+- **E3 scoring external citations** → Should ONLY detect original assets (not cited sources)
+- **T3 scoring recency** → Should ONLY detect visible dates (not evaluate freshness)
+- **X1 detecting content narratives** → Should ONLY detect author metadata (not content language)
+
+**If violations found:**
+```markdown
+⚠️ **SCOPE VIOLATION DETECTED**
+
+**Metric:** [ID]
+**Violation:** [Description of what's being detected that shouldn't be]
+**Belongs To:** [Which metric should handle this signal]
+**Impact:** [Double-counting, signal overlap, scoring inflation]
+**Action Required:** Remove out-of-scope pathway before implementing improvements
+```
+
+**Only proceed with improvements if:**
+- ✅ Implementation adheres to scope, OR
+- ✅ Scope violations are removed first
+
+#### C. Analyze Detection Pathways
 
 For each metric, identify which detection layers are implemented:
 
@@ -382,9 +466,39 @@ recommendations: [
 ]
 ```
 
-### Step 5: Deploy Changes to Production
+### Step 5: Final Scope Validation Before Deployment
 
-After implementing improvements, deploy to production so the user can test on the live site:
+**CRITICAL: Before deploying, verify NO scope violations remain:**
+
+1. **Re-read the improved detector code**
+2. **Check against scope guide one final time:**
+   - [ ] Only signals in "DETECTS" are detected
+   - [ ] No signals from "DOES NOT DETECT" are present
+   - [ ] Scope boundary is respected
+3. **Verify removal of violations (if any were found):**
+   - [ ] Credential detection removed from E1? (if applicable)
+   - [ ] Credential scoring removed from E2? (if applicable)
+   - [ ] External citations removed from E3? (if applicable)
+   - [ ] Any other violations removed?
+
+**Sign-off:**
+```markdown
+✅ **SCOPE VALIDATION PASSED**
+
+- Metric detects ONLY in-scope signals
+- NO cross-metric overlap
+- NO double-counting risk
+- Ready for deployment
+```
+
+**If validation fails:**
+- Do NOT deploy
+- Fix remaining violations
+- Re-run validation
+
+### Step 6: Deploy Changes to Production
+
+After scope validation passes, deploy to production so the user can test on the live site:
 
 ```bash
 git add .

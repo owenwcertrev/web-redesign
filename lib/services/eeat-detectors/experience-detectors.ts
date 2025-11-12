@@ -96,6 +96,14 @@ async function detectE1WithLLM(
 
 /**
  * E1 detection with regex (sync) - used as fallback or for blog aggregation
+ *
+ * FIXED ISSUES (2025-01):
+ * - Regex state corruption (exec + lastIndex reset)
+ * - Pattern over-counting (capped matches)
+ * - Removed Pathways 3 & 4 (credential detection moved to E2)
+ * - Performance optimization (text sampling)
+ * - Tightened generic patterns
+ * - Evidence reporting (once per pathway)
  */
 function detectE1WithRegex(
   pageAnalysis: PageAnalysis,
@@ -115,7 +123,10 @@ function detectE1WithRegex(
     })
   } else {
     const text = pageAnalysis.contentText?.toLowerCase() || ''
-    const authors = pageAnalysis.authors || []
+
+    // PERFORMANCE FIX: Sample first 12,000 chars (~2000 words)
+    // Experience signals appear early in content - no need to scan entire page
+    const textSample = text.slice(0, 12000)
 
     // === PATHWAY 1: Personal First-Person Narratives (blog-style) ===
     // High-confidence experience patterns (specific contexts)
@@ -130,38 +141,63 @@ function detectE1WithRegex(
     ]
 
     // Medium-confidence patterns (recommendations/opinions based on experience)
+    // TIGHTENED (2025-01): Require experience context to prevent false positives
     const mediumExperiencePatterns = [
-      /\b(i recommend|we recommend|i suggest|we suggest)\b(?!\s+(checking|considering|avoiding|researching)\s+(competitors|alternatives|other options))/gi,
+      /\b(i recommend|we recommend|i suggest|we suggest)\s+(based on|from my|from our|in my)\b/gi, // Requires experience context
       /\b(from my perspective|in my opinion|in our opinion)\b/gi,
       /\b(i (believe|think).*based on)\b/gi
     ]
 
     let strongMatchCount = 0
     let mediumMatchCount = 0
-    let evidenceAdded = false
+    let narrativeEvidenceAdded = false
 
-    strongExperiencePatterns.forEach(pattern => {
-      const matches = text.match(pattern)
-      if (matches) {
-        strongMatchCount += matches.length
-        if (!evidenceAdded) {
+    // BUG FIX: Use exec() with lastIndex reset to prevent state corruption
+    const MAX_NARRATIVE_MATCHES = 5 // Cap total narrative matches to prevent over-counting
+
+    for (const pattern of strongExperiencePatterns) {
+      let match
+      while ((match = pattern.exec(textSample)) !== null) {
+        strongMatchCount++
+        pattern.lastIndex = 0 // Reset regex state
+
+        if (!narrativeEvidenceAdded) {
+          // Collect up to 3 examples for evidence
+          const examples: string[] = []
+          for (const p of strongExperiencePatterns) {
+            const matches = textSample.match(p)
+            p.lastIndex = 0
+            if (matches) examples.push(...matches.slice(0, 1))
+            if (examples.length >= 3) break
+          }
+
           evidence.push({
             type: 'snippet',
-            value: matches.slice(0, 3).join(', '),
+            value: examples.slice(0, 3).join(', '),
             label: 'First-person experience phrases'
           })
-          evidenceAdded = true
+          narrativeEvidenceAdded = true
         }
+        break // Only count first match per pattern to prevent over-counting
       }
-    })
+    }
 
-    mediumExperiencePatterns.forEach(pattern => {
-      const matches = text.match(pattern)
-      if (matches) mediumMatchCount += matches.length
-    })
+    for (const pattern of mediumExperiencePatterns) {
+      let match
+      while ((match = pattern.exec(textSample)) !== null) {
+        mediumMatchCount++
+        pattern.lastIndex = 0 // Reset regex state
+        break // Only count first match per pattern
+      }
+    }
+
+    // Cap narrative matches to prevent over-counting from repetitive content
+    strongMatchCount = Math.min(strongMatchCount, MAX_NARRATIVE_MATCHES)
+    mediumMatchCount = Math.min(mediumMatchCount, MAX_NARRATIVE_MATCHES)
 
     // === PATHWAY 2: Professional/Institutional Experience ===
     // Professional experience patterns (collective/institutional voice) - UNIVERSAL
+    // TIGHTENED (2025-01): More specific patterns to prevent false positives
     const professionalExperiencePatterns = [
       // Institutional research/work (any field)
       /\b(our research|our study|our analysis|our findings|our data|our team|our investigation)\b/gi,
@@ -180,174 +216,69 @@ function detectE1WithRegex(
       // Licensing/Certification (any field)
       /\b((board[- ])?certified|licensed|registered)\s+(professional|practitioner|specialist)\b/gi,
 
-      // Professional activities (universal)
-      /\b(worked (with|as a|at)|specializes? in|focuses on|expert in)\b/gi,
-      /\b(built|founded|developed|created|managed)\s+(for|at|with)\b/gi, // "Built software at Google"
+      // Professional activities (TIGHTENED: requires specific context)
+      /\b(worked (with|as a|at))\s+\w+\s+(patients|clients|companies|teams)\b/gi, // Requires object
+      /\b(specializes? in|expert in)\s+\w+/gi, // Requires specialization area
+      /\b(built|founded|developed|created)\s+(a|an|the)\s+\w+\s+(company|product|system|platform|practice)\b/gi, // Requires object
+
+      // Passive voice experience (ADDED: catches institutional voice)
+      /\b(observations from|findings from|conclusions based on|experience treating|experience working with)\b/gi
     ]
 
     let professionalMatchCount = 0
-    professionalExperiencePatterns.forEach(pattern => {
-      const matches = text.match(pattern)
+    let professionalEvidenceAdded = false
+    const MAX_PROFESSIONAL_MATCHES = 10 // Cap professional matches
+
+    for (const pattern of professionalExperiencePatterns) {
+      const matches = textSample.match(pattern)
+      pattern.lastIndex = 0 // Reset regex state
+
       if (matches) {
-        professionalMatchCount += matches.length
-        if (professionalMatchCount <= 3) {
+        professionalMatchCount += Math.min(matches.length, 3) // Max 3 per pattern
+
+        if (!professionalEvidenceAdded) {
           evidence.push({
             type: 'snippet',
             value: matches.slice(0, 2).join(', '),
             label: 'Professional experience indicators'
           })
+          professionalEvidenceAdded = true
         }
       }
-    })
+    }
 
-    // === PATHWAY 3: Author Professional Background ===
-    // Check if authors have experience-related credentials or roles
-    let authorExperienceScore = 0
-    authors.forEach(author => {
-      const authorInfo = `${author.name || ''} ${author.credentials || ''}`.toLowerCase()
+    // Cap professional matches
+    professionalMatchCount = Math.min(professionalMatchCount, MAX_PROFESSIONAL_MATCHES)
 
-      // Professional credentials that indicate direct experience across ALL verticals
-      const experienceCredentials = [
-        // === MEDICAL/HEALTH ===
-        /\b(md|do|phd|pharmd|dds|dvm|dnp|psyd)\b/i, // Doctors/Psychologists
-        /\b(rn|np|pa-c|lpn|cna|emt)\b/i, // Nursing/Emergency
-        /\b(rd|rdn|ldn|cns)\b/i, // Dietitian/Nutritionist
-        /\b(mph|msn|msw|mft|lcsw|lmft|lpc|lcpc)\b/i, // Mental health / Public health
-        /\b(pt|ot|slp|ccc-slp|dpt)\b/i, // Physical/Occupational therapy
-        /\b(ms|mph|mha|mhs|msc|mcmsc)\b/i, // Master's in health sciences
-        /\b(bs|bsc|bsn|ba)\b/i, // Bachelor's degrees
-        /\b(mba)\b/i, // MBA
-
-        // === FINANCE/ACCOUNTING ===
-        /\b(cfa|cfp|cpa|cma|cia)\b/i, // Chartered Financial Analyst, Certified Financial Planner, CPA
-        /\b(series\s*(7|6|63|65|66))\b/i, // FINRA licenses
-        /\b(chartered (financial|accountant))\b/i,
-        /\b(enrolled agent|ea)\b/i, // Tax professionals
-
-        // === LAW ===
-        /\b(jd|esq|esquire|llm|llb)\b/i, // Law degrees
-        /\b(attorney|lawyer|counsel)\b/i,
-        /\b(bar certified|admitted to (the )?bar|licensed to practice law)\b/i,
-
-        // === TECHNOLOGY/ENGINEERING ===
-        /\b(software engineer|senior engineer|principal engineer|staff engineer|lead engineer)\b/i,
-        /\b(phd.*(computer science|cs|engineering|data science))\b/i,
-        /\b(ms.*(computer science|cs|engineering|data science))\b/i,
-        /\b(full[- ]stack|backend|frontend|devops|machine learning)\s+(engineer|developer)\b/i,
-        /\b(certified.*(professional|developer|architect)|aws certified|google cloud certified|azure certified)\b/i,
-
-        // === FOOD/CULINARY ===
-        /\b(chef|executive chef|head chef|sous chef|pastry chef)\b/i,
-        /\b(culinary (institute|school|arts|degree))\b/i,
-        /\b(james beard|michelin star|cordon bleu)\b/i,
-        /\b(certified (master chef|culinary|sommelier))\b/i,
-
-        // === REAL ESTATE ===
-        /\b(realtor|real estate (broker|agent))\b/i,
-        /\b(licensed (broker|agent)|broker license)\b/i,
-        /\b(gri|crs|abr)\b/i, // Graduate REALTOR Institute, Certified Residential Specialist
-
-        // === BUSINESS/MANAGEMENT (generic professional roles) ===
-        /\b(ceo|cto|cfo|coo|founder|co[- ]founder)\b/i,
-        /\b(director|vice president|vp|senior (vice president|vp))\b/i,
-        /\b(president|managing director|general manager)\b/i,
-        /\b(senior|lead|principal|staff)\s+(analyst|consultant|advisor|specialist)\b/i,
-
-        // === EDUCATION/ACADEMIA ===
-        /\b(professor|associate professor|assistant professor)\b/i,
-        /\b(phd|doctorate|doctoral)\b/i, // Any PhD
-        /\b(adjunct|lecturer|instructor)\b/i,
-
-        // === FITNESS/WELLNESS ===
-        /\b(certified (personal trainer|fitness|yoga|pilates))\b/i,
-        /\b(cscs|nsca|nasm|ace|issa)\b/i, // Strength & conditioning certifications
-
-        // === INTERNATIONAL CREDENTIALS ===
-        // German
-        /\b(dipl[.-]?ing|dr[.-]?ing|facharzt|diplomingenieur)\b/i, // Engineer, Doctor-Engineer, Specialist Doctor
-        /\b(rechtsanwalt|steuerberater)\b/i, // Attorney, Tax Advisor
-        // French
-        /\b(docteur|maître|ingénieur)\b/i, // Doctor, Master (lawyer), Engineer
-        /\b(diplômé|diplôme)\b/i, // Graduate, Diploma
-        // Spanish
-        /\b(licenciado|ingeniero|abogado)\b/i, // Graduate, Engineer, Lawyer
-        // Italian
-        /\b(dottore|ingegnere|avvocato)\b/i, // Doctor, Engineer, Lawyer
-        // Generic international
-        /\b(dr\.|prof\.|eng\.)\b/i, // Doctor, Professor, Engineer (abbreviated)
-        /\b(professor|professeur)\b/i, // Professor (international)
-
-        // === GENERIC PROFESSIONAL PATTERNS ===
-        /\b(physician|doctor|nurse|therapist|dietitian|nutritionist|pharmacist|practitioner)\b/i,
-        /\b(\d+\+?\s*years?.*(professional |clinical )?(experience|practicing))\b/i, // "10+ years experience"
-        /\b(board[- ]certified|licensed|registered|certified)\b/i,
-        /\b(specialist|expert|professional|consultant)\s+in\b/i,
-
-        // === GENERIC POST-NOMINAL CREDENTIALS PATTERN ===
-        // Catches any 2-5 uppercase letter credentials after comma: "John Smith, CFA, CMT"
-        /,\s*[A-Z]{2,5}(\b|,|\s)/i,
-      ]
-
-      const hasExperienceCredential = experienceCredentials.some(pattern => pattern.test(authorInfo))
-
-      if (hasExperienceCredential) {
-        authorExperienceScore += 1
-        evidence.push({
-          type: 'snippet',
-          value: `${author.name || 'Author'} - professional background`,
-          label: 'Author with professional experience'
-        })
-      }
-    })
-
-    // === PATHWAY 4: Expert Reviewer (Experienced Practitioner Review) ===
-    // Check schema for reviewedBy or medicalReviewer (universal - any field's expert review)
-    const schema = pageAnalysis.schemaMarkup || []
-    let reviewerExperienceScore = 0
-
-    schema.forEach(s => {
-      const reviewer = s.data?.reviewedBy || s.data?.medicalReviewer
-      if (reviewer) {
-        const reviewerName = typeof reviewer === 'string' ? reviewer : reviewer?.name
-        if (reviewerName) {
-          reviewerExperienceScore += 1.5
-          evidence.push({
-            type: 'snippet',
-            value: reviewerName,
-            label: 'Expert reviewer (implies professional experience)'
-          })
-        }
-      }
-    })
+    // === REMOVED PATHWAYS 3 & 4 ===
+    // Author credentials and reviewers are now EXCLUSIVELY handled by E2
+    // This eliminates double-counting between E1 and E2
+    // E1 = NARRATIVE experience (content-based)
+    // E2 = ATTRIBUTION experience (author/reviewer credentials)
 
     // === CALCULATE FINAL SCORE ===
-    // Weight different pathways appropriately:
-    // - Personal narratives: highest weight (1.5x for strong, 1x for medium) - Blog-style content
-    // - Professional patterns: medium weight (0.75x) - Editorial/institutional voice
-    // - Author backgrounds: strong boost (1.5pt per credentialed author, cap at 3pts) - Professional publishers
-    // - Reviewer presence: strong boost (2pts for medical reviewer) - YMYL content quality signal
+    // UPDATED SCORING (2025-01): Only narratives + professional voice
+    // Removed author/reviewer pathways to eliminate E2 overlap
 
     const narrativeScore = (strongMatchCount * 1.5) + mediumMatchCount
     const professionalScore = professionalMatchCount * 0.75
-    const authorScore = Math.min(authorExperienceScore * 1.5, 3) // Cap at 3 pts (2 credentialed authors = 3pts)
-    const reviewerScore = Math.min(reviewerExperienceScore, 2) // Cap at 2 pts
 
-    const totalWeighted = narrativeScore + professionalScore + authorScore + reviewerScore
+    const totalWeighted = narrativeScore + professionalScore
 
-    // Calibrated scoring thresholds for professional publishers
-    // Professional medical sites (like Healthline) score high via credentialed authors + reviewers
-    // Blog-style sites score high via first-person narratives
-    if (totalWeighted >= 5) score = config.maxScore // Excellent: Strong experience signals
-    else if (totalWeighted >= 3) score = 3 // Good: Multiple experience indicators
-    else if (totalWeighted >= 1.5) score = 2 // Fair: Some experience signals
-    else if (totalWeighted >= 0.5) score = 1 // Minimal: Limited experience shown
+    // Recalibrated thresholds (without author/reviewer boost)
+    // Personal blogs score high via narratives
+    // Professional sites score high via institutional voice
+    if (totalWeighted >= 6) score = config.maxScore // Excellent: Strong narrative + professional
+    else if (totalWeighted >= 4) score = 3 // Good: Multiple experience indicators
+    else if (totalWeighted >= 2) score = 2 // Fair: Some experience signals
+    else if (totalWeighted >= 0.75) score = 1 // Minimal: Limited experience shown
     else score = 0
 
     // Add summary metric
     if (totalWeighted > 0) {
       evidence.push({
         type: 'metric',
-        value: `Experience score: ${totalWeighted.toFixed(1)} (narratives: ${narrativeScore.toFixed(1)}, professional: ${professionalScore.toFixed(1)}, authors: ${authorScore.toFixed(1)}, reviewers: ${reviewerScore.toFixed(1)})`,
+        value: `Experience score: ${totalWeighted.toFixed(1)} (narratives: ${narrativeScore.toFixed(1)}, professional: ${professionalScore.toFixed(1)})`,
         label: 'Combined experience signals'
       })
     }
@@ -358,15 +289,21 @@ function detectE1WithRegex(
   // Dynamic recommendations based on what's missing
   let recommendation: string | undefined
   if (score < config.thresholds.good) {
-    const hasAuthors = (pageAnalysis.authors?.length || 0) > 0
-    const hasReviewers = (pageAnalysis.schemaMarkup || []).some(s => s.data?.reviewedBy || s.data?.medicalReviewer)
+    const missing: string[] = []
+    const narrativeScore = (evidence.find(e => e.label.includes('First-person')) ? 1 : 0)
+    const professionalScore = (evidence.find(e => e.label.includes('Professional')) ? 1 : 0)
 
-    if (!hasAuthors && !hasReviewers) {
-      recommendation = 'Add named authors with professional backgrounds (e.g., "15 years clinical experience") and/or medical reviewers to demonstrate practical experience'
-    } else if (score < 1) {
-      recommendation = 'Include first-person narratives ("In my practice..."), case examples, or professional context ("Our research team...") to demonstrate hands-on experience'
+    if (narrativeScore === 0) {
+      missing.push('first-person narratives ("In my experience...", "I\'ve observed...")')
+    }
+    if (professionalScore === 0) {
+      missing.push('institutional voice ("Our research team...", "10+ years experience")')
+    }
+
+    if (missing.length > 0) {
+      recommendation = `Add experience signals to content: ${missing.join(' and/or ')}. Show hands-on expertise through personal insights or professional context.`
     } else {
-      recommendation = 'Strengthen experience signals: add personal insights, clinical observations, or institutional research findings to show direct expertise application'
+      recommendation = 'Strengthen experience signals: add more specific examples, case observations, or professional insights to demonstrate direct expertise application'
     }
   }
 
