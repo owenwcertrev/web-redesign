@@ -78,14 +78,28 @@ export function detectFirstPersonNarratives(
     })
 
     // === PATHWAY 2: Professional/Institutional Experience ===
-    // Professional experience patterns (collective/institutional voice)
+    // Professional experience patterns (collective/institutional voice) - UNIVERSAL
     const professionalExperiencePatterns = [
+      // Institutional research/work (any field)
       /\b(our research|our study|our analysis|our findings|our data|our team|our investigation)\b/gi,
-      /\b(our editorial team|our medical team|our expert team)\b/gi,
-      /\b(years? of (clinical |professional )?experience|decades of experience)\b/gi,
-      /\b((board[- ])?certified|licensed|practicing)\s+(physician|doctor|nurse|therapist|dietitian|pharmacist)\b/gi,
-      /\b(clinical practice|medical practice|professional practice|treating patients)\b/gi,
-      /\b(worked (with|as a)|specializes? in|focuses on)\b/gi
+      /\b(our (editorial|legal|engineering|financial|culinary|design) team)\b/gi,
+      /\b(our (experts|specialists|analysts|consultants|advisors))\b/gi,
+
+      // Experience statements (any profession)
+      /\b(\d+\+?\s*years?.*(experience|practicing|working in|specializing in))\b/gi, // "10+ years experience"
+      /\b(decades of experience|years of expertise)\b/gi,
+
+      // Professional practice (multi-vertical)
+      /\b((clinical|legal|financial|engineering|culinary) practice)\b/gi,
+      /\b(practicing (physician|attorney|engineer|accountant|architect))\b/gi,
+      /\b(professional practice|treating (patients|clients)|serving clients)\b/gi,
+
+      // Licensing/Certification (any field)
+      /\b((board[- ])?certified|licensed|registered)\s+(professional|practitioner|specialist)\b/gi,
+
+      // Professional activities (universal)
+      /\b(worked (with|as a|at)|specializes? in|focuses on|expert in)\b/gi,
+      /\b(built|founded|developed|created|managed)\s+(for|at|with)\b/gi, // "Built software at Google"
     ]
 
     let professionalMatchCount = 0
@@ -109,23 +123,71 @@ export function detectFirstPersonNarratives(
     authors.forEach(author => {
       const authorInfo = `${author.name || ''} ${author.credentials || ''}`.toLowerCase()
 
-      // Professional credentials that indicate direct experience
+      // Professional credentials that indicate direct experience across ALL verticals
       const experienceCredentials = [
-        // Medical/Health professional licenses (strongest signal)
-        /\b(md|do|phd|pharmd|dds|dvm|dnp|psyd)\b/i,
-        /\b(rn|np|pa-c|lpn|cna)\b/i, // Nursing
+        // === MEDICAL/HEALTH ===
+        /\b(md|do|phd|pharmd|dds|dvm|dnp|psyd)\b/i, // Doctors/Psychologists
+        /\b(rn|np|pa-c|lpn|cna|emt)\b/i, // Nursing/Emergency
         /\b(rd|rdn|ldn|cns)\b/i, // Dietitian/Nutritionist
-        /\b(mph|msn|msw|mft|lcsw|lmft|lpc)\b/i, // Mental health / Public health
+        /\b(mph|msn|msw|mft|lcsw|lmft|lpc|lcpc)\b/i, // Mental health / Public health
         /\b(pt|ot|slp|ccc-slp|dpt)\b/i, // Physical/Occupational therapy
-        // Relevant academic credentials in health/nutrition context (moderate signal)
-        // For health/nutrition content, MS/BSc indicate relevant educational background
-        /\b(ms|mph|mha|mhs|msc|mcmsc)\b/i, // Master's in sciences/health/clinical
-        /\b(bs|bsc|bsn|ba)\b/i, // Bachelor's degrees (in health content context, likely relevant)
-        /\b(mba)\b/i, // MBA (in health publishing context, indicates business/editorial experience)
-        // Professional roles that indicate direct experience
+        /\b(ms|mph|mha|mhs|msc|mcmsc)\b/i, // Master's in health sciences
+        /\b(bs|bsc|bsn|ba)\b/i, // Bachelor's degrees
+        /\b(mba)\b/i, // MBA
+
+        // === FINANCE/ACCOUNTING ===
+        /\b(cfa|cfp|cpa|cma|cia)\b/i, // Chartered Financial Analyst, Certified Financial Planner, CPA
+        /\b(series\s*(7|6|63|65|66))\b/i, // FINRA licenses
+        /\b(chartered (financial|accountant))\b/i,
+        /\b(enrolled agent|ea)\b/i, // Tax professionals
+
+        // === LAW ===
+        /\b(jd|esq|esquire|llm|llb)\b/i, // Law degrees
+        /\b(attorney|lawyer|counsel)\b/i,
+        /\b(bar certified|admitted to (the )?bar|licensed to practice law)\b/i,
+
+        // === TECHNOLOGY/ENGINEERING ===
+        /\b(software engineer|senior engineer|principal engineer|staff engineer|lead engineer)\b/i,
+        /\b(phd.*(computer science|cs|engineering|data science))\b/i,
+        /\b(ms.*(computer science|cs|engineering|data science))\b/i,
+        /\b(full[- ]stack|backend|frontend|devops|machine learning)\s+(engineer|developer)\b/i,
+        /\b(certified.*(professional|developer|architect)|aws certified|google cloud certified|azure certified)\b/i,
+
+        // === FOOD/CULINARY ===
+        /\b(chef|executive chef|head chef|sous chef|pastry chef)\b/i,
+        /\b(culinary (institute|school|arts|degree))\b/i,
+        /\b(james beard|michelin star|cordon bleu)\b/i,
+        /\b(certified (master chef|culinary|sommelier))\b/i,
+
+        // === REAL ESTATE ===
+        /\b(realtor|real estate (broker|agent))\b/i,
+        /\b(licensed (broker|agent)|broker license)\b/i,
+        /\b(gri|crs|abr)\b/i, // Graduate REALTOR Institute, Certified Residential Specialist
+
+        // === BUSINESS/MANAGEMENT (generic professional roles) ===
+        /\b(ceo|cto|cfo|coo|founder|co[- ]founder)\b/i,
+        /\b(director|vice president|vp|senior (vice president|vp))\b/i,
+        /\b(president|managing director|general manager)\b/i,
+        /\b(senior|lead|principal|staff)\s+(analyst|consultant|advisor|specialist)\b/i,
+
+        // === EDUCATION/ACADEMIA ===
+        /\b(professor|associate professor|assistant professor)\b/i,
+        /\b(phd|doctorate|doctoral)\b/i, // Any PhD
+        /\b(adjunct|lecturer|instructor)\b/i,
+
+        // === FITNESS/WELLNESS ===
+        /\b(certified (personal trainer|fitness|yoga|pilates))\b/i,
+        /\b(cscs|nsca|nasm|ace|issa)\b/i, // Strength & conditioning certifications
+
+        // === GENERIC PROFESSIONAL PATTERNS ===
         /\b(physician|doctor|nurse|therapist|dietitian|nutritionist|pharmacist|practitioner)\b/i,
-        /\b(clinical|medical|health)\s+(specialist|expert|professional|consultant)\b/i,
-        /\b(years? of (clinical |professional )?experience|practicing|board[- ]certified|licensed|registered)\b/i
+        /\b(\d+\+?\s*years?.*(professional |clinical )?(experience|practicing))\b/i, // "10+ years experience"
+        /\b(board[- ]certified|licensed|registered|certified)\b/i,
+        /\b(specialist|expert|professional|consultant)\s+in\b/i,
+
+        // === GENERIC POST-NOMINAL CREDENTIALS PATTERN ===
+        // Catches any 2-5 uppercase letter credentials after comma: "John Smith, CFA, CMT"
+        /,\s*[A-Z]{2,5}(\b|,|\s)/i,
       ]
 
       const hasExperienceCredential = experienceCredentials.some(pattern => pattern.test(authorInfo))
@@ -140,8 +202,8 @@ export function detectFirstPersonNarratives(
       }
     })
 
-    // === PATHWAY 4: Medical Reviewer (Experienced Practitioner Review) ===
-    // Check schema for reviewedBy or medicalReviewer
+    // === PATHWAY 4: Expert Reviewer (Experienced Practitioner Review) ===
+    // Check schema for reviewedBy or medicalReviewer (universal - any field's expert review)
     const schema = pageAnalysis.schemaMarkup || []
     let reviewerExperienceScore = 0
 
@@ -154,7 +216,7 @@ export function detectFirstPersonNarratives(
           evidence.push({
             type: 'snippet',
             value: reviewerName,
-            label: 'Medical/expert reviewer (implies clinical experience)'
+            label: 'Expert reviewer (implies professional experience)'
           })
         }
       }
