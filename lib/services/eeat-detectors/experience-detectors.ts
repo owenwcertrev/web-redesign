@@ -979,38 +979,69 @@ export function detectExperienceMarkup(pageAnalysis: PageAnalysis): EEATVariable
   const schema = pageAnalysis.schemaMarkup || []
   const headings = pageAnalysis.headings || { h1: [], h2: [], h3: [] }
 
-  // Check for experience-related schema types
-  const experienceSchemaTypes = ['MedicalWebPage', 'HealthTopicContent']
-
-  schema.forEach(s => {
-    if (s.type && experienceSchemaTypes.includes(s.type)) {
-      score += 1
-      evidence.push({
-        type: 'snippet',
-        value: s.type,
-        label: 'Experience-related schema'
-      })
-    }
-  })
-
-  // Check for "What we do" or similar sections
-  const experienceSectionPatterns = [
-    /\b(what we do|who we are|our approach|our methodology|our process)\b/gi,
-    /\b(how we help|why choose us|our expertise|our background)\b/gi
+  // Check for experience-related schema types (vertical-specific schemas)
+  // These schemas indicate domain-specific experience and expertise
+  // NOTE: Generic schemas (Article, WebPage, BlogPosting) don't count - only vertical-specific ones
+  const experienceSchemaTypes = [
+    // Health/Medical
+    'MedicalWebPage', 'HealthTopicContent', 'MedicalCondition', 'MedicalProcedure',
+    // Food/Nutrition
+    'Recipe', 'NutritionInformation',
+    // Education/Tutorial
+    'HowTo', 'Course', 'LearningResource', 'Quiz',
+    // Reviews/Products
+    'Review', 'Product',
+    // Events
+    'Event', 'EventSeries',
+    // Professional Services
+    'ProfessionalService', 'Service',
+    // Technical/Scholarly (specific article types, not generic Article)
+    'TechArticle', 'ScholarlyArticle'
   ]
 
-  const allHeadings = [...headings.h1, ...headings.h2, ...headings.h3]
-  allHeadings.forEach(headingText => {
-    experienceSectionPatterns.forEach(pattern => {
-      if (pattern.test(headingText)) {
-        score += 0.5
+  schema.forEach(s => {
+    if (!s.type) return
+
+    // Handle both string and array @type values
+    const types = Array.isArray(s.type) ? s.type : [s.type]
+
+    types.forEach(type => {
+      if (experienceSchemaTypes.includes(type)) {
+        score += 1
         evidence.push({
           type: 'snippet',
-          value: headingText,
-          label: 'Experience section heading'
+          value: type,
+          label: 'Vertical-specific schema'
         })
       }
     })
+  })
+
+  // Check for "What we do" or similar sections
+  // NOTE: Don't use /g flag - it causes .test() to maintain state between calls
+  const experienceSectionPatterns = [
+    /\b(what we do|who we are|our approach|our methodology|our process)\b/i,
+    /\b(how we help|why choose us|our expertise|our background)\b/i
+  ]
+
+  const allHeadings = [...headings.h1, ...headings.h2, ...headings.h3]
+  const matchedHeadings = new Set<string>() // Prevent double-counting same heading
+
+  allHeadings.forEach(headingText => {
+    // Skip if already matched
+    if (matchedHeadings.has(headingText)) return
+
+    // Check if heading matches any pattern
+    const matches = experienceSectionPatterns.some(pattern => pattern.test(headingText))
+    if (matches) {
+      score += 0.5
+      matchedHeadings.add(headingText)
+      evidence.push({
+        type: 'snippet',
+        value: headingText,
+        label: 'Experience section heading'
+      })
+    }
   })
 
   // Cap at maxScore
