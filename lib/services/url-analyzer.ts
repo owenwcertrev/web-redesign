@@ -43,6 +43,7 @@ export interface Author {
   name: string
   credentials?: string
   url?: string
+  photo?: string
   source: 'schema' | 'meta' | 'content' | 'rel-author' | 'html-class' | 'javascript'
 }
 
@@ -274,6 +275,9 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
           authors.push(author)
         }
       })
+      if (schemaAuthors.length > 0) {
+        console.log('[extractAuthors] Found from schema:', schemaAuthors)
+      }
     } catch (e) {
       // Invalid JSON, skip
     }
@@ -286,6 +290,7 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
       name: metaAuthor,
       source: 'meta'
     })
+    console.log('[extractAuthors] Found from meta tag:', metaAuthor)
   }
 
   // Check rel="author" links
@@ -366,34 +371,40 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
     // Look for dataLayer with byline/medicalReviewers
     if (scriptContent.includes('window.dataLayer.push')) {
       try {
-        // Look for medicalReviewers in byline structure
-        // Pattern: "medicalReviewers":[{..."name":{"display":"Helen Chen MCMSc, PA-C"
-        const reviewerPattern = /"medicalReviewers"\s*:\s*\[\s*\{[^}]*?"name"\s*:\s*\{\s*"display"\s*:\s*"([^"]+)"/
-        const reviewerMatch = scriptContent.match(reviewerPattern)
+        // Look for medicalReviewers with full details in byline structure
+        // Pattern matches: "medicalReviewers":[{"id":6848,"name":{"display":"Helen Chen MCMSc, PA-C"...
+        const fullReviewerPattern = /"medicalReviewers"\s*:\s*\[([^\]]+)\]/
+        const fullMatch = scriptContent.match(fullReviewerPattern)
 
-        if (reviewerMatch && !authors.some(a => a.name === reviewerMatch[1])) {
-          // Extract credentials from name (e.g., "Helen Chen MCMSc, PA-C")
-          const fullName = reviewerMatch[1]
+        if (fullMatch) {
+          const reviewersData = fullMatch[1]
 
-          // Try to split name and credentials
-          // Common pattern: "FirstName LastName CREDENTIAL1, CREDENTIAL2"
-          const credMatch = fullName.match(/^(.+?)\s+((?:MD|PhD|RN|MPH|DDS|PharmD|RD|CNE|COI|PA-C|MCMSc|BSc|MSc|MSN|MPH|MBA|JD|DO|NP|APRN)[,\s]*.*)$/i)
+          // Extract name
+          const nameMatch = reviewersData.match(/"name"\s*:\s*\{\s*"display"\s*:\s*"([^"]+)"/)
+          if (nameMatch && !authors.some(a => a.name === nameMatch[1])) {
+            const fullName = nameMatch[1]
 
-          if (credMatch) {
-            const baseName = credMatch[1].trim()
-            const credentials = credMatch[2].trim()
-            authors.push({
-              name: fullName, // Keep full name for matching
-              credentials: credentials,
-              source: 'javascript'
-            })
-          } else {
-            // No credentials in name, just mark as medical reviewer
-            authors.push({
+            // Extract bio page URL from "link" field
+            const linkMatch = reviewersData.match(/"link"\s*:\s*"([^"]+)"/)
+            const bioUrl = linkMatch ? linkMatch[1] : undefined
+
+            // Extract photo URL from "avatar" field
+            // Pattern: "avatar":{"src":"https://post.healthline.com/wp-content/uploads/2023/03/Helen-Chen-Headshot-500x500-Bio.png"}
+            const photoMatch = reviewersData.match(/"avatar"\s*:\s*\{\s*"src"\s*:\s*"([^"]+)"/)
+            const photoUrl = photoMatch ? photoMatch[1] : undefined
+
+            // Extract credentials from name
+            const credMatch = fullName.match(/^(.+?)\s+((?:MD|PhD|RN|MPH|DDS|PharmD|RD|CNE|COI|PA-C|MCMSc|BSc|MSc|MSN|MPH|MBA|JD|DO|NP|APRN)[,\s]*.*)$/i)
+
+            const newAuthor = {
               name: fullName,
-              credentials: 'Medical Reviewer',
-              source: 'javascript'
-            })
+              credentials: credMatch ? credMatch[2].trim() : 'Medical Reviewer',
+              url: bioUrl,
+              photo: photoUrl,
+              source: 'javascript' as const
+            }
+            authors.push(newAuthor)
+            console.log('[extractAuthors] Found from JavaScript dataLayer:', newAuthor)
           }
         }
 
@@ -405,6 +416,7 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
             name: authorMatch[1],
             source: 'javascript'
           })
+          console.log('[extractAuthors] Found author from JavaScript:', authorMatch[1])
         }
       } catch (e) {
         // Invalid format, skip
@@ -412,6 +424,7 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
     }
   })
 
+  console.log(`[extractAuthors] Total authors found: ${authors.length}`, authors)
   return authors
 }
 
@@ -446,6 +459,7 @@ function extractAuthorsFromSchema(schema: any): Author[] {
           name: author.name,
           credentials: author.jobTitle || author.description,
           url: author.url,
+          photo: author.image,
           source: 'schema'
         })
       }
@@ -458,16 +472,28 @@ function extractAuthorsFromSchema(schema: any): Author[] {
 
     for (const reviewer of reviewerData) {
       if (typeof reviewer === 'string') {
-        authors.push({
-          name: reviewer,
-          credentials: 'Reviewer',
-          source: 'schema'
-        })
+        // Extract credentials from name string (e.g., "Helen Chen MCMSc, PA-C")
+        const credMatch = reviewer.match(/^(.+?)\s+((?:MD|PhD|RN|MPH|DDS|PharmD|RD|CNE|COI|PA-C|MCMSc|BSc|MSc|MSN|MPH|MBA|JD|DO|NP|APRN)[,\s]*.*)$/i)
+
+        if (credMatch) {
+          authors.push({
+            name: reviewer, // Keep full name
+            credentials: credMatch[2].trim(),
+            source: 'schema'
+          })
+        } else {
+          authors.push({
+            name: reviewer,
+            credentials: 'Medical Reviewer',
+            source: 'schema'
+          })
+        }
       } else if (reviewer.name) {
         authors.push({
           name: reviewer.name,
           credentials: reviewer.jobTitle || reviewer.description || 'Medical Reviewer',
           url: reviewer.url,
+          photo: reviewer.image,
           source: 'schema'
         })
       }
@@ -490,6 +516,7 @@ function extractAuthorsFromSchema(schema: any): Author[] {
           name: reviewer.name,
           credentials: reviewer.jobTitle || reviewer.description || 'Medical Reviewer',
           url: reviewer.url,
+          photo: reviewer.image,
           source: 'schema'
         })
       }

@@ -38,6 +38,12 @@ export function detectNamedAuthorsWithCredentials(
   const schema = pageAnalysis.schemaMarkup || []
   const authors = pageAnalysis.authors || []
 
+  console.log('[E1 Detector] Starting with:', {
+    schemaCount: schema.length,
+    authorsCount: authors.length,
+    authors
+  })
+
   // Check for author schema with detailed info
   schema.forEach(s => {
     if (s.type === 'Person' && s.data?.name) {
@@ -168,7 +174,7 @@ export function detectNamedAuthorsWithCredentials(
         })
 
         // Detect credentials in author name
-        const credentialPatterns = /\b(MD|PhD|RN|MPH|DDS|JD|MBA|MSc|BSc|Dr\.|Prof\.)\b/gi
+        const credentialPatterns = /\b(MD|PhD|RN|MPH|DDS|JD|MBA|MSc|BSc|Dr\.|Prof\.|PharmD|RD|CNE|COI|PA-C|MCMSc|MSN|DO|NP|APRN)\b/gi
         if (credentialPatterns.test(author.name)) {
           score += 1
           evidence.push({
@@ -207,7 +213,16 @@ export function detectNamedAuthorsWithCredentials(
   }
 
   // Cap at maxScore
+  const uncappedScore = score
   score = Math.min(score, config.maxScore)
+
+  console.log('[E1 Detector] Final score:', {
+    uncappedScore,
+    cappedScore: score,
+    maxScore: config.maxScore,
+    evidenceCount: evidence.length,
+    evidence
+  })
 
   const status = getVariableStatus(score, config)
 
