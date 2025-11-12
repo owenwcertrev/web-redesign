@@ -8,13 +8,96 @@ import type { NLPAnalysisResult } from '../nlp-analyzer'
 import type { EEATVariable, EEATEvidence } from '../../types/blog-analysis'
 import type { BlogInsights } from '../../types/blog-analysis'
 import { EEAT_VARIABLES } from '../../eeat-config'
+import { analyzeE1WithGPT4 } from '../llm-metric-analyzer'
 
 /**
  * E1: First-person narratives
  * Detect experience signals: first-person narratives, professional backgrounds, clinical practice
  * Recognizes both blog-style personal stories AND professional/institutional experience
+ *
+ * HYBRID DETECTION: Runs regex + GPT-4 in parallel, LLM overrides if successful
+ * @param pageAnalysis - The page data to analyze
+ * @param nlpAnalysis - Optional legacy NLP analysis
+ * @param skipLLM - If true, skip LLM analysis (used for blog aggregation to save costs)
  */
 export function detectFirstPersonNarratives(
+  pageAnalysis: PageAnalysis,
+  nlpAnalysis?: NLPAnalysisResult,
+  skipLLM: boolean = false
+): EEATVariable | Promise<EEATVariable> {
+  const config = EEAT_VARIABLES.experience.find(v => v.id === 'E1')!
+
+  // === HYBRID APPROACH: Try LLM first (parallel with regex) ===
+  // Skip LLM for blog aggregation (too expensive to run on 10+ posts)
+  if (!skipLLM && process.env.ENABLE_LLM_SCORING === 'true') {
+    return detectE1WithLLM(pageAnalysis, nlpAnalysis)
+  }
+
+  // === FALLBACK: Use regex detection (sync) ===
+  return detectE1WithRegex(pageAnalysis, nlpAnalysis)
+}
+
+/**
+ * E1 detection with LLM (async)
+ */
+async function detectE1WithLLM(
+  pageAnalysis: PageAnalysis,
+  nlpAnalysis?: NLPAnalysisResult
+): Promise<EEATVariable> {
+  const config = EEAT_VARIABLES.experience.find(v => v.id === 'E1')!
+  const contentSample = pageAnalysis.contentText || ''
+
+  // Run LLM with timeout
+  const [llmResult] = await Promise.allSettled([
+    Promise.race([
+      analyzeE1WithGPT4(pageAnalysis, contentSample),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), 5000)) // 5s timeout
+    ])
+  ])
+
+  // If LLM succeeded, use its result (LLM overrides regex)
+  if (llmResult.status === 'fulfilled' && llmResult.value) {
+    const llm = llmResult.value
+    return {
+      id: config.id,
+      name: config.name,
+      description: config.description,
+      maxScore: config.maxScore,
+      actualScore: llm.score,
+      status: getVariableStatus(llm.score, config),
+      evidence: [
+        {
+          type: 'metric',
+          value: `Analyzed by GPT-4: ${llm.score}/${config.maxScore} points`,
+          label: 'AI-powered analysis',
+          confidence: llm.confidence
+        },
+        {
+          type: 'snippet',
+          value: llm.reasoning,
+          label: 'Analysis reasoning'
+        },
+        ...llm.detectedSignals.map(signal => ({
+          type: 'snippet' as const,
+          value: signal,
+          label: 'Detected by GPT-4'
+        }))
+      ],
+      recommendation: llm.score < config.thresholds.good
+        ? generateE1Recommendation(llm.score, pageAnalysis)
+        : undefined,
+      detectionMethod: config.detectionMethod
+    }
+  }
+
+  // LLM failed or timed out - fall back to regex
+  return detectE1WithRegex(pageAnalysis, nlpAnalysis)
+}
+
+/**
+ * E1 detection with regex (sync) - used as fallback or for blog aggregation
+ */
+function detectE1WithRegex(
   pageAnalysis: PageAnalysis,
   nlpAnalysis?: NLPAnalysisResult
 ): EEATVariable {
@@ -22,7 +105,7 @@ export function detectFirstPersonNarratives(
   const evidence: EEATEvidence[] = []
   let score = 0
 
-  // Use NLP analysis if available
+  // Use legacy NLP analysis if available (from old system)
   if (nlpAnalysis?.experienceScore) {
     score = Math.min(config.maxScore, (nlpAnalysis.experienceScore / 10) * config.maxScore)
     evidence.push({
@@ -701,6 +784,22 @@ export function detectContentFreshnessRate(blogInsights?: BlogInsights, posts?: 
       ? 'Update older blog posts regularly to maintain content freshness (target 50%+ in last 12 months)'
       : undefined,
     detectionMethod: config.detectionMethod
+  }
+}
+
+/**
+ * Helper: Generate context-aware recommendation for E1
+ */
+function generateE1Recommendation(score: number, pageAnalysis: PageAnalysis): string {
+  const hasAuthors = (pageAnalysis.authors?.length || 0) > 0
+  const hasReviewers = (pageAnalysis.schemaMarkup || []).some(s => s.data?.reviewedBy || s.data?.medicalReviewer)
+
+  if (!hasAuthors && !hasReviewers) {
+    return 'Add named authors with professional backgrounds (e.g., "15 years clinical experience") and/or expert reviewers to demonstrate practical experience'
+  } else if (score < 1) {
+    return 'Include first-person narratives ("In my practice..."), case examples, or professional context ("Our research team...") to demonstrate hands-on experience'
+  } else {
+    return 'Strengthen experience signals: add personal insights, clinical observations, or institutional research findings to show direct expertise application'
   }
 }
 

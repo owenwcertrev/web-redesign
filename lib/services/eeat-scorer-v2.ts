@@ -40,7 +40,7 @@ export async function calculateInstantEEATScores(
   // Fetch instant APIs in parallel with timeouts
   const apiResults = await fetchInstantAPIs(domain, authorName)
 
-  const experience = calculateExperienceCategory(pageAnalysis, undefined, undefined, true)
+  const experience = await calculateExperienceCategory(pageAnalysis, undefined, undefined, true)
   const expertise = calculateExpertiseCategory(
     pageAnalysis,
     undefined,
@@ -94,13 +94,13 @@ export async function calculateInstantEEATScores(
 /**
  * Calculate comprehensive E-E-A-T scores with external API data
  */
-export function calculateComprehensiveEEATScores(
+export async function calculateComprehensiveEEATScores(
   pageAnalysis: PageAnalysis,
   domainMetrics?: DataForSEOMetrics,
   nlpAnalysis?: NLPAnalysisResult,
   authorReputation?: ReputationResult
-): EEATScore {
-  const experience = calculateExperienceCategory(pageAnalysis, undefined, nlpAnalysis)
+): Promise<EEATScore> {
+  const experience = await calculateExperienceCategory(pageAnalysis, undefined, nlpAnalysis)
   const expertise = calculateExpertiseCategory(pageAnalysis, undefined, nlpAnalysis, authorReputation)
   const authoritativeness = calculateAuthoritativenessCategory(pageAnalysis, undefined, domainMetrics, authorReputation)
   const trustworthiness = calculateTrustworthinessCategory(pageAnalysis)
@@ -129,13 +129,13 @@ export function calculateComprehensiveEEATScores(
 /**
  * Calculate E-E-A-T scores for blog analysis (multiple posts)
  */
-export function calculateBlogEEATScores(
+export async function calculateBlogEEATScores(
   posts: any[],
   blogInsights: BlogInsights,
   domainMetrics?: DataForSEOMetrics,
   nlpAnalysis?: NLPAnalysisResult,
   authorReputation?: ReputationResult
-): EEATScore {
+): Promise<EEATScore> {
   // For blog analysis, ALL metrics should be based on:
   // 1. Aggregated data across posts (E1-E5, X1-X5, A2-A3, T1-T5)
   // 2. Domain-level data (A1, A4)
@@ -148,7 +148,7 @@ export function calculateBlogEEATScores(
 
   try {
     console.log('[calculateBlogEEATScores] Calculating Experience category...')
-    experience = calculateExperienceCategory(
+    experience = await calculateExperienceCategory(
       undefined, // No single pageAnalysis for blog mode
       blogInsights,
       nlpAnalysis,
@@ -235,22 +235,23 @@ export function calculateBlogEEATScores(
 /**
  * Calculate Experience category (E1-E7)
  */
-function calculateExperienceCategory(
+async function calculateExperienceCategory(
   pageAnalysis?: PageAnalysis,
   blogInsights?: BlogInsights,
   nlpAnalysis?: NLPAnalysisResult,
   isSinglePageAnalysis: boolean = false,
   posts?: any[]
-): EEATCategoryScore {
+): Promise<EEATCategoryScore> {
   const variables: EEATVariable[] = []
   const unavailableVariables: string[] = []
   let missedPoints = 0
 
   // If we have multiple posts (blog analysis), aggregate E1-E5 across all posts
   if (posts && posts.length > 1) {
-    // E1: First-person narratives (aggregate across posts)
+    // E1: First-person narratives (aggregate across posts) - NOTE: LLM disabled for blog aggregation (too expensive)
+    // For blog analysis, each post uses regex fallback (skipLLM: true)
     variables.push(aggregateVariableAcrossPosts(posts, 'E1', (post) =>
-      ExperienceDetectors.detectFirstPersonNarratives(post.pageAnalysis, nlpAnalysis)
+      ExperienceDetectors.detectFirstPersonNarratives(post.pageAnalysis, nlpAnalysis, true) as EEATVariable
     ))
 
     // E2: Author perspective blocks (aggregate)
@@ -274,8 +275,9 @@ function calculateExperienceCategory(
     ))
   } else if (pageAnalysis) {
     // Single page analysis - use original logic
-    // E1: First-person narratives
-    variables.push(ExperienceDetectors.detectFirstPersonNarratives(pageAnalysis, nlpAnalysis))
+    // E1: First-person narratives (LLM-enhanced if ENABLE_LLM_SCORING=true)
+    const e1Result = ExperienceDetectors.detectFirstPersonNarratives(pageAnalysis, nlpAnalysis)
+    variables.push(e1Result instanceof Promise ? await e1Result : e1Result)
 
     // E2: Author perspective blocks
     variables.push(ExperienceDetectors.detectAuthorPerspectiveBlocks(pageAnalysis))
