@@ -566,16 +566,25 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
  * E3: Original assets
  * Detect brand-owned images, charts, custom data, case studies (vs stock photos)
  *
- * UNIVERSAL COVERAGE (2025-01):
- * - Visual asset references (figures, diagrams, infographics, charts)
- * - Original research & data (proprietary studies, surveys, custom analysis)
- * - Case studies & examples (patient/client stories, real-world examples)
- * - Before/after comparisons (progress photos, demonstrations)
- * - Tutorial assets (screenshots, step-by-step images)
- * - Team/facility photography (original photos, not stock)
- * - Cross-vertical patterns (medical, tech, food, legal, business, etc.)
- * - International support (German, French, Spanish, Italian)
- * - Schema ImageObject with creator/copyrightHolder fields
+ * SCOPE (2025-01): E3 detects ORIGINAL content creation signals ONLY
+ * - Stock photos, generic illustrations → NO POINTS
+ * - Must have explicit signals: figures, data, case studies, tutorials, team photos
+ *
+ * 7 DETECTION PATHWAYS:
+ * 1. Visual asset references (figures, diagrams, infographics, charts) - 0.8pts
+ * 2. Original research & data (proprietary studies, surveys, custom analysis) - 0.8pts
+ * 3. Case studies & examples (patient/client stories, real-world examples) - 0.7pts
+ * 4. Before/after comparisons (progress photos, demonstrations) - 0.5pts
+ * 5. Tutorial assets (screenshots, step-by-step images) - 0.4pts
+ * 6. Team/facility photography (original photos, not stock) - 0.3pts
+ * 7. Schema ImageObject with creator/copyrightHolder fields - 0.5pts
+ *
+ * Cross-vertical patterns (medical, tech, food, legal, business, etc.)
+ * International support (German, French, Spanish, Italian)
+ *
+ * PATHWAY 8 REMOVED (2025-01): Visual content richness violated scope by awarding
+ * points for ANY images, including stock photos. E3 now requires explicit original
+ * asset signals to score.
  */
 export function detectOriginalAssets(pageAnalysis: PageAnalysis): EEATVariable {
   const config = EEAT_VARIABLES.experience.find(v => v.id === 'E3')!
@@ -805,38 +814,22 @@ export function detectOriginalAssets(pageAnalysis: PageAnalysis): EEATVariable {
     }
   })
 
-  // === PATHWAY 8: Visual Content Richness (1.0 pts max) ===
-  // Multiple images suggest substantial content investment and visual enhancement
-  // RECALIBRATED (2025-01): Increased weight - visual richness is a strong E-E-A-T signal
-  if (images.total >= 15) {
-    score += 1.0
-    evidence.push({
-      type: 'metric',
-      value: `${images.total} images`,
-      label: 'Extensive visual content (15+ images)'
-    })
-  } else if (images.total >= 10) {
-    score += 0.7
-    evidence.push({
-      type: 'metric',
-      value: `${images.total} images`,
-      label: 'Rich visual content (10+ images)'
-    })
-  } else if (images.total >= 5) {
-    score += 0.4
-    evidence.push({
-      type: 'metric',
-      value: `${images.total} images`,
-      label: 'Multiple images present (5+ images)'
-    })
-  } else if (images.total >= 2) {
-    score += 0.2
-    evidence.push({
-      type: 'metric',
-      value: `${images.total} images`,
-      label: 'Some visual content'
-    })
-  }
+  // === PATHWAY 8: Visual Content Richness ===
+  // REMOVED (2025-01): Scope violation fix
+  //
+  // ISSUE: Pathway 8 awarded points for ALL images (stock photos, generic illustrations),
+  // violating E3's scope: "Detect brand-owned images, charts, custom data, case studies"
+  //
+  // PROBLEM: Pages with 15+ stock photos scored 1.0/3 despite having ZERO original assets
+  // - Healthline: 1.0/3 (17 stock images, no figures/data/case studies)
+  // - Mayo Clinic: 0.2/3 (2 stock images, no original content)
+  //
+  // FIX: Removed Pathway 8 entirely. E3 now scores 0 if no original asset signals detected.
+  // Pathways 1-7 correctly detect specific original assets (figures, data, case studies, tutorials)
+  //
+  // IMPACT:
+  // - Sites with stock photos only: 1.0/3 → 0.0/3 (CORRECT: no original assets)
+  // - Sites with original assets: Still score via Pathways 1-7 (no impact)
 
   // Cap at maxScore
   score = Math.min(score, config.maxScore)
