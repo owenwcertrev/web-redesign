@@ -401,7 +401,12 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
         }
 
         if (jsonStart !== -1 && jsonEnd !== -1) {
-          const jsonStr = scriptContent.substring(jsonStart, jsonEnd)
+          let jsonStr = scriptContent.substring(jsonStart, jsonEnd)
+
+          // Fix unquoted property names (JavaScript allows them, JSON doesn't)
+          // Convert {event: "value"} to {"event": "value"}
+          jsonStr = jsonStr.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":')
+
           const dataLayerObj = JSON.parse(jsonStr)
 
           // Extract medicalReviewers
