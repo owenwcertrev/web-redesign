@@ -322,10 +322,15 @@ function detectE1WithRegex(
 
 /**
  * E2: Author perspective blocks
- * Detect professional perspective signals:
+ * Detect professional perspective STRUCTURE (not credential quality):
  * - Explicit perspective sections ("Reviewer's Note", "Expert Opinion")
  * - Medical/expert reviewer attribution (industry standard for YMYL)
- * - Multiple credentialed authors (collaborative expert perspective)
+ * - Collaborative authorship (multiple authors providing diverse perspectives)
+ *
+ * SCOPE (2025-01): E2 detects STRUCTURE, X1/X2 validate CREDENTIALS
+ * - E2: Does reviewer exist? Is there collaborative authorship?
+ * - X1: What credentials do authors have?
+ * - X2: Is reviewer qualified for YMYL content?
  */
 export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATVariable {
   const config = EEAT_VARIABLES.experience.find(v => v.id === 'E2')!
@@ -455,11 +460,11 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
     }
   }
 
-  // === PATHWAY 3: Credentialed Expert Reviewer (Schema/Authors) ===
-  // Healthline-style: Multiple authors where reviewer has professional credentials
+  // === PATHWAY 3: Expert Reviewer Present (Schema) ===
+  // SCOPE FIX (2025-01): Detect PRESENCE of reviewer structure, NOT credential quality
+  // Credential validation is X1/X2's responsibility, E2 only detects attribution structure
 
   // Check schema for reviewedBy or medicalReviewer
-  // BUG FIX (2025-01): Handle both single reviewer and array of reviewers
   let schemaReviewerFound = false
   schema.forEach(s => {
     if (schemaReviewerFound) return; // Only count once
@@ -487,133 +492,20 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
     }
   })
 
-  // Check for multiple authors with at least one having professional credentials
-  // This is Healthline's pattern: Author + Credentialed Reviewer
-  if (!schemaReviewerFound && authors.length >= 2) {
-    // Professional credentials that indicate expert review across ALL verticals + international
-    const professionalCredentials = [
-      // Medical/health
-      /\b(md|do|phd|pharmd|dds|dvm|dnp|psyd|rn|np|pa-c|rd|rdn|ldn|mph|msn|msw|mft|lcsw|lmft|lpc)\b/i,
+  // === PATHWAY 4: Collaborative Authorship (Multiple Authors) ===
+  // SCOPE FIX (2025-01): Detect collaborative STRUCTURE, NOT credential quality
+  // E2 detects that multiple perspectives exist (collaboration)
+  // X1 validates the credentials of those authors
 
-      // Finance/accounting
-      /\b(cfa|cfp|cpa|cma|cia|series\s*(7|6|63|65|66)|chartered financial|enrolled agent)\b/i,
-
-      // Law
-      /\b(jd|esq|esquire|llm|llb|attorney|lawyer|counsel|bar certified|admitted to (the )?bar)\b/i,
-
-      // Tech/engineering (contextual titles)
-      /\b(senior engineer|staff engineer|principal engineer|engineering lead|engineering manager|tech lead)\b/i,
-      /\b(software engineer|full[- ]stack|backend|frontend|devops)\s+(engineer|developer)\b/i,
-      /\b(phd.*(computer science|cs|engineering|data science))\b/i,
-
-      // Food/culinary
-      /\b(chef|executive chef|head chef|sous chef|pastry chef|culinary institute|cordon bleu|james beard|michelin)\b/i,
-      /\b(certified (master chef|culinary|sommelier))\b/i,
-
-      // Real estate
-      /\b(realtor|real estate (broker|agent)|licensed (broker|agent)|gri|crs|abr)\b/i,
-
-      // Business/management (C-suite only, removed generic director/vp/president)
-      // BUG FIX (2025-01): Removed "director", "vp", "president" - too broad without context
-      /\b(mba|ceo|cto|cfo|coo|founder|co[- ]founder)\b/i,
-
-      // Academia
-      /\b(professor|associate professor|assistant professor|lecturer|phd|doctorate|doctoral)\b/i,
-
-      // Fitness/wellness
-      /\b(certified (personal trainer|fitness|yoga|pilates)|cscs|nsca|nasm|ace|issa)\b/i,
-
-      // International credentials
-      // German
-      /\b(dipl[.-]?ing|dr[.-]?ing|facharzt|diplomingenieur|rechtsanwalt|steuerberater)\b/i,
-      // French
-      /\b(docteur|maître|ingénieur|diplômé|diplôme)\b/i,
-      // Spanish
-      /\b(licenciado|ingeniero|abogado|doctor)\b/i,
-      // Italian
-      /\b(dottore|ingegnere|avvocato)\b/i,
-
-      // Generic international
-      /\b(dr\.|prof\.|eng\.)\b/i,
-
-      // Generic post-nominals (2-5 uppercase letters after comma)
-      // BUG FIX (2025-01): Exclude common non-credential abbreviations
-      /,\s*(?!Jr|Sr|II|III|IV|UK|US|CA|NY|TX|FL|IL)\b[A-Z]{2,5}(\b|,|\s)/i,
-    ]
-
-    let credentialedAuthorsCount = 0
-    const credentialedAuthors: string[] = []
-
-    authors.forEach(author => {
-      const authorInfo = `${author.name || ''} ${author.credentials || ''}`.toLowerCase()
-      const hasCredentials = professionalCredentials.some(pattern => pattern.test(authorInfo))
-
-      if (hasCredentials) {
-        credentialedAuthorsCount++
-        credentialedAuthors.push(author.name || 'Credentialed author')
-      }
+  if (!schemaReviewerFound && !hasReviewAttribution && authors.length >= 2) {
+    // Award points for collaborative authorship (multiple perspectives)
+    // DO NOT check credentials - X1 handles that
+    score += 1.0
+    evidence.push({
+      type: 'metric',
+      value: `${authors.length} authors (collaborative perspective)`,
+      label: 'Multiple author collaboration'
     })
-
-    // Award points for collaborative expert authorship
-    if (credentialedAuthorsCount >= 2) {
-      // Multiple credentialed experts = strong collaborative perspective (excellent)
-      score += 2.5
-      evidence.push({
-        type: 'metric',
-        value: `${credentialedAuthorsCount} credentialed experts collaborated`,
-        label: credentialedAuthors.join(', ')
-      })
-    } else if (credentialedAuthorsCount === 1 && authors.length >= 2) {
-      // Writer + Credentialed Reviewer pattern (Healthline standard - industry best practice for YMYL)
-      score += 2.0
-      evidence.push({
-        type: 'snippet',
-        value: `Multiple authors including ${credentialedAuthors[0]}`,
-        label: 'Expert review collaboration'
-      })
-    }
-  }
-
-  // === PATHWAY 4: Single Credentialed Author with Bio/Background ===
-  // Solo expert providing their perspective
-  // BUG FIX (2025-01): Validate credentials against professional patterns (not just any credentials)
-  if (authors.length === 1 && !schemaReviewerFound && !hasReviewAttribution) {
-    const author = authors[0]
-    const authorInfo = `${author.name || ''} ${author.credentials || ''}`.toLowerCase()
-
-    // Use same professional credential patterns from Pathway 3
-    const professionalCredentialPatterns = [
-      /\b(md|do|phd|pharmd|dds|dvm|dnp|psyd|rn|np|pa-c|rd|rdn|ldn|mph|msn|msw|mft|lcsw|lmft|lpc)\b/i,
-      /\b(cfa|cfp|cpa|cma|cia|series\s*(7|6|63|65|66)|chartered financial|enrolled agent)\b/i,
-      /\b(jd|esq|esquire|llm|llb|attorney|lawyer|counsel|bar certified)\b/i,
-      /\b(senior engineer|staff engineer|principal engineer|engineering lead|engineering manager|tech lead)\b/i,
-      /\b(software engineer|full[- ]stack|backend|frontend|devops)\s+(engineer|developer)\b/i,
-      /\b(chef|executive chef|head chef|sous chef|pastry chef|culinary institute|cordon bleu|james beard|michelin)\b/i,
-      /\b(realtor|real estate (broker|agent)|licensed (broker|agent)|gri|crs|abr)\b/i,
-      /\b(mba|ceo|cto|cfo|coo|founder|co[- ]founder)\b/i,
-      /\b(professor|associate professor|assistant professor|lecturer)\b/i,
-      /\b(certified (personal trainer|fitness|yoga|pilates)|cscs|nsca|nasm|ace|issa)\b/i,
-      /\b(dipl[.-]?ing|dr[.-]?ing|facharzt|diplomingenieur|rechtsanwalt|steuerberater)\b/i,
-      /\b(docteur|maître|ingénieur|diplômé|diplôme)\b/i,
-      /\b(licenciado|ingeniero|abogado|doctor)\b/i,
-      /\b(dottore|ingegnere|avvocato)\b/i,
-      /\b(dr\.|prof\.|eng\.)\b/i,
-      /,\s*(?!Jr|Sr|II|III|IV|UK|US|CA|NY|TX|FL|IL)\b[A-Z]{2,5}(\b|,|\s)/i,
-    ]
-
-    const hasValidCredentials = professionalCredentialPatterns.some(pattern => pattern.test(authorInfo))
-
-    // Check if author info suggests expert perspective (specific professional titles only)
-    const hasExpertLanguage = /\b(expert|specialist|consultant|professor|lecturer|researcher|chef|attorney|engineer|scientist)\b/i.test(authorInfo)
-
-    if (hasValidCredentials || hasExpertLanguage) {
-      score += 1.0
-      evidence.push({
-        type: 'snippet',
-        value: `${author.name}${author.credentials ? ' ' + author.credentials : ''}`,
-        label: 'Credentialed author provides expert perspective'
-      })
-    }
   }
 
   // Cap at maxScore
