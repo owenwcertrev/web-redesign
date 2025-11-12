@@ -68,19 +68,19 @@ async function detectE1WithLLM(
       evidence: [
         {
           type: 'metric',
-          value: `Analyzed by GPT-4: ${llm.score}/${config.maxScore} points`,
-          label: 'AI-powered analysis',
+          value: `${llm.score}/${config.maxScore} points`,
+          label: 'Experience analysis',
           confidence: llm.confidence
         },
         {
           type: 'snippet',
           value: llm.reasoning,
-          label: 'Analysis reasoning'
+          label: 'Assessment'
         },
         ...llm.detectedSignals.map(signal => ({
           type: 'snippet' as const,
           value: signal,
-          label: 'Detected by GPT-4'
+          label: 'Evidence'
         }))
       ],
       recommendation: llm.score < config.thresholds.good
