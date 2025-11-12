@@ -1149,15 +1149,21 @@ export function detectContentFreshnessRate(blogInsights?: BlogInsights, posts?: 
     const pageAnalysis = post.pageAnalysis
     const schema: PageAnalysis['schemaMarkup'] = pageAnalysis?.schemaMarkup || []
 
+    // Check if this post has ANY fresh date (don't double-count posts with multiple schemas)
+    let postIsFresh = false
     schema.forEach(s => {
       const dateModified = s.data?.dateModified || s.data?.dateUpdated
       if (dateModified) {
         const date = new Date(dateModified)
         if (!isNaN(date.getTime()) && date >= twelveMonthsAgo) {
-          freshCount++
+          postIsFresh = true
         }
       }
     })
+
+    if (postIsFresh) {
+      freshCount++
+    }
   })
 
   const freshnessRate = freshCount / posts.length
