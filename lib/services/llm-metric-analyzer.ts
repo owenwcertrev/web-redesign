@@ -67,12 +67,15 @@ async function fetchAuthorBio(url: string, timeout: number = 3000): Promise<stri
 /**
  * Analyzes E1 (First-person narratives / Experience signals) using GPT-4
  *
- * Detects:
- * - Professional credentials across all verticals
- * - Years of experience statements
- * - First-person experience narratives
- * - Institutional/professional context
- * - Implied expertise from role descriptions
+ * SCOPE (2025-01): E1 detects CONTENT-BASED experience signals ONLY
+ * - First-person experience narratives in content
+ * - Professional voice in content ("Our research team...", "10+ years practicing")
+ * - Institutional experience statements in content
+ *
+ * DOES NOT DETECT (handled by other metrics):
+ * - Author credentials (MD, PhD, CFA) → X1
+ * - Expert reviewers in schema → E2/X2
+ * - Author bios or professional titles → X1
  */
 export async function analyzeE1WithGPT4(
   pageAnalysis: PageAnalysis,
@@ -92,30 +95,8 @@ export async function analyzeE1WithGPT4(
       apiKey: process.env.OPENAI_API_KEY,
     })
 
-    // Fetch author bios in parallel (with timeout)
-    const authors = pageAnalysis.authors || []
-    const authorBios = await Promise.allSettled(
-      authors
-        .filter(a => a.url) // Only fetch if URL exists
-        .map(async (author) => ({
-          name: author.name,
-          bio: await fetchAuthorBio(author.url!)
-        }))
-    )
-
-    // Extract successful bio fetches
-    const bios: Array<{name: string, bio: string}> = []
-    for (const result of authorBios) {
-      if (result.status === 'fulfilled' && result.value.bio !== null) {
-        bios.push({
-          name: result.value.name,
-          bio: result.value.bio
-        })
-      }
-    }
-
-    // Build E1-specific analysis prompt
-    const prompt = buildE1AnalysisPrompt(pageAnalysis, contentSample, bios)
+    // Build E1-specific analysis prompt (no author bio fetching - that's X1's domain)
+    const prompt = buildE1AnalysisPrompt(pageAnalysis, contentSample)
 
     // Call GPT-4o with structured output (supports JSON mode, faster & cheaper than GPT-4)
     const response = await openai.chat.completions.create({
@@ -158,45 +139,33 @@ export async function analyzeE1WithGPT4(
 
 /**
  * Builds the analysis prompt for E1 (Experience signals)
+ * SCOPE FIX (2025-01): Only analyze CONTENT, not author metadata
  */
 function buildE1AnalysisPrompt(
   pageAnalysis: PageAnalysis,
-  contentSample: string,
-  authorBios: Array<{name: string, bio: string}> = []
+  contentSample: string
 ): string {
-  const authors = pageAnalysis.authors || []
   const title = pageAnalysis.title || 'Untitled'
-
-  // Format author information
-  const authorsText = authors.length > 0
-    ? authors.map(a => `- ${a.name}${a.credentials ? ` (${a.credentials})` : ''}`).join('\n')
-    : 'No authors listed'
-
-  // Format author bio information
-  const biosText = authorBios.length > 0
-    ? authorBios.map(bio => `**${bio.name}:**\n${bio.bio}\n`).join('\n')
-    : 'No author bios available'
 
   return `Analyze this content for **E1: First-person narratives / Experience signals** (max 4 points).
 
-**METRIC DEFINITION:**
-E1 measures demonstrated first-hand experience through:
-1. Professional credentials (ANY field: medical, finance, tech, law, food, etc.)
-2. Years of professional experience mentioned
-3. First-person narratives ("In my practice...", "I've found...")
-4. Institutional/professional context ("our research", "built at Google")
-5. Expert reviewer presence
-6. Professional roles indicating direct experience
+**CRITICAL SCOPE DEFINITION:**
+E1 measures experience signals **IN THE CONTENT TEXT ONLY**. DO NOT analyze author names, credentials, or bios.
+
+**What E1 DETECTS (in content):**
+1. ✅ First-person experience narratives ("In my experience...", "I've observed...", "I've treated...")
+2. ✅ Professional voice in content ("10+ years practicing medicine", "decades of clinical work")
+3. ✅ Institutional voice in content ("Our research team", "Our study found", "Our data shows")
+4. ✅ Contextual experience statements ("treating patients for 20 years", "building ML systems at Google")
+
+**What E1 DOES NOT DETECT (handled by other metrics):**
+- ❌ Author names or credentials (MD, PhD, CFA) → Handled by X1
+- ❌ Expert reviewers → Handled by E2/X2
+- ❌ Author bio pages → Handled by X1
 
 **CONTENT TO ANALYZE:**
 
 **Title:** ${title}
-
-**Authors:**
-${authorsText}
-
-**Author Bios (for cross-validation):**
-${biosText}
 
 **Content Sample (first ~1000 words):**
 ${contentSample.substring(0, 5000)}
@@ -206,48 +175,43 @@ ${contentSample.substring(0, 5000)}
 **SCORING GUIDELINES:**
 
 **4 points (Excellent):**
-- 2+ credentialed authors/contributors with clear professional backgrounds
-- OR strong first-person experience narratives with specific examples
-- OR combination of credentials + professional context
+- Strong first-person experience narratives with specific examples
+- Multiple professional voice indicators ("10+ years", "our research", "treating patients")
+- Clear demonstration of hands-on expertise IN THE CONTENT
 
 **3 points (Good):**
-- 1-2 credentialed professional(s) identified
-- OR substantial first-person experience content
-- Clear professional authority demonstrated
+- Substantial first-person experience content OR institutional voice
+- Professional context mentioned in content
+- Clear practical experience demonstrated
 
 **2 points (Needs Improvement):**
-- Some professional signals (e.g., job title, years experience)
-- OR limited first-person narratives
+- Some professional signals in content (years experience mentioned, institutional voice)
+- Limited first-person narratives
 - Experience implied but not strongly demonstrated
 
 **1 point (Poor):**
-- Minimal experience signals
-- Generic author info without credentials
+- Minimal experience signals in content
+- Vague or generic professional statements
 
 **0 points (None):**
-- No identifiable experience signals
-- Anonymous or no author attribution
+- No identifiable experience signals in content
+- Pure third-person factual writing with no experience context
 
 ---
 
 **IMPORTANT CONSIDERATIONS:**
 
-1. **Cross-vertical credentials:** Recognize credentials from ALL fields and languages:
-   - Medical: MD, RD, RN, PA-C, BSc, MS, Facharzt (DE), Docteur (FR)
-   - Finance: CFA, CFP, CPA, Series 7/65, Chartered Accountant
-   - Tech: Software Engineer, "10 years at Google", PhD CS, Dipl.-Ing. (DE), Ingénieur (FR)
-   - Law: JD, Esq, Attorney, Maître (FR), Rechtsanwalt (DE)
-   - Food: Chef, Culinary Institute, James Beard
-   - Business: CEO, Founder, VP, Director, Licenciado (ES), Dottore (IT)
-   - International: Dr., Prof., Eng., any professional post-nominal
+1. **Content-only analysis:** ONLY look at the content text. Ignore author bylines, credentials, or any metadata.
 
-2. **Context matters:** "10+ years building ML systems at Google" = strong experience even without formal credential
+2. **First-person indicators:** "In my practice", "I've found", "We've observed", "From my experience"
 
-3. **Institutional voice:** "Our research team" or "Our editorial board" indicates organizational experience
+3. **Professional voice:** "10+ years", "decades of experience", "board-certified", "licensed practitioner" WITHIN CONTENT
 
-4. **Implied expertise:** "Board-certified cardiologist treating patients for 20 years" = clear professional experience
+4. **Institutional voice:** "Our research team", "Our analysis shows", "Our editorial board", "Our study found"
 
-5. **Author bio cross-validation:** If author bios are provided, use them to validate credentials and expertise relevant to the content topic
+5. **Context matters:** "Treating patients for 20 years in cardiology" = strong content-based experience
+
+6. **International patterns:** Recognize experience statements in German, French, Spanish, Italian
 
 ---
 
@@ -256,18 +220,17 @@ ${contentSample.substring(0, 5000)}
 {
   "score": 0-4,
   "confidence": 0.0-1.0,
-  "reasoning": "Brief explanation of score (2-3 sentences)",
+  "reasoning": "Brief explanation of score focusing on CONTENT signals (2-3 sentences)",
   "detectedSignals": ["signal1", "signal2", "signal3"]
 }
 
-**Examples of detectedSignals:**
-- "Author: Jane Smith, CFA, CFP - finance credentials"
-- "10+ years professional experience mentioned"
-- "First-person narrative: 'In my practice...' found 3 times"
-- "Expert reviewer: Dr. John Doe, MD"
-- "Institutional voice: 'our research team' mentioned"
+**Examples of detectedSignals (content-based only):**
+- "First-person narrative: 'In my practice treating patients...' found 3 times"
+- "Professional voice: '15+ years of clinical experience' mentioned in content"
+- "Institutional voice: 'Our research team analyzed...' found"
+- "Experience context: 'treating over 10,000 patients' mentioned"
 
-Provide your analysis now.`
+Provide your analysis now. Remember: ONLY analyze content text, NOT author metadata.`
 }
 
 /**

@@ -25,7 +25,7 @@ export const EEAT_VARIABLES = {
     {
       id: 'E1',
       name: 'First-person narratives',
-      description: 'Experience signals: personal narratives, professional credentials (any field), years of practice, or institutional expertise',
+      description: 'Experience signals in content: personal narratives, professional voice, years of practice mentioned, or institutional expertise statements',
       maxScore: 4,
       detectionMethod: 'automated' as const,
       thresholds: { excellent: 3.5, good: 2.5, needsImprovement: 1.5 }
