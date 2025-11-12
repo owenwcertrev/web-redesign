@@ -401,12 +401,33 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
   const schema = pageAnalysis.schemaMarkup || []
 
   // === PATHWAY 1: Explicit Perspective Section Headings (Editorial Style) ===
-  // Strong signal for blog/editorial content
+  // Strong signal for blog/editorial content across ALL verticals
   const perspectiveSectionPatterns = [
+    // Generic perspective sections
     /\b(reviewer'?s? note|editor'?s? note|expert'?s? note)\b/gi,
     /\b(author'?s? perspective|expert perspective|professional perspective)\b/gi,
     /\b(my take|our take|expert opinion|professional opinion)\b/gi,
-    /\b(clinical perspective|practitioner'?s? view|professional view)\b/gi
+
+    // Medical/health
+    /\b(clinical perspective|practitioner'?s? view|professional view)\b/gi,
+
+    // Tech/engineering
+    /\b(engineer'?s? perspective|technical analysis|developer'?s? note|engineering lead'?s? take)\b/gi,
+
+    // Food/culinary
+    /\b(chef'?s? note|culinary perspective|tasting notes|chef'?s? take)\b/gi,
+
+    // Legal
+    /\b(attorney'?s? analysis|legal perspective|counsel'?s? opinion|lawyer'?s? view)\b/gi,
+
+    // Finance/business
+    /\b(analyst'?s? view|financial perspective|economist'?s? take|cfo'?s? perspective)\b/gi,
+
+    // International (German, French, Spanish, Italian)
+    /\b(expertenmeinung|fachmeinung)\b/gi, // DE: expert opinion
+    /\b(avis d'expert|perspective professionnelle)\b/gi, // FR: expert opinion, professional perspective
+    /\b(opinión del experto|perspectiva profesional)\b/gi, // ES: expert opinion, professional perspective
+    /\b(parere dell'esperto|prospettiva professionale)\b/gi // IT: expert opinion, professional perspective
   ]
 
   const allHeadings = [...headings.h1, ...headings.h2, ...headings.h3]
@@ -440,11 +461,24 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
   })
 
   // === PATHWAY 2: Medical/Expert Reviewer Attribution (YMYL Standard) ===
-  // Industry-standard approach for health/financial content
+  // Industry-standard approach for health/financial content (universal + international)
   const reviewAttributionPatterns = [
+    // English
     /\b(medically reviewed by|medical review by)\b/gi,
     /\b(reviewed by|fact[- ]checked by|verified by)\b/gi,
-    /\b(expert review|professional review)\b/gi
+    /\b(expert review|professional review|technically reviewed by)\b/gi,
+
+    // German
+    /\b(geprüft von|überprüft von|fachlich geprüft von)\b/gi,
+
+    // French
+    /\b(revu par|vérifié par|examiné par)\b/gi,
+
+    // Spanish
+    /\b(revisado por|verificado por|examinado por)\b/gi,
+
+    // Italian
+    /\b(revisionato da|verificato da|esaminato da)\b/gi
   ]
 
   let hasReviewAttribution = false
@@ -485,17 +519,52 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
   // Check for multiple authors with at least one having professional credentials
   // This is Healthline's pattern: Author + Credentialed Reviewer
   if (!schemaReviewerFound && authors.length >= 2) {
-    // Professional credentials that indicate expert review
+    // Professional credentials that indicate expert review across ALL verticals + international
     const professionalCredentials = [
-      // Medical
+      // Medical/health
       /\b(md|do|phd|pharmd|dds|dvm|dnp|psyd|rn|np|pa-c|rd|rdn|ldn|mph|msn|msw|mft|lcsw|lmft|lpc)\b/i,
-      // Finance
-      /\b(cfa|cfp|cpa|cma|cia)\b/i,
+
+      // Finance/accounting
+      /\b(cfa|cfp|cpa|cma|cia|series\s*(7|6|63|65|66)|chartered financial|enrolled agent)\b/i,
+
       // Law
-      /\b(jd|esq|llm|llb)\b/i,
-      // Other professional
-      /\b(mba|pe|aia|leed ap)\b/i,
-      // Generic post-nominals (2-5 uppercase letters)
+      /\b(jd|esq|esquire|llm|llb|attorney|lawyer|counsel|bar certified|admitted to (the )?bar)\b/i,
+
+      // Tech/engineering (contextual titles)
+      /\b(senior engineer|staff engineer|principal engineer|engineering lead|engineering manager|tech lead)\b/i,
+      /\b(software engineer|full[- ]stack|backend|frontend|devops)\s+(engineer|developer)\b/i,
+      /\b(phd.*(computer science|cs|engineering|data science))\b/i,
+
+      // Food/culinary
+      /\b(chef|executive chef|head chef|sous chef|pastry chef|culinary institute|cordon bleu|james beard|michelin)\b/i,
+      /\b(certified (master chef|culinary|sommelier))\b/i,
+
+      // Real estate
+      /\b(realtor|real estate (broker|agent)|licensed (broker|agent)|gri|crs|abr)\b/i,
+
+      // Business/management
+      /\b(mba|ceo|cto|cfo|coo|founder|co[- ]founder|director|vice president|vp|president)\b/i,
+
+      // Academia
+      /\b(professor|associate professor|assistant professor|lecturer|phd|doctorate|doctoral)\b/i,
+
+      // Fitness/wellness
+      /\b(certified (personal trainer|fitness|yoga|pilates)|cscs|nsca|nasm|ace|issa)\b/i,
+
+      // International credentials
+      // German
+      /\b(dipl[.-]?ing|dr[.-]?ing|facharzt|diplomingenieur|rechtsanwalt|steuerberater)\b/i,
+      // French
+      /\b(docteur|maître|ingénieur|diplômé|diplôme)\b/i,
+      // Spanish
+      /\b(licenciado|ingeniero|abogado|doctor)\b/i,
+      // Italian
+      /\b(dottore|ingegnere|avvocato)\b/i,
+
+      // Generic international
+      /\b(dr\.|prof\.|eng\.)\b/i,
+
+      // Generic post-nominals (2-5 uppercase letters after comma)
       /,\s*[A-Z]{2,5}(\b|,|\s)/i,
     ]
 
@@ -538,9 +607,9 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
     const author = authors[0]
     const hasCredentials = author.credentials && author.credentials.length > 0
 
-    // Check if author info suggests expert perspective
+    // Check if author info suggests expert perspective (universal titles across verticals)
     const authorInfo = `${author.name || ''} ${author.credentials || ''}`.toLowerCase()
-    const hasExpertLanguage = /\b(expert|specialist|consultant|professor|director|senior)\b/i.test(authorInfo)
+    const hasExpertLanguage = /\b(expert|specialist|consultant|professor|lecturer|researcher|director|senior|principal|staff|lead|chef|attorney|engineer|analyst|manager)\b/i.test(authorInfo)
 
     if (hasCredentials || hasExpertLanguage) {
       score += 1.0
