@@ -785,16 +785,31 @@ function aggregateVariableAcrossPosts(
   // Determine status based on average score
   const status = getVariableStatusFromScore(roundedScore, config)
 
-  // Build recommendation with trend awareness
+  // Build recommendation with trend awareness and metric-specific guidance
   let recommendation: string | undefined
   if (roundedScore < config.thresholds.good) {
-    recommendation = `${config.name} is below optimal. `
-    if (trend.direction === 'increasing') {
-      recommendation += `Good news: trending upward. Continue this momentum.`
-    } else if (trend.direction === 'decreasing') {
-      recommendation += `Concerning: trending downward. Prioritize improvements in recent content.`
+    // Special handling for E1: Provide context-aware recommendations
+    if (variableId === 'E1') {
+      const avgAuthors = results.reduce((sum, r) => sum + r.score, 0) / results.length
+      if (avgAuthors >= 1.5 && avgAuthors < 3) {
+        // Professional publisher pattern: has authors but not enough
+        recommendation = `Many posts have single authors. Add second credentialed authors or medical reviewers to strengthen experience signals. Target: 2+ credentialed contributors per post.`
+      } else if (avgAuthors < 1) {
+        // Missing author attribution
+        recommendation = `Add credentialed authors (with degrees like MD, RD, MS) or include first-person experience narratives to demonstrate practical expertise.`
+      } else {
+        recommendation = `${config.name} is below optimal. Focus on adding more ${config.name.toLowerCase()} to your content.`
+      }
     } else {
-      recommendation += `Focus on adding more ${config.name.toLowerCase()} to your content.`
+      // Default recommendation for other metrics
+      recommendation = `${config.name} is below optimal. `
+      if (trend.direction === 'increasing') {
+        recommendation += `Good news: trending upward. Continue this momentum.`
+      } else if (trend.direction === 'decreasing') {
+        recommendation += `Concerning: trending downward. Prioritize improvements in recent content.`
+      } else {
+        recommendation += `Focus on adding more ${config.name.toLowerCase()} to your content.`
+      }
     }
   } else if (trend.direction === 'decreasing' && roundedScore < config.thresholds.excellent) {
     recommendation = `Strong score, but trending downward. Maintain consistency in recent posts.`
