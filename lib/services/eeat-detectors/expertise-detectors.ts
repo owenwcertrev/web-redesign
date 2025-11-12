@@ -192,6 +192,25 @@ export function detectNamedAuthorsWithCredentials(
             label: 'Author credentials'
           })
         }
+
+        // Check for author photo
+        if (author.photo) {
+          score += 0.5
+          evidence.push({
+            type: 'note',
+            value: 'Author photo found'
+          })
+        }
+
+        // Check for author bio/profile URL
+        if (author.url) {
+          score += 1
+          evidence.push({
+            type: 'url',
+            value: author.url,
+            label: 'Author bio/profile link'
+          })
+        }
       }
     })
   }

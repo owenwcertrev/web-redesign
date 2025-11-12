@@ -375,42 +375,79 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
     const scriptContent = $(el).html() || ''
 
     // Look for dataLayer with byline/medicalReviewers
-    if (scriptContent.includes('window.dataLayer.push')) {
+    if (scriptContent.includes('window.dataLayer.push') && scriptContent.includes('medicalReviewers')) {
       try {
-        // Look for medicalReviewers with full details in byline structure
-        // Pattern matches: "medicalReviewers":[{"id":6848,"name":{"display":"Helen Chen MCMSc, PA-C"...
-        const fullReviewerPattern = /"medicalReviewers"\s*:\s*\[([^\]]+)\]/
-        const fullMatch = scriptContent.match(fullReviewerPattern)
+        // Extract the dataLayer.push argument as JSON
+        // Find the opening { of the dataLayer.push argument
+        const pushStart = scriptContent.indexOf('window.dataLayer.push(')
+        if (pushStart === -1) return
 
-        if (fullMatch) {
-          const reviewersData = fullMatch[1]
+        let braceDepth = 0
+        let jsonStart = -1
+        let jsonEnd = -1
 
-          // Extract name
-          const nameMatch = reviewersData.match(/"name"\s*:\s*\{\s*"display"\s*:\s*"([^"]+)"/)
-          if (nameMatch && !authors.some(a => a.name === nameMatch[1])) {
-            const fullName = nameMatch[1]
-
-            // Extract bio page URL from "link" field
-            const linkMatch = reviewersData.match(/"link"\s*:\s*"([^"]+)"/)
-            const bioUrl = linkMatch ? linkMatch[1] : undefined
-
-            // Extract photo URL from "avatar" field
-            // Pattern: "avatar":{"src":"https://post.healthline.com/wp-content/uploads/2023/03/Helen-Chen-Headshot-500x500-Bio.png"}
-            const photoMatch = reviewersData.match(/"avatar"\s*:\s*\{\s*"src"\s*:\s*"([^"]+)"/)
-            const photoUrl = photoMatch ? photoMatch[1] : undefined
-
-            // Extract credentials from name
-            const credMatch = fullName.match(/^(.+?)\s+((?:MD|PhD|RN|MPH|DDS|PharmD|RD|CNE|COI|PA-C|MCMSc|BSc|MSc|MSN|MPH|MBA|JD|DO|NP|APRN)[,\s]*.*)$/i)
-
-            const newAuthor = {
-              name: fullName,
-              credentials: credMatch ? credMatch[2].trim() : 'Medical Reviewer',
-              url: bioUrl,
-              photo: photoUrl,
-              source: 'javascript' as const
+        // Find the JSON object boundaries by counting braces
+        for (let i = pushStart; i < scriptContent.length; i++) {
+          if (scriptContent[i] === '{') {
+            if (braceDepth === 0) jsonStart = i
+            braceDepth++
+          } else if (scriptContent[i] === '}') {
+            braceDepth--
+            if (braceDepth === 0 && jsonStart !== -1) {
+              jsonEnd = i + 1
+              break
             }
-            authors.push(newAuthor)
-            console.error('[extractAuthors] Found from JavaScript dataLayer:', newAuthor)
+          }
+        }
+
+        if (jsonStart !== -1 && jsonEnd !== -1) {
+          const jsonStr = scriptContent.substring(jsonStart, jsonEnd)
+          const dataLayerObj = JSON.parse(jsonStr)
+
+          // Extract medicalReviewers
+          const reviewers = dataLayerObj?.byline?.medicalReviewers
+          if (reviewers && Array.isArray(reviewers)) {
+            reviewers.forEach((reviewer: any) => {
+              const displayName = reviewer?.name?.display
+              if (displayName && !authors.some(a => a.name === displayName)) {
+                const bioUrl = reviewer.link ? reviewer.link : undefined
+                const photoUrl = reviewer?.avatar?.src
+
+                // Extract credentials from name
+                const credMatch = displayName.match(/^(.+?)\s+((?:MD|PhD|RN|MPH|DDS|PharmD|RD|CNE|COI|PA-C|MCMSc|BSc|MSc|MSN|MPH|MBA|JD|DO|NP|APRN)[,\s]*.*)$/i)
+
+                const newAuthor = {
+                  name: displayName,
+                  credentials: credMatch ? credMatch[2].trim() : undefined,
+                  url: bioUrl,
+                  photo: photoUrl,
+                  source: 'javascript' as const
+                }
+                authors.push(newAuthor)
+                console.error('[extractAuthors] Found medical reviewer from dataLayer:', newAuthor)
+              }
+            })
+          }
+
+          // Extract authors too
+          const authorsList = dataLayerObj?.byline?.authors
+          if (authorsList && Array.isArray(authorsList)) {
+            authorsList.forEach((author: any) => {
+              const displayName = author?.name?.display
+              if (displayName && !authors.some(a => a.name === displayName)) {
+                const bioUrl = author.link ? author.link : undefined
+                const photoUrl = author?.avatar?.src
+
+                const newAuthor = {
+                  name: displayName,
+                  url: bioUrl,
+                  photo: photoUrl,
+                  source: 'javascript' as const
+                }
+                authors.push(newAuthor)
+                console.error('[extractAuthors] Found author from dataLayer:', newAuthor)
+              }
+            })
           }
         }
 
@@ -422,9 +459,10 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
             name: authorMatch[1],
             source: 'javascript'
           })
-          console.error('[extractAuthors] Found author from JavaScript:', authorMatch[1])
+          console.error('[extractAuthors] Found author from JavaScript string:', authorMatch[1])
         }
       } catch (e) {
+        console.error('[extractAuthors] Error parsing JavaScript dataLayer:', e)
         // Invalid format, skip
       }
     }
