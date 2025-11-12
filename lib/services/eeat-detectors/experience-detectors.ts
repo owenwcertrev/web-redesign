@@ -492,20 +492,41 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
     }
   })
 
-  // === PATHWAY 4: Collaborative Authorship (Multiple Authors) ===
-  // SCOPE FIX (2025-01): Detect collaborative STRUCTURE, NOT credential quality
-  // E2 detects that multiple perspectives exist (collaboration)
-  // X1 validates the credentials of those authors
+  // === PATHWAY 4: Collaborative Authorship & Medical Reviewer Detection ===
+  // SCOPE FIX (2025-01): Detect collaborative STRUCTURE and reviewer PRESENCE
+  // E2 detects that review/collaboration exists, X1/X2 validates credential QUALITY
+  //
+  // IMPROVEMENT (2025-01): Detect medical reviewers in authors array
+  // Sites like Healthline store reviewer info in dataLayer (extracted as authors)
+  // Check if any author has reviewer credentials to award appropriate points
 
   if (!schemaReviewerFound && !hasReviewAttribution && authors.length >= 2) {
-    // Award points for collaborative authorship (multiple perspectives)
-    // DO NOT check credentials - X1 handles that
-    score += 1.0
-    evidence.push({
-      type: 'metric',
-      value: `${authors.length} authors (collaborative perspective)`,
-      label: 'Multiple author collaboration'
+    // Check if any author appears to be a medical/professional reviewer
+    // Look for medical credentials that suggest review role
+    const reviewerCredentialPatterns = /\b(MD|DO|RN|RD|PA-C|NP|PharmD|DDS|MPH|MSN|MCMSc|PhD|PsyD)\b/i
+
+    const possibleReviewer = authors.find(author => {
+      if (!author.credentials) return false
+      return reviewerCredentialPatterns.test(author.credentials)
     })
+
+    if (possibleReviewer) {
+      // Detected likely reviewer among authors (reviewer + writer collaboration)
+      score += 1.5 // Higher points for detected reviewer
+      evidence.push({
+        type: 'snippet',
+        value: `${possibleReviewer.name}${possibleReviewer.credentials ? ` (${possibleReviewer.credentials})` : ''}`,
+        label: 'Medical/professional reviewer detected in authors'
+      })
+    } else {
+      // Generic collaborative authorship (no clear reviewer)
+      score += 1.0
+      evidence.push({
+        type: 'metric',
+        value: `${authors.length} authors (collaborative perspective)`,
+        label: 'Multiple author collaboration'
+      })
+    }
   }
 
   // Cap at maxScore
