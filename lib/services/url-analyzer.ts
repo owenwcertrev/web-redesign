@@ -90,7 +90,7 @@ export async function analyzeURL(url: string): Promise<PageAnalysis> {
     headings: extractHeadings($),
     hasSSL: finalUrl.startsWith('https://'), // Use final URL for SSL check
     authors: extractAuthors($fresh), // Use fresh parse to preserve scripts
-    schemaMarkup: extractSchemaMarkup($),
+    schemaMarkup: extractSchemaMarkup($fresh), // BUG FIX (2025-01): Use fresh parse to preserve script tags
     images: analyzeImages($),
     links: analyzeLinks($, finalUrl), // Use final URL for link analysis
     citations: citationUrls.length, // Total count
