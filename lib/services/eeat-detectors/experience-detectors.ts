@@ -290,8 +290,8 @@ function detectE1WithRegex(
   let recommendation: string | undefined
   if (score < config.thresholds.good) {
     const missing: string[] = []
-    const narrativeScore = (evidence.find(e => e.label.includes('First-person')) ? 1 : 0)
-    const professionalScore = (evidence.find(e => e.label.includes('Professional')) ? 1 : 0)
+    const narrativeScore = (evidence.find(e => e.label?.includes('First-person')) ? 1 : 0)
+    const professionalScore = (evidence.find(e => e.label?.includes('Professional')) ? 1 : 0)
 
     if (narrativeScore === 0) {
       missing.push('first-person narratives ("In my experience...", "I\'ve observed...")')
