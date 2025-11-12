@@ -264,11 +264,11 @@ function extractHeadings($: cheerio.CheerioAPI): PageAnalysis['headings'] {
 function extractAuthors($: cheerio.CheerioAPI): Author[] {
   const authors: Author[] = []
 
-  console.log('[extractAuthors] START - Checking page structure')
-  console.log('[extractAuthors] Script tags found:', $('script').length)
-  console.log('[extractAuthors] JSON-LD script tags:', $('script[type="application/ld+json"]').length)
-  console.log('[extractAuthors] Meta author tag:', $('meta[name="author"]').attr('content'))
-  console.log('[extractAuthors] Meta article:author tag:', $('meta[name="article:author"]').attr('content'))
+  console.error('[extractAuthors] START - Checking page structure')
+  console.error('[extractAuthors] Script tags found:', $('script').length)
+  console.error('[extractAuthors] JSON-LD script tags:', $('script[type="application/ld+json"]').length)
+  console.error('[extractAuthors] Meta author tag:', $('meta[name="author"]').attr('content'))
+  console.error('[extractAuthors] Meta article:author tag:', $('meta[name="article:author"]').attr('content'))
 
   // Check schema markup for author
   $('script[type="application/ld+json"]').each((_, el) => {
@@ -282,7 +282,7 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
         }
       })
       if (schemaAuthors.length > 0) {
-        console.log('[extractAuthors] Found from schema:', schemaAuthors)
+        console.error('[extractAuthors] Found from schema:', schemaAuthors)
       }
     } catch (e) {
       // Invalid JSON, skip
@@ -296,7 +296,7 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
       name: metaAuthor,
       source: 'meta'
     })
-    console.log('[extractAuthors] Found from meta tag:', metaAuthor)
+    console.error('[extractAuthors] Found from meta tag:', metaAuthor)
   }
 
   // Check rel="author" links
@@ -410,7 +410,7 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
               source: 'javascript' as const
             }
             authors.push(newAuthor)
-            console.log('[extractAuthors] Found from JavaScript dataLayer:', newAuthor)
+            console.error('[extractAuthors] Found from JavaScript dataLayer:', newAuthor)
           }
         }
 
@@ -422,7 +422,7 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
             name: authorMatch[1],
             source: 'javascript'
           })
-          console.log('[extractAuthors] Found author from JavaScript:', authorMatch[1])
+          console.error('[extractAuthors] Found author from JavaScript:', authorMatch[1])
         }
       } catch (e) {
         // Invalid format, skip
@@ -430,7 +430,7 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
     }
   })
 
-  console.log(`[extractAuthors] Total authors found: ${authors.length}`, authors)
+  console.error(`[extractAuthors] Total authors found: ${authors.length}`, authors)
   return authors
 }
 

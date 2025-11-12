@@ -38,7 +38,7 @@ export function detectNamedAuthorsWithCredentials(
   const schema = pageAnalysis.schemaMarkup || []
   const authors = pageAnalysis.authors || []
 
-  console.log('[E1 Detector] Starting with:', {
+  console.error('[E1 Detector] Starting with:', {
     schemaCount: schema.length,
     authorsCount: authors.length,
     authors
@@ -216,7 +216,7 @@ export function detectNamedAuthorsWithCredentials(
   const uncappedScore = score
   score = Math.min(score, config.maxScore)
 
-  console.log('[E1 Detector] Final score:', {
+  console.error('[E1 Detector] Final score:', {
     uncappedScore,
     cappedScore: score,
     maxScore: config.maxScore,
