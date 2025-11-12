@@ -264,6 +264,12 @@ function extractHeadings($: cheerio.CheerioAPI): PageAnalysis['headings'] {
 function extractAuthors($: cheerio.CheerioAPI): Author[] {
   const authors: Author[] = []
 
+  console.log('[extractAuthors] START - Checking page structure')
+  console.log('[extractAuthors] Script tags found:', $('script').length)
+  console.log('[extractAuthors] JSON-LD script tags:', $('script[type="application/ld+json"]').length)
+  console.log('[extractAuthors] Meta author tag:', $('meta[name="author"]').attr('content'))
+  console.log('[extractAuthors] Meta article:author tag:', $('meta[name="article:author"]').attr('content'))
+
   // Check schema markup for author
   $('script[type="application/ld+json"]').each((_, el) => {
     try {
