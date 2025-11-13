@@ -8,7 +8,7 @@ import { calculateInstantEEATScores } from './eeat-scorer-v2'
 import type { BlogPostAnalysis, BlogAnalysisProgress, EEATScore } from '../types/blog-analysis'
 
 export interface BatchAnalysisOptions {
-  urls: string[]
+  posts: Array<{ url: string; lastmod?: Date }> // BUG FIX (2025-11-12): Changed from urls to posts
   maxConcurrent?: number // Default: 3
   timeout?: number // Timeout per URL in ms (default: 30000)
   onProgress?: (progress: BlogAnalysisProgress) => void
@@ -48,8 +48,11 @@ export class BatchAnalyzer {
 
   /**
    * Analyze a single blog post with timeout
+   * BUG FIX (2025-11-12): Now accepts BlogPost object to preserve sitemap lastmod
    */
-  private async analyzeSinglePost(url: string): Promise<BlogPostAnalysis> {
+  private async analyzeSinglePost(post: { url: string; lastmod?: Date }): Promise<BlogPostAnalysis> {
+    const { url, lastmod } = post
+
     const timeoutPromise = new Promise<never>((_, reject) =>
       setTimeout(() => reject(new Error('Analysis timeout')), this.timeout)
     )
@@ -70,8 +73,8 @@ export class BatchAnalyzer {
       // Try to extract author name
       const authorName = pageAnalysis.authors[0]?.name
 
-      // Try to extract published date from URL or schema
-      const publishedDate = this.extractPublishedDate(url, pageAnalysis)
+      // BUG FIX (2025-11-12): Pass sitemap lastmod as fallback
+      const publishedDate = this.extractPublishedDate(url, pageAnalysis, lastmod)
 
       return {
         url,
@@ -137,8 +140,9 @@ export class BatchAnalyzer {
 
   /**
    * Try to extract published date from URL patterns or schema
+   * BUG FIX (2025-11-12): Added sitemapLastmod parameter as fallback
    */
-  private extractPublishedDate(url: string, page: PageAnalysis): Date | undefined {
+  private extractPublishedDate(url: string, page: PageAnalysis, sitemapLastmod?: Date): Date | undefined {
     // Try 1: Extract from URL (e.g., /2024/01/15/post-title)
     const datePattern = /\/(\d{4})\/(\d{1,2})\/(\d{1,2})\//
     const match = url.match(datePattern)
@@ -181,36 +185,44 @@ export class BatchAnalyzer {
       return new Date(articleSchema.data.dateModified)
     }
 
+    // BUG FIX (2025-11-12): Try 5: Use sitemap lastmod as fallback
+    // This fixes the issue where only 2/16 Healthline posts had dates
+    if (sitemapLastmod) {
+      console.log(`[extractPublishedDate] Using sitemap lastmod as fallback: ${sitemapLastmod.toISOString()} for ${url}`)
+      return sitemapLastmod
+    }
+
     return undefined
   }
 
   /**
    * Analyze multiple blog posts in batches with concurrency control
+   * BUG FIX (2025-11-12): Now accepts BlogPost objects to preserve sitemap dates
    */
-  async analyzeBatch(urls: string[]): Promise<BatchAnalysisResult> {
+  async analyzeBatch(posts: Array<{ url: string; lastmod?: Date }>): Promise<BatchAnalysisResult> {
     const startTime = Date.now()
     const successful: BlogPostAnalysis[] = []
     const failed: FailedAnalysis[] = []
 
-    console.log(`Starting batch analysis of ${urls.length} URLs (max ${this.maxConcurrent} concurrent)`)
+    console.log(`Starting batch analysis of ${posts.length} URLs (max ${this.maxConcurrent} concurrent)`)
 
     // Process in chunks to control concurrency
-    for (let i = 0; i < urls.length; i += this.maxConcurrent) {
-      const chunk = urls.slice(i, i + this.maxConcurrent)
-      const chunkPromises = chunk.map(async url => {
+    for (let i = 0; i < posts.length; i += this.maxConcurrent) {
+      const chunk = posts.slice(i, i + this.maxConcurrent)
+      const chunkPromises = chunk.map(async post => {
         try {
-          const result = await this.analyzeSinglePost(url)
+          const result = await this.analyzeSinglePost(post)
           successful.push(result)
-          return { success: true, url }
+          return { success: true, url: post.url }
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Unknown error'
           failed.push({
-            url,
+            url: post.url,
             error: errorMessage,
             timestamp: new Date(),
           })
-          console.error(`Failed to analyze ${url}:`, errorMessage)
-          return { success: false, url }
+          console.error(`Failed to analyze ${post.url}:`, errorMessage)
+          return { success: false, url: post.url }
         }
       })
 
@@ -220,15 +232,15 @@ export class BatchAnalyzer {
       // Report progress
       if (this.onProgress) {
         const totalProcessed = successful.length + failed.length
-        const percentage = (totalProcessed / urls.length) * 100
+        const percentage = (totalProcessed / posts.length) * 100
         const elapsed = Date.now() - startTime
-        const estimatedTotal = (elapsed / totalProcessed) * urls.length
+        const estimatedTotal = (elapsed / totalProcessed) * posts.length
         const estimatedRemaining = Math.round((estimatedTotal - elapsed) / 1000)
 
         this.onProgress({
-          totalPosts: urls.length,
+          totalPosts: posts.length,
           analyzedPosts: totalProcessed,
-          currentPost: chunk[chunk.length - 1],
+          currentPost: chunk[chunk.length - 1].url,
           percentage: Math.round(percentage),
           estimatedTimeRemaining: estimatedRemaining,
           errors: failed.map(f => `${f.url}: ${f.error}`),
@@ -253,6 +265,7 @@ export class BatchAnalyzer {
 
   /**
    * Static helper to analyze multiple URLs
+   * BUG FIX (2025-11-12): Now accepts BlogPost objects to preserve sitemap dates
    */
   static async analyze(options: BatchAnalysisOptions): Promise<BatchAnalysisResult> {
     const analyzer = new BatchAnalyzer({
@@ -261,22 +274,23 @@ export class BatchAnalyzer {
       onProgress: options.onProgress,
     })
 
-    return analyzer.analyzeBatch(options.urls)
+    return analyzer.analyzeBatch(options.posts)
   }
 }
 
 /**
  * Convenience function for simple batch analysis
+ * BUG FIX (2025-11-12): Now accepts BlogPost objects to preserve sitemap dates
  */
 export async function analyzeBlogPosts(
-  urls: string[],
+  posts: Array<{ url: string; lastmod?: Date }>,
   options: {
     maxConcurrent?: number
     onProgress?: (progress: BlogAnalysisProgress) => void
   } = {}
 ): Promise<BatchAnalysisResult> {
   return BatchAnalyzer.analyze({
-    urls,
+    posts,
     maxConcurrent: options.maxConcurrent,
     onProgress: options.onProgress,
   })

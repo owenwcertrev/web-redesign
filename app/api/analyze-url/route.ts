@@ -96,12 +96,12 @@ async function handleBlogAnalysis(domain: string, email?: string) {
 
     // Step 2: Limit to 20 posts for analysis (to control API costs)
     const postsToAnalyze = discovery.posts.slice(0, 20)
-    const urlsToAnalyze = postsToAnalyze.map(p => p.url)
 
-    console.log(`Analyzing ${urlsToAnalyze.length} posts...`)
+    console.log(`Analyzing ${postsToAnalyze.length} posts...`)
 
     // Step 3: Batch analyze posts
-    const batchResult = await analyzeBlogPosts(urlsToAnalyze, {
+    // BUG FIX (2025-11-12): Pass full BlogPost objects (with lastmod) instead of just URLs
+    const batchResult = await analyzeBlogPosts(postsToAnalyze, {
       maxConcurrent: 3,
       onProgress: (progress: BlogAnalysisProgress) => {
         console.log(
