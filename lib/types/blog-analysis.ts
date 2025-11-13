@@ -140,7 +140,9 @@ export interface BlogInsights {
  */
 export interface PublishingFrequencyInsight {
   postsPerMonth: number
-  totalPosts: number
+  totalPosts: number // BUG FIX (2025-11-12): Posts WITH dates (used in calculation)
+  totalPostsAnalyzed?: number // Total posts analyzed (including those without dates)
+  postsWithoutDates?: number // Posts missing date information
   dateRange: {
     earliest?: Date
     latest?: Date

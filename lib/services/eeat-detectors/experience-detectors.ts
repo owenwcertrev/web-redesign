@@ -1227,9 +1227,26 @@ export function detectPublishingConsistency(blogInsights?: BlogInsights): EEATVa
   })
 
   if (freq.dateRange.spanMonths > 0) {
+    // BUG FIX (2025-11-12): Show clear evidence about date extraction
+    if (freq.totalPostsAnalyzed && freq.postsWithoutDates && freq.postsWithoutDates > 0) {
+      evidence.push({
+        type: 'metric',
+        value: `${freq.totalPosts} posts with dates (out of ${freq.totalPostsAnalyzed} analyzed)`,
+        label: `⚠️ ${freq.postsWithoutDates} posts missing dates`
+      })
+    } else {
+      evidence.push({
+        type: 'metric',
+        value: `${freq.totalPosts} posts over ${freq.dateRange.spanMonths} months`
+      })
+    }
+  }
+
+  // Add warning if many posts are missing dates
+  if (freq.postsWithoutDates && freq.postsWithoutDates > freq.totalPosts) {
     evidence.push({
-      type: 'metric',
-      value: `${freq.totalPosts} posts over ${freq.dateRange.spanMonths} months`
+      type: 'note',
+      value: `⚠️ ${freq.postsWithoutDates}/${freq.totalPostsAnalyzed} posts are missing publication dates. Add datePublished to schema markup or URL structure to improve accuracy.`
     })
   }
 

@@ -148,7 +148,9 @@ function calculatePublishingFrequency(posts: BlogPostAnalysis[]): PublishingFreq
 
   return {
     postsPerMonth: Math.round(postsPerMonth * 10) / 10,
-    totalPosts: posts.length,
+    totalPosts: postsWithDates.length, // BUG FIX (2025-11-12): Use posts WITH dates, not all posts
+    totalPostsAnalyzed: posts.length,  // Track total for debugging
+    postsWithoutDates: posts.length - postsWithDates.length, // Track missing dates
     dateRange: {
       earliest,
       latest,
