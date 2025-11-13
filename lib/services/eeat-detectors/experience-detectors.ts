@@ -313,22 +313,44 @@ function detectE1WithRegex(
 
   // Dynamic recommendations based on what's missing
   let recommendation: string | undefined
-  if (score < config.thresholds.good) {
-    const missing: string[] = []
-    const narrativeScore = (evidence.find(e => e.label?.includes('First-person')) ? 1 : 0)
-    const professionalScore = (evidence.find(e => e.label?.includes('Professional')) ? 1 : 0)
+  if (score < config.thresholds.excellent) {
+    const hasNarratives = evidence.some(e => e.label?.includes('First-person'))
+    const hasProfessional = evidence.some(e => e.label?.includes('Professional'))
 
-    if (narrativeScore === 0) {
-      missing.push('first-person narratives ("In my experience...", "I\'ve observed...")')
+    const strengths: string[] = []
+    const suggestions: string[] = []
+
+    // Acknowledge existing strengths
+    if (hasNarratives) {
+      strengths.push('✅ First-person narratives present')
     }
-    if (professionalScore === 0) {
-      missing.push('institutional voice ("Our research team...", "10+ years experience")')
+    if (hasProfessional) {
+      strengths.push('✅ Professional/institutional voice present')
     }
 
-    if (missing.length > 0) {
-      recommendation = `Add experience signals to content: ${missing.join(' and/or ')}. Show hands-on expertise through personal insights or professional context.`
-    } else {
-      recommendation = 'Strengthen experience signals: add more specific examples, case observations, or professional insights to demonstrate direct expertise application'
+    // Suggest improvements based on what's missing
+    if (score < config.thresholds.good) {
+      // Below "good" - need foundational improvements
+      if (!hasNarratives && !hasProfessional) {
+        recommendation = 'Add experience signals to content: first-person narratives ("In my experience...", "I\'ve observed...") and/or institutional voice ("Our research team...", "10+ years experience"). Show hands-on expertise through personal insights or professional context.'
+      } else if (!hasNarratives) {
+        suggestions.push('add first-person narratives ("In my practice...", "I\'ve found that...")')
+      } else if (!hasProfessional) {
+        suggestions.push('add institutional voice ("Our team has...", "10+ years specializing in...")')
+      } else {
+        suggestions.push('strengthen existing signals with more specific examples, case observations, or professional insights')
+      }
+
+      if (suggestions.length > 0) {
+        const strengthsText = strengths.length > 0 ? strengths.join(', ') + '. ' : ''
+        recommendation = `${strengthsText}To reach "good" status, ${suggestions.join(' or ')}`
+      }
+    } else if (score < config.thresholds.excellent) {
+      // At "good" - suggest path to excellence
+      suggestions.push('add more detailed experience indicators (specific case examples, years of practice, institutional credentials)')
+
+      const strengthsText = strengths.length > 0 ? strengths.join(', ') + '. ' : ''
+      recommendation = `${strengthsText}To reach "excellent" status, ${suggestions.join(' and ')}`
     }
   }
 
@@ -517,8 +539,8 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
       hasReviewAttribution = true
       evidence.push({
         type: 'snippet',
-        value: matches[0],
-        label: 'Review attribution found'
+        value: `"${matches[0]}" (+1.0 pt)`,
+        label: 'Review attribution in visible content'
       })
       // Reset regex state
       pattern.lastIndex = 0
@@ -565,8 +587,8 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
           schemaReviewerFound = true
           evidence.push({
             type: 'snippet',
-            value: reviewerName,
-            label: 'Expert reviewer in schema'
+            value: `${reviewerName} (+1.5 pts)`,
+            label: 'Expert reviewer found (in structured data)'
           })
           break // Only count first reviewer
         }
@@ -603,15 +625,65 @@ export function detectAuthorPerspectiveBlocks(pageAnalysis: PageAnalysis): EEATV
 
   // Dynamic recommendation based on what's missing
   let recommendation: string | undefined
-  if (score < config.thresholds.good) {
-    if (authors.length === 0) {
-      recommendation = 'Add named author and expert reviewer to provide professional perspective validation'
-    } else if (authors.length === 1 && !authors[0].credentials) {
-      recommendation = 'Add medical/expert reviewer with credentials to validate content (e.g., "Medically reviewed by [Name, MD]")'
-    } else if (authors.length >= 2 && evidence.length === 0) {
-      recommendation = 'Highlight reviewer credentials and review process to demonstrate expert perspective validation'
-    } else {
-      recommendation = 'Add explicit perspective sections (e.g., "Expert Opinion", "Reviewer\'s Note") or medical review attribution'
+  if (score < config.thresholds.excellent) {
+    // Identify what's present and what's missing
+    const hasSchemaReviewer = schemaReviewerFound
+    const hasTextAttribution = hasReviewAttribution
+    const hasCollaboration = authors.length >= 2
+    const hasPerspectiveSections = explicitSectionFound
+
+    const strengths: string[] = []
+    const suggestions: string[] = []
+
+    // Acknowledge existing strengths
+    if (hasSchemaReviewer) {
+      const reviewerEvidence = evidence.find(e => e.label?.includes('Expert reviewer'))?.value
+      if (reviewerEvidence) {
+        strengths.push(`✅ Expert reviewer found: ${reviewerEvidence}`)
+      }
+    }
+    if (hasTextAttribution) {
+      strengths.push(`✅ Review attribution in content`)
+    }
+    if (hasCollaboration) {
+      strengths.push(`✅ Collaborative authorship (${authors.length} authors)`)
+    }
+    if (hasPerspectiveSections) {
+      strengths.push(`✅ Explicit perspective sections`)
+    }
+
+    // Suggest improvements based on what's missing
+    if (score < config.thresholds.good) {
+      // Below "good" - need foundational improvements
+      if (authors.length === 0) {
+        recommendation = 'Add named author and expert reviewer to provide professional perspective validation'
+      } else if (!hasSchemaReviewer && !hasTextAttribution && !hasCollaboration) {
+        recommendation = 'Add medical/expert reviewer with credentials to validate content (e.g., "Medically reviewed by [Name, MD]")'
+      } else {
+        // Has some signals, suggest specific additions
+        if (!hasTextAttribution && !hasPerspectiveSections) {
+          suggestions.push('add visible review attribution ("Reviewed by [Name]") in the content')
+        }
+        if (!hasPerspectiveSections) {
+          suggestions.push('create explicit perspective sections (e.g., "Expert Opinion", "Reviewer\'s Note")')
+        }
+
+        const strengthsText = strengths.length > 0 ? strengths.join(', ') + '. ' : ''
+        const suggestionsText = suggestions.join(' or ')
+        recommendation = `${strengthsText}To reach "good" status, ${suggestionsText}`
+      }
+    } else if (score < config.thresholds.excellent) {
+      // At "good" - suggest path to excellence
+      if (!hasPerspectiveSections) {
+        suggestions.push('add explicit perspective section headings (e.g., "Expert Opinion", "Medical Reviewer\'s Note")')
+      }
+      if (!hasTextAttribution) {
+        suggestions.push('add visible review attribution in the content body')
+      }
+
+      const strengthsText = strengths.length > 0 ? strengths.join(', ') + '. ' : ''
+      const suggestionsText = suggestions.join(' and/or ')
+      recommendation = `${strengthsText}To reach "excellent" status, ${suggestionsText}`
     }
   }
 

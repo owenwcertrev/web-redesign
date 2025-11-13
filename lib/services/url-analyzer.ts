@@ -410,9 +410,19 @@ function extractAuthors($: cheerio.CheerioAPI): Author[] {
         if (jsonStart !== -1 && jsonEnd !== -1) {
           let jsonStr = scriptContent.substring(jsonStart, jsonEnd)
 
-          // Fix unquoted property names (JavaScript allows them, JSON doesn't)
-          // Convert {event: "value"} to {"event": "value"}
+          // BUG FIX (2025-11-12): More robust JSON cleanup before parsing
+          // 1. Fix unquoted property names (JavaScript allows them, JSON doesn't)
           jsonStr = jsonStr.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":')
+
+          // 2. Remove trailing commas before closing braces/brackets (JS allows, JSON doesn't)
+          jsonStr = jsonStr.replace(/,(\s*[}\]])/g, '$1')
+
+          // 3. Fix single quotes (JS allows 'value', JSON requires "value")
+          jsonStr = jsonStr.replace(/:\s*'([^']*?)'/g, ': "$1"')
+
+          // 4. Remove comments (JS allows, JSON doesn't)
+          jsonStr = jsonStr.replace(/\/\*[\s\S]*?\*\//g, '') // /* ... */
+          jsonStr = jsonStr.replace(/\/\/.*/g, '') // // ...
 
           const dataLayerObj = JSON.parse(jsonStr)
 
