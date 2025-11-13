@@ -6,7 +6,11 @@ import { useState } from 'react'
 import { Menu, X, User } from 'lucide-react'
 import Button from './Button'
 
-export default function Navigation() {
+interface NavigationProps {
+  showEEATMeter?: boolean
+}
+
+export default function Navigation({ showEEATMeter = true }: NavigationProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
@@ -26,9 +30,11 @@ export default function Navigation() {
               <Link href="/book-demo" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
                 Book Demo
               </Link>
-              <Link href="/eeat-meter" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
-                E-E-A-T Meter
-              </Link>
+              {showEEATMeter && (
+                <Link href="/eeat-meter" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
+                  E-E-A-T Meter
+                </Link>
+              )}
               <Link href="/how-it-works" className="text-black hover:text-coral transition-colors text-base whitespace-nowrap">
                 How It Works
               </Link>
@@ -92,13 +98,15 @@ export default function Navigation() {
             >
               Book Demo
             </Link>
-            <Link
-              href="/eeat-meter"
-              className="block py-3 text-base text-black hover:text-coral transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              E-E-A-T Meter
-            </Link>
+            {showEEATMeter && (
+              <Link
+                href="/eeat-meter"
+                className="block py-3 text-base text-black hover:text-coral transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                E-E-A-T Meter
+              </Link>
+            )}
             <Link
               href="/how-it-works"
               className="block py-3 text-base text-black hover:text-coral transition-colors"

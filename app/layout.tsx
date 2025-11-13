@@ -79,6 +79,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // Check if E-E-A-T meter should be shown
+  const showEEATMeter = process.env.EEAT_METER_ENABLED === 'true'
+
   // Organization Schema
   const organizationSchema = {
     '@context': 'https://schema.org',
@@ -130,7 +133,7 @@ export default function RootLayout({
               <PostHogPageView />
             </Suspense>
             <SmoothResize />
-            <Navigation />
+            <Navigation showEEATMeter={showEEATMeter} />
             <main className="pt-16">
               {children}
             </main>

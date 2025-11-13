@@ -296,6 +296,15 @@ async function handleBlogAnalysis(domain: string, email?: string) {
 }
 
 export async function POST(request: NextRequest) {
+  // Check if E-E-A-T meter is enabled
+  const isEnabled = process.env.EEAT_METER_ENABLED === 'true'
+  if (!isEnabled) {
+    return NextResponse.json(
+      { error: 'Not found' },
+      { status: 404 }
+    )
+  }
+
   try {
     const { url, email } = await request.json()
 

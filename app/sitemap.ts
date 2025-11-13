@@ -3,8 +3,9 @@ import { MetadataRoute } from 'next'
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://certrev.com'
   const currentDate = new Date()
+  const isEEATMeterEnabled = process.env.EEAT_METER_ENABLED === 'true'
 
-  return [
+  const routes: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: currentDate,
@@ -22,12 +23,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/eeat-meter`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.8,
     },
     {
       url: `${baseUrl}/faq`,
@@ -84,4 +79,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
   ]
+
+  // Conditionally add E-E-A-T meter if enabled
+  if (isEEATMeterEnabled) {
+    routes.push({
+      url: `${baseUrl}/eeat-meter`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    })
+  }
+
+  return routes
 }
