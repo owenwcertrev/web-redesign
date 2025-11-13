@@ -18,7 +18,6 @@ Files still using `primary`, `verification`, `alert` instead of `navy`, `lime`, 
 Files with legacy colors:
 - app/human-layer/page.tsx
 - components/trust/ConfidenceMeter.tsx
-- app/trust-showcase/page.tsx
 - components/trust/CitationMarker.tsx
 - components/cards3d/StackedCards.tsx
 - app/cards-3d-demo/page.tsx
@@ -26,8 +25,6 @@ Files with legacy colors:
 - app/radical-demo/page.tsx
 - components/radical/NeonText.tsx
 - components/trust/TrustIndicator.tsx
-- components/trust/GlassMorphCard.tsx
-- components/trust/VerificationProgress.tsx
 - components/EEATMeterTool.tsx
 - components/StatCard.tsx
 - app/contact/page.tsx

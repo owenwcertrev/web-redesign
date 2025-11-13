@@ -21,10 +21,6 @@ export const featureFlags = {
   },
 
   // Other pages
-  trustShowcase: {
-    enabled: true,
-  },
-
   humanLayer: {
     enabled: true,
   },
