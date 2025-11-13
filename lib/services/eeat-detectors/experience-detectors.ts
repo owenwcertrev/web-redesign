@@ -311,7 +311,17 @@ function detectE1WithRegex(
 
   const status = getVariableStatus(score, config)
 
-  // Dynamic recommendations based on what's missing
+  // Check for context: do we have author credentials or authoritative signals?
+  const hasCredentialedAuthors = pageAnalysis.authors?.some(a =>
+    a.credentials ||
+    /\b(MD|PhD|MPH|RN|DDS|DO|MBA|MS|MA|BS|BA)\b/.test(a.name || '')
+  )
+  const hasReviewer = pageAnalysis.authors?.some(a =>
+    a.source === 'reviewedBy' ||
+    (a.name?.toLowerCase().includes('review') ?? false)
+  )
+
+  // Dynamic recommendations based on what's missing and content type context
   let recommendation: string | undefined
   if (score < config.thresholds.excellent) {
     const hasNarratives = evidence.some(e => e.label?.includes('First-person'))
@@ -332,7 +342,12 @@ function detectE1WithRegex(
     if (score < config.thresholds.good) {
       // Below "good" - need foundational improvements
       if (!hasNarratives && !hasProfessional) {
-        recommendation = 'Add experience signals to content: first-person narratives ("In my experience...", "I\'ve observed...") and/or institutional voice ("Our research team...", "10+ years experience"). Show hands-on expertise through personal insights or professional context.'
+        // Context-aware: if page has strong credentials but no narratives
+        if (hasCredentialedAuthors || hasReviewer) {
+          recommendation = 'Your content has strong author credentials (X1). E1 measures experience signals in the content itself. If appropriate for your content type, consider adding first-person case examples ("In my practice...") or institutional observations ("Our research team found..."). Encyclopedic styles may intentionally score low on E1 while maintaining high overall E-E-A-T through credentials and authority.'
+        } else {
+          recommendation = 'Add experience signals to content: first-person narratives ("In my experience...", "I\'ve observed...") and/or institutional voice ("Our research team...", "10+ years experience"). Show hands-on expertise through personal insights or professional context.'
+        }
       } else if (!hasNarratives) {
         suggestions.push('add first-person narratives ("In my practice...", "I\'ve found that...")')
       } else if (!hasProfessional) {
@@ -1344,10 +1359,25 @@ function generateE1Recommendation(score: number, pageAnalysis: PageAnalysis): st
   const hasAuthors = (pageAnalysis.authors?.length || 0) > 0
   const hasReviewers = (pageAnalysis.schemaMarkup || []).some(s => s.data?.reviewedBy || s.data?.medicalReviewer)
 
+  // Check for credentialed authors or reviewers
+  const hasCredentialedAuthors = pageAnalysis.authors?.some(a =>
+    a.credentials ||
+    /\b(MD|PhD|MPH|RN|DDS|DO|MBA|MS|MA|BS|BA)\b/.test(a.name || '')
+  )
+  const hasReviewer = pageAnalysis.authors?.some(a =>
+    a.source === 'reviewedBy' ||
+    (a.name?.toLowerCase().includes('review') ?? false)
+  )
+
   if (!hasAuthors && !hasReviewers) {
     return 'Add named authors with professional backgrounds (e.g., "15 years clinical experience") and/or expert reviewers to demonstrate practical experience'
   } else if (score < 1) {
-    return 'Include first-person narratives ("In my practice..."), case examples, or professional context ("Our research team...") to demonstrate hands-on experience'
+    // Context-aware: if page has strong credentials but no narratives
+    if (hasCredentialedAuthors || hasReviewer) {
+      return 'Your content has strong author credentials (X1). E1 measures experience signals in the content itself. If appropriate for your content type, consider adding first-person case examples ("In my practice...") or institutional observations ("Our research team found..."). Encyclopedic styles may intentionally score low on E1 while maintaining high overall E-E-A-T through credentials and authority.'
+    } else {
+      return 'Include first-person narratives ("In my practice..."), case examples, or professional context ("Our research team...") to demonstrate hands-on experience'
+    }
   } else {
     return 'Strengthen experience signals: add personal insights, clinical observations, or institutional research findings to show direct expertise application'
   }
