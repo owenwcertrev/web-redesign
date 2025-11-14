@@ -790,17 +790,19 @@ function aggregateVariableAcrossPosts(
   // Build recommendation with trend awareness and metric-specific guidance
   let recommendation: string | undefined
   if (roundedScore < config.thresholds.good) {
-    // Special handling for E1: Provide context-aware recommendations
+    // Special handling for E1: Content narrative recommendations (NOT author attribution)
+    // FIX: E1 measures first-person narratives in CONTENT, not author metadata
     if (variableId === 'E1') {
-      const avgAuthors = results.reduce((sum, r) => sum + r.score, 0) / results.length
-      if (avgAuthors >= 1.5 && avgAuthors < 3) {
-        // Professional publisher pattern: has authors but not enough
-        recommendation = `Many posts have single authors. Add second credentialed authors or medical reviewers to strengthen experience signals. Target: 2+ credentialed contributors per post.`
-      } else if (avgAuthors < 1) {
-        // Missing author attribution
-        recommendation = `Add credentialed authors (with degrees like MD, RD, MS) or include first-person experience narratives to demonstrate practical expertise.`
+      const avgE1Score = roundedScore // Use the already-calculated average
+      if (avgE1Score >= 2 && avgE1Score < 3) {
+        // Has some narrative signals but needs more
+        recommendation = `Content shows some experience signals but could be strengthened. Add first-person narratives from authors sharing professional insights (e.g., "In my 10+ years as a [profession]...") or institutional voice demonstrating hands-on expertise (e.g., "Our research team has observed...").`
+      } else if (avgE1Score >= 1 && avgE1Score < 2) {
+        // Minimal narrative content
+        recommendation = `Content has limited experience signals. Add first-person professional perspectives ("In my practice, I've found..."), case observations, or years of experience mentions to demonstrate hands-on expertise. Focus on narrative content within articles, not just author bios.`
       } else {
-        recommendation = `${config.name} is below optimal. Focus on adding more ${config.name.toLowerCase()} to your content.`
+        // Very low narrative content
+        recommendation = `Content lacks experience signals. Consider adding: (1) First-person narratives from professionals sharing insights based on their work, (2) Institutional voice showing years of practice or research, (3) Case examples demonstrating real-world expertise. Note: This is about content narrative, not author attribution (see X1 for author credentials).`
       }
     } else {
       // Default recommendation for other metrics
@@ -924,14 +926,19 @@ async function aggregateVariableAcrossPostsAsync(
 
   let recommendation: string | undefined
   if (roundedScore < config.thresholds.good) {
+    // Special handling for E1: Content narrative recommendations (NOT author attribution)
+    // FIX: E1 measures first-person narratives in CONTENT, not author metadata
     if (variableId === 'E1') {
-      const avgAuthors = results.reduce((sum, r) => sum + r.score, 0) / results.length
-      if (avgAuthors >= 1.5 && avgAuthors < 3) {
-        recommendation = `Many posts have single authors. Add second credentialed authors or medical reviewers to strengthen experience signals. Target: 2+ credentialed contributors per post.`
-      } else if (avgAuthors < 1) {
-        recommendation = `Most posts lack clear author attribution or credentials. Add named authors with relevant professional backgrounds to improve experience signals.`
+      const avgE1Score = roundedScore // Use the already-calculated average
+      if (avgE1Score >= 2 && avgE1Score < 3) {
+        // Has some narrative signals but needs more
+        recommendation = `Content shows some experience signals but could be strengthened. Add first-person narratives from authors sharing professional insights (e.g., "In my 10+ years as a [profession]...") or institutional voice demonstrating hands-on expertise (e.g., "Our research team has observed...").`
+      } else if (avgE1Score >= 1 && avgE1Score < 2) {
+        // Minimal narrative content
+        recommendation = `Content has limited experience signals. Add first-person professional perspectives ("In my practice, I've found..."), case observations, or years of experience mentions to demonstrate hands-on expertise. Focus on narrative content within articles, not just author bios.`
       } else {
-        recommendation = `Inconsistent experience signals across posts. Ensure all posts have credentialed authors or clear first-person narratives.`
+        // Very low narrative content
+        recommendation = `Content lacks experience signals. Consider adding: (1) First-person narratives from professionals sharing insights based on their work, (2) Institutional voice showing years of practice or research, (3) Case examples demonstrating real-world expertise. Note: This is about content narrative, not author attribution (see X1 for author credentials).`
       }
     } else {
       // Default recommendation for other metrics
